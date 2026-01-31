@@ -6,12 +6,15 @@
 
 	let { recipe }: { recipe: Recipe } = $props();
 
-	let numberOfPizzas = $state(recipe.yieldPizzas);
-	let doughBallWeight = $state(recipe.baseWeight);
+	let numberOfPizzas = $state(0);
+	let doughBallWeight = $state(0);
 	let editingIngredient = $state<string | null>(null);
 	let editValue = $state('');
 
+	// Reset values when recipe changes
 	$effect(() => {
+		numberOfPizzas = recipe.yieldPizzas;
+		doughBallWeight = recipe.baseWeight;
 		calculator.setRecipe(recipe);
 	});
 
