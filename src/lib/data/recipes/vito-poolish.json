@@ -60,7 +60,12 @@
         "temperature": 4,
         "location": "fridge",
         "canSetTimer": true,
-        "instructionsDa": "Bland poolish og lad hvile i koeleskab"
+        "instructionsDa": "Bland poolish og lad hvile i koeleskab",
+        "ingredientsDa": [
+          "187 g vand, 3,1 g. gær, 3,1 g. honning.",
+          "~93 g. mel.",
+          "~93 g. mel."
+        ]
       },
       {
         "id": "stage-2",
@@ -70,7 +75,11 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Bland hoveddej og lad haeve"
+        "instructionsDa": "Bland hoveddej og lad haeve",
+        "ingredientsDa": [
+          "436 ml. vand, poolish og ~389 g. mel.",
+          "25 g. salt og ~389 g. mel"
+        ]
       },
       {
         "id": "stage-3",

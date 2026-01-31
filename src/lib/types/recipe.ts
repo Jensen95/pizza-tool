@@ -34,6 +34,7 @@ export interface FermentationScheduleStage {
 	location?: 'room' | 'fridge' | 'warm';
 	instructions?: string;
 	instructionsDa?: string;
+	ingredientsDa?: string[]; // ingredients used at this stage
 	canSetTimer: boolean;
 }
 

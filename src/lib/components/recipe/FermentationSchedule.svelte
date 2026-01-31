@@ -42,6 +42,17 @@
 						{/if}
 					</div>
 
+					{#if stage.ingredientsDa && stage.ingredientsDa.length > 0}
+						<div class="stage-ingredients">
+							<span class="ingredients-label">Ingredienser:</span>
+							<ul class="ingredients-list">
+								{#each stage.ingredientsDa as ingredient}
+									<li>{ingredient}</li>
+								{/each}
+							</ul>
+						</div>
+					{/if}
+
 					{#if stage.instructionsDa}
 						<p class="stage-instructions">{stage.instructionsDa}</p>
 					{/if}
@@ -148,6 +159,34 @@
 		background: var(--color-background);
 		padding: 2px 8px;
 		border-radius: var(--radius-sm);
+	}
+
+	.stage-ingredients {
+		margin-bottom: var(--spacing-sm);
+		padding: var(--spacing-sm);
+		background: var(--color-background);
+		border-radius: var(--radius-sm);
+	}
+
+	.ingredients-label {
+		font-size: var(--font-size-sm);
+		font-weight: 600;
+		color: var(--color-primary);
+		display: block;
+		margin-bottom: var(--spacing-xs);
+	}
+
+	.ingredients-list {
+		margin: 0;
+		padding-left: var(--spacing-md);
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	.ingredients-list li {
+		font-size: var(--font-size-sm);
+		color: var(--color-text-secondary);
 	}
 
 	.stage-instructions {

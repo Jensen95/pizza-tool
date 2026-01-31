@@ -71,7 +71,11 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Bland hoveddej og lad haeve"
+        "instructionsDa": "Bland hoveddej og lad haeve",
+        "ingredientsDa": [
+          "438 g. vand, poolish, 781 g. mel",
+          "25 g. salt"
+        ]
       },
       {
         "id": "stage-3",

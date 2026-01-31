@@ -71,7 +71,11 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Bland hoveddej og lad haeve"
+        "instructionsDa": "Bland hoveddej og lad haeve",
+        "ingredientsDa": [
+          "166 g vand (kold)",
+          "16 g. salt"
+        ]
       }
     ],
     "totalTime": 1620

@@ -81,7 +81,11 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Bland dej og ael godt"
+        "instructionsDa": "Bland dej og ael godt",
+        "ingredientsDa": [
+          "977 g mel, 0,68 g gær, 20 g salt,",
+          "566 g vand, 29 g olie"
+        ]
       },
       {
         "id": "stage-2",
