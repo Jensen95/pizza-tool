@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { get } from 'svelte/store';
 	import type { Recipe } from '$lib/types';
+	import type { ScaledIngredient } from '$lib/types/ingredient';
 	import { calculator, totalWeight, flourWeight, recipeHistory } from '$lib/stores';
 	import { formatWeight } from '$lib/utils/baker-percentage';
 
@@ -23,8 +23,8 @@
 		calculator.setDoughBallWeight(doughBallWeight);
 	}
 
-	function groupIngredientsByStage(ingredients: ReturnType<typeof get<typeof calculator>>['scaledIngredients']) {
-		const groups = new Map<string, typeof ingredients>();
+	function groupIngredientsByStage(ingredients: ScaledIngredient[]) {
+		const groups = new Map<string, ScaledIngredient[]>();
 
 		for (const ing of ingredients) {
 			const stage = ing.stage || 'hoveddej';
@@ -36,7 +36,7 @@
 		return groups;
 	}
 
-	let ingredientGroups = $derived(groupIngredientsByStage(get(calculator).scaledIngredients));
+	let ingredientGroups = $derived(groupIngredientsByStage($calculator.scaledIngredients));
 	let hasCustomizations = $derived(calculator.hasCustomizations());
 
 	const stageLabels: Record<string, string> = {

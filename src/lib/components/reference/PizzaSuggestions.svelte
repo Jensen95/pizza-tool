@@ -96,7 +96,7 @@
 	}
 
 	.pizza-details {
-		padding: 0 var(--spacing-md) var(--spacing-md);
+		padding: var(--spacing-md);
 		display: flex;
 		flex-direction: column;
 		gap: var(--spacing-md);

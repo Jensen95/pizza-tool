@@ -1,22 +1,52 @@
 <script lang="ts">
-	import { get } from 'svelte/store';
-	import { page } from '$app/stores';
-	import { getRecipeById } from '$lib/stores/recipes';
+	import { page } from '$app/state';
+	import { getRecipeById, recipeHistory } from '$lib/stores';
 	import RecipeDetail from '$lib/components/recipe/RecipeDetail.svelte';
 	import IngredientCalculator from '$lib/components/recipe/IngredientCalculator.svelte';
 	import FermentationSchedule from '$lib/components/recipe/FermentationSchedule.svelte';
+	import type { RecipeHistoryEntry } from '$lib/stores';
 
-	let recipeId = $derived(get(page).params.id);
-	let recipe = $derived(getRecipeById(recipeId));
+	let recipeId = $derived(page.params.id);
+	let recipe = $derived(recipeId ? getRecipeById(recipeId) : undefined);
+	let showHistory = $state(false);
 
-	let activeTab = $state<'ingredients' | 'schedule'>('ingredients');
+	let recipeHistoryEntries = $derived(
+		recipeId ? $recipeHistory.filter((e) => e.recipeId === recipeId) : []
+	);
 
-	function setIngredientsTab() {
-		activeTab = 'ingredients';
+	function toggleHistory() {
+		showHistory = !showHistory;
 	}
 
-	function setScheduleTab() {
-		activeTab = 'schedule';
+	function formatDate(isoDate: string): string {
+		const date = new Date(isoDate);
+		return date.toLocaleDateString('da-DK', {
+			day: 'numeric',
+			month: 'short',
+			hour: '2-digit',
+			minute: '2-digit'
+		});
+	}
+
+	function getIngredientChanges(entry: RecipeHistoryEntry): { name: string; original: number; custom: number }[] {
+		if (!recipe) return [];
+
+		const changes: { name: string; original: number; custom: number }[] = [];
+		for (const [ingredientId, customValue] of Object.entries(entry.ingredients)) {
+			const ingredient = recipe.ingredients.find((i) => i.id === ingredientId);
+			if (ingredient) {
+				changes.push({
+					name: ingredient.nameDa,
+					original: ingredient.percentage,
+					custom: customValue
+				});
+			}
+		}
+		return changes;
+	}
+
+	function deleteHistoryEntry(entryId: string) {
+		recipeHistory.deleteEntry(entryId);
 	}
 </script>
 
@@ -28,30 +58,55 @@
 	<div class="recipe-page">
 		<RecipeDetail {recipe} />
 
-		<div class="tabs">
-			<button
-				class="tab"
-				class:active={activeTab === 'ingredients'}
-				onclick={setIngredientsTab}
-			>
-				Ingredienser
-			</button>
-			<button
-				class="tab"
-				class:active={activeTab === 'schedule'}
-				onclick={setScheduleTab}
-			>
-				Tidsplan
-			</button>
-		</div>
+		<section class="recipe-section">
+			<div class="section-header">
+				<h2 class="section-title">Tidsplan</h2>
+			</div>
+			<FermentationSchedule {recipe} />
+		</section>
 
-		<div class="tab-content">
-			{#if activeTab === 'ingredients'}
-				<IngredientCalculator {recipe} />
-			{:else}
-				<FermentationSchedule {recipe} />
+		<section class="recipe-section">
+			<div class="section-header">
+				<h2 class="section-title">Ingredienser</h2>
+				{#if recipeHistoryEntries.length > 0}
+					<button class="btn btn-outline btn-sm" onclick={toggleHistory}>
+						{showHistory ? 'Skjul historik' : `Historik (${recipeHistoryEntries.length})`}
+					</button>
+				{/if}
+			</div>
+
+			{#if showHistory && recipeHistoryEntries.length > 0}
+				<div class="history-section">
+					<h3 class="history-title">Tidligere tilpasninger</h3>
+					<div class="history-list">
+						{#each recipeHistoryEntries as entry (entry.id)}
+							<div class="history-entry">
+								<div class="entry-header">
+									<span class="entry-date">{formatDate(entry.createdAt)}</span>
+									<span class="entry-info">{entry.numberOfPizzas} pizzaer, {entry.doughBallWeight}g</span>
+									<button
+										class="btn-icon"
+										onclick={() => deleteHistoryEntry(entry.id)}
+										title="Slet"
+									>
+										&times;
+									</button>
+								</div>
+								{#if Object.keys(entry.ingredients).length > 0}
+									<ul class="entry-changes">
+										{#each getIngredientChanges(entry) as change}
+											<li>{change.name}: {change.original.toFixed(1)}% &rarr; {change.custom.toFixed(1)}%</li>
+										{/each}
+									</ul>
+								{/if}
+							</div>
+						{/each}
+					</div>
+				</div>
 			{/if}
-		</div>
+
+			<IngredientCalculator {recipe} />
+		</section>
 	</div>
 {:else}
 	<div class="not-found">
@@ -68,56 +123,90 @@
 		gap: var(--spacing-lg);
 	}
 
-	.tabs {
+	.recipe-section {
 		display: flex;
-		gap: var(--spacing-xs);
-		border-bottom: 2px solid var(--color-border);
+		flex-direction: column;
+		gap: var(--spacing-md);
 	}
 
-	.tab {
-		flex: 1;
-		padding: var(--spacing-sm) var(--spacing-md);
-		background: none;
-		border: none;
+	.section-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.section-title {
+		margin: 0;
+		font-size: var(--font-size-lg);
+	}
+
+	.btn-sm {
+		font-size: var(--font-size-sm);
+		padding: var(--spacing-xs) var(--spacing-sm);
+	}
+
+	.history-section {
+		background: var(--color-surface);
+		border-radius: var(--radius-md);
+		padding: var(--spacing-md);
+		margin-bottom: var(--spacing-sm);
+	}
+
+	.history-title {
+		margin: 0 0 var(--spacing-sm);
 		font-size: var(--font-size-md);
-		font-weight: 500;
-		color: var(--color-text-secondary);
-		cursor: pointer;
-		position: relative;
-		transition: color 0.2s;
-	}
-
-	.tab:hover {
-		color: var(--color-text);
-	}
-
-	.tab.active {
 		color: var(--color-primary);
 	}
 
-	.tab.active::after {
-		content: '';
-		position: absolute;
-		bottom: -2px;
-		left: 0;
-		right: 0;
-		height: 2px;
-		background: var(--color-primary);
+	.history-list {
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-sm);
 	}
 
-	.tab-content {
-		animation: fadeIn 0.2s ease-out;
+	.history-entry {
+		background: var(--color-background);
+		border-radius: var(--radius-sm);
+		padding: var(--spacing-sm);
 	}
 
-	@keyframes fadeIn {
-		from {
-			opacity: 0;
-			transform: translateY(4px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
+	.entry-header {
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-sm);
+		margin-bottom: var(--spacing-xs);
+	}
+
+	.entry-date {
+		font-weight: 500;
+		font-size: var(--font-size-sm);
+	}
+
+	.entry-info {
+		color: var(--color-text-secondary);
+		font-size: var(--font-size-sm);
+		flex: 1;
+	}
+
+	.btn-icon {
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 2px 6px;
+		font-size: var(--font-size-lg);
+		color: var(--color-text-secondary);
+		line-height: 1;
+	}
+
+	.btn-icon:hover {
+		color: var(--color-error);
+	}
+
+	.entry-changes {
+		margin: 0;
+		padding-left: var(--spacing-md);
+		font-size: var(--font-size-sm);
+		color: var(--color-text-secondary);
 	}
 
 	.not-found {

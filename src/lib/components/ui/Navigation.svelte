@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { activeTimerCount } from '$lib/stores';
 
 	interface NavItem {
@@ -10,7 +10,6 @@
 
 	const navItems: NavItem[] = [
 		{ href: '/', label: 'Opskrifter', icon: '📖' },
-		{ href: '/history', label: 'Historik', icon: '📋' },
 		{ href: '/timers', label: 'Timere', icon: '⏱️' },
 		{ href: '/reference', label: 'Reference', icon: '📚' }
 	];
@@ -26,7 +25,7 @@
 		<a
 			href={item.href}
 			class="nav-item"
-			class:active={isActive(item.href, $page.url.pathname)}
+			class:active={isActive(item.href, page.url.pathname)}
 		>
 			<span class="nav-icon">
 				{item.icon}

@@ -69,23 +69,24 @@ export async function sendNotification(
 		// Try to use service worker notification if available
 		if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
 			const registration = await navigator.serviceWorker.ready;
+			// Cast to include vibrate which is supported but not in TS definitions
 			await registration.showNotification(title, {
 				body: options.body,
-				icon: options.icon || '/icons/icon-192.png',
-				badge: options.badge || '/icons/icon-72.png',
+				icon: options.icon || '/icons/icon.svg',
+				badge: options.badge || '/icons/icon.svg',
 				tag: options.tag,
 				requireInteraction: options.requireInteraction ?? true,
 				silent: options.silent,
-				vibrate: options.vibrate || [200, 100, 200],
-				data: options.data
-			});
+				data: options.data,
+				vibrate: options.vibrate || [200, 100, 200]
+			} as globalThis.NotificationOptions & { vibrate?: number[] });
 			return true;
 		}
 
 		// Fallback to regular notification
 		const notification = new Notification(title, {
 			body: options.body,
-			icon: options.icon || '/icons/icon-192.png',
+			icon: options.icon || '/icons/icon.svg',
 			tag: options.tag,
 			requireInteraction: options.requireInteraction,
 			silent: options.silent

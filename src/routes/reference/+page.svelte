@@ -65,6 +65,12 @@
 		overflow-x: auto;
 		padding-bottom: var(--spacing-xs);
 		border-bottom: 2px solid var(--color-border);
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+
+	.tabs::-webkit-scrollbar {
+		display: none;
 	}
 
 	.tab {
