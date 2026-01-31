@@ -1,0 +1,149 @@
+[
+  {
+    "name": "Pizza Margherita",
+    "ingredients": [
+      "Tomatsauce",
+      "Mozzarella",
+      "Frisk basilikum"
+    ],
+    "instructions": "Bred et tyndt lag tomatsauce på pizzaen. Fordel mozzarella og basilikum. Bag."
+  },
+  {
+    "name": "Pizza Marinara",
+    "ingredients": [
+      "Tomatsauce",
+      "Hvidløg",
+      "Oregano",
+      "Frisk basilikum",
+      "Ekstra jomfru olivenolie"
+    ],
+    "instructions": "Bred et tyndt lag tomatsauce på pizzaen. Skær hvidløgene i tynde skiver og fordel på pizzaen. Drys med tørret oregano og dryp cirkulær med olivenolie. Tilfør enkelte basilikumblade. Bag."
+  },
+  {
+    "name": "Pizza alla caprese",
+    "ingredients": [
+      "Tomatsauce",
+      "Frisk mozzarella (i tynde skiver)",
+      "Tomater (i tynde skiver)",
+      "Hvidløg (i tynde skiver)",
+      "Frisk basilikum",
+      "Olivenolie",
+      "Friskkværnet peber"
+    ],
+    "instructions": "Bred et tyndt lag tomatsauce på. Skær mozzarella, tomater og hvidløg tyndt. Fordel det på pizzaen sammen med hele basilikumblade. I ovnen med pizzaen. Tag pizzaen ud, dryp med olivenolie, og kværn peber over."
+  },
+  {
+    "name": "Pizza alla capricciosa",
+    "ingredients": [
+      "Tomatsauce",
+      "Røget skinke",
+      "Solmoden tomat",
+      "Champignon",
+      "Hvidløg",
+      "Frisk mozzarella",
+      "Frisk basilikum",
+      "Olivenolie",
+      "Friskkværnet peber"
+    ],
+    "instructions": "Bred et tyndt lag tomatsauce på. Skær champignon, tomater og hvidløg tyndt og skær mozzarella i skiver. Fordel skinke og de øvrige ingredienser på pizzaen sammen med hele basilikumblade. Bag i ovnen og dryp herefter med olivenolie og kværn peber over."
+  },
+  {
+    "name": "Pizza Diavola",
+    "ingredients": [
+      "Tomatsauce",
+      "Stærk salami i skiver",
+      "Mozzarella",
+      "Basilikum",
+      "Evt. jalapeños eller anden chili"
+    ],
+    "instructions": "Smør et fornuftigt lag tomatsauce på og fordel salami, mozzarella og basilikum på den. Bag."
+  },
+  {
+    "name": "Pizza al salame piccante",
+    "ingredients": [
+      "Tomatsauce",
+      "Hvidløg",
+      "Mild rød chili",
+      "Mozzarella",
+      "Krydret salami i skiver",
+      "Frisk oregano",
+      "Olivenolie",
+      "Flagesalt",
+      "Friskkværnet sort peber"
+    ],
+    "instructions": "Skær hvidløg og chili i tynde skiver og skær mozzarella i skiver. Bred et tyndt lag tomatsauce på. Fordel salami, hvidløg, chili, mozzarella og oregano på pizzaen."
+  },
+  {
+    "name": "Pizza ai quattro formaggi",
+    "ingredients": [
+      "Tomatsauce",
+      "Taleggio",
+      "Fontina",
+      "Parmesan",
+      "Gorgonzola",
+      "Valnødder"
+    ],
+    "instructions": "Riv de hårde oste og del taleggio og gorgonzola i mindre stykker. Fordel tomatsauce og derefter ost og groft hakkede valnødder. Bag."
+  },
+  {
+    "name": "Pizza bianca",
+    "ingredients": [
+      "Ricotta-ost",
+      "Parmesan-ost",
+      "Mozzarella",
+      "Pinjekerner",
+      "Hvidløg",
+      "Friske rosmarin-kviste",
+      "Olivenolie",
+      "Flagesalt",
+      "Friskkværnet peber"
+    ],
+    "instructions": "Bred et lag ricottaost på pizzaen. Riv parmasanost over og læg skiver af mozzarellaost og pinjekerner på. Skær hvidløgene i tynde skiver og hak rosmarinen fint. Drys det over pizzaen og dryp med olivenolie samt krydr med salt og peber."
+  },
+  {
+    "name": "Pizza ai carciofi",
+    "ingredients": [
+      "Tomatsauce",
+      "Artiskokhjerter",
+      "Olivenolie",
+      "Pecorino-ost",
+      "Valnødder",
+      "Flagesalt",
+      "Friskkværnet peber",
+      "Frisk timian"
+    ],
+    "instructions": "Lad artiskokhjerterne dryppe godt af. Del dem og steg dem gyldenbrune i olivenolie. Riv pecorino-osten og hak nødderne groft. Smør pizzaen med tomatsauce. Fordel artiskokker, pecorino-ost og valnødder på pizzaen. Bag i ovnen og dryp herefter med olivenolie og kværn peber over. Pynt med timian."
+  },
+  {
+    "name": "Pizza al prosciutto crudo",
+    "ingredients": [
+      "Tomatsauce",
+      "Mozzarella",
+      "Prosciutto Crudo (parmaskinke)",
+      "Ruccola salat",
+      "Parmesan flager",
+      "Ekstra jomfru olivenolie"
+    ],
+    "instructions": "Bred et tyndt lag tomatsauce på pizzaen og tilføj mozzarella og bag pizzaen. Tag den ud når den er færdig og fordel prosciutto, ruccola salat og parmesan-skiver. Dryp med olivenolie."
+  },
+  {
+    "name": "Pizza prosciutto cotto e funghi",
+    "ingredients": [
+      "Tomatsauce",
+      "Revet mozzarella",
+      "Prosciutto cotto (kogt skinke)",
+      "Champignon"
+    ],
+    "instructions": "Bred et tyndt lag tomatsauce på pizzaen. Fordel kogt skinke, champignon og revet mozzarella og bag pizzaen."
+  },
+  {
+    "name": "Kartoffel Jalapeño Pizza",
+    "ingredients": [
+      "Hvidløgssauce (120 ml olivenolie + 4 fed hvidløg)",
+      "Kartofler, tyndskårne",
+      "Jalapeños, gerne frisk tyndskåret",
+      "Mozzarella"
+    ],
+    "instructions": "Blend olivenolie med hvidløg til hvidløgssauce. Smør et lag af hvidløgssaucen på pizzabunden. Fordel kartoffel, jalapeño og ost. Bag."
+  }
+]
