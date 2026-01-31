@@ -1,0 +1,104 @@
+{
+  "id": "tony-tiga-poolish",
+  "name": "Tony Tiga + Poolish",
+  "nameDa": "Tony Tiga + Poolish",
+  "category": "poolish",
+  "baseWeight": 270,
+  "hydration": 65,
+  "yieldPizzas": 4,
+  "ingredients": [
+    {
+      "id": "ing-1",
+      "name": "Salt",
+      "nameDa": "salt",
+      "percentage": 1.8,
+      "type": "salt"
+    },
+    {
+      "id": "ing-2",
+      "name": "Tørgær",
+      "nameDa": "tørgær",
+      "percentage": 0.46,
+      "type": "yeast"
+    },
+    {
+      "id": "ing-3",
+      "name": "Olivenolie",
+      "nameDa": "olivenolie",
+      "percentage": 1.0,
+      "type": "oil"
+    },
+    {
+      "id": "ing-4",
+      "name": "Diastatisk malt",
+      "nameDa": "diastatisk malt",
+      "percentage": 1.8,
+      "type": "other"
+    },
+    {
+      "id": "ing-5",
+      "name": "Poolish",
+      "nameDa": "poolish",
+      "percentage": 9.4,
+      "type": "flour",
+      "stage": "poolish"
+    },
+    {
+      "id": "ing-6",
+      "name": "G tørgær",
+      "nameDa": "g tørgær",
+      "percentage": 22.32,
+      "type": "yeast"
+    },
+    {
+      "id": "ing-7",
+      "name": "Rør gæren ud i kold vand i 30 sek. indtil det skummer lidt (ingen skum = død gær).",
+      "nameDa": "Rør gæren ud i kold vand i 30 sek. indtil det skummer lidt (ingen skum = død gær).",
+      "percentage": 100,
+      "type": "water"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Poolish",
+        "nameDa": "Dag 1 - Poolish",
+        "duration": 1440,
+        "temperature": 4,
+        "location": "fridge",
+        "canSetTimer": true,
+        "instructionsDa": "Bland poolish og lad hvile i koeleskab"
+      },
+      {
+        "id": "stage-2",
+        "name": "Main dough",
+        "nameDa": "Dag 2 - Hoveddej",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Bland hoveddej og lad haeve"
+      },
+      {
+        "id": "stage-3",
+        "name": "Ball rest",
+        "nameDa": "Kuglehvile",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Del i kugler og lad hvile"
+      }
+    ],
+    "totalTime": 1680
+  },
+  "tipsDa": [
+    "Anbefaling:  Hvedemel - 13-14,5% protein.",
+    "En NY style pizza har typisk en hydrering på 60-65%.",
+    "Diatistisk malt og bageenzym er generelt det samme eller meget",
+    "Forslag til afbagning:",
+    "Tony bruger altid kold vand fra hanen i sine 'starters' for at"
+  ],
+  "source": "Tony tiga+poolish"
+}

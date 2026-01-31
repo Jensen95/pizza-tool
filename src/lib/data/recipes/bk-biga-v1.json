@@ -1,0 +1,81 @@
+{
+  "id": "bk-biga-v1",
+  "name": "BK Biga v1",
+  "nameDa": "BK Biga v1",
+  "category": "biga",
+  "baseWeight": 270,
+  "hydration": 65,
+  "yieldPizzas": 4,
+  "ingredients": [
+    {
+      "id": "ing-1",
+      "name": "Mel tipo 00",
+      "nameDa": "mel tipo 00",
+      "percentage": 100,
+      "type": "flour"
+    },
+    {
+      "id": "ing-2",
+      "name": "Salt",
+      "nameDa": "salt",
+      "percentage": 2.68,
+      "type": "salt"
+    },
+    {
+      "id": "ing-3",
+      "name": "Tørgær",
+      "nameDa": "tørgær",
+      "percentage": 0.22,
+      "type": "yeast"
+    },
+    {
+      "id": "ing-4",
+      "name": "Biga",
+      "nameDa": "biga",
+      "percentage": 100,
+      "type": "flour",
+      "stage": "biga"
+    },
+    {
+      "id": "ing-5",
+      "name": "Gæren vendes i melet og vandet tilsættes. spred dine fingre og kør dem igennem",
+      "nameDa": "Gæren vendes i melet og vandet tilsættes. Spred dine fingre og kør dem igennem",
+      "percentage": 100,
+      "type": "flour"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Biga",
+        "nameDa": "Dag 1 - Biga",
+        "duration": 1440,
+        "temperature": 4,
+        "location": "fridge",
+        "canSetTimer": true,
+        "instructionsDa": "Bland biga og lad hvile i koeleskab"
+      },
+      {
+        "id": "stage-2",
+        "name": "Main dough",
+        "nameDa": "Dag 2 - Hoveddej",
+        "duration": 180,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Bland hoveddej og lad haeve"
+      }
+    ],
+    "totalTime": 1620
+  },
+  "tipsDa": [
+    "Tørgæren arbejder bedst i bigaen når vandet er 25-27°.",
+    "Vand i hoveddejen skal være det koldeste fra hanen.",
+    "Hoveddejen må helst ikke overstige 20°.",
+    "Røremaskinen skaber friktion og tilfører varme.",
+    "Dejen er klar når den er blank, glat og kan strækkes langt.",
+    "V1 er god om sommeren, da den koldhæver."
+  ],
+  "source": "BK_biga_v1"
+}

@@ -1,0 +1,79 @@
+{
+  "id": "seb-24t",
+  "name": "Seb 24 timer",
+  "nameDa": "Seb 24 timer",
+  "category": "neapolitan",
+  "baseWeight": 270,
+  "hydration": 70,
+  "yieldPizzas": 4,
+  "ingredients": [
+    {
+      "id": "ing-1",
+      "name": "Tipo 0 eller 00",
+      "nameDa": "tipo 0 eller 00",
+      "percentage": 100,
+      "type": "other"
+    },
+    {
+      "id": "ing-2",
+      "name": "Salt",
+      "nameDa": "salt",
+      "percentage": 2.99,
+      "type": "salt"
+    },
+    {
+      "id": "ing-3",
+      "name": "G frisk gær",
+      "nameDa": "g frisk gær",
+      "percentage": 37.25,
+      "type": "yeast"
+    },
+    {
+      "id": "ing-4",
+      "name": "Opløs gæren i vandet.",
+      "nameDa": "Opløs gæren i vandet.",
+      "percentage": 100,
+      "type": "water"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Mix",
+        "nameDa": "Bland dej",
+        "duration": 30,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": false,
+        "instructionsDa": "Bland alle ingredienser"
+      },
+      {
+        "id": "stage-2",
+        "name": "Bulk ferment",
+        "nameDa": "Stuehaevning",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Lad haeve ved stuetemperatur"
+      },
+      {
+        "id": "stage-3",
+        "name": "Ball rest",
+        "nameDa": "Kuglehvile",
+        "duration": 180,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Del i kugler og lad hvile"
+      }
+    ],
+    "totalTime": 330
+  },
+  "tipsDa": [
+    "Opskriften er god hvis du ikke har plads til koldhævning i",
+    "Ja, det er den rette mængde gær i denne opskrift…. :-)"
+  ],
+  "source": "Seb_24t"
+}

@@ -1,0 +1,85 @@
+{
+  "id": "seb-biga",
+  "name": "Seb Biga",
+  "nameDa": "Seb Biga",
+  "category": "biga",
+  "baseWeight": 270,
+  "hydration": 72,
+  "yieldPizzas": 4,
+  "ingredients": [
+    {
+      "id": "ing-1",
+      "name": "Caputo nuvola super",
+      "nameDa": "Caputo Nuvola Super",
+      "percentage": 70.0,
+      "type": "other"
+    },
+    {
+      "id": "ing-2",
+      "name": "Caputo pizzaria",
+      "nameDa": "Caputo Pizzaria",
+      "percentage": 30.0,
+      "type": "other"
+    },
+    {
+      "id": "ing-3",
+      "name": "Salt",
+      "nameDa": "salt",
+      "percentage": 2.54,
+      "type": "salt"
+    },
+    {
+      "id": "ing-4",
+      "name": "Frisk gær",
+      "nameDa": "frisk gær",
+      "percentage": 1.0,
+      "type": "yeast"
+    },
+    {
+      "id": "ing-5",
+      "name": "Biga",
+      "nameDa": "biga",
+      "percentage": 100,
+      "type": "flour",
+      "stage": "biga"
+    },
+    {
+      "id": "ing-6",
+      "name": "Opløs gøren i vandet",
+      "nameDa": "Opløs gøren i vandet",
+      "percentage": 100,
+      "type": "water"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Biga",
+        "nameDa": "Dag 1 - Biga",
+        "duration": 1440,
+        "temperature": 4,
+        "location": "fridge",
+        "canSetTimer": true,
+        "instructionsDa": "Bland biga og lad hvile i koeleskab"
+      },
+      {
+        "id": "stage-2",
+        "name": "Main dough",
+        "nameDa": "Dag 2 - Hoveddej",
+        "duration": 180,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Bland hoveddej og lad haeve"
+      }
+    ],
+    "totalTime": 1620
+  },
+  "tipsDa": [
+    "Bruges anden mel, anbefales styrke W300/310.",
+    "Vand i hoveddej skal være det koldeste fra hanen/køl.",
+    "Den perfekte \"stuetemperatur\" for en biga er 18°."
+  ],
+  "source": "Seb_biga"
+}

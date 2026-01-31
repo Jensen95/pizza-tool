@@ -1,0 +1,101 @@
+{
+  "id": "ny-style",
+  "name": "New York Style",
+  "nameDa": "New York Style",
+  "category": "ny-style",
+  "baseWeight": 270,
+  "hydration": 66,
+  "yieldPizzas": 4,
+  "ingredients": [
+    {
+      "id": "ing-1",
+      "name": "Hvedemel tipo 00",
+      "nameDa": "hvedemel tipo 00",
+      "percentage": 90.77,
+      "type": "flour"
+    },
+    {
+      "id": "ing-2",
+      "name": "Fintmalet fuldkornsmel",
+      "nameDa": "fintmalet fuldkornsmel",
+      "percentage": 9.23,
+      "type": "flour"
+    },
+    {
+      "id": "ing-3",
+      "name": "Olivenolie",
+      "nameDa": "olivenolie",
+      "percentage": 3.08,
+      "type": "oil"
+    },
+    {
+      "id": "ing-4",
+      "name": "Salt",
+      "nameDa": "salt",
+      "percentage": 2.62,
+      "type": "salt"
+    },
+    {
+      "id": "ing-5",
+      "name": "Frisk gær",
+      "nameDa": "frisk gær",
+      "percentage": 0.46,
+      "type": "yeast"
+    },
+    {
+      "id": "ing-6",
+      "name": "Rørsukker",
+      "nameDa": "rørsukker",
+      "percentage": 2.92,
+      "type": "sugar"
+    },
+    {
+      "id": "ing-7",
+      "name": "Bland mel, vand, olie og sukker.",
+      "nameDa": "Bland mel, vand, olie og sukker.",
+      "percentage": 100,
+      "type": "flour"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Mix dough",
+        "nameDa": "Dag 1 - Bland dej",
+        "duration": 150,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Bland dej og ael godt"
+      },
+      {
+        "id": "stage-2",
+        "name": "Cold ferment",
+        "nameDa": "Dag 2-4 - Kold haevning",
+        "duration": 4320,
+        "temperature": 4,
+        "location": "fridge",
+        "canSetTimer": true,
+        "instructionsDa": "Lad haeve i koeleskab i 3-4 dage"
+      },
+      {
+        "id": "stage-3",
+        "name": "Temper",
+        "nameDa": "Temperering",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Tag ud af koeleskab 2 timer foer bagning"
+      }
+    ],
+    "totalTime": 4590
+  },
+  "tipsDa": [
+    "Anbefaling:  Hvedemel - 13-14,5% protein.",
+    "Fintmalet fuldkornsmel (f.eks. Emmermel) tilfører mere smag.",
+    "Bages ved 315-370°C."
+  ],
+  "source": "NY style"
+}

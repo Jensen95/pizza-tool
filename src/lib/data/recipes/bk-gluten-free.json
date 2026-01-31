@@ -1,0 +1,89 @@
+{
+  "id": "bk-gluten-free",
+  "name": "BK Glutenfri",
+  "nameDa": "BK Glutenfri",
+  "category": "direct",
+  "baseWeight": 270,
+  "hydration": 74,
+  "yieldPizzas": 4,
+  "ingredients": [
+    {
+      "id": "ing-1",
+      "name": "Rød finax",
+      "nameDa": "Rød Finax",
+      "percentage": 100,
+      "type": "other"
+    },
+    {
+      "id": "ing-2",
+      "name": "Olie",
+      "nameDa": "olie",
+      "percentage": 4.17,
+      "type": "oil"
+    },
+    {
+      "id": "ing-3",
+      "name": "Salt",
+      "nameDa": "salt",
+      "percentage": 3.0,
+      "type": "salt"
+    },
+    {
+      "id": "ing-4",
+      "name": "Tørgær",
+      "nameDa": "tørgær",
+      "percentage": 0.42,
+      "type": "yeast"
+    },
+    {
+      "id": "ing-5",
+      "name": "Tørgæren vendes i den glutenfrie mel (stuetempereret mel).",
+      "nameDa": "Tørgæren vendes i den glutenfrie mel (stuetempereret mel).",
+      "percentage": 100,
+      "type": "flour"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Mix",
+        "nameDa": "Bland dej",
+        "duration": 30,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": false,
+        "instructionsDa": "Bland alle ingredienser"
+      },
+      {
+        "id": "stage-2",
+        "name": "Bulk ferment",
+        "nameDa": "Stuehaevning",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Lad haeve ved stuetemperatur"
+      },
+      {
+        "id": "stage-3",
+        "name": "Ball rest",
+        "nameDa": "Kuglehvile",
+        "duration": 180,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Del i kugler og lad hvile"
+      }
+    ],
+    "totalTime": 330
+  },
+  "tipsDa": [
+    "Den færdige dej-temperatur må ikke overstige 27°.",
+    "Tørgæren arbejder bedst når dejen bliver 25-27°.",
+    "Rød Finax melblanding er en glutenfri melblandinger af dem der",
+    "Grundet det lave protein-indhold i en glutenfri mel (blanding), skal du",
+    "Der kan naturligvis også bruges en anden glutenfri melblanding."
+  ],
+  "source": "BK_glut_h"
+}

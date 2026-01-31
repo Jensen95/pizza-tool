@@ -1,0 +1,97 @@
+{
+  "id": "bk-poolish",
+  "name": "BK Poolish",
+  "nameDa": "BK Poolish",
+  "category": "poolish",
+  "baseWeight": 270,
+  "hydration": 65,
+  "yieldPizzas": 4,
+  "ingredients": [
+    {
+      "id": "ing-1",
+      "name": "Mel",
+      "nameDa": "mel",
+      "percentage": 100,
+      "type": "flour"
+    },
+    {
+      "id": "ing-2",
+      "name": "Salt",
+      "nameDa": "salt",
+      "percentage": 2.56,
+      "type": "salt"
+    },
+    {
+      "id": "ing-3",
+      "name": "Tørgær",
+      "nameDa": "tørgær",
+      "percentage": 0.15,
+      "type": "yeast"
+    },
+    {
+      "id": "ing-4",
+      "name": "Poolish",
+      "nameDa": "poolish",
+      "percentage": 19.35,
+      "type": "flour",
+      "stage": "poolish"
+    },
+    {
+      "id": "ing-5",
+      "name": "G tørgær",
+      "nameDa": "g tørgær",
+      "percentage": 146.73,
+      "type": "yeast"
+    },
+    {
+      "id": "ing-6",
+      "name": "Gæren vendes i melet, og vandet tilsættes.",
+      "nameDa": "Gæren vendes i melet, og vandet tilsættes.",
+      "percentage": 100,
+      "type": "flour"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Poolish",
+        "nameDa": "Dag 1 - Poolish",
+        "duration": 1440,
+        "temperature": 4,
+        "location": "fridge",
+        "canSetTimer": true,
+        "instructionsDa": "Bland poolish og lad hvile i koeleskab"
+      },
+      {
+        "id": "stage-2",
+        "name": "Main dough",
+        "nameDa": "Dag 2 - Hoveddej",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Bland hoveddej og lad haeve"
+      },
+      {
+        "id": "stage-3",
+        "name": "Ball rest",
+        "nameDa": "Kuglehvile",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Del i kugler og lad hvile"
+      }
+    ],
+    "totalTime": 1680
+  },
+  "tipsDa": [
+    "Tørgæren arbejder bedst i poolish når vandet er 25-27°.",
+    "Poolish kan fermenteres op til 4 timer ved",
+    "Sørg for at hoveddejen ender på 24-27°C.",
+    "Røremaskinen skaber friktion og tilfører varme.",
+    "Dejen er klar når den er blank, glat og kan strækkes langt."
+  ],
+  "source": "BK_poolish"
+}

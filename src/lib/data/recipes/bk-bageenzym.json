@@ -1,0 +1,96 @@
+{
+  "id": "bk-bageenzym",
+  "name": "BK Bageenzym",
+  "nameDa": "BK Bageenzym",
+  "category": "direct",
+  "baseWeight": 270,
+  "hydration": 64,
+  "yieldPizzas": 4,
+  "ingredients": [
+    {
+      "id": "ing-1",
+      "name": "Mel tipo 00",
+      "nameDa": "mel tipo 00",
+      "percentage": 100,
+      "type": "flour"
+    },
+    {
+      "id": "ing-2",
+      "name": "Speltsur el. hvedesur",
+      "nameDa": "speltsur el. hvedesur",
+      "percentage": 4.71,
+      "type": "flour",
+      "stage": "preferment"
+    },
+    {
+      "id": "ing-3",
+      "name": "Bageenzym",
+      "nameDa": "bageenzym",
+      "percentage": 0.91,
+      "type": "other"
+    },
+    {
+      "id": "ing-4",
+      "name": "Salt",
+      "nameDa": "salt",
+      "percentage": 2.43,
+      "type": "salt"
+    },
+    {
+      "id": "ing-5",
+      "name": "G tørgær",
+      "nameDa": "g tørgær",
+      "percentage": 29.59,
+      "type": "yeast"
+    },
+    {
+      "id": "ing-6",
+      "name": "Mel, speltsurdej/hvedesur, bageenzym og vand røres let sammen.",
+      "nameDa": "Mel, speltsurdej/hvedesur, bageenzym og vand røres let sammen.",
+      "percentage": 100,
+      "type": "flour"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Mix",
+        "nameDa": "Bland dej",
+        "duration": 30,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": false,
+        "instructionsDa": "Bland alle ingredienser"
+      },
+      {
+        "id": "stage-2",
+        "name": "Bulk ferment",
+        "nameDa": "Stuehaevning",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Lad haeve ved stuetemperatur"
+      },
+      {
+        "id": "stage-3",
+        "name": "Ball rest",
+        "nameDa": "Kuglehvile",
+        "duration": 180,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Del i kugler og lad hvile"
+      }
+    ],
+    "totalTime": 330
+  },
+  "tipsDa": [
+    "Tørgæren arbejder bedst når vandet er 25-27°.",
+    "Den færdige dej temperatur må ikke overstige 27°.",
+    "Dejen er klar når den er blank, glat og kan strækkes langt.",
+    "Husk: æltetider er vejlendende, da der er forskel på maskiner."
+  ],
+  "source": "BK_bageenzym"
+}

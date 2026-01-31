@@ -1,0 +1,116 @@
+{
+  "id": "ppah-ny",
+  "name": "PPAH NY Style",
+  "nameDa": "PPAH NY Style",
+  "category": "ny-style",
+  "baseWeight": 270,
+  "hydration": 58,
+  "yieldPizzas": 4,
+  "ingredients": [
+    {
+      "id": "ing-1",
+      "name": "Mel",
+      "nameDa": "mel",
+      "percentage": 100,
+      "type": "flour"
+    },
+    {
+      "id": "ing-2",
+      "name": "Salt",
+      "nameDa": "salt",
+      "percentage": 2.0,
+      "type": "salt"
+    },
+    {
+      "id": "ing-3",
+      "name": "Sukker",
+      "nameDa": "sukker",
+      "percentage": 2.8,
+      "type": "sugar"
+    },
+    {
+      "id": "ing-4",
+      "name": "Olivenolie",
+      "nameDa": "olivenolie",
+      "percentage": 3.0,
+      "type": "oil"
+    },
+    {
+      "id": "ing-5",
+      "name": "G tørgær",
+      "nameDa": "g tørgær",
+      "percentage": 67.97,
+      "type": "yeast"
+    },
+    {
+      "id": "ing-6",
+      "name": "Bland de tøre ingredienser. rør dem sammen.",
+      "nameDa": "Bland de tøre ingredienser. Rør dem sammen.",
+      "percentage": 100,
+      "type": "other"
+    },
+    {
+      "id": "ing-7",
+      "name": "Portion  (ca. 800 ml.)",
+      "nameDa": "portion  (ca. 800 ml.)",
+      "percentage": 100,
+      "type": "other"
+    },
+    {
+      "id": "ing-8",
+      "name": "Tørret basilkum",
+      "nameDa": "tørret basilkum",
+      "percentage": 50.0,
+      "type": "other"
+    },
+    {
+      "id": "ing-9",
+      "name": "Chiliflager",
+      "nameDa": "chiliflager",
+      "percentage": 50.0,
+      "type": "other"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Mix dough",
+        "nameDa": "Dag 1 - Bland dej",
+        "duration": 150,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Bland dej og ael godt"
+      },
+      {
+        "id": "stage-2",
+        "name": "Cold ferment",
+        "nameDa": "Dag 2-4 - Kold haevning",
+        "duration": 4320,
+        "temperature": 4,
+        "location": "fridge",
+        "canSetTimer": true,
+        "instructionsDa": "Lad haeve i koeleskab i 3-4 dage"
+      },
+      {
+        "id": "stage-3",
+        "name": "Temper",
+        "nameDa": "Temperering",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Tag ud af koeleskab 2 timer foer bagning"
+      }
+    ],
+    "totalTime": 4590
+  },
+  "tipsDa": [
+    "Normalt anbefales mel med 13-14,5% protein til NY style.",
+    "En ægte New York style pizza er kendt for sin enkelte topping-",
+    "Forslag til afbagning:",
+    "Tørgæren arbejder bedst når vandet er 25-27°."
+  ],
+  "source": "PPAH_NY"
+}

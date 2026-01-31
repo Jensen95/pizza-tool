@@ -1,0 +1,79 @@
+{
+  "id": "bk-handaelt",
+  "name": "BK Handaeltet",
+  "nameDa": "BK Handaeltet",
+  "category": "neapolitan",
+  "baseWeight": 270,
+  "hydration": 60,
+  "yieldPizzas": 4,
+  "ingredients": [
+    {
+      "id": "ing-1",
+      "name": "Mel tipo 00",
+      "nameDa": "mel tipo 00",
+      "percentage": 100,
+      "type": "flour"
+    },
+    {
+      "id": "ing-2",
+      "name": "Salt",
+      "nameDa": "salt",
+      "percentage": 2.96,
+      "type": "salt"
+    },
+    {
+      "id": "ing-3",
+      "name": "G frisk gær",
+      "nameDa": "g frisk gær",
+      "percentage": 44.17,
+      "type": "yeast"
+    },
+    {
+      "id": "ing-4",
+      "name": "Kom vand (ca 15°c) i en skål, og opløs herefter gæren.",
+      "nameDa": "Kom vand (ca 15°C) i en skål, og opløs herefter gæren.",
+      "percentage": 100,
+      "type": "water"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Mix",
+        "nameDa": "Bland dej",
+        "duration": 30,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": false,
+        "instructionsDa": "Bland alle ingredienser"
+      },
+      {
+        "id": "stage-2",
+        "name": "Bulk ferment",
+        "nameDa": "Stuehaevning",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Lad haeve ved stuetemperatur"
+      },
+      {
+        "id": "stage-3",
+        "name": "Ball rest",
+        "nameDa": "Kuglehvile",
+        "duration": 180,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Del i kugler og lad hvile"
+      }
+    ],
+    "totalTime": 330
+  },
+  "tipsDa": [
+    "Vil du bruge dejen på dag 2, så se * pkt. 8",
+    "Dejen er færdigæltet, når du kan trykke på den og den"
+  ],
+  "source": "BK_Handaelt"
+}

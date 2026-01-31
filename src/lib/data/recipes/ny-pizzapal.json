@@ -1,0 +1,138 @@
+{
+  "id": "ny-pizzapal",
+  "name": "NY PizzaPal",
+  "nameDa": "NY PizzaPal",
+  "category": "ny-style",
+  "baseWeight": 270,
+  "hydration": 57,
+  "yieldPizzas": 4,
+  "ingredients": [
+    {
+      "id": "ing-1",
+      "name": "Mel",
+      "nameDa": "mel",
+      "percentage": 100,
+      "type": "flour"
+    },
+    {
+      "id": "ing-2",
+      "name": "Salt",
+      "nameDa": "salt",
+      "percentage": 2.5,
+      "type": "salt"
+    },
+    {
+      "id": "ing-3",
+      "name": "Tørgær",
+      "nameDa": "tørgær",
+      "percentage": 0.38,
+      "type": "yeast"
+    },
+    {
+      "id": "ing-4",
+      "name": "Sukker",
+      "nameDa": "sukker",
+      "percentage": 2.5,
+      "type": "sugar"
+    },
+    {
+      "id": "ing-5",
+      "name": "Olivenolie",
+      "nameDa": "olivenolie",
+      "percentage": 2.0,
+      "type": "oil"
+    },
+    {
+      "id": "ing-6",
+      "name": "Hæld vandet i en skål.",
+      "nameDa": "Hæld vandet i en skål.",
+      "percentage": 100,
+      "type": "water"
+    },
+    {
+      "id": "ing-7",
+      "name": "Portion  (ca. 400 ml.)",
+      "nameDa": "portion  (ca. 400 ml.)",
+      "percentage": 100,
+      "type": "other"
+    },
+    {
+      "id": "ing-8",
+      "name": "Dåse hakkede tomater (f.eks. san marzano d.o.p.).",
+      "nameDa": "dåse hakkede tomater (f.eks. San Marzano D.O.P.).",
+      "percentage": 100,
+      "type": "other"
+    },
+    {
+      "id": "ing-9",
+      "name": "Fed hvidløg, hakkede",
+      "nameDa": "fed hvidløg, hakkede",
+      "percentage": 30.0,
+      "type": "other"
+    },
+    {
+      "id": "ing-10",
+      "name": "Løgpulver",
+      "nameDa": "løgpulver",
+      "percentage": 150.0,
+      "type": "other"
+    },
+    {
+      "id": "ing-11",
+      "name": "Tørret oregano",
+      "nameDa": "tørret oregano",
+      "percentage": 50.0,
+      "type": "other"
+    },
+    {
+      "id": "ing-12",
+      "name": "Tørret basilkum",
+      "nameDa": "tørret basilkum",
+      "percentage": 50.0,
+      "type": "other"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Mix dough",
+        "nameDa": "Dag 1 - Bland dej",
+        "duration": 150,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Bland dej og ael godt"
+      },
+      {
+        "id": "stage-2",
+        "name": "Cold ferment",
+        "nameDa": "Dag 2-4 - Kold haevning",
+        "duration": 4320,
+        "temperature": 4,
+        "location": "fridge",
+        "canSetTimer": true,
+        "instructionsDa": "Lad haeve i koeleskab i 3-4 dage"
+      },
+      {
+        "id": "stage-3",
+        "name": "Temper",
+        "nameDa": "Temperering",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Tag ud af koeleskab 2 timer foer bagning"
+      }
+    ],
+    "totalTime": 4590
+  },
+  "tipsDa": [
+    "Anbefaling:  Hvedemel - 13-14,5% protein (Manitoba).",
+    "Frisk gær kan opløses i koldt eller lunkent vand.",
+    "Olie tilsættes dejen som det sidste for at bevare fugtigheden efter bagning og",
+    "Sukkeren bidrager til en gylden skorpe, giver næring til gæren",
+    "Forslag til afbagning:"
+  ],
+  "source": "NY_PizzaPal"
+}

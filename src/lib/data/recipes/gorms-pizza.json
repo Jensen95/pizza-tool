@@ -1,0 +1,81 @@
+{
+  "id": "gorms-pizza",
+  "name": "Gorms Pizzadej",
+  "nameDa": "Gorms Pizzadej",
+  "category": "direct",
+  "baseWeight": 270,
+  "hydration": 65,
+  "yieldPizzas": 270,
+  "ingredients": [
+    {
+      "id": "ing-1",
+      "name": "Flour",
+      "nameDa": "Mel tipo 00",
+      "percentage": 100,
+      "type": "flour"
+    },
+    {
+      "id": "ing-2",
+      "name": "Water",
+      "nameDa": "Vand",
+      "percentage": 65,
+      "type": "water"
+    },
+    {
+      "id": "ing-3",
+      "name": "Salt",
+      "nameDa": "Salt",
+      "percentage": 2.5,
+      "type": "salt"
+    },
+    {
+      "id": "ing-4",
+      "name": "Yeast",
+      "nameDa": "Gaer",
+      "percentage": 0.3,
+      "type": "yeast"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Mix",
+        "nameDa": "Bland dej",
+        "duration": 30,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": false,
+        "instructionsDa": "Bland alle ingredienser"
+      },
+      {
+        "id": "stage-2",
+        "name": "Bulk ferment",
+        "nameDa": "Stuehaevning",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Lad haeve ved stuetemperatur"
+      },
+      {
+        "id": "stage-3",
+        "name": "Ball rest",
+        "nameDa": "Kuglehvile",
+        "duration": 180,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Del i kugler og lad hvile"
+      }
+    ],
+    "totalTime": 330
+  },
+  "tipsDa": [
+    "Afbagning ved samme temperatur som du vil",
+    "En direkte dej, er en metode hvor alle ingredienserne blandes",
+    "Bland gerne al melet fra starten, og så blot cirka brug halv-delen",
+    "Med den høje hydrering, bør den bages Napoletansk."
+  ],
+  "source": "Gorms pizzadej"
+}

@@ -1,0 +1,97 @@
+{
+  "id": "vito-poolish",
+  "name": "Vito's Poolish Pizza",
+  "nameDa": "Vito's Poolish Pizza",
+  "category": "poolish",
+  "baseWeight": 270,
+  "hydration": 65,
+  "yieldPizzas": 6,
+  "ingredients": [
+    {
+      "id": "ing-1",
+      "name": "Salt",
+      "nameDa": "salt",
+      "percentage": 2.6,
+      "type": "salt"
+    },
+    {
+      "id": "ing-2",
+      "name": "Tørgær",
+      "nameDa": "tørgær",
+      "percentage": 0.32,
+      "type": "yeast"
+    },
+    {
+      "id": "ing-3",
+      "name": "Honning",
+      "nameDa": "honning",
+      "percentage": 0.32,
+      "type": "sugar"
+    },
+    {
+      "id": "ing-4",
+      "name": "(mel i) poolish",
+      "nameDa": "(mel i) poolish",
+      "percentage": 19.35,
+      "type": "flour"
+    },
+    {
+      "id": "ing-5",
+      "name": "",
+      "nameDa": "",
+      "percentage": 0.32,
+      "type": "other"
+    },
+    {
+      "id": "ing-6",
+      "name": "Rør gær og honning ud i vandet.",
+      "nameDa": "Rør gær og honning ud i vandet.",
+      "percentage": 100,
+      "type": "water"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Poolish",
+        "nameDa": "Dag 1 - Poolish",
+        "duration": 1440,
+        "temperature": 4,
+        "location": "fridge",
+        "canSetTimer": true,
+        "instructionsDa": "Bland poolish og lad hvile i koeleskab"
+      },
+      {
+        "id": "stage-2",
+        "name": "Main dough",
+        "nameDa": "Dag 2 - Hoveddej",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Bland hoveddej og lad haeve"
+      },
+      {
+        "id": "stage-3",
+        "name": "Ball rest",
+        "nameDa": "Kuglehvile",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Del i kugler og lad hvile"
+      }
+    ],
+    "totalTime": 1680
+  },
+  "tipsDa": [
+    "Vito bruger megen tørgær!  Du kan sagtens reducere til 0,2%",
+    "Honning og olie kan undværes.",
+    "Den færdige dej temperatur bør ikke overstige 27°.",
+    "Dejen er klar når den er blank, glat og kan strækkes langt.",
+    "Tilberedningstid  21-29 timer",
+    "Poolish er med til at udvikle smagen i brødet og giver en bedre skorpe."
+  ],
+  "source": "Vito poolish"
+}

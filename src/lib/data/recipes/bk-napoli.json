@@ -1,0 +1,82 @@
+{
+  "id": "bk-napoli",
+  "name": "BK Napoli",
+  "nameDa": "BK Napoli",
+  "category": "neapolitan",
+  "baseWeight": 270,
+  "hydration": 63,
+  "yieldPizzas": 4,
+  "ingredients": [
+    {
+      "id": "ing-1",
+      "name": "Mel tipo 00",
+      "nameDa": "mel tipo 00",
+      "percentage": 100,
+      "type": "flour"
+    },
+    {
+      "id": "ing-2",
+      "name": "Salt",
+      "nameDa": "salt",
+      "percentage": 2.5,
+      "type": "salt"
+    },
+    {
+      "id": "ing-3",
+      "name": "G frisk gær",
+      "nameDa": "g frisk gær",
+      "percentage": 48.93,
+      "type": "yeast"
+    },
+    {
+      "id": "ing-4",
+      "name": "Mel og vand røres let sammen til dejen samler sig.",
+      "nameDa": "Mel og vand røres let sammen til dejen samler sig.",
+      "percentage": 100,
+      "type": "flour"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Mix",
+        "nameDa": "Bland dej",
+        "duration": 30,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": false,
+        "instructionsDa": "Bland alle ingredienser"
+      },
+      {
+        "id": "stage-2",
+        "name": "Bulk ferment",
+        "nameDa": "Stuehaevning",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Lad haeve ved stuetemperatur"
+      },
+      {
+        "id": "stage-3",
+        "name": "Ball rest",
+        "nameDa": "Kuglehvile",
+        "duration": 180,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Del i kugler og lad hvile"
+      }
+    ],
+    "totalTime": 330
+  },
+  "tipsDa": [
+    "Frisk gær arbejder bedst når dejen er 25-27°.",
+    "Den færdige dej temperatur bør ikke overstige 27°.",
+    "Husk: æltetider er vejledende.",
+    "Dejen er klar når den er blank, glat og kan strækkes langt.",
+    "Tip til 24 timers dej: Lad dejen bulkhæve i 18 timer (pkt. 9)"
+  ],
+  "source": "BK_napoli"
+}
