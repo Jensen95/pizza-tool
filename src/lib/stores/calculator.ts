@@ -1,4 +1,4 @@
-import { writable, derived } from 'svelte/store';
+import { writable, derived, get } from 'svelte/store';
 import type { Recipe } from '$lib/types/recipe';
 import type { CalculatorState, ScaledIngredient } from '$lib/types/ingredient';
 import { scaleRecipe, getTotalPercentage } from '$lib/utils/baker-percentage';
@@ -15,6 +15,9 @@ const defaultState: CalculatorState = {
 	scaledIngredients: []
 };
 
+// Store for custom ingredient percentages per recipe
+const customIngredientsStore = writable<Record<string, Record<string, number>>>({});
+
 function loadState(): CalculatorState {
 	const stored = storage.get<Partial<CalculatorState>>(CALCULATOR_STORAGE_KEY, {});
 	return {
@@ -26,8 +29,19 @@ function loadState(): CalculatorState {
 	};
 }
 
+function loadCustomIngredients(): Record<string, Record<string, number>> {
+	return storage.get<Record<string, Record<string, number>>>('custom-ingredients', {});
+}
+
+function saveCustomIngredients(data: Record<string, Record<string, number>>) {
+	storage.set('custom-ingredients', data);
+}
+
 function createCalculatorStore() {
 	const { subscribe, set, update } = writable<CalculatorState>(loadState());
+
+	// Initialize custom ingredients from localStorage
+	customIngredientsStore.set(loadCustomIngredients());
 
 	let currentRecipe: Recipe | null = null;
 
@@ -41,7 +55,17 @@ function createCalculatorStore() {
 			};
 		}
 
-		const { scaledIngredients, totalFlourWeight, totalDoughWeight } = scaleRecipe(currentRecipe, {
+		// Apply custom ingredients if available
+		const customIngredients = get(customIngredientsStore)[currentRecipe.id] || {};
+		const recipeWithCustoms: Recipe = {
+			...currentRecipe,
+			ingredients: currentRecipe.ingredients.map((ing) => ({
+				...ing,
+				percentage: customIngredients[ing.id] ?? ing.percentage
+			}))
+		};
+
+		const { scaledIngredients, totalFlourWeight, totalDoughWeight } = scaleRecipe(recipeWithCustoms, {
 			numberOfPizzas: state.numberOfPizzas,
 			doughBallWeight: state.doughBallWeight
 		});
@@ -133,6 +157,93 @@ function createCalculatorStore() {
 		 */
 		getCurrentRecipe(): Recipe | null {
 			return currentRecipe;
+		},
+
+		/**
+		 * Update a custom ingredient percentage
+		 */
+		setIngredientPercentage(ingredientId: string, percentage: number) {
+			if (!currentRecipe) return;
+
+			customIngredientsStore.update((state) => {
+				const recipeId = currentRecipe!.id;
+				const recipeCustoms = state[recipeId] || {};
+				const newState = {
+					...state,
+					[recipeId]: {
+						...recipeCustoms,
+						[ingredientId]: percentage
+					}
+				};
+				saveCustomIngredients(newState);
+				return newState;
+			});
+
+			// Trigger recalculation
+			update((state) => recalculate(state));
+		},
+
+		/**
+		 * Reset ingredient to original percentage
+		 */
+		resetIngredient(ingredientId: string) {
+			if (!currentRecipe) return;
+
+			customIngredientsStore.update((state) => {
+				const recipeId = currentRecipe!.id;
+				const recipeCustoms = { ...state[recipeId] };
+				delete recipeCustoms[ingredientId];
+
+				// If no more customizations, remove the recipe entry
+				if (Object.keys(recipeCustoms).length === 0) {
+					const { [recipeId]: _, ...rest } = state;
+					saveCustomIngredients(rest);
+					return rest;
+				}
+
+				const newState = {
+					...state,
+					[recipeId]: recipeCustoms
+				};
+				saveCustomIngredients(newState);
+				return newState;
+			});
+
+			// Trigger recalculation
+			update((state) => recalculate(state));
+		},
+
+		/**
+		 * Reset all customizations for current recipe
+		 */
+		resetAllCustomizations() {
+			if (!currentRecipe) return;
+
+			customIngredientsStore.update((state) => {
+				const { [currentRecipe!.id]: _, ...rest } = state;
+				saveCustomIngredients(rest);
+				return rest;
+			});
+
+			// Trigger recalculation
+			update((state) => recalculate(state));
+		},
+
+		/**
+		 * Get custom ingredients for current recipe
+		 */
+		getCustomIngredients(): Record<string, number> {
+			if (!currentRecipe) return {};
+			return get(customIngredientsStore)[currentRecipe.id] || {};
+		},
+
+		/**
+		 * Check if recipe has customizations
+		 */
+		hasCustomizations(): boolean {
+			if (!currentRecipe) return false;
+			const customs = get(customIngredientsStore)[currentRecipe.id];
+			return customs !== undefined && Object.keys(customs).length > 0;
 		}
 	};
 }

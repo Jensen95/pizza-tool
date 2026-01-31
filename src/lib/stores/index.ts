@@ -14,3 +14,10 @@ export {
 	ingredientsByStage
 } from './calculator';
 export { preferences, type Preferences } from './preferences';
+export {
+	customizations,
+	recipeHistory,
+	hasAnyCustomizations,
+	type RecipeCustomization,
+	type RecipeHistoryEntry
+} from './customizations';

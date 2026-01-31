@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { get } from 'svelte/store';
 	import type { Recipe } from '$lib/types';
-	import { calculator, totalWeight, flourWeight } from '$lib/stores';
+	import { calculator, totalWeight, flourWeight, recipeHistory } from '$lib/stores';
 	import { formatWeight } from '$lib/utils/baker-percentage';
 
 	let { recipe }: { recipe: Recipe } = $props();
 
 	let numberOfPizzas = $state(recipe.yieldPizzas);
 	let doughBallWeight = $state(recipe.baseWeight);
+	let editingIngredient = $state<string | null>(null);
+	let editValue = $state('');
 
 	$effect(() => {
 		calculator.setRecipe(recipe);
@@ -35,6 +37,7 @@
 	}
 
 	let ingredientGroups = $derived(groupIngredientsByStage(get(calculator).scaledIngredients));
+	let hasCustomizations = $derived(calculator.hasCustomizations());
 
 	const stageLabels: Record<string, string> = {
 		poolish: 'Poolish',
@@ -66,6 +69,55 @@
 	function incrementWeight() {
 		doughBallWeight = Math.min(500, doughBallWeight + 10);
 		handleWeightChange();
+	}
+
+	function startEditing(ingredientId: string, currentPercentage: number) {
+		editingIngredient = ingredientId;
+		editValue = currentPercentage.toFixed(1);
+	}
+
+	function cancelEditing() {
+		editingIngredient = null;
+		editValue = '';
+	}
+
+	function savePercentage(ingredientId: string) {
+		const value = parseFloat(editValue);
+		if (!isNaN(value) && value >= 0 && value <= 200) {
+			calculator.setIngredientPercentage(ingredientId, value);
+		}
+		cancelEditing();
+	}
+
+	function handleKeydown(event: KeyboardEvent, ingredientId: string) {
+		if (event.key === 'Enter') {
+			savePercentage(ingredientId);
+		} else if (event.key === 'Escape') {
+			cancelEditing();
+		}
+	}
+
+	function resetIngredient(ingredientId: string) {
+		calculator.resetIngredient(ingredientId);
+	}
+
+	function resetAllCustomizations() {
+		calculator.resetAllCustomizations();
+	}
+
+	function saveToHistory() {
+		const customIngredients = calculator.getCustomIngredients();
+		recipeHistory.saveToHistory(recipe, customIngredients, numberOfPizzas, doughBallWeight);
+	}
+
+	function isCustomized(ingredientId: string): boolean {
+		const customs = calculator.getCustomIngredients();
+		return ingredientId in customs;
+	}
+
+	function getOriginalPercentage(ingredientId: string): number | undefined {
+		const original = recipe.ingredients.find((i) => i.id === ingredientId);
+		return original?.percentage;
 	}
 </script>
 
@@ -134,6 +186,17 @@
 		</div>
 	</div>
 
+	{#if hasCustomizations}
+		<div class="customization-actions">
+			<button class="btn btn-secondary" onclick={resetAllCustomizations}>
+				Nulstil alle
+			</button>
+			<button class="btn btn-primary" onclick={saveToHistory}>
+				Gem til historik
+			</button>
+		</div>
+	{/if}
+
 	<div class="ingredients">
 		{#each ingredientGroups as [stage, ingredients]}
 			<div class="ingredient-group">
@@ -148,9 +211,59 @@
 					</thead>
 					<tbody>
 						{#each ingredients as ingredient}
-							<tr>
+							<tr class:customized={isCustomized(ingredient.id)}>
 								<td>{ingredient.nameDa}</td>
-								<td class="right">{ingredient.percentage.toFixed(1)}%</td>
+								<td class="right percentage-cell">
+									{#if editingIngredient === ingredient.id}
+										<div class="edit-percentage">
+											<input
+												type="number"
+												class="input percentage-input"
+												bind:value={editValue}
+												onkeydown={(e) => handleKeydown(e, ingredient.id)}
+												step="0.1"
+												min="0"
+												max="200"
+											/>
+											<button
+												class="btn-icon"
+												onclick={() => savePercentage(ingredient.id)}
+												title="Gem"
+											>
+												&#10003;
+											</button>
+											<button
+												class="btn-icon"
+												onclick={cancelEditing}
+												title="Annuller"
+											>
+												&#10005;
+											</button>
+										</div>
+									{:else}
+										<button
+											class="percentage-button"
+											onclick={() => startEditing(ingredient.id, ingredient.percentage)}
+											title="Klik for at redigere"
+										>
+											{ingredient.percentage.toFixed(1)}%
+											{#if isCustomized(ingredient.id)}
+												<span class="original-percentage">
+													(orig: {getOriginalPercentage(ingredient.id)?.toFixed(1)}%)
+												</span>
+											{/if}
+										</button>
+										{#if isCustomized(ingredient.id)}
+											<button
+												class="btn-icon reset-btn"
+												onclick={() => resetIngredient(ingredient.id)}
+												title="Nulstil"
+											>
+												&#8634;
+											</button>
+										{/if}
+									{/if}
+								</td>
 								<td class="right weight">{formatWeight(ingredient.weight)}</td>
 							</tr>
 						{/each}
@@ -159,6 +272,8 @@
 			</div>
 		{/each}
 	</div>
+
+	<p class="hint">Klik pa en procent for at tilpasse ingrediensen.</p>
 </div>
 
 <style>
@@ -278,5 +393,84 @@
 	.weight {
 		font-weight: 600;
 		color: var(--color-primary);
+	}
+
+	.customization-actions {
+		display: flex;
+		gap: var(--spacing-sm);
+		justify-content: flex-end;
+	}
+
+	.percentage-cell {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 4px;
+	}
+
+	.percentage-button {
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 2px 6px;
+		border-radius: var(--radius-sm);
+		color: inherit;
+		font-size: inherit;
+		transition: background-color 0.2s;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+	}
+
+	.percentage-button:hover {
+		background: var(--color-surface);
+	}
+
+	.original-percentage {
+		font-size: var(--font-size-xs);
+		color: var(--color-text-secondary);
+	}
+
+	.edit-percentage {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	.percentage-input {
+		width: 60px;
+		text-align: right;
+		padding: 2px 4px;
+		font-size: var(--font-size-sm);
+	}
+
+	.btn-icon {
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 4px;
+		font-size: var(--font-size-md);
+		color: var(--color-text-secondary);
+		line-height: 1;
+	}
+
+	.btn-icon:hover {
+		color: var(--color-primary);
+	}
+
+	.reset-btn {
+		font-size: var(--font-size-lg);
+	}
+
+	tr.customized td {
+		background: rgba(var(--color-primary-rgb), 0.1);
+	}
+
+	.hint {
+		margin: 0;
+		font-size: var(--font-size-sm);
+		color: var(--color-text-secondary);
+		text-align: center;
+		font-style: italic;
 	}
 </style>

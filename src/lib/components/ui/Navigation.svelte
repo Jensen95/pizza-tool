@@ -10,6 +10,7 @@
 
 	const navItems: NavItem[] = [
 		{ href: '/', label: 'Opskrifter', icon: '📖' },
+		{ href: '/history', label: 'Historik', icon: '📋' },
 		{ href: '/timers', label: 'Timere', icon: '⏱️' },
 		{ href: '/reference', label: 'Reference', icon: '📚' }
 	];
