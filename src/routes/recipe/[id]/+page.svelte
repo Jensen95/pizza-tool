@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { getRecipeById, recipeHistory } from '$lib/stores';
+	import { getRecipeById, recipeHistory, calculator } from '$lib/stores';
 	import RecipeDetail from '$lib/components/recipe/RecipeDetail.svelte';
 	import IngredientCalculator from '$lib/components/recipe/IngredientCalculator.svelte';
 	import FermentationSchedule from '$lib/components/recipe/FermentationSchedule.svelte';
@@ -48,6 +48,16 @@
 	function deleteHistoryEntry(entryId: string) {
 		recipeHistory.deleteEntry(entryId);
 	}
+
+	function applyHistoryEntry(entry: RecipeHistoryEntry) {
+		// Apply the custom ingredient percentages
+		calculator.applyCustomIngredients(entry.ingredients);
+		// Apply pizza count and weight
+		calculator.setNumberOfPizzas(entry.numberOfPizzas);
+		calculator.setDoughBallWeight(entry.doughBallWeight);
+		// Close history panel
+		showHistory = false;
+	}
 </script>
 
 <svelte:head>
@@ -80,17 +90,20 @@
 					<h3 class="history-title">Tidligere tilpasninger</h3>
 					<div class="history-list">
 						{#each recipeHistoryEntries as entry (entry.id)}
-							<div class="history-entry">
+							<button class="history-entry" onclick={() => applyHistoryEntry(entry)}>
 								<div class="entry-header">
 									<span class="entry-date">{formatDate(entry.createdAt)}</span>
 									<span class="entry-info">{entry.numberOfPizzas} pizzaer, {entry.doughBallWeight}g</span>
-									<button
-										class="btn-icon"
-										onclick={() => deleteHistoryEntry(entry.id)}
+									<span
+										class="btn-icon delete-btn"
+										role="button"
+										tabindex="0"
+										onclick={(e) => { e.stopPropagation(); deleteHistoryEntry(entry.id); }}
+										onkeydown={(e) => { if (e.key === 'Enter') { e.stopPropagation(); deleteHistoryEntry(entry.id); } }}
 										title="Slet"
 									>
 										&times;
-									</button>
+									</span>
 								</div>
 								{#if Object.keys(entry.ingredients).length > 0}
 									<ul class="entry-changes">
@@ -99,7 +112,8 @@
 										{/each}
 									</ul>
 								{/if}
-							</div>
+								<span class="apply-hint">Klik for at anvende</span>
+							</button>
 						{/each}
 					</div>
 				</div>
@@ -165,9 +179,20 @@
 	}
 
 	.history-entry {
+		display: block;
+		width: 100%;
+		text-align: left;
 		background: var(--color-background);
+		border: 1px solid transparent;
 		border-radius: var(--radius-sm);
 		padding: var(--spacing-sm);
+		cursor: pointer;
+		transition: border-color 0.2s, background-color 0.2s;
+	}
+
+	.history-entry:hover {
+		border-color: var(--color-primary);
+		background: var(--color-surface);
 	}
 
 	.entry-header {
@@ -207,6 +232,23 @@
 		padding-left: var(--spacing-md);
 		font-size: var(--font-size-sm);
 		color: var(--color-text-secondary);
+	}
+
+	.apply-hint {
+		display: block;
+		margin-top: var(--spacing-xs);
+		font-size: var(--font-size-xs);
+		color: var(--color-primary);
+		opacity: 0;
+		transition: opacity 0.2s;
+	}
+
+	.history-entry:hover .apply-hint {
+		opacity: 1;
+	}
+
+	.delete-btn:hover {
+		color: var(--color-error);
 	}
 
 	.not-found {

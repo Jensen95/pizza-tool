@@ -5,31 +5,31 @@
   "category": "direct",
   "baseWeight": 270,
   "hydration": 70,
-  "yieldPizzas": 270,
+  "yieldPizzas": 4,
   "ingredients": [
     {
-      "id": "ing-1",
-      "name": "Flour",
+      "id": "flour",
+      "name": "Flour tipo 00",
       "nameDa": "Mel tipo 00",
       "percentage": 100,
       "type": "flour"
     },
     {
-      "id": "ing-2",
+      "id": "water",
       "name": "Water",
       "nameDa": "Vand",
       "percentage": 70,
       "type": "water"
     },
     {
-      "id": "ing-3",
+      "id": "salt",
       "name": "Salt",
       "nameDa": "Salt",
       "percentage": 2.5,
       "type": "salt"
     },
     {
-      "id": "ing-4",
+      "id": "yeast",
       "name": "Yeast",
       "nameDa": "Gaer",
       "percentage": 0.3,
@@ -46,7 +46,7 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": false,
-        "instructionsDa": "Bland alle ingredienser"
+        "instructionsDa": "Bland alle ingredienser og ael godt."
       },
       {
         "id": "stage-2",
@@ -56,7 +56,7 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Lad haeve ved stuetemperatur"
+        "instructionsDa": "Lad haeve ved stuetemperatur."
       },
       {
         "id": "stage-3",
@@ -66,14 +66,14 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Del i kugler og lad hvile"
+        "instructionsDa": "Del i kugler og lad hvile."
       }
     ],
     "totalTime": 330
   },
   "tipsDa": [
-    "En direkte dej, er en metode hvor alle ingredienserne blandes",
-    "Med den høje hydrering, bør den bages Napoletansk."
+    "En direkte dej er en metode hvor alle ingredienserne blandes sammen paa een gang.",
+    "Med den hoeje hydrering boer den bages Napoletansk."
   ],
   "source": "Umuts pizzadej"
 }

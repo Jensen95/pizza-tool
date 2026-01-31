@@ -8,32 +8,32 @@
   "yieldPizzas": 4,
   "ingredients": [
     {
-      "id": "ing-1",
-      "name": "Mel tipo 00",
-      "nameDa": "mel tipo 00",
+      "id": "flour",
+      "name": "Flour tipo 00",
+      "nameDa": "Mel tipo 00",
       "percentage": 100,
       "type": "flour"
     },
     {
-      "id": "ing-2",
+      "id": "water",
+      "name": "Water",
+      "nameDa": "Vand",
+      "percentage": 60,
+      "type": "water"
+    },
+    {
+      "id": "salt",
       "name": "Salt",
-      "nameDa": "salt",
-      "percentage": 2.96,
+      "nameDa": "Salt",
+      "percentage": 3,
       "type": "salt"
     },
     {
-      "id": "ing-3",
-      "name": "G frisk gær",
-      "nameDa": "g frisk gær",
-      "percentage": 44.17,
+      "id": "yeast",
+      "name": "Fresh yeast",
+      "nameDa": "Frisk gaer",
+      "percentage": 0.5,
       "type": "yeast"
-    },
-    {
-      "id": "ing-4",
-      "name": "Kom vand (ca 15°c) i en skål, og opløs herefter gæren.",
-      "nameDa": "Kom vand (ca 15°C) i en skål, og opløs herefter gæren.",
-      "percentage": 100,
-      "type": "water"
     }
   ],
   "schedule": {
@@ -46,7 +46,7 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": false,
-        "instructionsDa": "Bland alle ingredienser"
+        "instructionsDa": "Kom vand (ca 15 grader) i en skaal og oploes gaeren. Tilsaet melet og ael dejen i haanden."
       },
       {
         "id": "stage-2",
@@ -56,7 +56,7 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Lad haeve ved stuetemperatur"
+        "instructionsDa": "Lad haeve ved stuetemperatur."
       },
       {
         "id": "stage-3",
@@ -66,14 +66,14 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Del i kugler og lad hvile"
+        "instructionsDa": "Del i kugler og lad hvile."
       }
     ],
     "totalTime": 330
   },
   "tipsDa": [
-    "Vil du bruge dejen på dag 2, så se * pkt. 8",
-    "Dejen er færdigæltet, når du kan trykke på den og den"
+    "Vil du bruge dejen paa dag 2, saa se tip under kold haevning.",
+    "Dejen er faerdigaeltet naar du kan trykke paa den og den springer tilbage."
   ],
   "source": "BK_Handaelt"
 }

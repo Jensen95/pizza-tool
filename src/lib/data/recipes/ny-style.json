@@ -8,53 +8,53 @@
   "yieldPizzas": 4,
   "ingredients": [
     {
-      "id": "ing-1",
-      "name": "Hvedemel tipo 00",
-      "nameDa": "hvedemel tipo 00",
+      "id": "flour-00",
+      "name": "Wheat flour tipo 00",
+      "nameDa": "Hvedemel tipo 00",
       "percentage": 90.77,
       "type": "flour"
     },
     {
-      "id": "ing-2",
-      "name": "Fintmalet fuldkornsmel",
-      "nameDa": "fintmalet fuldkornsmel",
+      "id": "flour-wholegrain",
+      "name": "Fine wholegrain flour",
+      "nameDa": "Fintmalet fuldkornsmel",
       "percentage": 9.23,
       "type": "flour"
     },
     {
-      "id": "ing-3",
-      "name": "Olivenolie",
-      "nameDa": "olivenolie",
-      "percentage": 3.08,
+      "id": "water",
+      "name": "Water",
+      "nameDa": "Vand",
+      "percentage": 66,
+      "type": "water"
+    },
+    {
+      "id": "oil",
+      "name": "Olive oil",
+      "nameDa": "Olivenolie",
+      "percentage": 3,
       "type": "oil"
     },
     {
-      "id": "ing-4",
+      "id": "salt",
       "name": "Salt",
-      "nameDa": "salt",
-      "percentage": 2.62,
+      "nameDa": "Salt",
+      "percentage": 2.6,
       "type": "salt"
     },
     {
-      "id": "ing-5",
-      "name": "Frisk gær",
-      "nameDa": "frisk gær",
-      "percentage": 0.46,
-      "type": "yeast"
-    },
-    {
-      "id": "ing-6",
-      "name": "Rørsukker",
-      "nameDa": "rørsukker",
-      "percentage": 2.92,
+      "id": "sugar",
+      "name": "Cane sugar",
+      "nameDa": "Roersukker",
+      "percentage": 3,
       "type": "sugar"
     },
     {
-      "id": "ing-7",
-      "name": "Bland mel, vand, olie og sukker.",
-      "nameDa": "Bland mel, vand, olie og sukker.",
-      "percentage": 100,
-      "type": "flour"
+      "id": "yeast",
+      "name": "Fresh yeast",
+      "nameDa": "Frisk gaer",
+      "percentage": 0.5,
+      "type": "yeast"
     }
   ],
   "schedule": {
@@ -67,7 +67,7 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Bland dej og ael godt"
+        "instructionsDa": "Bland mel, vand, olie og sukker. Tilsaet salt og gaer og ael godt."
       },
       {
         "id": "stage-2",
@@ -77,7 +77,7 @@
         "temperature": 4,
         "location": "fridge",
         "canSetTimer": true,
-        "instructionsDa": "Lad haeve i koeleskab i 3-4 dage"
+        "instructionsDa": "Lad haeve i koeleskab i 3-4 dage."
       },
       {
         "id": "stage-3",
@@ -87,15 +87,15 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Tag ud af koeleskab 2 timer foer bagning"
+        "instructionsDa": "Tag ud af koeleskab 2 timer foer bagning."
       }
     ],
     "totalTime": 4590
   },
   "tipsDa": [
-    "Anbefaling:  Hvedemel - 13-14,5% protein.",
-    "Fintmalet fuldkornsmel (f.eks. Emmermel) tilfører mere smag.",
-    "Bages ved 315-370°C."
+    "Anbefaling: Hvedemel med 13-14,5% protein.",
+    "Fintmalet fuldkornsmel (f.eks. Emmermel) tilfoejer mere smag.",
+    "Bages ved 315-370 grader."
   ],
   "source": "NY style"
 }

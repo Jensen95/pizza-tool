@@ -8,33 +8,32 @@
   "yieldPizzas": 4,
   "ingredients": [
     {
-      "id": "ing-1",
-      "name": "Mel tipo 00",
-      "nameDa": "mel tipo 00",
+      "id": "flour",
+      "name": "Flour tipo 00",
+      "nameDa": "Mel tipo 00",
       "percentage": 100,
       "type": "flour"
     },
     {
-      "id": "ing-2",
-      "name": "Aktiv surdej",
-      "nameDa": "aktiv surdej",
-      "percentage": 15.0,
-      "type": "flour",
-      "stage": "preferment"
+      "id": "water",
+      "name": "Water",
+      "nameDa": "Vand",
+      "percentage": 60,
+      "type": "water"
     },
     {
-      "id": "ing-3",
+      "id": "sourdough",
+      "name": "Active sourdough",
+      "nameDa": "Aktiv surdej",
+      "percentage": 15,
+      "type": "other"
+    },
+    {
+      "id": "salt",
       "name": "Salt",
-      "nameDa": "salt",
+      "nameDa": "Salt",
       "percentage": 2.5,
       "type": "salt"
-    },
-    {
-      "id": "ing-4",
-      "name": "Mel, vand og surdej kommes i røremaskinen.",
-      "nameDa": "Mel, vand og surdej kommes i røremaskinen.",
-      "percentage": 100,
-      "type": "flour"
     }
   ],
   "schedule": {
@@ -42,12 +41,12 @@
       {
         "id": "stage-1",
         "name": "Levain",
-        "nameDa": "Surdej",
+        "nameDa": "Opfrisk surdej",
         "duration": 720,
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Opfrisk surdej"
+        "instructionsDa": "Opfrisk surdejen 8-12 timer foer brug."
       },
       {
         "id": "stage-2",
@@ -57,7 +56,7 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": false,
-        "instructionsDa": "Bland alle ingredienser"
+        "instructionsDa": "Bland mel, vand og surdej i roeremaskinen. Tilsaet salt og ael godt."
       },
       {
         "id": "stage-3",
@@ -67,7 +66,7 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Lad haeve ved stuetemperatur"
+        "instructionsDa": "Lad haeve ved stuetemperatur med strae og fold hver time."
       },
       {
         "id": "stage-4",
@@ -77,15 +76,15 @@
         "temperature": 4,
         "location": "fridge",
         "canSetTimer": true,
-        "instructionsDa": "Lad haeve i koeleskab"
+        "instructionsDa": "Del i kugler og lad haeve i koeleskab natten over."
       }
     ],
     "totalTime": 2430
   },
   "tipsDa": [
-    "Den færdige dej temperatur skal ikke overstige 27°.",
-    "Husk: æltetider er vejledende.",
-    "Dejen er klar når den er blank, glat og kan strækkes langt."
+    "Den faerdige dej temperatur skal ikke overstige 27 grader.",
+    "Husk: aeltetider er vejledende.",
+    "Dejen er klar naar den er blank, glat og kan straekkes langt."
   ],
   "source": "BK_surdej"
 }

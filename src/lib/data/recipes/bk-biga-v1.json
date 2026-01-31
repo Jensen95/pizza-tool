@@ -8,40 +8,60 @@
   "yieldPizzas": 4,
   "ingredients": [
     {
-      "id": "ing-1",
-      "name": "Mel tipo 00",
-      "nameDa": "mel tipo 00",
-      "percentage": 100,
-      "type": "flour"
-    },
-    {
-      "id": "ing-2",
-      "name": "Salt",
-      "nameDa": "salt",
-      "percentage": 2.68,
-      "type": "salt"
-    },
-    {
-      "id": "ing-3",
-      "name": "Tørgær",
-      "nameDa": "tørgær",
-      "percentage": 0.22,
-      "type": "yeast"
-    },
-    {
-      "id": "ing-4",
-      "name": "Biga",
-      "nameDa": "biga",
-      "percentage": 100,
+      "id": "biga-flour",
+      "name": "Biga flour",
+      "nameDa": "Mel (biga)",
+      "percentage": 50,
       "type": "flour",
       "stage": "biga"
     },
     {
-      "id": "ing-5",
-      "name": "Gæren vendes i melet og vandet tilsættes. spred dine fingre og kør dem igennem",
-      "nameDa": "Gæren vendes i melet og vandet tilsættes. Spred dine fingre og kør dem igennem",
-      "percentage": 100,
-      "type": "flour"
+      "id": "biga-water",
+      "name": "Biga water",
+      "nameDa": "Vand (biga)",
+      "percentage": 22,
+      "type": "water",
+      "stage": "biga"
+    },
+    {
+      "id": "biga-yeast",
+      "name": "Biga yeast",
+      "nameDa": "Toergaer (biga)",
+      "percentage": 0.1,
+      "type": "yeast",
+      "stage": "biga"
+    },
+    {
+      "id": "main-flour",
+      "name": "Main dough flour",
+      "nameDa": "Mel (hoveddej)",
+      "percentage": 50,
+      "type": "flour",
+      "stage": "main"
+    },
+    {
+      "id": "main-water",
+      "name": "Main dough water",
+      "nameDa": "Vand (hoveddej)",
+      "percentage": 43,
+      "type": "water",
+      "stage": "main"
+    },
+    {
+      "id": "main-salt",
+      "name": "Salt",
+      "nameDa": "Salt",
+      "percentage": 2.7,
+      "type": "salt",
+      "stage": "main"
+    },
+    {
+      "id": "main-yeast",
+      "name": "Main yeast",
+      "nameDa": "Toergaer (hoveddej)",
+      "percentage": 0.1,
+      "type": "yeast",
+      "stage": "main"
     }
   ],
   "schedule": {
@@ -54,7 +74,7 @@
         "temperature": 4,
         "location": "fridge",
         "canSetTimer": true,
-        "instructionsDa": "Bland biga og lad hvile i koeleskab"
+        "instructionsDa": "Gaeren vendes i melet og vandet tilsaettes. Spred fingrene og bland til krummet konsistens. Lad hvile i koeleskab i 24 timer."
       },
       {
         "id": "stage-2",
@@ -64,22 +84,17 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Bland hoveddej og lad haeve",
-        "ingredientsDa": [
-          "145 g vand (fra køl 5-7°)",
-          "26 g. salt"
-        ]
+        "instructionsDa": "Bland biga med koldt vand, mel, salt og gaer. Ael godt og lad haeve."
       }
     ],
     "totalTime": 1620
   },
   "tipsDa": [
-    "Tørgæren arbejder bedst i bigaen når vandet er 25-27°.",
-    "Vand i hoveddejen skal være det koldeste fra hanen.",
-    "Hoveddejen må helst ikke overstige 20°.",
-    "Røremaskinen skaber friktion og tilfører varme.",
-    "Dejen er klar når den er blank, glat og kan strækkes langt.",
-    "V1 er god om sommeren, da den koldhæver."
+    "Toergaeren arbejder bedst i bigaen naar vandet er 25-27 grader.",
+    "Vand i hoveddejen skal vaere det koldeste fra hanen.",
+    "Hoveddejen maa helst ikke overstige 20 grader.",
+    "Dejen er klar naar den er blank, glat og kan straekkes langt.",
+    "V1 er god om sommeren, da den koldhaever."
   ],
   "source": "BK_biga_v1"
 }

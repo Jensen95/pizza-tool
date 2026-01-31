@@ -8,88 +8,46 @@
   "yieldPizzas": 4,
   "ingredients": [
     {
-      "id": "ing-1",
-      "name": "Mel",
-      "nameDa": "mel",
+      "id": "flour",
+      "name": "Flour",
+      "nameDa": "Mel",
       "percentage": 100,
       "type": "flour"
     },
     {
-      "id": "ing-2",
+      "id": "water",
+      "name": "Water",
+      "nameDa": "Vand",
+      "percentage": 57,
+      "type": "water"
+    },
+    {
+      "id": "salt",
       "name": "Salt",
-      "nameDa": "salt",
+      "nameDa": "Salt",
       "percentage": 2.5,
       "type": "salt"
     },
     {
-      "id": "ing-3",
-      "name": "Tørgær",
-      "nameDa": "tørgær",
-      "percentage": 0.38,
+      "id": "yeast",
+      "name": "Dry yeast",
+      "nameDa": "Toergaer",
+      "percentage": 0.4,
       "type": "yeast"
     },
     {
-      "id": "ing-4",
-      "name": "Sukker",
-      "nameDa": "sukker",
+      "id": "sugar",
+      "name": "Sugar",
+      "nameDa": "Sukker",
       "percentage": 2.5,
       "type": "sugar"
     },
     {
-      "id": "ing-5",
-      "name": "Olivenolie",
-      "nameDa": "olivenolie",
-      "percentage": 2.0,
+      "id": "oil",
+      "name": "Olive oil",
+      "nameDa": "Olivenolie",
+      "percentage": 2,
       "type": "oil"
-    },
-    {
-      "id": "ing-6",
-      "name": "Hæld vandet i en skål.",
-      "nameDa": "Hæld vandet i en skål.",
-      "percentage": 100,
-      "type": "water"
-    },
-    {
-      "id": "ing-7",
-      "name": "Portion  (ca. 400 ml.)",
-      "nameDa": "portion  (ca. 400 ml.)",
-      "percentage": 100,
-      "type": "other"
-    },
-    {
-      "id": "ing-8",
-      "name": "Dåse hakkede tomater (f.eks. san marzano d.o.p.).",
-      "nameDa": "dåse hakkede tomater (f.eks. San Marzano D.O.P.).",
-      "percentage": 100,
-      "type": "other"
-    },
-    {
-      "id": "ing-9",
-      "name": "Fed hvidløg, hakkede",
-      "nameDa": "fed hvidløg, hakkede",
-      "percentage": 30.0,
-      "type": "other"
-    },
-    {
-      "id": "ing-10",
-      "name": "Løgpulver",
-      "nameDa": "løgpulver",
-      "percentage": 150.0,
-      "type": "other"
-    },
-    {
-      "id": "ing-11",
-      "name": "Tørret oregano",
-      "nameDa": "tørret oregano",
-      "percentage": 50.0,
-      "type": "other"
-    },
-    {
-      "id": "ing-12",
-      "name": "Tørret basilkum",
-      "nameDa": "tørret basilkum",
-      "percentage": 50.0,
-      "type": "other"
     }
   ],
   "schedule": {
@@ -102,7 +60,7 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Bland dej og ael godt"
+        "instructionsDa": "Haeld vandet i en skaal. Tilsaet mel, salt, gaer og sukker. Ael godt og tilsaet olie til sidst."
       },
       {
         "id": "stage-2",
@@ -112,7 +70,7 @@
         "temperature": 4,
         "location": "fridge",
         "canSetTimer": true,
-        "instructionsDa": "Lad haeve i koeleskab i 3-4 dage"
+        "instructionsDa": "Lad haeve i koeleskab i 3-4 dage."
       },
       {
         "id": "stage-3",
@@ -122,17 +80,16 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Tag ud af koeleskab 2 timer foer bagning"
+        "instructionsDa": "Tag ud af koeleskab 2 timer foer bagning."
       }
     ],
     "totalTime": 4590
   },
   "tipsDa": [
-    "Anbefaling:  Hvedemel - 13-14,5% protein (Manitoba).",
-    "Frisk gær kan opløses i koldt eller lunkent vand.",
-    "Olie tilsættes dejen som det sidste for at bevare fugtigheden efter bagning og",
-    "Sukkeren bidrager til en gylden skorpe, giver næring til gæren",
-    "Forslag til afbagning:"
+    "Anbefaling: Hvedemel med 13-14,5% protein (Manitoba).",
+    "Frisk gaer kan oploeses i koldt eller lunkent vand.",
+    "Olie tilsaettes dejen som det sidste for at bevare fugtigheden efter bagning.",
+    "Sukkeren bidrager til en gylden skorpe og giver naering til gaeren."
   ],
   "source": "NY_PizzaPal"
 }

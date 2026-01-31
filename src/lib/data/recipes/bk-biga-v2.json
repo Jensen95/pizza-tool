@@ -8,40 +8,52 @@
   "yieldPizzas": 4,
   "ingredients": [
     {
-      "id": "ing-1",
-      "name": "Mel tipo 00",
-      "nameDa": "mel tipo 00",
-      "percentage": 100,
-      "type": "flour"
-    },
-    {
-      "id": "ing-2",
-      "name": "Salt",
-      "nameDa": "salt",
-      "percentage": 2.68,
-      "type": "salt"
-    },
-    {
-      "id": "ing-3",
-      "name": "Biga",
-      "nameDa": "biga",
-      "percentage": 100,
+      "id": "biga-flour",
+      "name": "Biga flour",
+      "nameDa": "Mel (biga)",
+      "percentage": 50,
       "type": "flour",
       "stage": "biga"
     },
     {
-      "id": "ing-4",
-      "name": "G frisk gær",
-      "nameDa": "g frisk gær",
-      "percentage": 76.59,
-      "type": "yeast"
+      "id": "biga-water",
+      "name": "Biga water",
+      "nameDa": "Vand (biga)",
+      "percentage": 22,
+      "type": "water",
+      "stage": "biga"
     },
     {
-      "id": "ing-5",
-      "name": "Opløs gæren i vandet og tilsæt melet. spred alle dine finger og kør dem igennem",
-      "nameDa": "Opløs gæren i vandet og tilsæt melet. Spred alle dine finger og kør dem igennem",
-      "percentage": 100,
-      "type": "flour"
+      "id": "biga-yeast",
+      "name": "Biga yeast",
+      "nameDa": "Frisk gaer (biga)",
+      "percentage": 0.3,
+      "type": "yeast",
+      "stage": "biga"
+    },
+    {
+      "id": "main-flour",
+      "name": "Main dough flour",
+      "nameDa": "Mel (hoveddej)",
+      "percentage": 50,
+      "type": "flour",
+      "stage": "main"
+    },
+    {
+      "id": "main-water",
+      "name": "Main dough water",
+      "nameDa": "Vand (hoveddej)",
+      "percentage": 41,
+      "type": "water",
+      "stage": "main"
+    },
+    {
+      "id": "main-salt",
+      "name": "Salt",
+      "nameDa": "Salt",
+      "percentage": 2.7,
+      "type": "salt",
+      "stage": "main"
     }
   ],
   "schedule": {
@@ -54,7 +66,7 @@
         "temperature": 4,
         "location": "fridge",
         "canSetTimer": true,
-        "instructionsDa": "Bland biga og lad hvile i koeleskab"
+        "instructionsDa": "Oploes gaeren i vandet og tilsaet melet. Spred fingrene og bland til krummet konsistens. Lad hvile i koeleskab i 24 timer."
       },
       {
         "id": "stage-2",
@@ -64,22 +76,17 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Bland hoveddej og lad haeve",
-        "ingredientsDa": [
-          "126 g vand (fra køl 5-7°)",
-          "26 g. salt"
-        ]
+        "instructionsDa": "Bland biga med koldt vand, mel og salt. Ael godt og lad haeve."
       }
     ],
     "totalTime": 1620
   },
   "tipsDa": [
-    "Frisk gær kan opløses i koldt eller lunkent vand.",
-    "Vand i hoveddejen skal være det koldeste fra vandhanen/køl.",
-    "Hoveddejen må helst ikke overstige 20°.",
-    "Husk: æltetider er vejledende.",
-    "Dejen er klar når den er blank, glat og kan strækkes langt.",
-    "V2 er god når der ikke er alt for varmt i lokalet."
+    "Frisk gaer kan oploeses i koldt eller lunkent vand.",
+    "Vand i hoveddejen skal vaere det koldeste fra vandhanen/koel.",
+    "Hoveddejen maa helst ikke overstige 20 grader.",
+    "Dejen er klar naar den er blank, glat og kan straekkes langt.",
+    "V2 er god naar der ikke er alt for varmt i lokalet."
   ],
   "source": "BK_biga_v2"
 }

@@ -8,39 +8,39 @@
   "yieldPizzas": 4,
   "ingredients": [
     {
-      "id": "ing-1",
-      "name": "Rød finax",
-      "nameDa": "Rød Finax",
+      "id": "flour",
+      "name": "Gluten-free flour mix",
+      "nameDa": "Roed Finax melblanding",
       "percentage": 100,
-      "type": "other"
+      "type": "flour"
     },
     {
-      "id": "ing-2",
-      "name": "Olie",
-      "nameDa": "olie",
-      "percentage": 4.17,
+      "id": "water",
+      "name": "Water",
+      "nameDa": "Vand",
+      "percentage": 74,
+      "type": "water"
+    },
+    {
+      "id": "oil",
+      "name": "Oil",
+      "nameDa": "Olie",
+      "percentage": 4,
       "type": "oil"
     },
     {
-      "id": "ing-3",
+      "id": "salt",
       "name": "Salt",
-      "nameDa": "salt",
-      "percentage": 3.0,
+      "nameDa": "Salt",
+      "percentage": 3,
       "type": "salt"
     },
     {
-      "id": "ing-4",
-      "name": "Tørgær",
-      "nameDa": "tørgær",
-      "percentage": 0.42,
+      "id": "yeast",
+      "name": "Dry yeast",
+      "nameDa": "Toergaer",
+      "percentage": 0.4,
       "type": "yeast"
-    },
-    {
-      "id": "ing-5",
-      "name": "Tørgæren vendes i den glutenfrie mel (stuetempereret mel).",
-      "nameDa": "Tørgæren vendes i den glutenfrie mel (stuetempereret mel).",
-      "percentage": 100,
-      "type": "flour"
     }
   ],
   "schedule": {
@@ -53,7 +53,7 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": false,
-        "instructionsDa": "Bland alle ingredienser"
+        "instructionsDa": "Toergaeren vendes i den glutenfrie mel. Tilsaet vand og olie og bland godt."
       },
       {
         "id": "stage-2",
@@ -63,7 +63,7 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Lad haeve ved stuetemperatur"
+        "instructionsDa": "Lad haeve ved stuetemperatur."
       },
       {
         "id": "stage-3",
@@ -73,17 +73,17 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Del i kugler og lad hvile"
+        "instructionsDa": "Del i kugler og lad hvile."
       }
     ],
     "totalTime": 330
   },
   "tipsDa": [
-    "Den færdige dej-temperatur må ikke overstige 27°.",
-    "Tørgæren arbejder bedst når dejen bliver 25-27°.",
-    "Rød Finax melblanding er en glutenfri melblandinger af dem der",
-    "Grundet det lave protein-indhold i en glutenfri mel (blanding), skal du",
-    "Der kan naturligvis også bruges en anden glutenfri melblanding."
+    "Den faerdige dej-temperatur maa ikke overstige 27 grader.",
+    "Toergaeren arbejder bedst naar dejen bliver 25-27 grader.",
+    "Roed Finax melblanding er en af de bedre glutenfrie melblandinger.",
+    "Grundet det lave protein-indhold skal du vaere forsigtig med aeltning.",
+    "Der kan ogsaa bruges en anden glutenfri melblanding."
   ],
   "source": "BK_glut_h"
 }

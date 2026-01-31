@@ -8,47 +8,46 @@
   "yieldPizzas": 4,
   "ingredients": [
     {
-      "id": "ing-1",
-      "name": "Mel tipo 00",
-      "nameDa": "mel tipo 00",
+      "id": "flour",
+      "name": "Flour tipo 00",
+      "nameDa": "Mel tipo 00",
       "percentage": 100,
       "type": "flour"
     },
     {
-      "id": "ing-2",
-      "name": "Speltsur el. hvedesur",
-      "nameDa": "speltsur el. hvedesur",
-      "percentage": 4.71,
-      "type": "flour",
-      "stage": "preferment"
+      "id": "water",
+      "name": "Water",
+      "nameDa": "Vand",
+      "percentage": 64,
+      "type": "water"
     },
     {
-      "id": "ing-3",
-      "name": "Bageenzym",
-      "nameDa": "bageenzym",
-      "percentage": 0.91,
+      "id": "sourdough",
+      "name": "Sourdough starter",
+      "nameDa": "Speltsur el. hvedesur",
+      "percentage": 5,
       "type": "other"
     },
     {
-      "id": "ing-4",
+      "id": "enzyme",
+      "name": "Baking enzyme",
+      "nameDa": "Bageenzym",
+      "percentage": 1,
+      "type": "other"
+    },
+    {
+      "id": "salt",
       "name": "Salt",
-      "nameDa": "salt",
-      "percentage": 2.43,
+      "nameDa": "Salt",
+      "percentage": 2.5,
       "type": "salt"
     },
     {
-      "id": "ing-5",
-      "name": "G tørgær",
-      "nameDa": "g tørgær",
-      "percentage": 29.59,
+      "id": "yeast",
+      "name": "Dry yeast",
+      "nameDa": "Toergaer",
+      "percentage": 0.3,
       "type": "yeast"
-    },
-    {
-      "id": "ing-6",
-      "name": "Mel, speltsurdej/hvedesur, bageenzym og vand røres let sammen.",
-      "nameDa": "Mel, speltsurdej/hvedesur, bageenzym og vand røres let sammen.",
-      "percentage": 100,
-      "type": "flour"
     }
   ],
   "schedule": {
@@ -61,7 +60,7 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": false,
-        "instructionsDa": "Bland alle ingredienser"
+        "instructionsDa": "Mel, surdej, bageenzym og vand roeres let sammen. Tilsaet salt og gaer."
       },
       {
         "id": "stage-2",
@@ -71,7 +70,7 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Lad haeve ved stuetemperatur"
+        "instructionsDa": "Lad haeve ved stuetemperatur."
       },
       {
         "id": "stage-3",
@@ -81,16 +80,16 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Del i kugler og lad hvile"
+        "instructionsDa": "Del i kugler og lad hvile."
       }
     ],
     "totalTime": 330
   },
   "tipsDa": [
-    "Tørgæren arbejder bedst når vandet er 25-27°.",
-    "Den færdige dej temperatur må ikke overstige 27°.",
-    "Dejen er klar når den er blank, glat og kan strækkes langt.",
-    "Husk: æltetider er vejlendende, da der er forskel på maskiner."
+    "Toergaeren arbejder bedst naar vandet er 25-27 grader.",
+    "Den faerdige dej temperatur maa ikke overstige 27 grader.",
+    "Dejen er klar naar den er blank, glat og kan straekkes langt.",
+    "Husk: aeltetider er vejlendende, da der er forskel paa maskiner."
   ],
   "source": "BK_bageenzym"
 }

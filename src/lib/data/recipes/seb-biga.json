@@ -8,47 +8,68 @@
   "yieldPizzas": 4,
   "ingredients": [
     {
-      "id": "ing-1",
-      "name": "Caputo nuvola super",
-      "nameDa": "Caputo Nuvola Super",
-      "percentage": 70.0,
-      "type": "other"
-    },
-    {
-      "id": "ing-2",
-      "name": "Caputo pizzaria",
-      "nameDa": "Caputo Pizzaria",
-      "percentage": 30.0,
-      "type": "other"
-    },
-    {
-      "id": "ing-3",
-      "name": "Salt",
-      "nameDa": "salt",
-      "percentage": 2.54,
-      "type": "salt"
-    },
-    {
-      "id": "ing-4",
-      "name": "Frisk gær",
-      "nameDa": "frisk gær",
-      "percentage": 1.0,
-      "type": "yeast"
-    },
-    {
-      "id": "ing-5",
-      "name": "Biga",
-      "nameDa": "biga",
-      "percentage": 100,
+      "id": "biga-flour",
+      "name": "Biga flour (Caputo Nuvola Super)",
+      "nameDa": "Mel (biga) - Caputo Nuvola Super",
+      "percentage": 50,
       "type": "flour",
       "stage": "biga"
     },
     {
-      "id": "ing-6",
-      "name": "Opløs gøren i vandet",
-      "nameDa": "Opløs gøren i vandet",
-      "percentage": 100,
-      "type": "water"
+      "id": "biga-water",
+      "name": "Biga water",
+      "nameDa": "Vand (biga)",
+      "percentage": 22,
+      "type": "water",
+      "stage": "biga"
+    },
+    {
+      "id": "biga-yeast",
+      "name": "Biga yeast",
+      "nameDa": "Frisk gaer (biga)",
+      "percentage": 0.3,
+      "type": "yeast",
+      "stage": "biga"
+    },
+    {
+      "id": "main-flour-nuvola",
+      "name": "Main flour (Caputo Nuvola Super)",
+      "nameDa": "Mel (hoveddej) - Caputo Nuvola Super",
+      "percentage": 20,
+      "type": "flour",
+      "stage": "main"
+    },
+    {
+      "id": "main-flour-pizzeria",
+      "name": "Main flour (Caputo Pizzeria)",
+      "nameDa": "Mel (hoveddej) - Caputo Pizzeria",
+      "percentage": 30,
+      "type": "flour",
+      "stage": "main"
+    },
+    {
+      "id": "main-water",
+      "name": "Main dough water",
+      "nameDa": "Vand (hoveddej)",
+      "percentage": 50,
+      "type": "water",
+      "stage": "main"
+    },
+    {
+      "id": "main-salt",
+      "name": "Salt",
+      "nameDa": "Salt",
+      "percentage": 2.5,
+      "type": "salt",
+      "stage": "main"
+    },
+    {
+      "id": "main-yeast",
+      "name": "Main yeast",
+      "nameDa": "Frisk gaer (hoveddej)",
+      "percentage": 0.7,
+      "type": "yeast",
+      "stage": "main"
     }
   ],
   "schedule": {
@@ -61,7 +82,7 @@
         "temperature": 4,
         "location": "fridge",
         "canSetTimer": true,
-        "instructionsDa": "Bland biga og lad hvile i koeleskab"
+        "instructionsDa": "Oploes gaeren i vandet og bland med melet. Lad hvile i koeleskab i 24 timer."
       },
       {
         "id": "stage-2",
@@ -71,19 +92,15 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Bland hoveddej og lad haeve",
-        "ingredientsDa": [
-          "166 g vand (kold)",
-          "16 g. salt"
-        ]
+        "instructionsDa": "Bland biga med koldt vand, mel, salt og gaer. Ael godt og lad haeve."
       }
     ],
     "totalTime": 1620
   },
   "tipsDa": [
     "Bruges anden mel, anbefales styrke W300/310.",
-    "Vand i hoveddej skal være det koldeste fra hanen/køl.",
-    "Den perfekte \"stuetemperatur\" for en biga er 18°."
+    "Vand i hoveddej skal vaere det koldeste fra hanen/koel.",
+    "Den perfekte stuetemperatur for en biga er 18 grader."
   ],
   "source": "Seb_biga"
 }

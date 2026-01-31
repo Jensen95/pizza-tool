@@ -244,6 +244,26 @@ function createCalculatorStore() {
 			if (!currentRecipe) return false;
 			const customs = get(customIngredientsStore)[currentRecipe.id];
 			return customs !== undefined && Object.keys(customs).length > 0;
+		},
+
+		/**
+		 * Apply a set of custom ingredient percentages (from history)
+		 */
+		applyCustomIngredients(ingredients: Record<string, number>) {
+			if (!currentRecipe) return;
+
+			customIngredientsStore.update((state) => {
+				const recipeId = currentRecipe!.id;
+				const newState = {
+					...state,
+					[recipeId]: { ...ingredients }
+				};
+				saveCustomIngredients(newState);
+				return newState;
+			});
+
+			// Trigger recalculation
+			update((state) => recalculate(state));
 		}
 	};
 }

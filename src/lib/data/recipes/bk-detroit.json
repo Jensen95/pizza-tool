@@ -3,52 +3,44 @@
   "name": "BK Detroit",
   "nameDa": "BK Detroit",
   "category": "detroit",
-  "baseWeight": 270,
+  "baseWeight": 290,
   "hydration": 72,
   "yieldPizzas": 4,
   "ingredients": [
     {
-      "id": "ing-1",
-      "name": "Mel tipo 00",
-      "nameDa": "mel tipo 00",
+      "id": "flour",
+      "name": "Flour tipo 00",
+      "nameDa": "Mel tipo 00",
       "percentage": 100,
       "type": "flour"
     },
     {
-      "id": "ing-2",
-      "name": "Hvedesur",
-      "nameDa": "hvedesur",
-      "percentage": 5.0,
-      "type": "flour",
-      "stage": "preferment"
+      "id": "water",
+      "name": "Water",
+      "nameDa": "Vand",
+      "percentage": 72,
+      "type": "water"
     },
     {
-      "id": "ing-3",
+      "id": "sourdough",
+      "name": "Wheat sourdough",
+      "nameDa": "Hvedesur",
+      "percentage": 5,
+      "type": "other"
+    },
+    {
+      "id": "salt",
       "name": "Salt",
-      "nameDa": "salt",
-      "percentage": 2.0,
+      "nameDa": "Salt",
+      "percentage": 2,
       "type": "salt"
     },
     {
-      "id": "ing-4",
-      "name": "Tørgær",
-      "nameDa": "tørgær",
+      "id": "yeast",
+      "name": "Dry yeast",
+      "nameDa": "Toergaer",
       "percentage": 0.6,
       "type": "yeast"
-    },
-    {
-      "id": "ing-5",
-      "name": "G tørgær",
-      "nameDa": "g tørgær",
-      "percentage": 193.76,
-      "type": "yeast"
-    },
-    {
-      "id": "ing-6",
-      "name": "Vand, mel og hvedesur røres let sammen.",
-      "nameDa": "Vand, mel og hvedesur røres let sammen.",
-      "percentage": 100,
-      "type": "flour"
     }
   ],
   "schedule": {
@@ -61,7 +53,7 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Bland mel og vand, lad hvile"
+        "instructionsDa": "Vand, mel og hvedesur roeres let sammen og hviler."
       },
       {
         "id": "stage-2",
@@ -71,7 +63,7 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Tilsaet salt og gaer, lad haeve"
+        "instructionsDa": "Tilsaet salt og gaer og ael godt. Lad haeve."
       },
       {
         "id": "stage-3",
@@ -81,15 +73,15 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Tryk ud i pande og lad hvile"
+        "instructionsDa": "Tryk ud i smoert pande og lad hvile."
       }
     ],
     "totalTime": 225
   },
   "tipsDa": [
-    "Der anbefales en mel med protein-indhold 12,5-14,5%",
-    "Pizzaen er færdig, når osten ved kanterne er sydende og mørk",
-    "De 290 g dej passer til en bradepande på 20x25 cm."
+    "Der anbefales en mel med protein-indhold 12,5-14,5%.",
+    "Pizzaen er faerdig naar osten ved kanterne er sydende og moerk.",
+    "De 290 g dej passer til en bradepande paa 20x25 cm."
   ],
   "source": "BK_detroit"
 }
