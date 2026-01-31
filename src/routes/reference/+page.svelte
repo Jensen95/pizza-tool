@@ -1,16 +1,14 @@
 <script lang="ts">
 	import FlourReference from '$lib/components/reference/FlourReference.svelte';
 	import SauceRecipes from '$lib/components/reference/SauceRecipes.svelte';
-	import ToppingsLibrary from '$lib/components/reference/ToppingsLibrary.svelte';
 	import TipsSection from '$lib/components/reference/TipsSection.svelte';
 
-	type Tab = 'flour' | 'sauce' | 'toppings' | 'tips';
+	type Tab = 'flour' | 'sauce' | 'tips';
 	let activeTab = $state<Tab>('flour');
 
 	const tabs: { id: Tab; label: string }[] = [
 		{ id: 'flour', label: 'Mel' },
 		{ id: 'sauce', label: 'Sauce' },
-		{ id: 'toppings', label: 'Toppings' },
 		{ id: 'tips', label: 'Tips' }
 	];
 </script>
@@ -39,8 +37,6 @@
 			<FlourReference />
 		{:else if activeTab === 'sauce'}
 			<SauceRecipes />
-		{:else if activeTab === 'toppings'}
-			<ToppingsLibrary />
 		{:else if activeTab === 'tips'}
 			<TipsSection />
 		{/if}

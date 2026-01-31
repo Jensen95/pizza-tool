@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { get } from 'svelte/store';
 	import { page } from '$app/stores';
 	import { activeTimerCount } from '$lib/stores';
 
@@ -11,16 +10,12 @@
 
 	const navItems: NavItem[] = [
 		{ href: '/', label: 'Opskrifter', icon: '📖' },
-		{ href: '/calculator', label: 'Beregner', icon: '🧮' },
 		{ href: '/timers', label: 'Timere', icon: '⏱️' },
 		{ href: '/reference', label: 'Reference', icon: '📚' }
 	];
 
-	let currentPath = $derived(get(page).url.pathname);
-	let timerCount = $derived(get(activeTimerCount));
-
 	function isActive(href: string, pathname: string): boolean {
-		if (href === '/') return pathname === '/';
+		if (href === '/') return pathname === '/' || pathname.startsWith('/recipe');
 		return pathname.startsWith(href);
 	}
 </script>
@@ -30,12 +25,12 @@
 		<a
 			href={item.href}
 			class="nav-item"
-			class:active={isActive(item.href, currentPath)}
+			class:active={isActive(item.href, $page.url.pathname)}
 		>
 			<span class="nav-icon">
 				{item.icon}
-				{#if item.href === '/timers' && timerCount > 0}
-					<span class="badge">{timerCount}</span>
+				{#if item.href === '/timers' && $activeTimerCount > 0}
+					<span class="badge">{$activeTimerCount}</span>
 				{/if}
 			</span>
 			<span class="nav-label">{item.label}</span>

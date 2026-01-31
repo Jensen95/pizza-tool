@@ -3,17 +3,16 @@
 	import Header from '$lib/components/ui/Header.svelte';
 	import Navigation from '$lib/components/ui/Navigation.svelte';
 	import { onMount } from 'svelte';
-	import { TimerManager } from '$lib/utils/timer-manager';
+	import { timers } from '$lib/stores';
 
 	let { children } = $props();
 
 	onMount(() => {
-		// Initialize timer manager
-		const timerManager = new TimerManager();
-		timerManager.start();
+		// Initialize timers store (loads from localStorage and starts checking)
+		timers.init();
 
 		return () => {
-			timerManager.stop();
+			timers.destroy();
 		};
 	});
 </script>

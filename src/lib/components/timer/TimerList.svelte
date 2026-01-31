@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { get } from 'svelte/store';
 	import { activeTimers, completedTimers, timers } from '$lib/stores';
 	import TimerCard from './TimerCard.svelte';
 
-	let activeList = $derived(get(activeTimers));
-	let completedList = $derived(get(completedTimers));
-	let hasActiveTimers = $derived(activeList.length > 0);
-	let hasCompletedTimers = $derived(completedList.length > 0);
+	// Use store subscriptions directly in template with $
+	// For derived values, compute from store values
+	let hasActiveTimers = $derived($activeTimers.length > 0);
+	let hasCompletedTimers = $derived($completedTimers.length > 0);
 	let hasAnyTimers = $derived(hasActiveTimers || hasCompletedTimers);
 
 	function clearCompleted() {
@@ -26,7 +25,7 @@
 			<section class="timer-section">
 				<h3 class="section-title">Aktive timere</h3>
 				<div class="timer-grid">
-					{#each activeList as timer (timer.id)}
+					{#each $activeTimers as timer (timer.id)}
 						<TimerCard {timer} />
 					{/each}
 				</div>
@@ -42,7 +41,7 @@
 					</button>
 				</div>
 				<div class="timer-grid">
-					{#each completedList as timer (timer.id)}
+					{#each $completedTimers as timer (timer.id)}
 						<TimerCard {timer} />
 					{/each}
 				</div>

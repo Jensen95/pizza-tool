@@ -2,8 +2,6 @@
 	import type { Recipe } from '$lib/types';
 	import { categoryLabels } from '$lib/types';
 	import { formatDuration } from '$lib/types/timer';
-	import IngredientCalculator from './IngredientCalculator.svelte';
-	import FermentationSchedule from './FermentationSchedule.svelte';
 
 	let { recipe }: { recipe: Recipe } = $props();
 
@@ -31,16 +29,6 @@
 				<span class="stat-label">Pizzaer</span>
 			</div>
 		</div>
-	</section>
-
-	<section class="recipe-section">
-		<h2 class="section-title">Beregner</h2>
-		<IngredientCalculator {recipe} />
-	</section>
-
-	<section class="recipe-section">
-		<h2 class="section-title">Tidsplan</h2>
-		<FermentationSchedule {recipe} />
 	</section>
 
 	{#if recipe.tipsDa && recipe.tipsDa.length > 0}

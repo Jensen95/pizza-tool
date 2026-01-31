@@ -87,6 +87,12 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--spacing-sm);
+		position: sticky;
+		top: var(--header-height);
+		background: var(--color-background);
+		padding: var(--spacing-sm) 0;
+		margin: calc(-1 * var(--spacing-sm)) 0 0 0;
+		z-index: 50;
 	}
 
 	@media (min-width: 480px) {
