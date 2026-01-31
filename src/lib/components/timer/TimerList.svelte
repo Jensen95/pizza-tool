@@ -1,10 +1,13 @@
 <script lang="ts">
+	import { get } from 'svelte/store';
 	import { activeTimers, completedTimers, timers } from '$lib/stores';
 	import TimerCard from './TimerCard.svelte';
 
-	$: hasActiveTimers = $activeTimers.length > 0;
-	$: hasCompletedTimers = $completedTimers.length > 0;
-	$: hasAnyTimers = hasActiveTimers || hasCompletedTimers;
+	let activeList = $derived(get(activeTimers));
+	let completedList = $derived(get(completedTimers));
+	let hasActiveTimers = $derived(activeList.length > 0);
+	let hasCompletedTimers = $derived(completedList.length > 0);
+	let hasAnyTimers = $derived(hasActiveTimers || hasCompletedTimers);
 
 	function clearCompleted() {
 		timers.clearCompleted();
@@ -23,7 +26,7 @@
 			<section class="timer-section">
 				<h3 class="section-title">Aktive timere</h3>
 				<div class="timer-grid">
-					{#each $activeTimers as timer (timer.id)}
+					{#each activeList as timer (timer.id)}
 						<TimerCard {timer} />
 					{/each}
 				</div>
@@ -34,12 +37,12 @@
 			<section class="timer-section">
 				<div class="section-header">
 					<h3 class="section-title">Faerdige timere</h3>
-					<button class="btn btn-secondary clear-btn" on:click={clearCompleted}>
+					<button class="btn btn-secondary clear-btn" onclick={clearCompleted}>
 						Ryd alle
 					</button>
 				</div>
 				<div class="timer-grid">
-					{#each $completedTimers as timer (timer.id)}
+					{#each completedList as timer (timer.id)}
 						<TimerCard {timer} />
 					{/each}
 				</div>

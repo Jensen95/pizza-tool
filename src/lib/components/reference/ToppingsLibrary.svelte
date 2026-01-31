@@ -1,17 +1,19 @@
 <script lang="ts">
-	import { toppings, getToppingsByCategory } from '$lib/data/reference';
+	import { getToppingsByCategory } from '$lib/data/reference';
 	import { toppingCategoryLabels } from '$lib/types';
 	import type { Topping } from '$lib/types';
 
 	const categories: Topping['category'][] = ['cheese', 'meat', 'vegetable', 'herb', 'sauce', 'other'];
 
-	$: groupedToppings = categories
-		.map((cat) => ({
-			category: cat,
-			label: toppingCategoryLabels[cat],
-			items: getToppingsByCategory(cat)
-		}))
-		.filter((g) => g.items.length > 0);
+	let groupedToppings = $derived(
+		categories
+			.map((cat) => ({
+				category: cat,
+				label: toppingCategoryLabels[cat],
+				items: getToppingsByCategory(cat)
+			}))
+			.filter((g) => g.items.length > 0)
+	);
 </script>
 
 <div class="toppings-library">

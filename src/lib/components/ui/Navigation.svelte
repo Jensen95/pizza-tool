@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { get } from 'svelte/store';
 	import { page } from '$app/stores';
 	import { activeTimerCount } from '$lib/stores';
 
@@ -15,6 +16,9 @@
 		{ href: '/reference', label: 'Reference', icon: '📚' }
 	];
 
+	let currentPath = $derived(get(page).url.pathname);
+	let timerCount = $derived(get(activeTimerCount));
+
 	function isActive(href: string, pathname: string): boolean {
 		if (href === '/') return pathname === '/';
 		return pathname.startsWith(href);
@@ -26,12 +30,12 @@
 		<a
 			href={item.href}
 			class="nav-item"
-			class:active={isActive(item.href, $page.url.pathname)}
+			class:active={isActive(item.href, currentPath)}
 		>
 			<span class="nav-icon">
 				{item.icon}
-				{#if item.href === '/timers' && $activeTimerCount > 0}
-					<span class="badge">{$activeTimerCount}</span>
+				{#if item.href === '/timers' && timerCount > 0}
+					<span class="badge">{timerCount}</span>
 				{/if}
 			</span>
 			<span class="nav-label">{item.label}</span>

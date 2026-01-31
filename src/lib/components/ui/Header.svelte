@@ -1,9 +1,14 @@
 <script lang="ts">
+	import { get } from 'svelte/store';
 	import { activeTimerCount } from '$lib/stores';
 
-	export let title: string = 'Pizza Tool';
-	export let showBack: boolean = false;
-	export let backHref: string = '/';
+	let { title = 'Pizza Tool', showBack = false, backHref = '/' }: {
+		title?: string;
+		showBack?: boolean;
+		backHref?: string;
+	} = $props();
+
+	let timerCount = $derived(get(activeTimerCount));
 </script>
 
 <header class="header">
@@ -18,10 +23,10 @@
 
 		<h1 class="header-title">{title}</h1>
 
-		{#if $activeTimerCount > 0}
-			<a href="/timers" class="timer-indicator" aria-label="{$activeTimerCount} aktive timere">
+		{#if timerCount > 0}
+			<a href="/timers" class="timer-indicator" aria-label="{timerCount} aktive timere">
 				<span class="timer-icon">⏱️</span>
-				<span class="timer-count">{$activeTimerCount}</span>
+				<span class="timer-count">{timerCount}</span>
 			</a>
 		{/if}
 	</div>

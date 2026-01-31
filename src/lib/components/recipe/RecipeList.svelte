@@ -1,13 +1,12 @@
 <script lang="ts">
+	import { get } from 'svelte/store';
 	import type { Recipe, RecipeCategory } from '$lib/types';
-	import { recipes, recipeGroups, searchRecipes } from '$lib/stores';
+	import { recipes } from '$lib/stores';
 	import RecipeCard from './RecipeCard.svelte';
 	import { categoryLabels } from '$lib/types';
 
-	let searchQuery = '';
-	let selectedCategory: RecipeCategory | 'all' = 'all';
-
-	$: filteredRecipes = getFilteredRecipes(searchQuery, selectedCategory, $recipes);
+	let searchQuery = $state('');
+	let selectedCategory = $state<RecipeCategory | 'all'>('all');
 
 	function getFilteredRecipes(query: string, category: RecipeCategory | 'all', allRecipes: Recipe[]): Recipe[] {
 		let result = allRecipes;
@@ -28,7 +27,14 @@
 		return result;
 	}
 
-	$: categories = Array.from(new Set($recipes.map((r) => r.category)));
+	let allRecipes = $derived(get(recipes));
+	let filteredRecipes = $derived(getFilteredRecipes(searchQuery, selectedCategory, allRecipes));
+	let categories = $derived(Array.from(new Set(allRecipes.map((r) => r.category))));
+
+	function resetFilters() {
+		searchQuery = '';
+		selectedCategory = 'all';
+	}
 </script>
 
 <div class="recipe-list">
@@ -56,7 +62,7 @@
 		<div class="empty-state">
 			<p class="text-secondary">Ingen opskrifter fundet</p>
 			{#if searchQuery || selectedCategory !== 'all'}
-				<button class="btn btn-secondary" on:click={() => { searchQuery = ''; selectedCategory = 'all'; }}>
+				<button class="btn btn-secondary" onclick={resetFilters}>
 					Nulstil filtre
 				</button>
 			{/if}

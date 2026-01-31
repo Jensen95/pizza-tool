@@ -4,10 +4,10 @@
 	import { formatTimeRemaining } from '$lib/types/timer';
 	import { timers, getTimeRemaining } from '$lib/stores';
 
-	export let timer: Timer;
+	let { timer }: { timer: Timer } = $props();
 
-	let timeRemaining = 0;
-	let progress = 0;
+	let timeRemaining = $state(0);
+	let progress = $state(0);
 	let intervalId: ReturnType<typeof setInterval>;
 
 	function updateTimer() {
@@ -36,9 +36,9 @@
 		timers.remove(timer.id);
 	}
 
-	$: isCompleted = timer.status === 'completed';
-	$: isPaused = timer.status === 'paused';
-	$: isActive = timer.status === 'active';
+	let isCompleted = $derived(timer.status === 'completed');
+	let isPaused = $derived(timer.status === 'paused');
+	let isActive = $derived(timer.status === 'active');
 </script>
 
 <div class="timer-card" class:completed={isCompleted} class:paused={isPaused}>
@@ -64,16 +64,16 @@
 
 		<div class="timer-actions">
 			{#if isActive}
-				<button class="btn btn-secondary" on:click={handlePause}>
+				<button class="btn btn-secondary" onclick={handlePause}>
 					Pause
 				</button>
 			{:else if isPaused}
-				<button class="btn btn-primary" on:click={handleResume}>
+				<button class="btn btn-primary" onclick={handleResume}>
 					Fortsaet
 				</button>
 			{/if}
 
-			<button class="btn btn-secondary delete-btn" on:click={handleCancel}>
+			<button class="btn btn-secondary delete-btn" onclick={handleCancel}>
 				{isCompleted ? 'Fjern' : 'Annuller'}
 			</button>
 		</div>

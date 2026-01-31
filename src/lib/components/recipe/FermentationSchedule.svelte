@@ -3,7 +3,7 @@
 	import { formatDuration } from '$lib/types/timer';
 	import { timers } from '$lib/stores';
 
-	export let recipe: Recipe;
+	let { recipe }: { recipe: Recipe } = $props();
 
 	const locationLabels: Record<string, string> = {
 		room: 'Stuetemperatur',
@@ -49,7 +49,7 @@
 					{#if stage.canSetTimer}
 						<button
 							class="btn btn-outline timer-btn"
-							on:click={() => startTimer(stage.nameDa, stage.duration)}
+							onclick={() => startTimer(stage.nameDa, stage.duration)}
 						>
 							Start timer
 						</button>

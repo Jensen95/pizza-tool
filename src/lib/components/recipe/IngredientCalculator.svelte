@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 	import type { Recipe } from '$lib/types';
 	import { calculator, totalWeight, flourWeight } from '$lib/stores';
 	import { formatWeight } from '$lib/utils/baker-percentage';
 
-	export let recipe: Recipe;
+	let { recipe }: { recipe: Recipe } = $props();
 
-	let numberOfPizzas = recipe.yieldPizzas;
-	let doughBallWeight = recipe.baseWeight;
+	let numberOfPizzas = $state(recipe.yieldPizzas);
+	let doughBallWeight = $state(recipe.baseWeight);
 
-	onMount(() => {
+	$effect(() => {
 		calculator.setRecipe(recipe);
 	});
 
@@ -21,9 +21,7 @@
 		calculator.setDoughBallWeight(doughBallWeight);
 	}
 
-	$: ingredientGroups = groupIngredientsByStage($calculator.scaledIngredients);
-
-	function groupIngredientsByStage(ingredients: typeof $calculator.scaledIngredients) {
+	function groupIngredientsByStage(ingredients: ReturnType<typeof get<typeof calculator>>['scaledIngredients']) {
 		const groups = new Map<string, typeof ingredients>();
 
 		for (const ing of ingredients) {
@@ -36,6 +34,8 @@
 		return groups;
 	}
 
+	let ingredientGroups = $derived(groupIngredientsByStage(get(calculator).scaledIngredients));
+
 	const stageLabels: Record<string, string> = {
 		poolish: 'Poolish',
 		biga: 'Biga',
@@ -47,6 +47,26 @@
 		hoveddej: 'Hoveddej',
 		main: 'Hoveddej'
 	};
+
+	function decrementPizzas() {
+		numberOfPizzas = Math.max(1, numberOfPizzas - 1);
+		handlePizzaCountChange();
+	}
+
+	function incrementPizzas() {
+		numberOfPizzas = Math.min(100, numberOfPizzas + 1);
+		handlePizzaCountChange();
+	}
+
+	function decrementWeight() {
+		doughBallWeight = Math.max(100, doughBallWeight - 10);
+		handleWeightChange();
+	}
+
+	function incrementWeight() {
+		doughBallWeight = Math.min(500, doughBallWeight + 10);
+		handleWeightChange();
+	}
 </script>
 
 <div class="calculator">
@@ -56,7 +76,7 @@
 			<div class="input-with-buttons">
 				<button
 					class="btn btn-secondary"
-					on:click={() => { numberOfPizzas = Math.max(1, numberOfPizzas - 1); handlePizzaCountChange(); }}
+					onclick={decrementPizzas}
 					disabled={numberOfPizzas <= 1}
 				>-</button>
 				<input
@@ -64,13 +84,13 @@
 					type="number"
 					class="input number-input"
 					bind:value={numberOfPizzas}
-					on:change={handlePizzaCountChange}
+					onchange={handlePizzaCountChange}
 					min="1"
 					max="100"
 				/>
 				<button
 					class="btn btn-secondary"
-					on:click={() => { numberOfPizzas = Math.min(100, numberOfPizzas + 1); handlePizzaCountChange(); }}
+					onclick={incrementPizzas}
 					disabled={numberOfPizzas >= 100}
 				>+</button>
 			</div>
@@ -81,7 +101,7 @@
 			<div class="input-with-buttons">
 				<button
 					class="btn btn-secondary"
-					on:click={() => { doughBallWeight = Math.max(100, doughBallWeight - 10); handleWeightChange(); }}
+					onclick={decrementWeight}
 					disabled={doughBallWeight <= 100}
 				>-10</button>
 				<input
@@ -89,14 +109,14 @@
 					type="number"
 					class="input number-input"
 					bind:value={doughBallWeight}
-					on:change={handleWeightChange}
+					onchange={handleWeightChange}
 					min="100"
 					max="500"
 					step="10"
 				/>
 				<button
 					class="btn btn-secondary"
-					on:click={() => { doughBallWeight = Math.min(500, doughBallWeight + 10); handleWeightChange(); }}
+					onclick={incrementWeight}
 					disabled={doughBallWeight >= 500}
 				>+10</button>
 			</div>

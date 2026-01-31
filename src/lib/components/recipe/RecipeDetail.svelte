@@ -5,9 +5,9 @@
 	import IngredientCalculator from './IngredientCalculator.svelte';
 	import FermentationSchedule from './FermentationSchedule.svelte';
 
-	export let recipe: Recipe;
+	let { recipe }: { recipe: Recipe } = $props();
 
-	$: categoryLabel = categoryLabels[recipe.category];
+	let categoryLabel = $derived(categoryLabels[recipe.category]);
 </script>
 
 <div class="recipe-detail">

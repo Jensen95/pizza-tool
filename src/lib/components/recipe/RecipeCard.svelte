@@ -3,10 +3,10 @@
 	import { categoryLabels } from '$lib/types';
 	import { formatDuration } from '$lib/types/timer';
 
-	export let recipe: Recipe;
+	let { recipe }: { recipe: Recipe } = $props();
 
-	$: categoryLabel = categoryLabels[recipe.category];
-	$: totalTimeFormatted = formatDuration(recipe.schedule.totalTime);
+	let categoryLabel = $derived(categoryLabels[recipe.category]);
+	let totalTimeFormatted = $derived(formatDuration(recipe.schedule.totalTime));
 </script>
 
 <a href="/recipe/{recipe.id}" class="recipe-card">

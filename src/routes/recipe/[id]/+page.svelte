@@ -1,14 +1,23 @@
 <script lang="ts">
+	import { get } from 'svelte/store';
 	import { page } from '$app/stores';
 	import { getRecipeById } from '$lib/stores/recipes';
 	import RecipeDetail from '$lib/components/recipe/RecipeDetail.svelte';
 	import IngredientCalculator from '$lib/components/recipe/IngredientCalculator.svelte';
 	import FermentationSchedule from '$lib/components/recipe/FermentationSchedule.svelte';
 
-	$: recipeId = $page.params.id;
-	$: recipe = getRecipeById(recipeId);
+	let recipeId = $derived(get(page).params.id);
+	let recipe = $derived(getRecipeById(recipeId));
 
-	let activeTab: 'ingredients' | 'schedule' = 'ingredients';
+	let activeTab = $state<'ingredients' | 'schedule'>('ingredients');
+
+	function setIngredientsTab() {
+		activeTab = 'ingredients';
+	}
+
+	function setScheduleTab() {
+		activeTab = 'schedule';
+	}
 </script>
 
 <svelte:head>
@@ -23,14 +32,14 @@
 			<button
 				class="tab"
 				class:active={activeTab === 'ingredients'}
-				on:click={() => (activeTab = 'ingredients')}
+				onclick={setIngredientsTab}
 			>
 				Ingredienser
 			</button>
 			<button
 				class="tab"
 				class:active={activeTab === 'schedule'}
-				on:click={() => (activeTab = 'schedule')}
+				onclick={setScheduleTab}
 			>
 				Tidsplan
 			</button>

@@ -1,18 +1,17 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import { timers } from '$lib/stores';
 	import { defaultPresets } from '$lib/types/timer';
 
-	const dispatch = createEventDispatcher<{ created: void }>();
+	let { oncreated }: { oncreated?: () => void } = $props();
 
-	let timerName = '';
-	let hours = 0;
-	let minutes = 30;
-	let showCustom = false;
+	let timerName = $state('');
+	let hours = $state(0);
+	let minutes = $state(30);
+	let showCustom = $state(false);
 
 	function createFromPreset(preset: typeof defaultPresets[0]) {
 		timers.create(preset.nameDa, preset.duration);
-		dispatch('created');
+		oncreated?.();
 	}
 
 	function createCustomTimer() {
@@ -31,7 +30,7 @@
 		minutes = 30;
 		showCustom = false;
 
-		dispatch('created');
+		oncreated?.();
 	}
 
 	function toggleCustom() {
@@ -82,12 +81,12 @@
 			</div>
 
 			<div class="form-actions">
-				<button class="btn btn-secondary" on:click={toggleCustom}>
+				<button class="btn btn-secondary" onclick={toggleCustom}>
 					Annuller
 				</button>
 				<button
 					class="btn btn-primary"
-					on:click={createCustomTimer}
+					onclick={createCustomTimer}
 					disabled={hours === 0 && minutes === 0}
 				>
 					Start timer
@@ -102,7 +101,7 @@
 				{#each defaultPresets as preset}
 					<button
 						class="preset-btn"
-						on:click={() => createFromPreset(preset)}
+						onclick={() => createFromPreset(preset)}
 					>
 						<span class="preset-name">{preset.nameDa}</span>
 						{#if preset.descriptionDa}
@@ -112,7 +111,7 @@
 				{/each}
 			</div>
 
-			<button class="btn btn-outline custom-btn" on:click={toggleCustom}>
+			<button class="btn btn-outline custom-btn" onclick={toggleCustom}>
 				Opret tilpasset timer
 			</button>
 		</div>

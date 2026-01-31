@@ -1,19 +1,21 @@
 <script lang="ts">
-	import { tips, getTipsByCategory } from '$lib/data/reference';
+	import { getTipsByCategory } from '$lib/data/reference';
 	import { tipCategoryLabels } from '$lib/types';
 	import type { Tip } from '$lib/types';
 
 	const categories: Tip['category'][] = ['dough', 'technique', 'ingredients', 'baking', 'equipment', 'general'];
 
-	$: groupedTips = categories
-		.map((cat) => ({
-			category: cat,
-			label: tipCategoryLabels[cat],
-			items: getTipsByCategory(cat)
-		}))
-		.filter((g) => g.items.length > 0);
+	let groupedTips = $derived(
+		categories
+			.map((cat) => ({
+				category: cat,
+				label: tipCategoryLabels[cat],
+				items: getTipsByCategory(cat)
+			}))
+			.filter((g) => g.items.length > 0)
+	);
 
-	let expandedTipId: string | null = null;
+	let expandedTipId = $state<string | null>(null);
 
 	function toggleTip(tipId: string) {
 		expandedTipId = expandedTipId === tipId ? null : tipId;
@@ -29,7 +31,7 @@
 					<button
 						class="tip-item"
 						class:expanded={expandedTipId === tip.id}
-						on:click={() => toggleTip(tip.id)}
+						onclick={() => toggleTip(tip.id)}
 					>
 						<div class="tip-header">
 							<span class="tip-title">{tip.titleDa}</span>

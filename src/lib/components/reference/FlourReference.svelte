@@ -2,7 +2,7 @@
 	import { flourTypes } from '$lib/data/reference';
 	import { flourTypeLabels } from '$lib/types';
 
-	$: sortedFlours = [...flourTypes].sort((a, b) => a.proteinMin - b.proteinMin);
+	let sortedFlours = $derived([...flourTypes].sort((a, b) => a.proteinMin - b.proteinMin));
 </script>
 
 <div class="flour-reference">

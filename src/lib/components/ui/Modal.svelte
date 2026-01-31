@@ -1,14 +1,24 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import type { Snippet } from 'svelte';
 
-	export let open: boolean = false;
-	export let title: string = '';
-	export let showClose: boolean = true;
-
-	const dispatch = createEventDispatcher<{ close: void }>();
+	let {
+		open = false,
+		title = '',
+		showClose = true,
+		onclose,
+		children,
+		footer
+	}: {
+		open?: boolean;
+		title?: string;
+		showClose?: boolean;
+		onclose?: () => void;
+		children?: Snippet;
+		footer?: Snippet;
+	} = $props();
 
 	function handleClose() {
-		dispatch('close');
+		onclose?.();
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
@@ -24,17 +34,17 @@
 	}
 </script>
 
-<svelte:window on:keydown={handleKeydown} />
+<svelte:window onkeydown={handleKeydown} />
 
 {#if open}
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	<div class="modal-backdrop" on:click={handleBackdropClick}>
+	<div class="modal-backdrop" onclick={handleBackdropClick}>
 		<div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
 			<div class="modal-header">
 				<h2 id="modal-title" class="modal-title">{title}</h2>
 				{#if showClose}
-					<button class="close-button" on:click={handleClose} aria-label="Luk">
+					<button class="close-button" onclick={handleClose} aria-label="Luk">
 						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 							<path d="M18 6L6 18M6 6l12 12"/>
 						</svg>
@@ -42,11 +52,13 @@
 				{/if}
 			</div>
 			<div class="modal-body">
-				<slot />
+				{#if children}
+					{@render children()}
+				{/if}
 			</div>
-			{#if $$slots.footer}
+			{#if footer}
 				<div class="modal-footer">
-					<slot name="footer" />
+					{@render footer()}
 				</div>
 			{/if}
 		</div>

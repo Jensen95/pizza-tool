@@ -7,9 +7,13 @@
 	let numberOfPizzas = $state(4);
 	let doughBallWeight = $state(270);
 
+	let allRecipes = $derived(get(recipes));
+	let totalWeightValue = $derived(get(totalWeight));
+	let ingredientsByStageValue = $derived(get(ingredientsByStage));
+
 	let selectedRecipe = $derived(
 		selectedRecipeId
-			? get(recipes).find((r) => r.id === selectedRecipeId) ?? null
+			? allRecipes.find((r) => r.id === selectedRecipeId) ?? null
 			: null
 	);
 
@@ -48,11 +52,11 @@
 	<section class="recipe-selector">
 		<h2 class="section-title">Vaelg opskrift</h2>
 		<div class="recipe-grid">
-			{#each $recipes as recipe}
+			{#each allRecipes as recipe}
 				<button
 					class="recipe-option"
 					class:selected={selectedRecipeId === recipe.id}
-					on:click={() => selectRecipe(recipe)}
+					onclick={() => selectRecipe(recipe)}
 				>
 					<span class="recipe-name">{recipe.nameDa}</span>
 					<span class="recipe-hydration">{recipe.hydration}%</span>
@@ -89,14 +93,14 @@
 			</div>
 			<div class="total-display">
 				<span class="total-label">Total dej:</span>
-				<span class="total-value">{formatWeight($totalWeight)}</span>
+				<span class="total-value">{formatWeight(totalWeightValue)}</span>
 			</div>
 		</section>
 
 		<section class="results-section">
 			<h2 class="section-title">Ingredienser</h2>
 
-			{#each Object.entries($ingredientsByStage) as [stage, ingredients]}
+			{#each Object.entries(ingredientsByStageValue) as [stage, ingredients]}
 				<div class="stage-group">
 					{#if stage !== 'undefined'}
 						<h3 class="stage-title">{stage}</h3>
