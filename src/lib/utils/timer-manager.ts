@@ -209,3 +209,36 @@ export function clearCompletedTimers(): Timer[] {
 	saveTimers(timers);
 	return timers;
 }
+
+/**
+ * Timer Manager class for managing timer checking lifecycle
+ */
+export class TimerManager {
+	private intervalId: ReturnType<typeof setInterval> | null = null;
+	private isRunning = false;
+
+	start(): void {
+		if (this.isRunning) return;
+
+		this.isRunning = true;
+
+		// Request notification permission
+		requestPermission();
+
+		// Check immediately
+		checkTimers();
+
+		// Check every second
+		this.intervalId = setInterval(() => {
+			checkTimers();
+		}, 1000);
+	}
+
+	stop(): void {
+		if (this.intervalId) {
+			clearInterval(this.intervalId);
+			this.intervalId = null;
+		}
+		this.isRunning = false;
+	}
+}
