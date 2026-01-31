@@ -62,15 +62,8 @@
 	.tabs {
 		display: flex;
 		gap: var(--spacing-xs);
-		overflow-x: auto;
-		padding-bottom: var(--spacing-xs);
 		border-bottom: 2px solid var(--color-border);
-		scrollbar-width: none;
-		-ms-overflow-style: none;
-	}
-
-	.tabs::-webkit-scrollbar {
-		display: none;
+		margin-bottom: var(--spacing-md);
 	}
 
 	.tab {
@@ -85,6 +78,7 @@
 		position: relative;
 		transition: color 0.2s;
 		white-space: nowrap;
+		margin-bottom: -2px;
 	}
 
 	.tab:hover {
@@ -93,16 +87,7 @@
 
 	.tab.active {
 		color: var(--color-primary);
-	}
-
-	.tab.active::after {
-		content: '';
-		position: absolute;
-		bottom: calc(-1 * var(--spacing-xs) - 2px);
-		left: 0;
-		right: 0;
-		height: 2px;
-		background: var(--color-primary);
+		border-bottom: 2px solid var(--color-primary);
 	}
 
 	.tab-content {
