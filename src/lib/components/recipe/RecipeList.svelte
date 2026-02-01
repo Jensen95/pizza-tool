@@ -30,12 +30,12 @@
 	}
 
 	function decrementWeight() {
-		doughBallWeight = Math.max(100, doughBallWeight - 10);
+		doughBallWeight = Math.max(100, doughBallWeight - 5);
 		handleWeightChange();
 	}
 
 	function incrementWeight() {
-		doughBallWeight = Math.min(500, doughBallWeight + 10);
+		doughBallWeight = Math.min(500, doughBallWeight + 5);
 		handleWeightChange();
 	}
 
@@ -98,7 +98,7 @@
 			<label class="setting-label" for="main-ball-weight">Kuglevaegt (g)</label>
 			<div class="setting-controls">
 				<button class="btn btn-sm" onclick={decrementWeight} disabled={doughBallWeight <= 100}
-					>-10</button
+					>-5</button
 				>
 				<input
 					id="main-ball-weight"
@@ -108,10 +108,10 @@
 					onchange={handleWeightChange}
 					min="100"
 					max="500"
-					step="10"
+					step="5"
 				/>
 				<button class="btn btn-sm" onclick={incrementWeight} disabled={doughBallWeight >= 500}
-					>+10</button
+					>+5</button
 				>
 			</div>
 		</div>
