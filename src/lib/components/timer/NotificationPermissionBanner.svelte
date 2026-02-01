@@ -6,6 +6,8 @@
 		requestPermission
 	} from '$lib/utils/notification';
 
+	let { hasActiveTimers = false }: { hasActiveTimers?: boolean } = $props();
+
 	let permissionStatus = $state<'granted' | 'denied' | 'default' | 'unsupported'>('default');
 	let isRequesting = $state(false);
 
@@ -34,10 +36,12 @@
 	}
 
 	// Only show banner if:
+	// - There are active timers
 	// - Notifications are supported
 	// - Permission is not granted (either 'default' or 'denied')
 	let shouldShowBanner = $derived(
-		isNotificationSupported() &&
+		hasActiveTimers &&
+			isNotificationSupported() &&
 			(permissionStatus === 'default' || permissionStatus === 'denied')
 	);
 </script>

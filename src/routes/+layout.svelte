@@ -2,8 +2,9 @@
 	import '../app.css';
 	import Header from '$lib/components/ui/Header.svelte';
 	import Navigation from '$lib/components/ui/Navigation.svelte';
+	import NotificationPermissionBanner from '$lib/components/timer/NotificationPermissionBanner.svelte';
 	import { onMount } from 'svelte';
-	import { timers } from '$lib/stores';
+	import { timers, activeTimers } from '$lib/stores';
 
 	let { children } = $props();
 
@@ -15,6 +16,9 @@
 			timers.destroy();
 		};
 	});
+
+	// Check if there are active timers
+	let hasActiveTimers = $derived($activeTimers.length > 0);
 </script>
 
 <svelte:head>
@@ -25,6 +29,7 @@
 <div class="app">
 	<Header />
 	<main class="main-content">
+		<NotificationPermissionBanner {hasActiveTimers} />
 		{@render children()}
 	</main>
 	<Navigation />
