@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { activeTimerCount } from '$lib/stores';
 
-	let { title = 'Pizza Tool', showBack = false, backHref = '/' }: {
+	let {
+		title = 'Pizza Tool',
+		showBack = false,
+		backHref = '/'
+	}: {
 		title?: string;
 		showBack?: boolean;
 		backHref?: string;
@@ -12,8 +16,15 @@
 	<div class="header-content">
 		{#if showBack}
 			<a href={backHref} class="back-button" aria-label="Tilbage">
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M19 12H5M12 19l-7-7 7-7"/>
+				<svg
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+				>
+					<path d="M19 12H5M12 19l-7-7 7-7" />
 				</svg>
 			</a>
 		{/if}

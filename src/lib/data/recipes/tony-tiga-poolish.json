@@ -1,125 +1,125 @@
 {
-  "id": "tony-tiga-poolish",
-  "name": "Tony Tiga + Poolish",
-  "nameDa": "Tony Tiga + Poolish",
-  "category": "poolish",
-  "baseWeight": 270,
-  "hydration": 65,
-  "yieldPizzas": 4,
-  "ingredients": [
-    {
-      "id": "poolish-flour",
-      "name": "Poolish flour",
-      "nameDa": "Mel (poolish)",
-      "percentage": 10,
-      "type": "flour",
-      "stage": "poolish"
-    },
-    {
-      "id": "poolish-water",
-      "name": "Poolish water",
-      "nameDa": "Vand (poolish)",
-      "percentage": 10,
-      "type": "water",
-      "stage": "poolish"
-    },
-    {
-      "id": "poolish-yeast",
-      "name": "Poolish yeast",
-      "nameDa": "Toergaer (poolish)",
-      "percentage": 0.1,
-      "type": "yeast",
-      "stage": "poolish"
-    },
-    {
-      "id": "main-flour",
-      "name": "Main dough flour",
-      "nameDa": "Mel (hoveddej)",
-      "percentage": 90,
-      "type": "flour",
-      "stage": "main"
-    },
-    {
-      "id": "main-water",
-      "name": "Main dough water",
-      "nameDa": "Vand (hoveddej)",
-      "percentage": 55,
-      "type": "water",
-      "stage": "main"
-    },
-    {
-      "id": "main-salt",
-      "name": "Salt",
-      "nameDa": "Salt",
-      "percentage": 1.8,
-      "type": "salt",
-      "stage": "main"
-    },
-    {
-      "id": "main-yeast",
-      "name": "Main yeast",
-      "nameDa": "Toergaer (hoveddej)",
-      "percentage": 0.4,
-      "type": "yeast",
-      "stage": "main"
-    },
-    {
-      "id": "main-oil",
-      "name": "Olive oil",
-      "nameDa": "Olivenolie",
-      "percentage": 1,
-      "type": "oil",
-      "stage": "main"
-    },
-    {
-      "id": "main-malt",
-      "name": "Diastatic malt",
-      "nameDa": "Diastatisk malt",
-      "percentage": 1.8,
-      "type": "other",
-      "stage": "main"
-    }
-  ],
-  "schedule": {
-    "stages": [
-      {
-        "id": "stage-1",
-        "name": "Poolish",
-        "nameDa": "Dag 1 - Poolish",
-        "duration": 1440,
-        "temperature": 4,
-        "location": "fridge",
-        "canSetTimer": true,
-        "instructionsDa": "Roer gaeren ud i koldt vand i 30 sek. indtil det skummer lidt. Bland med mel og lad hvile i koeleskab."
-      },
-      {
-        "id": "stage-2",
-        "name": "Main dough",
-        "nameDa": "Dag 2 - Hoveddej",
-        "duration": 120,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": true,
-        "instructionsDa": "Bland poolish med mel, vand, salt, gaer, olie og malt. Ael godt og lad haeve."
-      },
-      {
-        "id": "stage-3",
-        "name": "Ball rest",
-        "nameDa": "Kuglehvile",
-        "duration": 120,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": true,
-        "instructionsDa": "Del i kugler og lad hvile."
-      }
-    ],
-    "totalTime": 1680
-  },
-  "tipsDa": [
-    "Anbefaling: Hvedemel med 13-14,5% protein.",
-    "En NY style pizza har typisk en hydrering paa 60-65%.",
-    "Diatistisk malt og bageenzym er generelt det samme.",
-    "Tony bruger altid koldt vand fra hanen i sine starters."
-  ],
-  "source": "Tony tiga+poolish"
+	"id": "tony-tiga-poolish",
+	"name": "Tony Tiga + Poolish",
+	"nameDa": "Tony Tiga + Poolish",
+	"category": "poolish",
+	"baseWeight": 270,
+	"hydration": 65,
+	"yieldPizzas": 4,
+	"ingredients": [
+		{
+			"id": "poolish-flour",
+			"name": "Poolish flour",
+			"nameDa": "Mel (poolish)",
+			"percentage": 10,
+			"type": "flour",
+			"stage": "poolish"
+		},
+		{
+			"id": "poolish-water",
+			"name": "Poolish water",
+			"nameDa": "Vand (poolish)",
+			"percentage": 10,
+			"type": "water",
+			"stage": "poolish"
+		},
+		{
+			"id": "poolish-yeast",
+			"name": "Poolish yeast",
+			"nameDa": "Toergaer (poolish)",
+			"percentage": 0.1,
+			"type": "yeast",
+			"stage": "poolish"
+		},
+		{
+			"id": "main-flour",
+			"name": "Main dough flour",
+			"nameDa": "Mel (hoveddej)",
+			"percentage": 90,
+			"type": "flour",
+			"stage": "main"
+		},
+		{
+			"id": "main-water",
+			"name": "Main dough water",
+			"nameDa": "Vand (hoveddej)",
+			"percentage": 55,
+			"type": "water",
+			"stage": "main"
+		},
+		{
+			"id": "main-salt",
+			"name": "Salt",
+			"nameDa": "Salt",
+			"percentage": 1.8,
+			"type": "salt",
+			"stage": "main"
+		},
+		{
+			"id": "main-yeast",
+			"name": "Main yeast",
+			"nameDa": "Toergaer (hoveddej)",
+			"percentage": 0.4,
+			"type": "yeast",
+			"stage": "main"
+		},
+		{
+			"id": "main-oil",
+			"name": "Olive oil",
+			"nameDa": "Olivenolie",
+			"percentage": 1,
+			"type": "oil",
+			"stage": "main"
+		},
+		{
+			"id": "main-malt",
+			"name": "Diastatic malt",
+			"nameDa": "Diastatisk malt",
+			"percentage": 1.8,
+			"type": "other",
+			"stage": "main"
+		}
+	],
+	"schedule": {
+		"stages": [
+			{
+				"id": "stage-1",
+				"name": "Poolish",
+				"nameDa": "Dag 1 - Poolish",
+				"duration": 1440,
+				"temperature": 4,
+				"location": "fridge",
+				"canSetTimer": true,
+				"instructionsDa": "Roer gaeren ud i koldt vand i 30 sek. indtil det skummer lidt. Bland med mel og lad hvile i koeleskab."
+			},
+			{
+				"id": "stage-2",
+				"name": "Main dough",
+				"nameDa": "Dag 2 - Hoveddej",
+				"duration": 120,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Bland poolish med mel, vand, salt, gaer, olie og malt. Ael godt og lad haeve."
+			},
+			{
+				"id": "stage-3",
+				"name": "Ball rest",
+				"nameDa": "Kuglehvile",
+				"duration": 120,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Del i kugler og lad hvile."
+			}
+		],
+		"totalTime": 1680
+	},
+	"tipsDa": [
+		"Anbefaling: Hvedemel med 13-14,5% protein.",
+		"En NY style pizza har typisk en hydrering paa 60-65%.",
+		"Diatistisk malt og bageenzym er generelt det samme.",
+		"Tony bruger altid koldt vand fra hanen i sine starters."
+	],
+	"source": "Tony tiga+poolish"
 }

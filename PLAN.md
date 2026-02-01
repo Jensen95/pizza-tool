@@ -1,6 +1,7 @@
 # Pizza Tool PWA - Implementation Plan
 
 ## Overview
+
 Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App using Svelte. The PWA will include 20+ pizza dough recipes, an ingredient calculator, and fermentation timers with notifications.
 
 **Language**: Danish only
@@ -12,12 +13,14 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
 ## What We're Building
 
 ### Core Features
+
 1. **Recipe Browser** - 20+ pizza dough recipes organized by category (Neapolitan, NY style, poolish, biga, etc.)
 2. **Ingredient Calculator** - Scale recipes using baker's percentages based on number of pizzas or dough weight
 3. **Fermentation Timers** - Multiple named timers (Dag 1, Dag 2, autolyse) with push notifications
 4. **Reference Library** - Flour types, sauce recipes, toppings, tips (from Excel reference sheets)
 
 ### PWA Capabilities
+
 - Install to home screen
 - Works offline
 - Push notifications for timer completion
@@ -28,15 +31,18 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
 ## Implementation Phases
 
 ### Phase 1: Project Setup
+
 **Goal**: Create SvelteKit project with PWA configuration
 
 1. Initialize SvelteKit project with TypeScript
+
    ```bash
    npm create svelte@latest .
    # Choose: Skeleton project, TypeScript, ESLint, Prettier
    ```
 
 2. Install dependencies
+
    ```bash
    npm install
    npm install -D @sveltejs/adapter-static
@@ -50,6 +56,7 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
    - Create PWA icons (72, 96, 128, 144, 192, 512px)
 
 4. Set up project structure:
+
    ```
    src/
    ├── lib/
@@ -65,6 +72,7 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
 5. Create TypeScript type definitions (see Phase 2 for details)
 
 **Files Created**:
+
 - `svelte.config.js`, `vite.config.js`, `tsconfig.json`
 - `static/manifest.json`, `static/service-worker.js`
 - All folder structure
@@ -72,6 +80,7 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
 ---
 
 ### Phase 2: Data Model & Types
+
 **Goal**: Define TypeScript schemas for recipes, timers, and reference data
 
 1. Create **`src/lib/types/recipe.ts`**
@@ -94,6 +103,7 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
    - `CalculatorState`: recipe, numberOfPizzas, doughBallWeight, results
 
 **Files Created**:
+
 - `src/lib/types/recipe.ts`
 - `src/lib/types/timer.ts`
 - `src/lib/types/reference.ts`
@@ -102,6 +112,7 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
 ---
 
 ### Phase 3: Data Extraction from Excel
+
 **Goal**: Extract all 20+ recipes and reference data from .xlsm file into JSON
 
 **Approach**: Manual extraction for accuracy (20 recipes is manageable)
@@ -138,6 +149,7 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
    - Ensure all required fields present
 
 **Files Created**:
+
 - `src/lib/data/recipes/vito-poolish.json` (and 20+ more)
 - `src/lib/data/recipes/index.ts`
 - `src/lib/data/reference/*.json` (5-6 files)
@@ -147,9 +159,11 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
 ---
 
 ### Phase 4: Core Utilities
+
 **Goal**: Implement baker's percentage calculations and helper functions
 
 1. Create **`src/lib/utils/baker-percentage.ts`**
+
    ```typescript
    // Calculate ingredient weight from flour weight and percentage
    calculateIngredientWeight(flourWeight: number, percentage: number): number
@@ -160,6 +174,7 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
    // Scale entire recipe to desired number of pizzas
    scaleRecipe(recipe, numberOfPizzas, targetDoughBallWeight): ScaledIngredient[]
    ```
+
    **Critical**: These calculations must match Excel formulas exactly
 
 2. Create **`src/lib/utils/storage.ts`**
@@ -181,6 +196,7 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
    - Check permission status
 
 **Files Created**:
+
 - `src/lib/utils/baker-percentage.ts`
 - `src/lib/utils/storage.ts`
 - `src/lib/utils/timer-manager.ts`
@@ -189,6 +205,7 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
 ---
 
 ### Phase 5: State Management (Svelte Stores)
+
 **Goal**: Create reactive stores for app state
 
 1. Create **`src/lib/stores/recipes.ts`**
@@ -213,6 +230,7 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
    - Settings: theme, defaultPizzaCount, defaultDoughWeight, notificationsEnabled
 
 **Files Created**:
+
 - `src/lib/stores/recipes.ts`
 - `src/lib/stores/timers.ts`
 - `src/lib/stores/calculator.ts`
@@ -221,26 +239,31 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
 ---
 
 ### Phase 6: UI Components
+
 **Goal**: Build reusable Svelte components
 
 #### Recipe Components
+
 1. **`RecipeCard.svelte`** - Compact card for recipe list (name, category, time)
 2. **`RecipeList.svelte`** - Grid of recipe cards with filtering
 3. **`RecipeDetail.svelte`** - Full recipe display with ingredients and schedule
 4. **`IngredientCalculator.svelte`** - Input controls + scaled ingredient table
 
 #### Timer Components
+
 5. **`TimerCard.svelte`** - Individual timer display (countdown, controls)
 6. **`TimerCreator.svelte`** - Form to create new timer
 7. **`TimerList.svelte`** - Display all active/completed timers
 8. **`FermentationSchedule.svelte`** - Timeline view of recipe stages with "Set Timer" buttons
 
 #### Reference Components
+
 9. **`FlourReference.svelte`** - Table of flour types with properties
 10. **`SauceRecipes.svelte`** - List of tomato sauce recipes
 11. **`ToppingsLibrary.svelte`** - Grid of topping options
 
 #### UI Components
+
 12. **`Navigation.svelte`** - Bottom tab bar (Opskrifter, Beregner, Timere, Reference)
 13. **`Header.svelte`** - App header with title and active timer indicator
 14. **`Modal.svelte`** - Reusable modal dialog
@@ -248,6 +271,7 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
 **Files Created**: 14 component files in `src/lib/components/`
 
 **Design Guidelines**:
+
 - Clean, minimal styling
 - Mobile-first responsive
 - Danish labels throughout
@@ -256,6 +280,7 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
 ---
 
 ### Phase 7: Pages & Routing
+
 **Goal**: Create SvelteKit routes for navigation
 
 1. **`src/routes/+layout.svelte`**
@@ -293,6 +318,7 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
 ---
 
 ### Phase 8: PWA Features
+
 **Goal**: Implement offline support and notifications
 
 1. **Service Worker** (`static/service-worker.js`):
@@ -303,16 +329,17 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
    - Offline fallback page
 
 2. **Manifest** (`static/manifest.json`):
+
    ```json
    {
-     "name": "Pizza Tool",
-     "short_name": "Pizza",
-     "description": "Pizza dej opskrifter og beregner",
-     "start_url": "/",
-     "display": "standalone",
-     "theme_color": "#d32f2f",
-     "background_color": "#ffffff",
-     "lang": "da"
+   	"name": "Pizza Tool",
+   	"short_name": "Pizza",
+   	"description": "Pizza dej opskrifter og beregner",
+   	"start_url": "/",
+   	"display": "standalone",
+   	"theme_color": "#d32f2f",
+   	"background_color": "#ffffff",
+   	"lang": "da"
    }
    ```
 
@@ -331,6 +358,7 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
    - Vibration pattern (if supported)
 
 **Files Modified/Created**:
+
 - `static/service-worker.js`
 - `static/manifest.json`
 - `static/icons/*.png`
@@ -339,6 +367,7 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
 ---
 
 ### Phase 9: Styling & Polish
+
 **Goal**: Apply clean, minimal design
 
 1. **Global Styles** (`src/app.css`):
@@ -348,11 +377,12 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
    - Dark mode support (optional)
 
 2. **Color Scheme**:
+
    ```css
-   --color-primary: #d32f2f;      /* Tomato red for accents */
-   --color-background: #fafafa;   /* Light gray */
-   --color-surface: #ffffff;      /* White cards */
-   --color-text: #212121;         /* Dark text */
+   --color-primary: #d32f2f; /* Tomato red for accents */
+   --color-background: #fafafa; /* Light gray */
+   --color-surface: #ffffff; /* White cards */
+   --color-text: #212121; /* Dark text */
    ```
 
 3. **Component Styling**:
@@ -372,9 +402,11 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
 ---
 
 ### Phase 10: Testing & Deployment
+
 **Goal**: Verify functionality and deploy
 
 #### Manual Testing Checklist
+
 1. **Recipe Features**:
    - [ ] All 20+ recipes load correctly
    - [ ] Recipe details display properly
@@ -408,7 +440,9 @@ Convert Excel-based pizza tool (PizzaTool 14.6.xlsm) to a Progressive Web App us
    - [ ] Toppings library complete
 
 #### Deployment
+
 1. Build for production:
+
    ```bash
    npm run build
    ```
@@ -446,6 +480,7 @@ These files are essential to the implementation, in order of creation:
 ## Data Extraction Strategy
 
 ### Recipe Extraction Process (Per Recipe)
+
 For each of the 20+ recipe sheets in Excel:
 
 1. Open worksheet (e.g., "Vito poolish")
@@ -458,43 +493,44 @@ For each of the 20+ recipe sheets in Excel:
 
 ```json
 {
-  "id": "vito-poolish",
-  "name": "Vito Poolish",
-  "nameDa": "Vito Poolish",
-  "category": "poolish",
-  "baseWeight": 250,
-  "hydration": 65,
-  "yieldPizzas": 4,
-  "schedule": {
-    "stages": [
-      {
-        "name": "Dag 1 - Poolish",
-        "nameDa": "Dag 1 - Poolish",
-        "duration": 1440,
-        "temperature": 20,
-        "canSetTimer": true
-      }
-    ],
-    "totalTime": 1920
-  },
-  "ingredients": [
-    {
-      "name": "Mel (Poolish)",
-      "nameDa": "Mel (Poolish)",
-      "percentage": 50,
-      "type": "flour",
-      "stage": "poolish"
-    }
-  ]
+	"id": "vito-poolish",
+	"name": "Vito Poolish",
+	"nameDa": "Vito Poolish",
+	"category": "poolish",
+	"baseWeight": 250,
+	"hydration": 65,
+	"yieldPizzas": 4,
+	"schedule": {
+		"stages": [
+			{
+				"name": "Dag 1 - Poolish",
+				"nameDa": "Dag 1 - Poolish",
+				"duration": 1440,
+				"temperature": 20,
+				"canSetTimer": true
+			}
+		],
+		"totalTime": 1920
+	},
+	"ingredients": [
+		{
+			"name": "Mel (Poolish)",
+			"nameDa": "Mel (Poolish)",
+			"percentage": 50,
+			"type": "flour",
+			"stage": "poolish"
+		}
+	]
 }
 ```
 
 4. Validate:
    - Sum of ingredient percentages
-   - Hydration calculation (water/flour * 100)
+   - Hydration calculation (water/flour \* 100)
    - Total time matches sum of stage durations
 
 ### Reference Data Extraction
+
 - Manually transcribe reference sheets to JSON
 - Simpler structure (just arrays of objects)
 - Verify all data included
@@ -504,6 +540,7 @@ For each of the 20+ recipe sheets in Excel:
 ## Verification Plan
 
 ### Calculator Accuracy Test
+
 1. Choose 3-4 recipes
 2. For each recipe:
    - Input same parameters in Excel and PWA
@@ -511,6 +548,7 @@ For each of the 20+ recipe sheets in Excel:
    - Verify they match exactly (allow ±1g rounding)
 
 ### Timer Functionality Test
+
 1. Create timer with 2-minute duration
 2. Verify countdown updates every second
 3. Close browser, reopen - timer should still be running
@@ -518,6 +556,7 @@ For each of the 20+ recipe sheets in Excel:
 5. Verify notification text is in Danish
 
 ### Offline Test
+
 1. Load app while online
 2. Disconnect network
 3. Navigate to different pages - should work

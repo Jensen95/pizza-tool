@@ -1,4 +1,4 @@
-import type { Recipe, RecipeCategory, RecipeGroup, categoryLabels } from '$lib/types';
+import type { Recipe, RecipeCategory, RecipeGroup } from '$lib/types';
 
 import vitoPoolish from './vito-poolish.json';
 import gormsPizza from './gorms-pizza.json';

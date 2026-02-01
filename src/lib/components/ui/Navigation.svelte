@@ -22,11 +22,7 @@
 
 <nav class="navigation">
 	{#each navItems as item}
-		<a
-			href={item.href}
-			class="nav-item"
-			class:active={isActive(item.href, page.url.pathname)}
-		>
+		<a href={item.href} class="nav-item" class:active={isActive(item.href, page.url.pathname)}>
 			<span class="nav-icon">
 				{item.icon}
 				{#if item.href === '/timers' && $activeTimerCount > 0}

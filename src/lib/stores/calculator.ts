@@ -1,7 +1,7 @@
 import { writable, derived, get } from 'svelte/store';
 import type { Recipe } from '$lib/types/recipe';
 import type { CalculatorState, ScaledIngredient } from '$lib/types/ingredient';
-import { scaleRecipe, getTotalPercentage } from '$lib/utils/baker-percentage';
+import { scaleRecipe } from '$lib/utils/baker-percentage';
 import * as storage from '$lib/utils/storage';
 
 const CALCULATOR_STORAGE_KEY = 'calculator';
@@ -65,10 +65,13 @@ function createCalculatorStore() {
 			}))
 		};
 
-		const { scaledIngredients, totalFlourWeight, totalDoughWeight } = scaleRecipe(recipeWithCustoms, {
-			numberOfPizzas: state.numberOfPizzas,
-			doughBallWeight: state.doughBallWeight
-		});
+		const { scaledIngredients, totalFlourWeight, totalDoughWeight } = scaleRecipe(
+			recipeWithCustoms,
+			{
+				numberOfPizzas: state.numberOfPizzas,
+				doughBallWeight: state.doughBallWeight
+			}
+		);
 
 		return {
 			...state,

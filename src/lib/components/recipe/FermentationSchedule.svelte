@@ -19,7 +19,11 @@
 <div class="schedule">
 	<div class="timeline">
 		{#each recipe.schedule.stages as stage, index}
-			<div class="stage" class:first={index === 0} class:last={index === recipe.schedule.stages.length - 1}>
+			<div
+				class="stage"
+				class:first={index === 0}
+				class:last={index === recipe.schedule.stages.length - 1}
+			>
 				<div class="stage-marker">
 					<div class="marker-dot"></div>
 					{#if index < recipe.schedule.stages.length - 1}

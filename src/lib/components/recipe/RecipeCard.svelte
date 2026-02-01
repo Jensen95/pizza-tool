@@ -40,7 +40,9 @@
 		box-shadow: var(--shadow-sm);
 		text-decoration: none;
 		color: inherit;
-		transition: box-shadow 0.2s, transform 0.1s;
+		transition:
+			box-shadow 0.2s,
+			transform 0.1s;
 	}
 
 	.recipe-card:hover {

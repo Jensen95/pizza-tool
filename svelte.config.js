@@ -9,7 +9,11 @@ const config = {
 			fallback: 'index.html',
 			precompress: false,
 			strict: true
-		})
+		}),
+		prerender: {
+			handleHttpError: 'warn',
+			handleMissingId: 'warn'
+		}
 	}
 };
 

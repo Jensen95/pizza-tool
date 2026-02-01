@@ -2,7 +2,6 @@ import { writable, derived } from 'svelte/store';
 import type { Timer, TimerStatus } from '$lib/types';
 import {
 	getTimers,
-	saveTimers,
 	createTimer as createTimerUtil,
 	addTimer as addTimerUtil,
 	removeTimer as removeTimerUtil,
@@ -17,7 +16,7 @@ import {
 import { requestPermission } from '$lib/utils/notification';
 
 function createTimersStore() {
-	const { subscribe, set, update } = writable<Timer[]>([]);
+	const { subscribe, set } = writable<Timer[]>([]);
 
 	// Initialize store with stored timers
 	let cleanup: (() => void) | null = null;

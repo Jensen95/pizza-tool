@@ -36,9 +36,7 @@ function loadHistory(): RecipeHistoryEntry[] {
 
 // Create the customizations store
 function createCustomizationsStore() {
-	const { subscribe, set, update } = writable<Record<string, RecipeCustomization>>(
-		loadCustomizations()
-	);
+	const { subscribe, update } = writable<Record<string, RecipeCustomization>>(loadCustomizations());
 
 	function save(customizations: Record<string, RecipeCustomization>) {
 		storage.set(CUSTOMIZATIONS_KEY, customizations);
@@ -57,11 +55,7 @@ function createCustomizationsStore() {
 		/**
 		 * Update ingredient percentage for a recipe
 		 */
-		setIngredientPercentage(
-			recipe: Recipe,
-			ingredientId: string,
-			percentage: number
-		) {
+		setIngredientPercentage(recipe: Recipe, ingredientId: string, percentage: number) {
 			update((state) => {
 				const existing = state[recipe.id] || {
 					recipeId: recipe.id,

@@ -1,101 +1,101 @@
 {
-  "id": "bk-poolish",
-  "name": "BK Poolish",
-  "nameDa": "BK Poolish",
-  "category": "poolish",
-  "baseWeight": 270,
-  "hydration": 65,
-  "yieldPizzas": 4,
-  "ingredients": [
-    {
-      "id": "poolish-flour",
-      "name": "Poolish flour",
-      "nameDa": "Mel (poolish)",
-      "percentage": 20,
-      "type": "flour",
-      "stage": "poolish"
-    },
-    {
-      "id": "poolish-water",
-      "name": "Poolish water",
-      "nameDa": "Vand (poolish)",
-      "percentage": 20,
-      "type": "water",
-      "stage": "poolish"
-    },
-    {
-      "id": "poolish-yeast",
-      "name": "Poolish yeast",
-      "nameDa": "Toergaer (poolish)",
-      "percentage": 0.1,
-      "type": "yeast",
-      "stage": "poolish"
-    },
-    {
-      "id": "main-flour",
-      "name": "Main dough flour",
-      "nameDa": "Mel (hoveddej)",
-      "percentage": 80,
-      "type": "flour",
-      "stage": "main"
-    },
-    {
-      "id": "main-water",
-      "name": "Main dough water",
-      "nameDa": "Vand (hoveddej)",
-      "percentage": 45,
-      "type": "water",
-      "stage": "main"
-    },
-    {
-      "id": "main-salt",
-      "name": "Salt",
-      "nameDa": "Salt",
-      "percentage": 2.5,
-      "type": "salt",
-      "stage": "main"
-    }
-  ],
-  "schedule": {
-    "stages": [
-      {
-        "id": "stage-1",
-        "name": "Poolish",
-        "nameDa": "Dag 1 - Poolish",
-        "duration": 1440,
-        "temperature": 4,
-        "location": "fridge",
-        "canSetTimer": true,
-        "instructionsDa": "Gaeren vendes i melet og vandet tilsaettes. Bland og lad hvile i koeleskab i 24 timer."
-      },
-      {
-        "id": "stage-2",
-        "name": "Main dough",
-        "nameDa": "Dag 2 - Hoveddej",
-        "duration": 120,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": true,
-        "instructionsDa": "Bland poolish med mel, vand og salt. Ael godt og lad haeve."
-      },
-      {
-        "id": "stage-3",
-        "name": "Ball rest",
-        "nameDa": "Kuglehvile",
-        "duration": 120,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": true,
-        "instructionsDa": "Del i kugler og lad hvile."
-      }
-    ],
-    "totalTime": 1680
-  },
-  "tipsDa": [
-    "Toergaeren arbejder bedst i poolish naar vandet er 25-27 grader.",
-    "Poolish kan fermenteres op til 4 timer ved stuetemperatur eller 24 timer i koeleskab.",
-    "Soerg for at hoveddejen ender paa 24-27 grader.",
-    "Dejen er klar naar den er blank, glat og kan straekkes langt."
-  ],
-  "source": "BK_poolish"
+	"id": "bk-poolish",
+	"name": "BK Poolish",
+	"nameDa": "BK Poolish",
+	"category": "poolish",
+	"baseWeight": 270,
+	"hydration": 65,
+	"yieldPizzas": 4,
+	"ingredients": [
+		{
+			"id": "poolish-flour",
+			"name": "Poolish flour",
+			"nameDa": "Mel (poolish)",
+			"percentage": 20,
+			"type": "flour",
+			"stage": "poolish"
+		},
+		{
+			"id": "poolish-water",
+			"name": "Poolish water",
+			"nameDa": "Vand (poolish)",
+			"percentage": 20,
+			"type": "water",
+			"stage": "poolish"
+		},
+		{
+			"id": "poolish-yeast",
+			"name": "Poolish yeast",
+			"nameDa": "Toergaer (poolish)",
+			"percentage": 0.1,
+			"type": "yeast",
+			"stage": "poolish"
+		},
+		{
+			"id": "main-flour",
+			"name": "Main dough flour",
+			"nameDa": "Mel (hoveddej)",
+			"percentage": 80,
+			"type": "flour",
+			"stage": "main"
+		},
+		{
+			"id": "main-water",
+			"name": "Main dough water",
+			"nameDa": "Vand (hoveddej)",
+			"percentage": 45,
+			"type": "water",
+			"stage": "main"
+		},
+		{
+			"id": "main-salt",
+			"name": "Salt",
+			"nameDa": "Salt",
+			"percentage": 2.5,
+			"type": "salt",
+			"stage": "main"
+		}
+	],
+	"schedule": {
+		"stages": [
+			{
+				"id": "stage-1",
+				"name": "Poolish",
+				"nameDa": "Dag 1 - Poolish",
+				"duration": 1440,
+				"temperature": 4,
+				"location": "fridge",
+				"canSetTimer": true,
+				"instructionsDa": "Gaeren vendes i melet og vandet tilsaettes. Bland og lad hvile i koeleskab i 24 timer."
+			},
+			{
+				"id": "stage-2",
+				"name": "Main dough",
+				"nameDa": "Dag 2 - Hoveddej",
+				"duration": 120,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Bland poolish med mel, vand og salt. Ael godt og lad haeve."
+			},
+			{
+				"id": "stage-3",
+				"name": "Ball rest",
+				"nameDa": "Kuglehvile",
+				"duration": 120,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Del i kugler og lad hvile."
+			}
+		],
+		"totalTime": 1680
+	},
+	"tipsDa": [
+		"Toergaeren arbejder bedst i poolish naar vandet er 25-27 grader.",
+		"Poolish kan fermenteres op til 4 timer ved stuetemperatur eller 24 timer i koeleskab.",
+		"Soerg for at hoveddejen ender paa 24-27 grader.",
+		"Dejen er klar naar den er blank, glat og kan straekkes langt."
+	],
+	"source": "BK_poolish"
 }

@@ -9,7 +9,7 @@
 	let minutes = $state(30);
 	let showCustom = $state(false);
 
-	function createFromPreset(preset: typeof defaultPresets[0]) {
+	function createFromPreset(preset: (typeof defaultPresets)[0]) {
 		timers.create(preset.nameDa, preset.duration);
 		oncreated?.();
 	}
@@ -57,14 +57,7 @@
 			<div class="duration-inputs">
 				<div class="form-group">
 					<label class="label" for="timer-hours">Timer</label>
-					<input
-						id="timer-hours"
-						type="number"
-						class="input"
-						min="0"
-						max="72"
-						bind:value={hours}
-					/>
+					<input id="timer-hours" type="number" class="input" min="0" max="72" bind:value={hours} />
 				</div>
 
 				<div class="form-group">
@@ -81,9 +74,7 @@
 			</div>
 
 			<div class="form-actions">
-				<button class="btn btn-secondary" onclick={toggleCustom}>
-					Annuller
-				</button>
+				<button class="btn btn-secondary" onclick={toggleCustom}> Annuller </button>
 				<button
 					class="btn btn-primary"
 					onclick={createCustomTimer}
@@ -99,10 +90,7 @@
 
 			<div class="preset-grid">
 				{#each defaultPresets as preset}
-					<button
-						class="preset-btn"
-						onclick={() => createFromPreset(preset)}
-					>
+					<button class="preset-btn" onclick={() => createFromPreset(preset)}>
 						<span class="preset-name">{preset.nameDa}</span>
 						{#if preset.descriptionDa}
 							<span class="preset-desc">{preset.descriptionDa}</span>
@@ -153,7 +141,9 @@
 		border: 1px solid var(--color-border);
 		border-radius: var(--radius-md);
 		text-align: left;
-		transition: border-color 0.2s, background 0.2s;
+		transition:
+			border-color 0.2s,
+			background 0.2s;
 	}
 
 	.preset-btn:hover {

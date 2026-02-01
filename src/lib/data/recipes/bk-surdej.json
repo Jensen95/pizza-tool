@@ -1,90 +1,90 @@
 {
-  "id": "bk-surdej",
-  "name": "BK Surdej",
-  "nameDa": "BK Surdej",
-  "category": "sourdough",
-  "baseWeight": 270,
-  "hydration": 60,
-  "yieldPizzas": 4,
-  "ingredients": [
-    {
-      "id": "flour",
-      "name": "Flour tipo 00",
-      "nameDa": "Mel tipo 00",
-      "percentage": 100,
-      "type": "flour"
-    },
-    {
-      "id": "water",
-      "name": "Water",
-      "nameDa": "Vand",
-      "percentage": 60,
-      "type": "water"
-    },
-    {
-      "id": "sourdough",
-      "name": "Active sourdough",
-      "nameDa": "Aktiv surdej",
-      "percentage": 15,
-      "type": "other"
-    },
-    {
-      "id": "salt",
-      "name": "Salt",
-      "nameDa": "Salt",
-      "percentage": 2.5,
-      "type": "salt"
-    }
-  ],
-  "schedule": {
-    "stages": [
-      {
-        "id": "stage-1",
-        "name": "Levain",
-        "nameDa": "Opfrisk surdej",
-        "duration": 720,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": true,
-        "instructionsDa": "Opfrisk surdejen 8-12 timer foer brug."
-      },
-      {
-        "id": "stage-2",
-        "name": "Mix",
-        "nameDa": "Bland hoveddej",
-        "duration": 30,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": false,
-        "instructionsDa": "Bland mel, vand og surdej i roeremaskinen. Tilsaet salt og ael godt."
-      },
-      {
-        "id": "stage-3",
-        "name": "Bulk",
-        "nameDa": "Haevning",
-        "duration": 240,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": true,
-        "instructionsDa": "Lad haeve ved stuetemperatur med strae og fold hver time."
-      },
-      {
-        "id": "stage-4",
-        "name": "Cold retard",
-        "nameDa": "Kold haevning",
-        "duration": 1440,
-        "temperature": 4,
-        "location": "fridge",
-        "canSetTimer": true,
-        "instructionsDa": "Del i kugler og lad haeve i koeleskab natten over."
-      }
-    ],
-    "totalTime": 2430
-  },
-  "tipsDa": [
-    "Den faerdige dej temperatur skal ikke overstige 27 grader.",
-    "Husk: aeltetider er vejledende.",
-    "Dejen er klar naar den er blank, glat og kan straekkes langt."
-  ],
-  "source": "BK_surdej"
+	"id": "bk-surdej",
+	"name": "BK Surdej",
+	"nameDa": "BK Surdej",
+	"category": "sourdough",
+	"baseWeight": 270,
+	"hydration": 60,
+	"yieldPizzas": 4,
+	"ingredients": [
+		{
+			"id": "flour",
+			"name": "Flour tipo 00",
+			"nameDa": "Mel tipo 00",
+			"percentage": 100,
+			"type": "flour"
+		},
+		{
+			"id": "water",
+			"name": "Water",
+			"nameDa": "Vand",
+			"percentage": 60,
+			"type": "water"
+		},
+		{
+			"id": "sourdough",
+			"name": "Active sourdough",
+			"nameDa": "Aktiv surdej",
+			"percentage": 15,
+			"type": "other"
+		},
+		{
+			"id": "salt",
+			"name": "Salt",
+			"nameDa": "Salt",
+			"percentage": 2.5,
+			"type": "salt"
+		}
+	],
+	"schedule": {
+		"stages": [
+			{
+				"id": "stage-1",
+				"name": "Levain",
+				"nameDa": "Opfrisk surdej",
+				"duration": 720,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Opfrisk surdejen 8-12 timer foer brug."
+			},
+			{
+				"id": "stage-2",
+				"name": "Mix",
+				"nameDa": "Bland hoveddej",
+				"duration": 30,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": false,
+				"instructionsDa": "Bland mel, vand og surdej i roeremaskinen. Tilsaet salt og ael godt."
+			},
+			{
+				"id": "stage-3",
+				"name": "Bulk",
+				"nameDa": "Haevning",
+				"duration": 240,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Lad haeve ved stuetemperatur med strae og fold hver time."
+			},
+			{
+				"id": "stage-4",
+				"name": "Cold retard",
+				"nameDa": "Kold haevning",
+				"duration": 1440,
+				"temperature": 4,
+				"location": "fridge",
+				"canSetTimer": true,
+				"instructionsDa": "Del i kugler og lad haeve i koeleskab natten over."
+			}
+		],
+		"totalTime": 2430
+	},
+	"tipsDa": [
+		"Den faerdige dej temperatur skal ikke overstige 27 grader.",
+		"Husk: aeltetider er vejledende.",
+		"Dejen er klar naar den er blank, glat og kan straekkes langt."
+	],
+	"source": "BK_surdej"
 }

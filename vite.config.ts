@@ -1,6 +1,30 @@
+import { defineConfig } from 'vitest/config';
 import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [sveltekit()]
+	plugins: [sveltekit()],
+	test: {
+		globals: true,
+		environment: 'node',
+		setupFiles: ['./src/tests/setup.ts'],
+		// Only include unit tests, not e2e tests
+		include: ['src/**/*.{test,spec}.{js,ts}'],
+		exclude: [
+			'**/node_modules/**',
+			'**/dist/**',
+			'**/e2e/**',
+			'**/.{idea,git,cache,output,temp}/**'
+		],
+		coverage: {
+			provider: 'v8',
+			reporter: ['text', 'json', 'html'],
+			exclude: ['node_modules/', 'src/tests/e2e/', 'src/tests/setup.ts']
+		},
+		alias: {
+			$lib: '/src/lib'
+		}
+	},
+	resolve: {
+		conditions: ['browser']
+	}
 });

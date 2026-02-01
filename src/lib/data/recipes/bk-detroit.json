@@ -1,87 +1,87 @@
 {
-  "id": "bk-detroit",
-  "name": "BK Detroit",
-  "nameDa": "BK Detroit",
-  "category": "detroit",
-  "baseWeight": 290,
-  "hydration": 72,
-  "yieldPizzas": 4,
-  "ingredients": [
-    {
-      "id": "flour",
-      "name": "Flour tipo 00",
-      "nameDa": "Mel tipo 00",
-      "percentage": 100,
-      "type": "flour"
-    },
-    {
-      "id": "water",
-      "name": "Water",
-      "nameDa": "Vand",
-      "percentage": 72,
-      "type": "water"
-    },
-    {
-      "id": "sourdough",
-      "name": "Wheat sourdough",
-      "nameDa": "Hvedesur",
-      "percentage": 5,
-      "type": "other"
-    },
-    {
-      "id": "salt",
-      "name": "Salt",
-      "nameDa": "Salt",
-      "percentage": 2,
-      "type": "salt"
-    },
-    {
-      "id": "yeast",
-      "name": "Dry yeast",
-      "nameDa": "Toergaer",
-      "percentage": 0.6,
-      "type": "yeast"
-    }
-  ],
-  "schedule": {
-    "stages": [
-      {
-        "id": "stage-1",
-        "name": "Autolyse",
-        "nameDa": "Autolyse",
-        "duration": 45,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": true,
-        "instructionsDa": "Vand, mel og hvedesur roeres let sammen og hviler."
-      },
-      {
-        "id": "stage-2",
-        "name": "Bulk ferment",
-        "nameDa": "Haevning",
-        "duration": 120,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": true,
-        "instructionsDa": "Tilsaet salt og gaer og ael godt. Lad haeve."
-      },
-      {
-        "id": "stage-3",
-        "name": "Pan proof",
-        "nameDa": "Pande-haevning",
-        "duration": 60,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": true,
-        "instructionsDa": "Tryk ud i smoert pande og lad hvile."
-      }
-    ],
-    "totalTime": 225
-  },
-  "tipsDa": [
-    "Der anbefales en mel med protein-indhold 12,5-14,5%.",
-    "Pizzaen er faerdig naar osten ved kanterne er sydende og moerk.",
-    "De 290 g dej passer til en bradepande paa 20x25 cm."
-  ],
-  "source": "BK_detroit"
+	"id": "bk-detroit",
+	"name": "BK Detroit",
+	"nameDa": "BK Detroit",
+	"category": "detroit",
+	"baseWeight": 290,
+	"hydration": 72,
+	"yieldPizzas": 4,
+	"ingredients": [
+		{
+			"id": "flour",
+			"name": "Flour tipo 00",
+			"nameDa": "Mel tipo 00",
+			"percentage": 100,
+			"type": "flour"
+		},
+		{
+			"id": "water",
+			"name": "Water",
+			"nameDa": "Vand",
+			"percentage": 72,
+			"type": "water"
+		},
+		{
+			"id": "sourdough",
+			"name": "Wheat sourdough",
+			"nameDa": "Hvedesur",
+			"percentage": 5,
+			"type": "other"
+		},
+		{
+			"id": "salt",
+			"name": "Salt",
+			"nameDa": "Salt",
+			"percentage": 2,
+			"type": "salt"
+		},
+		{
+			"id": "yeast",
+			"name": "Dry yeast",
+			"nameDa": "Toergaer",
+			"percentage": 0.6,
+			"type": "yeast"
+		}
+	],
+	"schedule": {
+		"stages": [
+			{
+				"id": "stage-1",
+				"name": "Autolyse",
+				"nameDa": "Autolyse",
+				"duration": 45,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Vand, mel og hvedesur roeres let sammen og hviler."
+			},
+			{
+				"id": "stage-2",
+				"name": "Bulk ferment",
+				"nameDa": "Haevning",
+				"duration": 120,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Tilsaet salt og gaer og ael godt. Lad haeve."
+			},
+			{
+				"id": "stage-3",
+				"name": "Pan proof",
+				"nameDa": "Pande-haevning",
+				"duration": 60,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Tryk ud i smoert pande og lad hvile."
+			}
+		],
+		"totalTime": 225
+	},
+	"tipsDa": [
+		"Der anbefales en mel med protein-indhold 12,5-14,5%.",
+		"Pizzaen er faerdig naar osten ved kanterne er sydende og moerk.",
+		"De 290 g dej passer til en bradepande paa 20x25 cm."
+	],
+	"source": "BK_detroit"
 }

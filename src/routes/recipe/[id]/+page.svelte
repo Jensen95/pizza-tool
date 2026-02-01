@@ -28,7 +28,9 @@
 		});
 	}
 
-	function getIngredientChanges(entry: RecipeHistoryEntry): { name: string; original: number; custom: number }[] {
+	function getIngredientChanges(
+		entry: RecipeHistoryEntry
+	): { name: string; original: number; custom: number }[] {
 		if (!recipe) return [];
 
 		const changes: { name: string; original: number; custom: number }[] = [];
@@ -94,13 +96,23 @@
 							<button class="history-entry" onclick={() => applyHistoryEntry(entry)}>
 								<div class="entry-header">
 									<span class="entry-date">{formatDate(entry.createdAt)}</span>
-									<span class="entry-info">{entry.numberOfPizzas} pizzaer, {entry.doughBallWeight}g</span>
+									<span class="entry-info"
+										>{entry.numberOfPizzas} pizzaer, {entry.doughBallWeight}g</span
+									>
 									<span
 										class="btn-icon delete-btn"
 										role="button"
 										tabindex="0"
-										onclick={(e) => { e.stopPropagation(); deleteHistoryEntry(entry.id); }}
-										onkeydown={(e) => { if (e.key === 'Enter') { e.stopPropagation(); deleteHistoryEntry(entry.id); } }}
+										onclick={(e) => {
+											e.stopPropagation();
+											deleteHistoryEntry(entry.id);
+										}}
+										onkeydown={(e) => {
+											if (e.key === 'Enter') {
+												e.stopPropagation();
+												deleteHistoryEntry(entry.id);
+											}
+										}}
 										title="Slet"
 									>
 										&times;
@@ -109,7 +121,11 @@
 								{#if Object.keys(entry.ingredients).length > 0}
 									<ul class="entry-changes">
 										{#each getIngredientChanges(entry) as change}
-											<li>{change.name}: {change.original.toFixed(1)}% &rarr; {change.custom.toFixed(1)}%</li>
+											<li>
+												{change.name}: {change.original.toFixed(1)}% &rarr; {change.custom.toFixed(
+													1
+												)}%
+											</li>
 										{/each}
 									</ul>
 								{/if}
@@ -202,7 +218,9 @@
 		border-radius: var(--radius-sm);
 		padding: var(--spacing-sm);
 		cursor: pointer;
-		transition: border-color 0.2s, background-color 0.2s;
+		transition:
+			border-color 0.2s,
+			background-color 0.2s;
 	}
 
 	.history-entry:hover {
