@@ -120,9 +120,7 @@ export function scaleRecipe(
 
 	// Calculate predough flour weight for stage percentage calculation
 	const predoughFlourWeight =
-		hasPredough && effectivePredoughRatio !== null
-			? totalFlourWeight * effectivePredoughRatio
-			: 0;
+		hasPredough && effectivePredoughRatio !== null ? totalFlourWeight * effectivePredoughRatio : 0;
 	const mainFlourWeight = totalFlourWeight - predoughFlourWeight;
 
 	// Scale each ingredient and calculate stage percentages

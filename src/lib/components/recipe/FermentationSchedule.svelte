@@ -76,7 +76,11 @@
 <div class="schedule">
 	<div class="timeline">
 		{#each recipe.schedule.stages as stage, index}
-			{@const stageIngredients = getIngredientsForStage(stage.id, stage.nameDa, $calculator.scaledIngredients)}
+			{@const stageIngredients = getIngredientsForStage(
+				stage.id,
+				stage.nameDa,
+				$calculator.scaledIngredients
+			)}
 			<div
 				class="stage"
 				class:first={index === 0}

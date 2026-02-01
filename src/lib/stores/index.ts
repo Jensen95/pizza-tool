@@ -7,7 +7,13 @@ export {
 	getTimeRemaining,
 	isTimerComplete
 } from './timers';
-export { calculator, totalWeight, flourWeight, ingredientsByStage, predoughRatio } from './calculator';
+export {
+	calculator,
+	totalWeight,
+	flourWeight,
+	ingredientsByStage,
+	predoughRatio
+} from './calculator';
 export { preferences, type Preferences } from './preferences';
 export {
 	customizations,

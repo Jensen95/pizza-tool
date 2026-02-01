@@ -77,9 +77,7 @@
 
 	let ingredientGroups = $derived(groupIngredientsByStage($calculator.scaledIngredients));
 	let hasCustomizations = $derived(calculator.hasCustomizations());
-	let hasPredoughRatioChanged = $derived(
-		$predoughRatio !== null && originalPredoughRatio !== null
-	);
+	let hasPredoughRatioChanged = $derived($predoughRatio !== null && originalPredoughRatio !== null);
 
 	const stageLabels: Record<string, string> = {
 		poolish: 'Poolish',
