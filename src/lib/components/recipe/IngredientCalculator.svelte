@@ -235,7 +235,6 @@
 		</div>
 	</div>
 
-
 	{#if hasCustomizations}
 		<div class="customization-actions">
 			<button class="btn btn-secondary" onclick={resetAllCustomizations}> Nulstil alle </button>
