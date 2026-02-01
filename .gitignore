@@ -29,6 +29,3 @@ coverage
 /test-results/
 /playwright-report/
 /playwright/.cache/
-
-# Temporary scripts
-capture-screenshots.js
