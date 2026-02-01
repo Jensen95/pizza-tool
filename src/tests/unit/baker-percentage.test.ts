@@ -24,9 +24,9 @@ describe("Baker's Percentage - Basic Calculations", () => {
 			expect(calculateIngredientWeight(1000, 2.7)).toBe(27);
 		});
 
-		it('should round to nearest gram', () => {
-			expect(calculateIngredientWeight(1000, 2.75)).toBe(28);
-			expect(calculateIngredientWeight(1000, 2.74)).toBe(27);
+		it('should calculate with two decimal precision', () => {
+			expect(calculateIngredientWeight(1000, 2.75)).toBe(27.5);
+			expect(calculateIngredientWeight(1000, 2.74)).toBe(27.4);
 		});
 
 		it('should handle small percentages', () => {
@@ -100,8 +100,10 @@ describe("Baker's Percentage - Basic Calculations", () => {
 			expect(formatWeight(2350)).toBe('2.35 kg');
 		});
 
-		it('should round grams to integer', () => {
-			expect(formatWeight(123.7)).toBe('124 g');
+		it('should display grams with two decimals when not an integer', () => {
+			expect(formatWeight(123.7)).toBe('123.70 g');
+			expect(formatWeight(123.75)).toBe('123.75 g');
+			expect(formatWeight(123)).toBe('123 g'); // Integers show without decimals
 		});
 	});
 });
@@ -159,16 +161,16 @@ describe("Baker's Percentage - Recipe Scaling", () => {
 			});
 
 			expect(result.totalDoughWeight).toBe(1080);
-			expect(result.totalFlourWeight).toBe(643); // 1080 * 100 / 168 ≈ 644
+			expect(result.totalFlourWeight).toBe(643); // 1080 * 100 / 168 ≈ 643
 
-			// Check scaled ingredients
+			// Check scaled ingredients (now with two decimal precision)
 			const flour = result.scaledIngredients.find((i) => i.id === 'flour');
 			const water = result.scaledIngredients.find((i) => i.id === 'water');
 			const salt = result.scaledIngredients.find((i) => i.id === 'salt');
 
 			expect(flour?.weight).toBe(643);
-			expect(water?.weight).toBe(418); // 644 * 0.65
-			expect(salt?.weight).toBe(17); // 644 * 0.027
+			expect(water?.weight).toBe(417.95); // 643 * 0.65
+			expect(salt?.weight).toBe(17.36); // 643 * 0.027
 		});
 
 		it('should maintain percentages in scaled ingredients', () => {

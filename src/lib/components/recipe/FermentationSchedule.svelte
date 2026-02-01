@@ -1,7 +1,9 @@
 <script lang="ts">
-	import type { Recipe } from '$lib/types';
+	import type { Recipe, FermentationStage } from '$lib/types';
+	import type { ScaledIngredient } from '$lib/types/ingredient';
 	import { formatDuration } from '$lib/types/timer';
-	import { timers } from '$lib/stores';
+	import { timers, calculator } from '$lib/stores';
+	import { formatWeight, isPredoughStage } from '$lib/utils/baker-percentage';
 
 	let { recipe }: { recipe: Recipe } = $props();
 
@@ -11,6 +13,61 @@
 		warm: 'Varmt sted'
 	};
 
+	// Map schedule stage IDs to ingredient stages
+	const scheduleStageToIngredientStage: Record<string, FermentationStage | 'main'> = {
+		'stage-1': 'poolish', // First stage is usually predough
+		'stage-2': 'main', // Main dough stage
+		poolish: 'poolish',
+		biga: 'biga',
+		preferment: 'preferment',
+		main: 'main',
+		hoveddej: 'main'
+	};
+
+	// Get ingredients for a specific schedule stage
+	function getIngredientsForStage(
+		stageId: string,
+		stageName: string,
+		scaledIngredients: ScaledIngredient[]
+	): ScaledIngredient[] {
+		// Try to determine the ingredient stage from the schedule stage
+		const lowerName = stageName.toLowerCase();
+
+		// Check if it's a predough stage
+		if (
+			lowerName.includes('poolish') ||
+			lowerName.includes('biga') ||
+			lowerName.includes('fordej')
+		) {
+			return scaledIngredients.filter((ing) => isPredoughStage(ing.stage));
+		}
+
+		// Check if it's a main dough stage
+		if (
+			lowerName.includes('hoveddej') ||
+			lowerName.includes('main') ||
+			lowerName.includes('dag 2')
+		) {
+			return scaledIngredients.filter((ing) => !isPredoughStage(ing.stage) || ing.stage === 'main');
+		}
+
+		// Fallback: try to match by stage ID
+		const ingredientStage = scheduleStageToIngredientStage[stageId];
+		if (ingredientStage) {
+			if (ingredientStage === 'main') {
+				return scaledIngredients.filter((ing) => !isPredoughStage(ing.stage));
+			}
+			return scaledIngredients.filter((ing) => ing.stage === ingredientStage);
+		}
+
+		return [];
+	}
+
+	// Format ingredient for display
+	function formatIngredient(ingredient: ScaledIngredient): string {
+		return `${formatWeight(ingredient.weight)} ${ingredient.nameDa.toLowerCase()}`;
+	}
+
 	function startTimer(stageName: string, duration: number) {
 		timers.create(stageName, duration, recipe.id);
 	}
@@ -19,6 +76,7 @@
 <div class="schedule">
 	<div class="timeline">
 		{#each recipe.schedule.stages as stage, index}
+			{@const stageIngredients = getIngredientsForStage(stage.id, stage.nameDa, $calculator.scaledIngredients)}
 			<div
 				class="stage"
 				class:first={index === 0}
@@ -46,12 +104,12 @@
 						{/if}
 					</div>
 
-					{#if stage.ingredientsDa && stage.ingredientsDa.length > 0}
+					{#if stageIngredients.length > 0}
 						<div class="stage-ingredients">
 							<span class="ingredients-label">Ingredienser:</span>
 							<ul class="ingredients-list">
-								{#each stage.ingredientsDa as ingredient}
-									<li>{ingredient}</li>
+								{#each stageIngredients as ingredient}
+									<li>{formatIngredient(ingredient)}</li>
 								{/each}
 							</ul>
 						</div>

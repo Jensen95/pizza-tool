@@ -18,7 +18,8 @@ export type FermentationStage =
 	| 'autolyse'
 	| 'bulk'
 	| 'ball'
-	| 'final';
+	| 'final'
+	| 'main';
 
 export interface RecipeIngredient {
 	id: string;

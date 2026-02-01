@@ -1,7 +1,7 @@
 import { writable, derived, get } from 'svelte/store';
 import type { Recipe } from '$lib/types/recipe';
 import type { CalculatorState, ScaledIngredient } from '$lib/types/ingredient';
-import { scaleRecipe } from '$lib/utils/baker-percentage';
+import { scaleRecipe, getOriginalPredoughRatio } from '$lib/utils/baker-percentage';
 import * as storage from '$lib/utils/storage';
 
 const CALCULATOR_STORAGE_KEY = 'calculator';
@@ -12,6 +12,7 @@ const defaultState: CalculatorState = {
 	doughBallWeight: 270,
 	totalDoughWeight: 1080,
 	totalFlourWeight: 0,
+	predoughRatio: null,
 	scaledIngredients: []
 };
 
@@ -25,7 +26,8 @@ function loadState(): CalculatorState {
 		...stored,
 		// Don't persist calculated values
 		scaledIngredients: [],
-		totalFlourWeight: 0
+		totalFlourWeight: 0,
+		predoughRatio: null
 	};
 }
 
@@ -51,7 +53,8 @@ function createCalculatorStore() {
 				...state,
 				scaledIngredients: [],
 				totalFlourWeight: 0,
-				totalDoughWeight: state.numberOfPizzas * state.doughBallWeight
+				totalDoughWeight: state.numberOfPizzas * state.doughBallWeight,
+				predoughRatio: null
 			};
 		}
 
@@ -69,7 +72,8 @@ function createCalculatorStore() {
 			recipeWithCustoms,
 			{
 				numberOfPizzas: state.numberOfPizzas,
-				doughBallWeight: state.doughBallWeight
+				doughBallWeight: state.doughBallWeight,
+				predoughRatio: state.predoughRatio
 			}
 		);
 
@@ -95,16 +99,46 @@ function createCalculatorStore() {
 		/**
 		 * Set the current recipe
 		 * Keeps current pizza count and weight (doesn't reset to recipe defaults)
+		 * Resets predoughRatio to null (uses recipe default)
 		 */
 		setRecipe(recipe: Recipe | null) {
 			currentRecipe = recipe;
 			update((state) => {
 				const newState = recalculate({
 					...state,
-					recipeId: recipe?.id || null
+					recipeId: recipe?.id || null,
+					predoughRatio: null // Reset to recipe default when switching recipes
 				});
 				return newState;
 			});
+		},
+
+		/**
+		 * Set predough ratio (percentage of total flour in predough)
+		 * @param ratio - ratio as decimal (e.g., 0.2 for 20%), or null to use recipe default
+		 */
+		setPredoughRatio(ratio: number | null) {
+			if (ratio !== null) {
+				if (ratio < 0.05) ratio = 0.05; // Minimum 5%
+				if (ratio > 0.95) ratio = 0.95; // Maximum 95%
+			}
+
+			update((state) => {
+				const newState = recalculate({
+					...state,
+					predoughRatio: ratio
+				});
+				return newState;
+			});
+		},
+
+		/**
+		 * Get the original predough ratio from the current recipe
+		 * Returns null if no predough in recipe
+		 */
+		getOriginalPredoughRatio(): number | null {
+			if (!currentRecipe) return null;
+			return getOriginalPredoughRatio(currentRecipe);
 		},
 
 		/**
@@ -299,3 +333,8 @@ export const ingredientsByStage = derived(calculator, ($calculator) => {
 
 	return stages;
 });
+
+/**
+ * Derived store for predough ratio
+ */
+export const predoughRatio = derived(calculator, ($calculator) => $calculator.predoughRatio);
