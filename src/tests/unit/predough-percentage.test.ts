@@ -46,7 +46,6 @@ describe('Predough Percentage Calculations', () => {
 					nameDa: 'Vand (hoveddej)',
 					percentage: 21,
 					type: 'water',
-					stage: 'main'
 				},
 				{
 					id: 'main-salt',
@@ -54,7 +53,6 @@ describe('Predough Percentage Calculations', () => {
 					nameDa: 'Salt',
 					percentage: 2.7,
 					type: 'salt',
-					stage: 'main'
 				}
 			],
 			schedule: {
@@ -146,7 +144,6 @@ describe('Predough Percentage Calculations', () => {
 					nameDa: 'Mel (hoveddej)',
 					percentage: 50,
 					type: 'flour',
-					stage: 'main'
 				},
 				{
 					id: 'main-water',
@@ -154,7 +151,6 @@ describe('Predough Percentage Calculations', () => {
 					nameDa: 'Vand (hoveddej)',
 					percentage: 20,
 					type: 'water',
-					stage: 'main'
 				},
 				{
 					id: 'main-salt',
@@ -162,7 +158,6 @@ describe('Predough Percentage Calculations', () => {
 					nameDa: 'Salt',
 					percentage: 2.5,
 					type: 'salt',
-					stage: 'main'
 				}
 			],
 			schedule: {
@@ -256,7 +251,6 @@ describe('Predough Percentage Calculations', () => {
 						nameDa: 'Vand (hoveddej)',
 						percentage: 21,
 						type: 'water',
-						stage: 'main'
 					},
 					{
 						id: 'main-salt',
@@ -264,7 +258,6 @@ describe('Predough Percentage Calculations', () => {
 						nameDa: 'Salt',
 						percentage: 2.7,
 						type: 'salt',
-						stage: 'main'
 					}
 				],
 				schedule: { stages: [], totalTime: 0 }
@@ -292,7 +285,6 @@ describe('Predough Percentage Calculations', () => {
 						nameDa: 'Mel (hoveddej)',
 						percentage: 50,
 						type: 'flour',
-						stage: 'main'
 					},
 					// Adjust main water to maintain overall hydration
 					// Original total water: 65%, biga now has 22%, so main needs 43%
@@ -367,9 +359,7 @@ describe('Predough Percentage Calculations', () => {
 						nameDa: 'Vand',
 						percentage: 15,
 						type: 'water',
-						stage: 'main'
 					},
-					{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.5, type: 'salt', stage: 'main' }
 				],
 				schedule: { stages: [], totalTime: 0 }
 			};
@@ -399,7 +389,6 @@ describe('Predough Percentage Calculations', () => {
 						nameDa: 'Mel',
 						percentage: 70,
 						type: 'flour',
-						stage: 'main'
 					},
 					{
 						id: 'main-water',
@@ -407,9 +396,7 @@ describe('Predough Percentage Calculations', () => {
 						nameDa: 'Vand',
 						percentage: 50,
 						type: 'water',
-						stage: 'main'
 					},
-					{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.5, type: 'salt', stage: 'main' }
 				]
 			};
 
@@ -467,7 +454,6 @@ describe('Predough Percentage Calculations', () => {
 						nameDa: 'Vand',
 						percentage: 10,
 						type: 'water',
-						stage: 'main'
 					},
 					{
 						id: 'main-salt',
@@ -475,7 +461,6 @@ describe('Predough Percentage Calculations', () => {
 						nameDa: 'Salt',
 						percentage: 2.5,
 						type: 'salt',
-						stage: 'main'
 					},
 					{
 						id: 'main-yeast',
@@ -483,7 +468,6 @@ describe('Predough Percentage Calculations', () => {
 						nameDa: 'Gær',
 						percentage: 0.2,
 						type: 'yeast',
-						stage: 'main'
 					}
 				],
 				schedule: { stages: [], totalTime: 0 }
