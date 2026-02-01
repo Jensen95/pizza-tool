@@ -1,0 +1,129 @@
+{
+	"id": "vito-poolish-double",
+	"name": "Vito's Poolish Pizza - Double Fermented",
+	"nameDa": "Vito's Poolish Pizza - Dobbelt Fermentering",
+	"category": "poolish",
+	"baseWeight": 270,
+	"hydration": 65,
+	"yieldPizzas": 6,
+	"ingredients": [
+		{
+			"id": "poolish-flour",
+			"name": "Flour (poolish)",
+			"nameDa": "Mel (poolish)",
+			"percentage": 19.35,
+			"type": "flour",
+			"stage": "poolish"
+		},
+		{
+			"id": "poolish-water",
+			"name": "Water (poolish)",
+			"nameDa": "Vand (poolish)",
+			"percentage": 19.35,
+			"type": "water",
+			"stage": "poolish"
+		},
+		{
+			"id": "poolish-yeast",
+			"name": "Dry yeast (poolish)",
+			"nameDa": "Tørgær (poolish)",
+			"percentage": 0.32,
+			"type": "yeast",
+			"stage": "poolish"
+		},
+		{
+			"id": "poolish-honey",
+			"name": "Honey (poolish)",
+			"nameDa": "Honning (poolish)",
+			"percentage": 0.32,
+			"type": "sugar",
+			"stage": "poolish"
+		},
+		{
+			"id": "main-flour",
+			"name": "Flour (main dough)",
+			"nameDa": "Mel (hoveddej)",
+			"percentage": 80.65,
+			"type": "flour",
+			"stage": "main"
+		},
+		{
+			"id": "main-water",
+			"name": "Water (main dough)",
+			"nameDa": "Vand (hoveddej)",
+			"percentage": 45.15,
+			"type": "water",
+			"stage": "main"
+		},
+		{
+			"id": "main-salt",
+			"name": "Salt",
+			"nameDa": "Salt",
+			"percentage": 2.6,
+			"type": "salt",
+			"stage": "main"
+		}
+	],
+	"schedule": {
+		"stages": [
+			{
+				"id": "stage-1",
+				"name": "Poolish - Day 1",
+				"nameDa": "Dag 1 - Poolish",
+				"duration": 1440,
+				"temperature": 4,
+				"location": "fridge",
+				"canSetTimer": true,
+				"instructionsDa": "Gær og honning røres ud i vandet. Tilsæt halvdelen af melet og rør godt sammen. Tilsæt resten af melet og rør godt sammen. Lad det hæve i en lukket beholder (låg eller film) i 1 time ved stuetemperatur. Sæt poolishen (i lukket beholder) i køleskabet i 16-24 timer.",
+				"ingredientsDa": [
+					"187 g vand (25 grader)",
+					"3,1 g tørgær",
+					"3,1 g honning",
+					"187 g mel tipo 00"
+				]
+			},
+			{
+				"id": "stage-2",
+				"name": "First bulk fermentation",
+				"nameDa": "Dag 2 - Første hævning (16-24 timer i køleskab)",
+				"duration": 1440,
+				"temperature": 4,
+				"location": "fridge",
+				"canSetTimer": true,
+				"instructionsDa": "Tag poolish'en ud af køleskabet og lad den stå ved stuetemperatur i 1-2 timer. Poolish'en røres ud i vandet, hvorefter halvdelen af melet tilsættes. Tilsæt salt og resten af melet og ælt dejen godt. Vend dejen ud på bordet. Tag evt. lidt olie på hænderne for at undgå klistren. Lad den hvile tildækket i 15 min. Vend en skål ovenpå med bunden i vejret. Dejen virkes nu op indtil overfladen virker jævn (fold dejen til midten som en kuvert). Smør en skål med olivenolie (for at dejen ikke klistrer fast). Luk tæt med låg eller film og lad dejen hæve 16-24 timer i køleskabet.",
+				"ingredientsDa": ["436 g vand", "Poolish fra dag 1", "779 g mel tipo 00", "25 g salt"]
+			},
+			{
+				"id": "stage-3",
+				"name": "Room temperature rest",
+				"nameDa": "Dag 3 - Stuehvile",
+				"duration": 120,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Tag dejen ud og lad den stå i 1-2 timer ved stuetemperatur."
+			},
+			{
+				"id": "stage-4",
+				"name": "Ball rest",
+				"nameDa": "Kuglehvile",
+				"duration": 120,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Del dejen i 6 klumper af ca. 270 g. Tag evt. lidt olie på hænderne for at undgå klistren. Dejklumperne skal nu strammes op til kugler ved at folde oversiden ned mod midten. Gentag indtil overfladen virker jævn. Husk at få 'lukket' i bunden. Klap dejkuglerne med olie på hænderne og placer dem i en hævekasse. Dæk dem med låg eller folie og lad dem hæve 2 timer ved stuetemperatur."
+			}
+		],
+		"totalTime": 3120
+	},
+	"tipsDa": [
+		"Vito bruger megen tørgær! Du kan sagtens reducere til 0,2%",
+		"Honning kan undværes.",
+		"Den færdige dej temperatur bør ikke overstige 27 grader.",
+		"Dejen er klar når den er blank, glat og kan strækkes langt.",
+		"Tilberedningstid 37-53 timer",
+		"Den dobbelte fermentering giver en luftig dej og udvikler smagen i brødet.",
+		"Poolish er med til at udvikle smagen i brødet og giver en bedre skorpe."
+	],
+	"source": "Vito Iacopelli"
+}

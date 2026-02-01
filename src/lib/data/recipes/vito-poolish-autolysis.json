@@ -1,0 +1,141 @@
+{
+	"id": "vito-poolish-autolysis",
+	"name": "Vito's Poolish Pizza + Autolysis",
+	"nameDa": "Vito's Poolish Pizza + Autolyse",
+	"category": "poolish",
+	"baseWeight": 270,
+	"hydration": 65,
+	"yieldPizzas": 6,
+	"ingredients": [
+		{
+			"id": "poolish-flour",
+			"name": "Flour (poolish)",
+			"nameDa": "Mel (poolish)",
+			"percentage": 19.35,
+			"type": "flour",
+			"stage": "poolish"
+		},
+		{
+			"id": "poolish-water",
+			"name": "Water (poolish)",
+			"nameDa": "Vand (poolish)",
+			"percentage": 19.35,
+			"type": "water",
+			"stage": "poolish"
+		},
+		{
+			"id": "poolish-yeast",
+			"name": "Dry yeast (poolish)",
+			"nameDa": "Tørgær (poolish)",
+			"percentage": 0.32,
+			"type": "yeast",
+			"stage": "poolish"
+		},
+		{
+			"id": "poolish-honey",
+			"name": "Honey (poolish)",
+			"nameDa": "Honning (poolish)",
+			"percentage": 0.32,
+			"type": "sugar",
+			"stage": "poolish"
+		},
+		{
+			"id": "main-flour",
+			"name": "Flour (main dough)",
+			"nameDa": "Mel (hoveddej)",
+			"percentage": 80.65,
+			"type": "flour",
+			"stage": "main"
+		},
+		{
+			"id": "main-water",
+			"name": "Water (main dough)",
+			"nameDa": "Vand (hoveddej)",
+			"percentage": 45.15,
+			"type": "water",
+			"stage": "main"
+		},
+		{
+			"id": "main-salt",
+			"name": "Salt",
+			"nameDa": "Salt",
+			"percentage": 2.6,
+			"type": "salt",
+			"stage": "main"
+		}
+	],
+	"schedule": {
+		"stages": [
+			{
+				"id": "stage-1",
+				"name": "Poolish",
+				"nameDa": "Dag 1 - Poolish",
+				"duration": 1440,
+				"temperature": 4,
+				"location": "fridge",
+				"canSetTimer": true,
+				"instructionsDa": "Gær og honning røres ud i vandet. Tilsæt halvdelen af melet og rør godt sammen. Tilsæt resten af melet og rør godt sammen. Hvil tildækket 1 time ved stuetemperatur. Herefter i køleskab i 16-24 timer.",
+				"ingredientsDa": [
+					"187 g vand (25 grader)",
+					"3,1 g tørgær",
+					"3,1 g honning",
+					"187 g mel tipo 00"
+				]
+			},
+			{
+				"id": "stage-2",
+				"name": "Autolysis",
+				"nameDa": "Dag 2 - Autolyse",
+				"duration": 60,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Bland mel og vand ved lav hastighed indtil dejen samler sig. Lad dejen hvile tildækket ved stuetemperatur (20-25°) i 40-60 min. I mellemtiden tages poolishen ud og hviler 20 min ved stuetemperatur.",
+				"ingredientsDa": ["779 g mel tipo 00", "436 g vand"]
+			},
+			{
+				"id": "stage-3",
+				"name": "Main dough",
+				"nameDa": "Dag 2 - Hoveddej",
+				"duration": 30,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Bland dejen og poolish ved lav/mellem hastighed, indtil dejen er elastisk. Tilsæt salt og ælt den godt ind i dejen. Dejen ud på bordet. Fordel olien med hænderne ud over overfladen. Lad dejen hvile tildækket 15 min. Dejen virkes op med stretch & fold metoden. Læg dejen i lufttæt beholder og sæt den i køleskabet i 6 timer.",
+				"ingredientsDa": ["Autolyse fra trin 2", "Poolish fra dag 1", "25 g salt"]
+			},
+			{
+				"id": "stage-4",
+				"name": "Cold fermentation",
+				"nameDa": "Koldhævning",
+				"duration": 360,
+				"temperature": 4,
+				"location": "fridge",
+				"canSetTimer": true,
+				"instructionsDa": "Dejen hviler i køleskabet."
+			},
+			{
+				"id": "stage-5",
+				"name": "Ball rest",
+				"nameDa": "Kuglehvile",
+				"duration": 150,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Vend dejen ud på bordet og sørg for at få oversiden op. Det er vigtigt at holde en stejl kold og en stejl varm. Del dejen i 6 klumper af ca. 270 g. Stram dejkuglerne op og lad dem hæve tildækket 2-3 timer ved stuetemperatur. De skal hæve til ca dobbelt størrelse og tiden kan variere afhængigt af temperatur."
+			}
+		],
+		"totalTime": 2040
+	},
+	"tipsDa": [
+		"Vito bruger megen tørgær! Du kan sagtens reducere til 0,2%",
+		"Honning kan undværes.",
+		"Den færdige dej temperatur bør ikke overstige 27 grader.",
+		"Dejen er klar når den er blank, glat og kan strækkes langt.",
+		"Tilberedningstid 26-34 timer",
+		"Ved autolyse absorberer melet vandet og der dannes gluten.",
+		"Autolyse giver en bedre struktur og letter efterfølgende æltning.",
+		"Poolish er med til at udvikle smagen i brødet og giver en bedre skorpe."
+	],
+	"source": "Vito Iacopelli"
+}
