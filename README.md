@@ -170,6 +170,7 @@ This project uses GitHub Actions for continuous integration:
 ## Baker's Percentage Calculations
 
 The app includes comprehensive unit tests for baker's percentage calculations:
+
 - Basic ingredient weight calculations
 - Total flour calculations for target dough weights
 - Recipe scaling for any number of pizzas

@@ -1,9 +1,11 @@
 # GitHub Pages Setup Instructions
 
 ## Overview
+
 This project is now configured for automatic deployment to GitHub Pages. Follow these steps to complete the setup.
 
 ## Prerequisites
+
 - Repository must be public (or have GitHub Pages enabled for private repos with GitHub Pro)
 - You need admin access to the repository
 
@@ -55,24 +57,28 @@ npm run preview
 ## Troubleshooting
 
 ### Site not loading or 404 errors
+
 - Ensure GitHub Pages is enabled and set to "GitHub Actions" as the source
 - Check that the workflow completed successfully in the Actions tab
 - Wait a few minutes for GitHub Pages to update (it can take 5-10 minutes)
 
 ### Build fails in GitHub Actions
+
 - Check the workflow logs in the Actions tab
 - Ensure all dependencies are in package.json
 - Run `npm run build` locally to test
 
 ### Wrong base path
+
 - The base path is set to `/pizza-tool/` in `svelte.config.js`
 - If your repository has a different name, update the `paths.base` value
 
 ## CI/CD Pipeline
 
 Every pull request and push will run:
+
 - ✅ ESLint (code linting)
-- ✅ Prettier (formatting check)  
+- ✅ Prettier (formatting check)
 - ✅ TypeScript type checking
 - ✅ Vitest tests
 - ✅ Production build verification
