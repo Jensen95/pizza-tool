@@ -6,16 +6,22 @@
 
 	let { recipe }: { recipe: Recipe } = $props();
 
-	let numberOfPizzas = $state(0);
-	let doughBallWeight = $state(0);
 	let editingIngredient = $state<string | null>(null);
 	let editValue = $state('');
 
-	// Reset values when recipe changes
+	// Use calculator store values, initialize from store
+	let numberOfPizzas = $state($calculator.numberOfPizzas || 4);
+	let doughBallWeight = $state($calculator.doughBallWeight || 270);
+
+	// Set recipe in calculator when recipe changes
 	$effect(() => {
-		numberOfPizzas = recipe.yieldPizzas;
-		doughBallWeight = recipe.baseWeight;
 		calculator.setRecipe(recipe);
+	});
+
+	// Keep local state in sync with calculator store
+	$effect(() => {
+		numberOfPizzas = $calculator.numberOfPizzas;
+		doughBallWeight = $calculator.doughBallWeight;
 	});
 
 	function handlePizzaCountChange() {
@@ -217,7 +223,9 @@
 							<tr class:customized={isCustomized(ingredient.id)}>
 								<td>{ingredient.nameDa}</td>
 								<td class="right percentage-cell">
-									{#if editingIngredient === ingredient.id}
+									{#if ingredient.type === 'flour'}
+										<span class="percentage-static">{ingredient.percentage.toFixed(1)}%</span>
+									{:else if editingIngredient === ingredient.id}
 										<div class="edit-percentage">
 											<input
 												type="number"
@@ -276,7 +284,7 @@
 		{/each}
 	</div>
 
-	<p class="hint">Klik pa en procent for at tilpasse ingrediensen.</p>
+	<p class="hint">Klik paa en procent for at tilpasse ingrediensen (undtagen mel).</p>
 </div>
 
 <style>
@@ -427,6 +435,11 @@
 
 	.percentage-button:hover {
 		background: var(--color-surface);
+	}
+
+	.percentage-static {
+		padding: 2px 6px;
+		color: var(--color-text-secondary);
 	}
 
 	.original-percentage {

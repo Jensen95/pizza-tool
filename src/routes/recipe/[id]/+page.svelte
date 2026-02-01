@@ -66,6 +66,7 @@
 
 {#if recipe}
 	<div class="recipe-page">
+		<a href="/" class="back-link">&larr; Tilbage til opskrifter</a>
 		<RecipeDetail {recipe} />
 
 		<section class="recipe-section">
@@ -135,6 +136,20 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--spacing-lg);
+	}
+
+	.back-link {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--spacing-xs);
+		color: var(--color-text-secondary);
+		text-decoration: none;
+		font-size: var(--font-size-sm);
+		transition: color 0.2s;
+	}
+
+	.back-link:hover {
+		color: var(--color-primary);
 	}
 
 	.recipe-section {

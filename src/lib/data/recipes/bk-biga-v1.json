@@ -11,7 +11,7 @@
       "id": "biga-flour",
       "name": "Biga flour",
       "nameDa": "Mel (biga)",
-      "percentage": 50,
+      "percentage": 100,
       "type": "flour",
       "stage": "biga"
     },
@@ -19,7 +19,7 @@
       "id": "biga-water",
       "name": "Biga water",
       "nameDa": "Vand (biga)",
-      "percentage": 22,
+      "percentage": 44,
       "type": "water",
       "stage": "biga"
     },
@@ -32,18 +32,10 @@
       "stage": "biga"
     },
     {
-      "id": "main-flour",
-      "name": "Main dough flour",
-      "nameDa": "Mel (hoveddej)",
-      "percentage": 50,
-      "type": "flour",
-      "stage": "main"
-    },
-    {
       "id": "main-water",
       "name": "Main dough water",
       "nameDa": "Vand (hoveddej)",
-      "percentage": 43,
+      "percentage": 21,
       "type": "water",
       "stage": "main"
     },
@@ -53,14 +45,6 @@
       "nameDa": "Salt",
       "percentage": 2.7,
       "type": "salt",
-      "stage": "main"
-    },
-    {
-      "id": "main-yeast",
-      "name": "Main yeast",
-      "nameDa": "Toergaer (hoveddej)",
-      "percentage": 0.1,
-      "type": "yeast",
       "stage": "main"
     }
   ],
@@ -84,7 +68,7 @@
         "temperature": 20,
         "location": "room",
         "canSetTimer": true,
-        "instructionsDa": "Bland biga med koldt vand, mel, salt og gaer. Ael godt og lad haeve."
+        "instructionsDa": "Bland biga med koldt vand og salt. Ael godt og lad haeve."
       }
     ],
     "totalTime": 1620
@@ -94,7 +78,8 @@
     "Vand i hoveddejen skal vaere det koldeste fra hanen.",
     "Hoveddejen maa helst ikke overstige 20 grader.",
     "Dejen er klar naar den er blank, glat og kan straekkes langt.",
-    "V1 er god om sommeren, da den koldhaever."
+    "V1 er god om sommeren, da den koldhaever.",
+    "100% af melet fermenteres i bigaen for fuld smagsudvikling."
   ],
   "source": "BK_biga_v1"
 }

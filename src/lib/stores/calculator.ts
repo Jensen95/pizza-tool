@@ -91,17 +91,15 @@ function createCalculatorStore() {
 
 		/**
 		 * Set the current recipe
+		 * Keeps current pizza count and weight (doesn't reset to recipe defaults)
 		 */
 		setRecipe(recipe: Recipe | null) {
 			currentRecipe = recipe;
 			update((state) => {
 				const newState = recalculate({
 					...state,
-					recipeId: recipe?.id || null,
-					doughBallWeight: recipe?.baseWeight || state.doughBallWeight,
-					numberOfPizzas: recipe?.yieldPizzas || state.numberOfPizzas
+					recipeId: recipe?.id || null
 				});
-				saveState(newState);
 				return newState;
 			});
 		},
