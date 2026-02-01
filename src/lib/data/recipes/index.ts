@@ -1,6 +1,8 @@
 import type { Recipe, RecipeCategory, RecipeGroup } from '$lib/types';
 
 import vitoPoolish from './vito-poolish.json';
+import vitoPoolishDouble from './vito-poolish-double.json';
+import vitoPoolishAutolysis from './vito-poolish-autolysis.json';
 import gormsPizza from './gorms-pizza.json';
 import umutsPizza from './umuts-pizza.json';
 import tonyTigaPoolish from './tony-tiga-poolish.json';
@@ -21,6 +23,8 @@ import bkGlutenFree from './bk-gluten-free.json';
 
 export const recipes: Recipe[] = [
 	vitoPoolish as Recipe,
+	vitoPoolishDouble as Recipe,
+	vitoPoolishAutolysis as Recipe,
 	gormsPizza as Recipe,
 	umutsPizza as Recipe,
 	tonyTigaPoolish as Recipe,
