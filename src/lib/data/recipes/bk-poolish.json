@@ -26,7 +26,7 @@
 		{
 			"id": "poolish-yeast",
 			"name": "Poolish yeast",
-			"nameDa": "Toergaer (poolish)",
+			"nameDa": "Tørgær (poolish)",
 			"percentage": 0.1,
 			"type": "yeast",
 			"stage": "poolish"
@@ -66,7 +66,7 @@
 				"temperature": 4,
 				"location": "fridge",
 				"canSetTimer": true,
-				"instructionsDa": "Gaeren vendes i melet og vandet tilsaettes. Bland og lad hvile i koeleskab i 24 timer."
+				"instructionsDa": "Gæren vendes i melet og vandet tilsættes. Bland og lad hvile i køleskab i 24 timer."
 			},
 			{
 				"id": "stage-2",
@@ -76,7 +76,7 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Bland poolish med mel, vand og salt. Ael godt og lad haeve."
+				"instructionsDa": "Bland poolish med mel, vand og salt. Æl godt og lad hæve."
 			},
 			{
 				"id": "stage-3",
@@ -92,10 +92,10 @@
 		"totalTime": 1680
 	},
 	"tipsDa": [
-		"Toergaeren arbejder bedst i poolish naar vandet er 25-27 grader.",
-		"Poolish kan fermenteres op til 4 timer ved stuetemperatur eller 24 timer i koeleskab.",
-		"Soerg for at hoveddejen ender paa 24-27 grader.",
-		"Dejen er klar naar den er blank, glat og kan straekkes langt."
+		"Tørgæren arbejder bedst i poolish når vandet er 25-27 grader.",
+		"Poolish kan fermenteres op til 4 timer ved stuetemperatur eller 24 timer i køleskab.",
+		"Sørg for at hoveddejen ender på 24-27 grader.",
+		"Dejen er klar når den er blank, glat og kan strækkes langt."
 	],
 	"source": "BK_poolish"
 }

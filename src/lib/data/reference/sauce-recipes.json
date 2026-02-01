@@ -25,7 +25,7 @@
 			},
 			{
 				"name": "Dried oregano",
-				"nameDa": "Toerret oregano",
+				"nameDa": "Tørret oregano",
 				"amount": "2-3 pinches",
 				"amountDa": "2-3 fingerspidser"
 			},
@@ -37,17 +37,17 @@
 			},
 			{
 				"name": "Garlic",
-				"nameDa": "Hvidloeg",
+				"nameDa": "Hvidløg",
 				"amount": "optional",
 				"amountDa": "evt. et fed"
 			}
 		],
 		"instructionsDa": [
-			"Bland alle ingredienserne i en skål og roer dem godt sammen.",
+			"Bland alle ingredienserne i en skål og rør dem godt sammen.",
 			"Smag til med havsalt."
 		],
 		"yieldDa": "3-4 pizzaer",
-		"tipsDa": ["Saucen kan holde sig i koeleskabet op til 3 dage. Kan også fryses."]
+		"tipsDa": ["Saucen kan holde sig i køleskabet op til 3 dage. Kan også fryses."]
 	},
 	{
 		"id": "tomato-sauce-cooked",
@@ -63,13 +63,13 @@
 			},
 			{
 				"name": "Garlic",
-				"nameDa": "Hvidloeg",
+				"nameDa": "Hvidløg",
 				"amount": "1 clove",
 				"amountDa": "1 fed, finthakket"
 			},
 			{
 				"name": "Dried oregano",
-				"nameDa": "Toerret oregano",
+				"nameDa": "Tørret oregano",
 				"amount": "1 tsp",
 				"amountDa": "1 tsk"
 			},
@@ -99,8 +99,8 @@
 			}
 		],
 		"instructionsDa": [
-			"Steg hvidloeg i olivenolie.",
-			"Tilsaet tomater, vand og krydderier.",
+			"Steg hvidløg i olivenolie.",
+			"Tilsæt tomater, vand og krydderier.",
 			"Kog op og lad simre i 5-10 minutter."
 		],
 		"yieldDa": "3-4 pizzaer"

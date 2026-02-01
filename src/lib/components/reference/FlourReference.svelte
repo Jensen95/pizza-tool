@@ -7,7 +7,7 @@
 
 <div class="flour-reference">
 	<p class="intro">
-		Oversigt over meltyper og deres egenskaber. Vaelg mel baseret på fermentationstid og oensket
+		Oversigt over meltyper og deres egenskaber. Vælg mel baseret på fermentationstid og ønsket
 		resultat.
 	</p>
 
@@ -30,7 +30,7 @@
 					</div>
 					{#if flour.wValue || flour.wValueMin}
 						<div class="detail-row">
-							<span class="detail-label">W-vaerdi:</span>
+							<span class="detail-label">W-værdi:</span>
 							<span class="detail-value">
 								{flour.wValue || `${flour.wValueMin}-${flour.wValueMax}`}
 							</span>

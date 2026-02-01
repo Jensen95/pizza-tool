@@ -26,7 +26,7 @@
 		{
 			"id": "biga-yeast",
 			"name": "Biga yeast",
-			"nameDa": "Frisk gaer (biga)",
+			"nameDa": "Frisk gær (biga)",
 			"percentage": 0.3,
 			"type": "yeast",
 			"stage": "biga"
@@ -66,7 +66,7 @@
 				"temperature": 4,
 				"location": "fridge",
 				"canSetTimer": true,
-				"instructionsDa": "Oploes gaeren i vandet og tilsaet melet. Spred fingrene og bland til krummet konsistens. Lad hvile i koeleskab i 24 timer."
+				"instructionsDa": "Opløs gæren i vandet og tilsæt melet. Spred fingrene og bland til krummet konsistens. Lad hvile i køleskab i 24 timer."
 			},
 			{
 				"id": "stage-2",
@@ -76,17 +76,17 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Bland biga med koldt vand, mel og salt. Ael godt og lad haeve."
+				"instructionsDa": "Bland biga med koldt vand, mel og salt. Æl godt og lad hæve."
 			}
 		],
 		"totalTime": 1620
 	},
 	"tipsDa": [
-		"Frisk gaer kan oploeses i koldt eller lunkent vand.",
-		"Vand i hoveddejen skal vaere det koldeste fra vandhanen/koel.",
-		"Hoveddejen maa helst ikke overstige 20 grader.",
-		"Dejen er klar naar den er blank, glat og kan straekkes langt.",
-		"V2 er god naar der ikke er alt for varmt i lokalet."
+		"Frisk gær kan opløses i koldt eller lunkent vand.",
+		"Vand i hoveddejen skal være det koldeste fra vandhanen/køl.",
+		"Hoveddejen må helst ikke overstige 20 grader.",
+		"Dejen er klar når den er blank, glat og kan strækkes langt.",
+		"V2 er god når der ikke er alt for varmt i lokalet."
 	],
 	"source": "BK_biga_v2"
 }

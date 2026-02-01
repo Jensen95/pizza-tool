@@ -26,7 +26,7 @@
 		{
 			"id": "poolish-yeast",
 			"name": "Dry yeast (poolish)",
-			"nameDa": "Toerger (poolish)",
+			"nameDa": "Tørgær (poolish)",
 			"percentage": 0.32,
 			"type": "yeast",
 			"stage": "poolish"
@@ -74,10 +74,10 @@
 				"temperature": 4,
 				"location": "fridge",
 				"canSetTimer": true,
-				"instructionsDa": "Roer gaer og honning ud i vandet. Tilsaet melet og roer godt. Lad hvile 1 time ved stuetemperatur, derefter i koeleskab 16-24 timer.",
+				"instructionsDa": "Rør gær og honning ud i vandet. Tilsæt melet og rør godt. Lad hvile 1 time ved stuetemperatur, derefter i køleskab 16-24 timer.",
 				"ingredientsDa": [
 					"187 g vand (25 grader)",
-					"3,1 g toerger",
+					"3,1 g tørgær",
 					"3,1 g honning",
 					"187 g mel tipo 00"
 				]
@@ -90,18 +90,18 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Lad poolish hvile 20 min ved stuetemperatur. Roer poolish ud i vandet og tilsaet halvdelen af melet. Tilsaet salt og resten af melet. Virk dejen til den er glat.",
+				"instructionsDa": "Lad poolish hvile 20 min ved stuetemperatur. Rør poolish ud i vandet og tilsæt halvdelen af melet. Tilsæt salt og resten af melet. Virk dejen til den er glat.",
 				"ingredientsDa": ["436 g vand", "Poolish fra dag 1", "779 g mel tipo 00", "25 g salt"]
 			},
 			{
 				"id": "stage-3",
 				"name": "Bulk fermentation",
-				"nameDa": "Stuehaevning",
+				"nameDa": "Stuehævning",
 				"duration": 60,
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Lad dejen haeve i en lukket skaal ved stuetemperatur."
+				"instructionsDa": "Lad dejen hæve i en lukket skål ved stuetemperatur."
 			},
 			{
 				"id": "stage-4",
@@ -117,12 +117,12 @@
 		"totalTime": 1680
 	},
 	"tipsDa": [
-		"Vito bruger megen toerger! Du kan sagtens reducere til 0,2%",
-		"Honning kan undvaeres.",
-		"Den faerdige dej temperatur boer ikke overstige 27 grader.",
-		"Dejen er klar naar den er blank, glat og kan straekkes langt.",
+		"Vito bruger megen tørgær! Du kan sagtens reducere til 0,2%",
+		"Honning kan undværes.",
+		"Den færdige dej temperatur bør ikke overstige 27 grader.",
+		"Dejen er klar når den er blank, glat og kan strækkes langt.",
 		"Tilberedningstid 21-29 timer",
-		"Poolish er med til at udvikle smagen i broedet og giver en bedre skorpe."
+		"Poolish er med til at udvikle smagen i brødet og giver en bedre skorpe."
 	],
 	"source": "Vito Iacopelli"
 }

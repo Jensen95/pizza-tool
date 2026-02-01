@@ -31,7 +31,7 @@
 		{
 			"id": "yeast",
 			"name": "Fresh yeast",
-			"nameDa": "Frisk gaer",
+			"nameDa": "Frisk gær",
 			"percentage": 0.5,
 			"type": "yeast"
 		}
@@ -46,17 +46,17 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": false,
-				"instructionsDa": "Mel og vand roeres let sammen til dejen samler sig. Tilsaet salt og gaer og ael godt."
+				"instructionsDa": "Mel og vand røres let sammen til dejen samler sig. Tilsæt salt og gær og æl godt."
 			},
 			{
 				"id": "stage-2",
 				"name": "Bulk ferment",
-				"nameDa": "Stuehaevning",
+				"nameDa": "Stuehævning",
 				"duration": 120,
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Lad haeve ved stuetemperatur."
+				"instructionsDa": "Lad hæve ved stuetemperatur."
 			},
 			{
 				"id": "stage-3",
@@ -72,11 +72,11 @@
 		"totalTime": 330
 	},
 	"tipsDa": [
-		"Frisk gaer arbejder bedst naar dejen er 25-27 grader.",
-		"Den faerdige dej temperatur boer ikke overstige 27 grader.",
-		"Husk: aeltetider er vejledende.",
-		"Dejen er klar naar den er blank, glat og kan straekkes langt.",
-		"Tip til 24 timers dej: Lad dejen bulkhaeve i 18 timer."
+		"Frisk gær arbejder bedst når dejen er 25-27 grader.",
+		"Den færdige dej temperatur bør ikke overstige 27 grader.",
+		"Husk: æltetider er vejledende.",
+		"Dejen er klar når den er blank, glat og kan strækkes langt.",
+		"Tip til 24 timers dej: Lad dejen bulkhæve i 18 timer."
 	],
 	"source": "BK_napoli"
 }

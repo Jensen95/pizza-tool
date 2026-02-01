@@ -95,7 +95,7 @@
 		</div>
 
 		<div class="setting-group">
-			<label class="setting-label" for="main-ball-weight">Kuglevaegt (g)</label>
+			<label class="setting-label" for="main-ball-weight">Kuglevægt (g)</label>
 			<div class="setting-controls">
 				<button class="btn btn-sm" onclick={decrementWeight} disabled={doughBallWeight <= 100}
 					>-5</button
@@ -122,7 +122,7 @@
 			<input
 				type="search"
 				class="search-input input"
-				placeholder="Soeg opskrifter..."
+				placeholder="Søg opskrifter..."
 				bind:value={searchQuery}
 			/>
 		</div>

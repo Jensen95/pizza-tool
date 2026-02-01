@@ -31,7 +31,7 @@
 		{
 			"id": "yeast",
 			"name": "Fresh yeast",
-			"nameDa": "Frisk gaer",
+			"nameDa": "Frisk gær",
 			"percentage": 0.4,
 			"type": "yeast"
 		}
@@ -46,17 +46,17 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": false,
-				"instructionsDa": "Oploes gaeren i vandet. Tilsaet mel og salt og ael godt."
+				"instructionsDa": "Opløs gæren i vandet. Tilsæt mel og salt og æl godt."
 			},
 			{
 				"id": "stage-2",
 				"name": "Room ferment",
-				"nameDa": "Stuehaevning",
+				"nameDa": "Stuehævning",
 				"duration": 1320,
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Lad haeve ved stuetemperatur i ca. 22 timer."
+				"instructionsDa": "Lad hæve ved stuetemperatur i ca. 22 timer."
 			},
 			{
 				"id": "stage-3",
@@ -72,8 +72,8 @@
 		"totalTime": 1470
 	},
 	"tipsDa": [
-		"Opskriften er god hvis du ikke har plads til koldhaevning i koeleskabet.",
-		"Ja, det er den rette maengde gaer i denne opskrift."
+		"Opskriften er god hvis du ikke har plads til koldhævning i køleskabet.",
+		"Ja, det er den rette mængde gær i denne opskrift."
 	],
 	"source": "Seb_24t"
 }
