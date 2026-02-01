@@ -1,6 +1,18 @@
 /* global clients */
 const CACHE_NAME = 'pizza-tool-v1';
-const STATIC_ASSETS = ['/', '/manifest.json', '/icons/icon-192.png', '/icons/icon-512.png'];
+const STATIC_ASSETS = [
+	'/',
+	'/manifest.json',
+	'/icons/icon.svg',
+	'/icons/icon-72.png',
+	'/icons/icon-96.png',
+	'/icons/icon-128.png',
+	'/icons/icon-144.png',
+	'/icons/icon-152.png',
+	'/icons/icon-192.png',
+	'/icons/icon-384.png',
+	'/icons/icon-512.png'
+];
 
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
