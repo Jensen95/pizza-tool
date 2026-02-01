@@ -91,12 +91,7 @@
 				"location": "fridge",
 				"canSetTimer": true,
 				"instructionsDa": "Tag poolish'en ud af køleskabet og lad den stå ved stuetemperatur i 1-2 timer. Poolish'en røres ud i vandet, hvorefter halvdelen af melet tilsættes. Tilsæt salt og resten af melet og ælt dejen godt. Vend dejen ud på bordet. Tag evt. lidt olie på hænderne for at undgå klistren. Lad den hvile tildækket i 15 min. Vend en skål ovenpå med bunden i vejret. Dejen virkes nu op indtil overfladen virker jævn (fold dejen til midten som en kuvert). Smør en skål med olivenolie (for at dejen ikke klistrer fast). Luk tæt med låg eller film og lad dejen hæve 16-24 timer i køleskabet.",
-				"ingredientsDa": [
-					"436 g vand",
-					"Poolish fra dag 1",
-					"779 g mel tipo 00",
-					"25 g salt"
-				]
+				"ingredientsDa": ["436 g vand", "Poolish fra dag 1", "779 g mel tipo 00", "25 g salt"]
 			},
 			{
 				"id": "stage-3",

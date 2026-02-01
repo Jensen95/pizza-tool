@@ -91,10 +91,7 @@
 				"location": "room",
 				"canSetTimer": true,
 				"instructionsDa": "Bland mel og vand ved lav hastighed indtil dejen samler sig. Lad dejen hvile tildækket ved stuetemperatur (20-25°) i 40-60 min. I mellemtiden tages poolishen ud og hviler 20 min ved stuetemperatur.",
-				"ingredientsDa": [
-					"779 g mel tipo 00",
-					"436 g vand"
-				]
+				"ingredientsDa": ["779 g mel tipo 00", "436 g vand"]
 			},
 			{
 				"id": "stage-3",
@@ -105,11 +102,7 @@
 				"location": "room",
 				"canSetTimer": true,
 				"instructionsDa": "Bland dejen og poolish ved lav/mellem hastighed, indtil dejen er elastisk. Tilsæt salt og ælt den godt ind i dejen. Dejen ud på bordet. Fordel olien med hænderne ud over overfladen. Lad dejen hvile tildækket 15 min. Dejen virkes op med stretch & fold metoden. Læg dejen i lufttæt beholder og sæt den i køleskabet i 6 timer.",
-				"ingredientsDa": [
-					"Autolyse fra trin 2",
-					"Poolish fra dag 1",
-					"25 g salt"
-				]
+				"ingredientsDa": ["Autolyse fra trin 2", "Poolish fra dag 1", "25 g salt"]
 			},
 			{
 				"id": "stage-4",
