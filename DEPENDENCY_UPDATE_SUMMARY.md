@@ -2,6 +2,22 @@
 
 This document summarizes the dependency and GitHub Actions updates performed on February 1, 2026.
 
+## Node.js Version Update
+
+**Updated from Node 20 to Node 24 LTS** ✅
+
+Changes made:
+- `.github/workflows/ci.yml`: Updated `node-version` from '20' to '24'
+- `.github/workflows/deploy.yml`: Updated `node-version` from '20' to '24'
+- `package.json`: Added `engines` field specifying Node >=24.0.0
+- `.nvmrc`: Created with value '24' for local development consistency
+
+Node 24 is the newest LTS (Long Term Support) version and provides:
+- Enhanced performance improvements
+- Latest security updates
+- Better ES module support
+- Improved V8 JavaScript engine
+
 ## npm Dependencies
 
 All npm dependencies were checked using `npm outdated`. 
@@ -23,6 +39,7 @@ The following GitHub Actions were updated to their latest major versions:
 | `actions/checkout` | v4 | **v6** | ✅ Updated |
 | `actions/setup-node` | v4 | **v6** | ✅ Updated |
 | `actions/upload-artifact` | v4 | v4 | ✅ Already latest |
+| Node.js version | 20 | **24** | ✅ Updated |
 
 ### Deploy Workflow (`.github/workflows/deploy.yml`)
 
@@ -32,6 +49,7 @@ The following GitHub Actions were updated to their latest major versions:
 | `actions/setup-node` | v4 | **v6** | ✅ Updated |
 | `actions/upload-pages-artifact` | v3 | v3 | ✅ Already latest |
 | `actions/deploy-pages` | v4 | v4 | ✅ Already latest |
+| Node.js version | 20 | **24** | ✅ Updated |
 
 ## What's New in Updated Actions
 
