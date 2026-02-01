@@ -45,14 +45,14 @@ describe('Predough Percentage Calculations', () => {
 					name: 'Main dough water',
 					nameDa: 'Vand (hoveddej)',
 					percentage: 21,
-					type: 'water',
+					type: 'water'
 				},
 				{
 					id: 'main-salt',
 					name: 'Salt',
 					nameDa: 'Salt',
 					percentage: 2.7,
-					type: 'salt',
+					type: 'salt'
 				}
 			],
 			schedule: {
@@ -143,21 +143,21 @@ describe('Predough Percentage Calculations', () => {
 					name: 'Main dough flour',
 					nameDa: 'Mel (hoveddej)',
 					percentage: 50,
-					type: 'flour',
+					type: 'flour'
 				},
 				{
 					id: 'main-water',
 					name: 'Main dough water',
 					nameDa: 'Vand (hoveddej)',
 					percentage: 20,
-					type: 'water',
+					type: 'water'
 				},
 				{
 					id: 'main-salt',
 					name: 'Salt',
 					nameDa: 'Salt',
 					percentage: 2.5,
-					type: 'salt',
+					type: 'salt'
 				}
 			],
 			schedule: {
@@ -250,14 +250,14 @@ describe('Predough Percentage Calculations', () => {
 						name: 'Main water',
 						nameDa: 'Vand (hoveddej)',
 						percentage: 21,
-						type: 'water',
+						type: 'water'
 					},
 					{
 						id: 'main-salt',
 						name: 'Salt',
 						nameDa: 'Salt',
 						percentage: 2.7,
-						type: 'salt',
+						type: 'salt'
 					}
 				],
 				schedule: { stages: [], totalTime: 0 }
@@ -284,7 +284,7 @@ describe('Predough Percentage Calculations', () => {
 						name: 'Main flour',
 						nameDa: 'Mel (hoveddej)',
 						percentage: 50,
-						type: 'flour',
+						type: 'flour'
 					},
 					// Adjust main water to maintain overall hydration
 					// Original total water: 65%, biga now has 22%, so main needs 43%
@@ -358,8 +358,8 @@ describe('Predough Percentage Calculations', () => {
 						name: 'Water',
 						nameDa: 'Vand',
 						percentage: 15,
-						type: 'water',
-					},
+						type: 'water'
+					}
 				],
 				schedule: { stages: [], totalTime: 0 }
 			};
@@ -388,15 +388,15 @@ describe('Predough Percentage Calculations', () => {
 						name: 'Flour',
 						nameDa: 'Mel',
 						percentage: 70,
-						type: 'flour',
+						type: 'flour'
 					},
 					{
 						id: 'main-water',
 						name: 'Water',
 						nameDa: 'Vand',
 						percentage: 50,
-						type: 'water',
-					},
+						type: 'water'
+					}
 				]
 			};
 
@@ -453,21 +453,21 @@ describe('Predough Percentage Calculations', () => {
 						name: 'Water',
 						nameDa: 'Vand',
 						percentage: 10,
-						type: 'water',
+						type: 'water'
 					},
 					{
 						id: 'main-salt',
 						name: 'Salt',
 						nameDa: 'Salt',
 						percentage: 2.5,
-						type: 'salt',
+						type: 'salt'
 					},
 					{
 						id: 'main-yeast',
 						name: 'Yeast',
 						nameDa: 'Gær',
 						percentage: 0.2,
-						type: 'yeast',
+						type: 'yeast'
 					}
 				],
 				schedule: { stages: [], totalTime: 0 }

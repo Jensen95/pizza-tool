@@ -8,7 +8,7 @@ export function isNotificationSupported(): boolean {
 /**
  * Get current notification permission status
  */
-export function getPermissionStatus(): NotificationPermission | 'unsupported' {
+export function getPermissionStatus(): 'granted' | 'denied' | 'default' | 'unsupported' {
 	if (!isNotificationSupported()) return 'unsupported';
 	return Notification.permission;
 }
@@ -16,7 +16,9 @@ export function getPermissionStatus(): NotificationPermission | 'unsupported' {
 /**
  * Request notification permission
  */
-export async function requestPermission(): Promise<NotificationPermission | 'unsupported'> {
+export async function requestPermission(): Promise<
+	'granted' | 'denied' | 'default' | 'unsupported'
+> {
 	if (!isNotificationSupported()) return 'unsupported';
 
 	if (Notification.permission === 'granted') {

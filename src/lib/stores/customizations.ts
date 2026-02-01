@@ -36,8 +36,7 @@ function loadHistory(): RecipeHistoryEntry[] {
 
 // Create the customizations store
 function createCustomizationsStore() {
-	const { subscribe, set, update } =
-		writable<Record<string, RecipeCustomization>>(loadCustomizations());
+	const { subscribe, update } = writable<Record<string, RecipeCustomization>>(loadCustomizations());
 
 	function save(customizations: Record<string, RecipeCustomization>) {
 		storage.set(CUSTOMIZATIONS_KEY, customizations);
