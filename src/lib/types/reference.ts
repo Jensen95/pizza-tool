@@ -101,9 +101,9 @@ export const flourTypeLabels: Record<FlourType['type'], string> = {
 };
 
 export const yeastTypeLabels: Record<YeastInfo['type'], string> = {
-	fresh: 'Frisk gaer',
-	'active-dry': 'Aktiv toergaer',
-	instant: 'Instant gaer'
+	fresh: 'Frisk gær',
+	'active-dry': 'Aktiv tørgær',
+	instant: 'Instant gær'
 };
 
 export const tipCategoryLabels: Record<Tip['category'], string> = {

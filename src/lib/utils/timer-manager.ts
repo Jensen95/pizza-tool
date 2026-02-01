@@ -151,8 +151,8 @@ export async function checkTimers(): Promise<Timer[]> {
 			updated = true;
 
 			// Send notification
-			await sendNotification('Timer faerdig!', {
-				body: `${timer.name} er faerdig`,
+			await sendNotification('Timer færdig!', {
+				body: `${timer.name} er færdig`,
 				tag: timer.id,
 				requireInteraction: true
 			});
