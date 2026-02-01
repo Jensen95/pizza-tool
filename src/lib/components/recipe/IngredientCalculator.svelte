@@ -17,8 +17,9 @@
 	let originalPredoughRatio = $derived(calculator.getOriginalPredoughRatio());
 	let hasPredough = $derived(originalPredoughRatio !== null);
 
-	// Local state for predough ratio percentage (for slider)
-	let predoughRatioPercent = $state<number>(0);
+	// Local state for main dough flour percentage (for slider)
+	// This is the inverse: 100% - predough% = main%
+	let mainDoughFlourPercent = $state<number>(100);
 
 	// Set recipe in calculator when recipe changes
 	$effect(() => {
@@ -31,14 +32,15 @@
 		doughBallWeight = $calculator.doughBallWeight;
 	});
 
-	// Initialize predough ratio from recipe or store
+	// Initialize main dough flour percentage from recipe or store
+	// Convert predough ratio to main dough percentage (100% - predough%)
 	$effect(() => {
 		const storeRatio = $predoughRatio;
 		const origRatio = calculator.getOriginalPredoughRatio();
 		if (storeRatio !== null) {
-			predoughRatioPercent = Math.round(storeRatio * 100);
+			mainDoughFlourPercent = Math.round((1 - storeRatio) * 100);
 		} else if (origRatio !== null) {
-			predoughRatioPercent = Math.round(origRatio * 100);
+			mainDoughFlourPercent = Math.round((1 - origRatio) * 100);
 		}
 	});
 
@@ -50,17 +52,24 @@
 		calculator.setDoughBallWeight(doughBallWeight);
 	}
 
-	function handlePredoughRatioChange() {
-		calculator.setPredoughRatio(predoughRatioPercent / 100);
+	function handleMainDoughFlourChange() {
+		// Convert main dough % to predough ratio (predough = 100% - main%)
+		const predoughRatio = (100 - mainDoughFlourPercent) / 100;
+		calculator.setPredoughRatio(predoughRatio);
 	}
 
-	function resetPredoughRatio() {
+	function resetFlourSplit() {
 		calculator.setPredoughRatio(null);
 		const origRatio = calculator.getOriginalPredoughRatio();
 		if (origRatio !== null) {
-			predoughRatioPercent = Math.round(origRatio * 100);
+			mainDoughFlourPercent = Math.round((1 - origRatio) * 100);
 		}
 	}
+
+	// Get original main dough flour percentage
+	let originalMainDoughPercent = $derived(
+		originalPredoughRatio !== null ? Math.round((1 - originalPredoughRatio) * 100) : 100
+	);
 
 	function groupIngredientsByStage(ingredients: ScaledIngredient[]) {
 		const groups = new Map<string, ScaledIngredient[]>();
@@ -77,7 +86,11 @@
 
 	let ingredientGroups = $derived(groupIngredientsByStage($calculator.scaledIngredients));
 	let hasCustomizations = $derived(calculator.hasCustomizations());
-	let hasPredoughRatioChanged = $derived($predoughRatio !== null && originalPredoughRatio !== null);
+	let hasFlourSplitChanged = $derived(
+		$predoughRatio !== null &&
+			originalPredoughRatio !== null &&
+			mainDoughFlourPercent !== originalMainDoughPercent
+	);
 
 	const stageLabels: Record<string, string> = {
 		poolish: 'Poolish',
@@ -222,29 +235,6 @@
 		</div>
 	</div>
 
-	{#if hasPredough}
-		<div class="predough-ratio">
-			<div class="predough-ratio-header">
-				<label class="label" for="predough-ratio">Fordej andel af total mel</label>
-				{#if hasPredoughRatioChanged}
-					<button class="btn-link" onclick={resetPredoughRatio}>Nulstil</button>
-				{/if}
-			</div>
-			<div class="predough-ratio-control">
-				<input
-					id="predough-ratio"
-					type="range"
-					class="slider"
-					bind:value={predoughRatioPercent}
-					oninput={handlePredoughRatioChange}
-					min="5"
-					max="95"
-					step="1"
-				/>
-				<span class="predough-ratio-value">{predoughRatioPercent}%</span>
-			</div>
-		</div>
-	{/if}
 
 	{#if hasCustomizations}
 		<div class="customization-actions">
@@ -257,6 +247,34 @@
 		{#each ingredientGroups as [stage, ingredients]}
 			<div class="ingredient-group">
 				<h4 class="group-title">{stageLabels[stage] || stage}</h4>
+
+				{#if hasPredough && (stage === 'main' || stage === 'hoveddej')}
+					<div class="flour-split-control">
+						<div class="flour-split-header">
+							<span class="flour-split-label">Mel i hoveddej</span>
+							{#if hasFlourSplitChanged}
+								<button class="btn-link" onclick={resetFlourSplit}>Nulstil</button>
+							{/if}
+						</div>
+						<div class="flour-split-slider">
+							<input
+								id="main-flour-percent"
+								type="range"
+								class="slider"
+								bind:value={mainDoughFlourPercent}
+								oninput={handleMainDoughFlourChange}
+								min="5"
+								max="95"
+								step="1"
+							/>
+							<span class="flour-split-value">{mainDoughFlourPercent}%</span>
+						</div>
+						<p class="flour-split-hint">
+							Fordej: {100 - mainDoughFlourPercent}% &middot; Hoveddej: {mainDoughFlourPercent}%
+						</p>
+					</div>
+				{/if}
+
 				<table class="ingredient-table">
 					<thead>
 						<tr>
@@ -268,7 +286,14 @@
 					<tbody>
 						{#each ingredients as ingredient}
 							<tr class:customized={isCustomized(ingredient.id)}>
-								<td>{ingredient.nameDa}</td>
+								<td>
+									{ingredient.nameDa}
+									{#if hasPredough && ingredient.type === 'flour'}
+										<span class="flour-ratio-badge">
+											{ingredient.percentage.toFixed(0)}% af total
+										</span>
+									{/if}
+								</td>
 								<td class="right percentage-cell">
 									{#if ingredient.type === 'flour'}
 										<span class="percentage-static">{ingredient.stagePercentage.toFixed(2)}%</span>
@@ -396,23 +421,31 @@
 		color: var(--color-primary);
 	}
 
-	.predough-ratio {
-		padding: var(--spacing-md);
-		background: var(--color-background);
-		border-radius: var(--radius-md);
+	.flour-split-control {
+		padding: var(--spacing-sm);
+		margin-bottom: var(--spacing-sm);
+		background: var(--color-surface);
+		border-radius: var(--radius-sm);
+		border-left: 3px solid var(--color-primary);
 	}
 
-	.predough-ratio-header {
+	.flour-split-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: var(--spacing-sm);
+		margin-bottom: var(--spacing-xs);
 	}
 
-	.predough-ratio-control {
+	.flour-split-label {
+		font-size: var(--font-size-sm);
+		font-weight: 500;
+		color: var(--color-text);
+	}
+
+	.flour-split-slider {
 		display: flex;
 		align-items: center;
-		gap: var(--spacing-md);
+		gap: var(--spacing-sm);
 	}
 
 	.slider {
@@ -442,11 +475,27 @@
 		border: none;
 	}
 
-	.predough-ratio-value {
+	.flour-split-value {
 		font-weight: 600;
 		color: var(--color-primary);
 		min-width: 45px;
 		text-align: right;
+	}
+
+	.flour-split-hint {
+		margin: var(--spacing-xs) 0 0;
+		font-size: var(--font-size-xs);
+		color: var(--color-text-secondary);
+	}
+
+	.flour-ratio-badge {
+		display: inline-block;
+		font-size: var(--font-size-xs);
+		color: var(--color-text-secondary);
+		background: var(--color-surface);
+		padding: 1px 6px;
+		border-radius: var(--radius-sm);
+		margin-left: var(--spacing-xs);
 	}
 
 	.btn-link {

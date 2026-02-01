@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { scaleRecipe, getTotalPercentage, calculateHydration } from '$lib/utils/baker-percentage';
+import {
+	scaleRecipe,
+	getTotalPercentage,
+	calculateHydration,
+	formatWeight
+} from '$lib/utils/baker-percentage';
 import type { Recipe } from '$lib/types/recipe';
 
 describe('Predough Percentage Calculations', () => {
@@ -608,6 +613,193 @@ describe('Predough Percentage Calculations', () => {
 			const totalWater = (autolysWater?.weight || 0) + (mainWater?.weight || 0);
 			const expectedWater = result.totalFlourWeight * 0.7;
 			expect(totalWater).toBeCloseTo(expectedWater, 1);
+		});
+	});
+});
+
+describe('Recipe Page Gram Display', () => {
+	// Test recipe matching bk-biga-v1.json structure
+	const bigaRecipe: Recipe = {
+		id: 'bk-biga-v1',
+		name: 'BK Biga v1',
+		nameDa: 'BK Biga v1',
+		category: 'biga',
+		baseWeight: 270,
+		hydration: 65,
+		yieldPizzas: 4,
+		ingredients: [
+			{
+				id: 'biga-flour',
+				name: 'Biga flour',
+				nameDa: 'Mel (biga)',
+				percentage: 100,
+				type: 'flour',
+				stage: 'biga'
+			},
+			{
+				id: 'biga-water',
+				name: 'Biga water',
+				nameDa: 'Vand (biga)',
+				percentage: 44,
+				type: 'water',
+				stage: 'biga'
+			},
+			{
+				id: 'biga-yeast',
+				name: 'Biga yeast',
+				nameDa: 'Toergaer (biga)',
+				percentage: 0.1,
+				type: 'yeast',
+				stage: 'biga'
+			},
+			{
+				id: 'main-water',
+				name: 'Main dough water',
+				nameDa: 'Vand (hoveddej)',
+				percentage: 21,
+				type: 'water',
+				stage: 'main'
+			},
+			{
+				id: 'main-salt',
+				name: 'Salt',
+				nameDa: 'Salt',
+				percentage: 2.7,
+				type: 'salt',
+				stage: 'main'
+			}
+		],
+		schedule: { stages: [], totalTime: 0 }
+	};
+
+	describe('Default values (4 pizzas, 270g each)', () => {
+		it('should display correct total dough weight', () => {
+			const result = scaleRecipe(bigaRecipe, { numberOfPizzas: 4, doughBallWeight: 270 });
+			expect(result.totalDoughWeight).toBe(1080);
+			expect(formatWeight(result.totalDoughWeight)).toBe('1.08 kg');
+		});
+
+		it('should display correct total flour weight', () => {
+			const result = scaleRecipe(bigaRecipe, { numberOfPizzas: 4, doughBallWeight: 270 });
+			// Total: 100 + 44 + 0.1 + 21 + 2.7 = 167.8%
+			// Flour = 1080 * 100 / 167.8 = 644g
+			expect(result.totalFlourWeight).toBe(644);
+			expect(formatWeight(result.totalFlourWeight)).toBe('644 g');
+		});
+
+		it('should display correct individual ingredient weights', () => {
+			const result = scaleRecipe(bigaRecipe, { numberOfPizzas: 4, doughBallWeight: 270 });
+
+			const bigaFlour = result.scaledIngredients.find((i) => i.id === 'biga-flour');
+			const bigaWater = result.scaledIngredients.find((i) => i.id === 'biga-water');
+			const bigaYeast = result.scaledIngredients.find((i) => i.id === 'biga-yeast');
+			const mainWater = result.scaledIngredients.find((i) => i.id === 'main-water');
+			const mainSalt = result.scaledIngredients.find((i) => i.id === 'main-salt');
+
+			// Biga flour: 644 * 100% = 644g
+			expect(bigaFlour?.weight).toBe(644);
+			expect(formatWeight(bigaFlour!.weight)).toBe('644 g');
+
+			// Biga water: 644 * 44% = 283.36g
+			expect(bigaWater?.weight).toBe(283.36);
+			expect(formatWeight(bigaWater!.weight)).toBe('283.36 g');
+
+			// Biga yeast: 644 * 0.1% = 0.64g
+			expect(bigaYeast?.weight).toBe(0.64);
+			expect(formatWeight(bigaYeast!.weight)).toBe('0.64 g');
+
+			// Main water: 644 * 21% = 135.24g
+			expect(mainWater?.weight).toBe(135.24);
+			expect(formatWeight(mainWater!.weight)).toBe('135.24 g');
+
+			// Main salt: 644 * 2.7% = 17.39g
+			expect(mainSalt?.weight).toBe(17.39);
+			expect(formatWeight(mainSalt!.weight)).toBe('17.39 g');
+		});
+	});
+
+	describe('Different pizza counts', () => {
+		it('should scale correctly for 2 pizzas', () => {
+			const result = scaleRecipe(bigaRecipe, { numberOfPizzas: 2, doughBallWeight: 270 });
+			// Total: 2 * 270 = 540g
+			expect(result.totalDoughWeight).toBe(540);
+			// Flour = 540 * 100 / 167.8 = 322g
+			expect(result.totalFlourWeight).toBe(322);
+		});
+
+		it('should scale correctly for 8 pizzas', () => {
+			const result = scaleRecipe(bigaRecipe, { numberOfPizzas: 8, doughBallWeight: 270 });
+			// Total: 8 * 270 = 2160g
+			expect(result.totalDoughWeight).toBe(2160);
+			// Flour = 2160 * 100 / 167.8 = 1287g
+			expect(result.totalFlourWeight).toBe(1287);
+			expect(formatWeight(result.totalFlourWeight)).toBe('1.29 kg');
+		});
+	});
+
+	describe('Different dough ball weights', () => {
+		it('should scale correctly for 300g balls', () => {
+			const result = scaleRecipe(bigaRecipe, { numberOfPizzas: 4, doughBallWeight: 300 });
+			// Total: 4 * 300 = 1200g
+			expect(result.totalDoughWeight).toBe(1200);
+			// Flour = 1200 * 100 / 167.8 = 715g
+			expect(result.totalFlourWeight).toBe(715);
+		});
+
+		it('should scale correctly for 200g balls (smaller pizzas)', () => {
+			const result = scaleRecipe(bigaRecipe, { numberOfPizzas: 4, doughBallWeight: 200 });
+			// Total: 4 * 200 = 800g
+			expect(result.totalDoughWeight).toBe(800);
+			// Flour = 800 * 100 / 167.8 = 477g
+			expect(result.totalFlourWeight).toBe(477);
+		});
+	});
+
+	describe('Predough ratio adjustments reflect in grams', () => {
+		it('should show correct grams when adjusting 100% biga to 50%', () => {
+			const result = scaleRecipe(bigaRecipe, {
+				numberOfPizzas: 4,
+				doughBallWeight: 270,
+				predoughRatio: 0.5
+			});
+
+			const bigaFlour = result.scaledIngredients.find((i) => i.id === 'biga-flour');
+			const mainFlour = result.scaledIngredients.find((i) => i.id === 'main-flour');
+			const bigaWater = result.scaledIngredients.find((i) => i.id === 'biga-water');
+			const mainWater = result.scaledIngredients.find((i) => i.id === 'main-water');
+
+			// With adjusted percentages, total will be different
+			// 50 + 22 + 0.05 + 50 + 43 + 2.7 = 167.75%
+			// Total flour remains similar
+
+			// Both flours should be roughly equal
+			expect(bigaFlour?.weight).toBeCloseTo(mainFlour!.weight, 0);
+
+			// Total flour split 50/50
+			const totalFlour = (bigaFlour?.weight || 0) + (mainFlour?.weight || 0);
+			expect(bigaFlour?.weight).toBeCloseTo(totalFlour * 0.5, 0);
+
+			// Total water should still be 65% of flour
+			const totalWater = (bigaWater?.weight || 0) + (mainWater?.weight || 0);
+			expect(totalWater).toBeCloseTo(result.totalFlourWeight * 0.65, 1);
+		});
+
+		it('should show correct grams when adjusting to 30% biga', () => {
+			const result = scaleRecipe(bigaRecipe, {
+				numberOfPizzas: 4,
+				doughBallWeight: 270,
+				predoughRatio: 0.3
+			});
+
+			const bigaFlour = result.scaledIngredients.find((i) => i.id === 'biga-flour');
+			const mainFlour = result.scaledIngredients.find((i) => i.id === 'main-flour');
+
+			// Biga flour should be 30% of total
+			const totalFlour = (bigaFlour?.weight || 0) + (mainFlour?.weight || 0);
+			expect((bigaFlour?.weight || 0) / totalFlour).toBeCloseTo(0.3, 1);
+
+			// Main flour should be 70% of total
+			expect((mainFlour?.weight || 0) / totalFlour).toBeCloseTo(0.7, 1);
 		});
 	});
 });
