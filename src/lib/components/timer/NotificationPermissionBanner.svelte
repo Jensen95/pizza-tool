@@ -61,15 +61,15 @@
 				<strong class="banner-title">Notifikationer deaktiveret</strong>
 				<p class="banner-description">
 					{#if permissionStatus === 'denied'}
-						Du har blokeret notifikationer. Aktiver dem i browserens indstillinger for at
-						modtage beskeder når timere er færdige.
+						Du har blokeret notifikationer. Aktiver dem i browserens indstillinger for at modtage
+						beskeder når timere er færdige.
 					{:else}
 						Tillad notifikationer for at få beskeder når dine timere er færdige.
 					{/if}
 				</p>
 			</div>
-			<button 
-				class="dismiss-button" 
+			<button
+				class="dismiss-button"
 				onclick={handleDismiss}
 				aria-label="Luk banner"
 				title="Vis ikke denne besked igen"
@@ -78,7 +78,11 @@
 			</button>
 		</div>
 		{#if permissionStatus === 'default'}
-			<button class="btn btn-primary banner-button" onclick={handleRequestPermission} disabled={isRequesting}>
+			<button
+				class="btn btn-primary banner-button"
+				onclick={handleRequestPermission}
+				disabled={isRequesting}
+			>
 				{isRequesting ? 'Anmoder...' : 'Tillad notifikationer'}
 			</button>
 		{/if}
@@ -142,7 +146,7 @@
 		align-items: center;
 		justify-content: center;
 		border-radius: var(--radius-sm);
-		transition: 
+		transition:
 			background-color 0.2s,
 			color 0.2s;
 	}
