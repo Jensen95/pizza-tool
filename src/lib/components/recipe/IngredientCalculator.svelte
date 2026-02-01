@@ -208,7 +208,7 @@
 			}
 			calculator.setIngredientPercentage(ingredientId, value);
 		}
-		
+
 		cancelEditing();
 	}
 
@@ -408,7 +408,9 @@
 		{/each}
 	</div>
 
-	<p class="hint">Klik paa en procent for at tilpasse ingrediensen. For mel skal total procent forblive konstant.</p>
+	<p class="hint">
+		Klik paa en procent for at tilpasse ingrediensen. For mel skal total procent forblive konstant.
+	</p>
 </div>
 
 <style>
