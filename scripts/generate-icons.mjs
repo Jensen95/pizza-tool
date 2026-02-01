@@ -1,6 +1,5 @@
 import sharp from 'sharp';
 import { readFileSync, mkdirSync } from 'fs';
-import { join } from 'path';
 
 async function generateIcons() {
 	const svgPath = 'static/icons/icon.svg';
