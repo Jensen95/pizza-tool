@@ -85,13 +85,13 @@ describe('Predough Percentage Calculations', () => {
 			// All flour goes to biga
 			expect(bigaFlour?.weight).toBe(644);
 
-			// Water split between biga and main dough
-			expect(bigaWater?.weight).toBe(283); // 644 * 0.44
-			expect(mainWater?.weight).toBe(135); // 644 * 0.21
+			// Water split between biga and main dough (now with two decimal precision)
+			expect(bigaWater?.weight).toBe(283.36); // 644 * 0.44
+			expect(mainWater?.weight).toBe(135.24); // 644 * 0.21
 
-			// Total water should equal hydration
+			// Total water should equal hydration (approximately)
 			const totalWater = (bigaWater?.weight || 0) + (mainWater?.weight || 0);
-			expect(totalWater).toBe(418); // 644 * 0.65
+			expect(totalWater).toBeCloseTo(418.6, 1); // 644 * 0.65
 		});
 
 		it('should calculate hydration correctly', () => {
@@ -482,10 +482,10 @@ describe('Predough Percentage Calculations', () => {
 			// All flour in autolyse
 			expect(autolysFlour?.weight).toBe(result.totalFlourWeight);
 
-			// Total water should be 70% hydration
+			// Total water should be 70% hydration (with two decimal precision)
 			const totalWater = (autolysWater?.weight || 0) + (mainWater?.weight || 0);
-			const expectedWater = Math.round(result.totalFlourWeight * 0.7);
-			expect(totalWater).toBe(expectedWater);
+			const expectedWater = result.totalFlourWeight * 0.7;
+			expect(totalWater).toBeCloseTo(expectedWater, 1);
 		});
 	});
 });

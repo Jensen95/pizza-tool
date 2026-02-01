@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Recipe } from '$lib/types';
 	import type { ScaledIngredient } from '$lib/types/ingredient';
-	import { calculator, totalWeight, flourWeight, recipeHistory } from '$lib/stores';
+	import { calculator, totalWeight, flourWeight, recipeHistory, predoughRatio } from '$lib/stores';
 	import { formatWeight } from '$lib/utils/baker-percentage';
 
 	let { recipe }: { recipe: Recipe } = $props();
@@ -12,6 +12,13 @@
 	// Use calculator store values, initialize from store
 	let numberOfPizzas = $state($calculator.numberOfPizzas || 4);
 	let doughBallWeight = $state($calculator.doughBallWeight || 270);
+
+	// Get original predough ratio from recipe
+	let originalPredoughRatio = $derived(calculator.getOriginalPredoughRatio());
+	let hasPredough = $derived(originalPredoughRatio !== null);
+
+	// Local state for predough ratio percentage (for slider)
+	let predoughRatioPercent = $state<number>(0);
 
 	// Set recipe in calculator when recipe changes
 	$effect(() => {
@@ -24,12 +31,35 @@
 		doughBallWeight = $calculator.doughBallWeight;
 	});
 
+	// Initialize predough ratio from recipe or store
+	$effect(() => {
+		const storeRatio = $predoughRatio;
+		const origRatio = calculator.getOriginalPredoughRatio();
+		if (storeRatio !== null) {
+			predoughRatioPercent = Math.round(storeRatio * 100);
+		} else if (origRatio !== null) {
+			predoughRatioPercent = Math.round(origRatio * 100);
+		}
+	});
+
 	function handlePizzaCountChange() {
 		calculator.setNumberOfPizzas(numberOfPizzas);
 	}
 
 	function handleWeightChange() {
 		calculator.setDoughBallWeight(doughBallWeight);
+	}
+
+	function handlePredoughRatioChange() {
+		calculator.setPredoughRatio(predoughRatioPercent / 100);
+	}
+
+	function resetPredoughRatio() {
+		calculator.setPredoughRatio(null);
+		const origRatio = calculator.getOriginalPredoughRatio();
+		if (origRatio !== null) {
+			predoughRatioPercent = Math.round(origRatio * 100);
+		}
 	}
 
 	function groupIngredientsByStage(ingredients: ScaledIngredient[]) {
@@ -47,6 +77,7 @@
 
 	let ingredientGroups = $derived(groupIngredientsByStage($calculator.scaledIngredients));
 	let hasCustomizations = $derived(calculator.hasCustomizations());
+	let hasPredoughRatioChanged = $derived($predoughRatio !== null && originalPredoughRatio !== null);
 
 	const stageLabels: Record<string, string> = {
 		poolish: 'Poolish',
@@ -71,18 +102,18 @@
 	}
 
 	function decrementWeight() {
-		doughBallWeight = Math.max(100, doughBallWeight - 10);
+		doughBallWeight = Math.max(100, doughBallWeight - 5);
 		handleWeightChange();
 	}
 
 	function incrementWeight() {
-		doughBallWeight = Math.min(500, doughBallWeight + 10);
+		doughBallWeight = Math.min(500, doughBallWeight + 5);
 		handleWeightChange();
 	}
 
 	function startEditing(ingredientId: string, currentPercentage: number) {
 		editingIngredient = ingredientId;
-		editValue = currentPercentage.toFixed(1);
+		editValue = currentPercentage.toFixed(2);
 	}
 
 	function cancelEditing() {
@@ -159,7 +190,7 @@
 				<button
 					class="btn btn-secondary"
 					onclick={decrementWeight}
-					disabled={doughBallWeight <= 100}>-10</button
+					disabled={doughBallWeight <= 100}>-5</button
 				>
 				<input
 					id="ball-weight"
@@ -169,12 +200,12 @@
 					onchange={handleWeightChange}
 					min="100"
 					max="500"
-					step="10"
+					step="5"
 				/>
 				<button
 					class="btn btn-secondary"
 					onclick={incrementWeight}
-					disabled={doughBallWeight >= 500}>+10</button
+					disabled={doughBallWeight >= 500}>+5</button
 				>
 			</div>
 		</div>
@@ -190,6 +221,30 @@
 			<span class="total-value">{formatWeight($flourWeight)}</span>
 		</div>
 	</div>
+
+	{#if hasPredough}
+		<div class="predough-ratio">
+			<div class="predough-ratio-header">
+				<label class="label" for="predough-ratio">Fordej andel af total mel</label>
+				{#if hasPredoughRatioChanged}
+					<button class="btn-link" onclick={resetPredoughRatio}>Nulstil</button>
+				{/if}
+			</div>
+			<div class="predough-ratio-control">
+				<input
+					id="predough-ratio"
+					type="range"
+					class="slider"
+					bind:value={predoughRatioPercent}
+					oninput={handlePredoughRatioChange}
+					min="5"
+					max="95"
+					step="1"
+				/>
+				<span class="predough-ratio-value">{predoughRatioPercent}%</span>
+			</div>
+		</div>
+	{/if}
 
 	{#if hasCustomizations}
 		<div class="customization-actions">
@@ -216,7 +271,7 @@
 								<td>{ingredient.nameDa}</td>
 								<td class="right percentage-cell">
 									{#if ingredient.type === 'flour'}
-										<span class="percentage-static">{ingredient.percentage.toFixed(1)}%</span>
+										<span class="percentage-static">{ingredient.stagePercentage.toFixed(2)}%</span>
 									{:else if editingIngredient === ingredient.id}
 										<div class="edit-percentage">
 											<input
@@ -242,13 +297,13 @@
 									{:else}
 										<button
 											class="percentage-button"
-											onclick={() => startEditing(ingredient.id, ingredient.percentage)}
+											onclick={() => startEditing(ingredient.id, ingredient.stagePercentage)}
 											title="Klik for at redigere"
 										>
-											{ingredient.percentage.toFixed(1)}%
+											{ingredient.stagePercentage.toFixed(2)}%
 											{#if isCustomized(ingredient.id)}
 												<span class="original-percentage">
-													(orig: {getOriginalPercentage(ingredient.id)?.toFixed(1)}%)
+													(orig: {getOriginalPercentage(ingredient.id)?.toFixed(2)}%)
 												</span>
 											{/if}
 										</button>
@@ -339,6 +394,73 @@
 		font-size: var(--font-size-lg);
 		font-weight: 600;
 		color: var(--color-primary);
+	}
+
+	.predough-ratio {
+		padding: var(--spacing-md);
+		background: var(--color-background);
+		border-radius: var(--radius-md);
+	}
+
+	.predough-ratio-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: var(--spacing-sm);
+	}
+
+	.predough-ratio-control {
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-md);
+	}
+
+	.slider {
+		flex: 1;
+		height: 8px;
+		border-radius: 4px;
+		background: var(--color-border);
+		appearance: none;
+		cursor: pointer;
+	}
+
+	.slider::-webkit-slider-thumb {
+		appearance: none;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background: var(--color-primary);
+		cursor: pointer;
+	}
+
+	.slider::-moz-range-thumb {
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background: var(--color-primary);
+		cursor: pointer;
+		border: none;
+	}
+
+	.predough-ratio-value {
+		font-weight: 600;
+		color: var(--color-primary);
+		min-width: 45px;
+		text-align: right;
+	}
+
+	.btn-link {
+		background: none;
+		border: none;
+		color: var(--color-primary);
+		cursor: pointer;
+		font-size: var(--font-size-sm);
+		text-decoration: underline;
+		padding: 0;
+	}
+
+	.btn-link:hover {
+		color: var(--color-primary-dark, var(--color-primary));
 	}
 
 	.ingredients {
