@@ -1,6 +1,7 @@
 <script lang="ts">
 	import TimerList from '$lib/components/timer/TimerList.svelte';
 	import TimerCreator from '$lib/components/timer/TimerCreator.svelte';
+	import NotificationPermissionBanner from '$lib/components/timer/NotificationPermissionBanner.svelte';
 </script>
 
 <svelte:head>
@@ -9,6 +10,8 @@
 
 <div class="timers-page">
 	<h1 class="page-title">Timere</h1>
+
+	<NotificationPermissionBanner />
 
 	<TimerList />
 
