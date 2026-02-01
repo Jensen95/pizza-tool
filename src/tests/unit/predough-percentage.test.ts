@@ -419,6 +419,128 @@ describe('Predough Percentage Calculations', () => {
 		});
 	});
 
+	describe('Using predoughRatio Parameter', () => {
+		// Recipe with 100% biga flour and NO main flour ingredient
+		const biga100Recipe: Recipe = {
+			id: 'test-biga-100-no-main',
+			name: 'Test Biga 100%',
+			nameDa: 'Test Biga 100%',
+			category: 'biga',
+			baseWeight: 270,
+			hydration: 65,
+			yieldPizzas: 4,
+			ingredients: [
+				{
+					id: 'biga-flour',
+					name: 'Biga flour',
+					nameDa: 'Mel (biga)',
+					percentage: 100,
+					type: 'flour',
+					stage: 'biga'
+				},
+				{
+					id: 'biga-water',
+					name: 'Biga water',
+					nameDa: 'Vand (biga)',
+					percentage: 44,
+					type: 'water',
+					stage: 'biga'
+				},
+				{
+					id: 'biga-yeast',
+					name: 'Biga yeast',
+					nameDa: 'Gær (biga)',
+					percentage: 0.1,
+					type: 'yeast',
+					stage: 'biga'
+				},
+				{
+					id: 'main-water',
+					name: 'Main water',
+					nameDa: 'Vand (hoveddej)',
+					percentage: 21,
+					type: 'water'
+				},
+				{
+					id: 'main-salt',
+					name: 'Salt',
+					nameDa: 'Salt',
+					percentage: 2.7,
+					type: 'salt'
+				}
+			],
+			schedule: { stages: [], totalTime: 0 }
+		};
+
+		it('should add main flour when adjusting 100% biga to 50%', () => {
+			const result = scaleRecipe(biga100Recipe, {
+				numberOfPizzas: 4,
+				doughBallWeight: 270,
+				predoughRatio: 0.5
+			});
+
+			const bigaFlour = result.scaledIngredients.find((i) => i.id === 'biga-flour');
+			const mainFlour = result.scaledIngredients.find((i) => i.id === 'main-flour');
+
+			// Main flour should be added
+			expect(mainFlour).toBeDefined();
+
+			// Both should have 50% of total flour
+			expect(bigaFlour?.percentage).toBe(50);
+			expect(mainFlour?.percentage).toBe(50);
+
+			// Weights should be equal
+			expect(bigaFlour?.weight).toBe(mainFlour?.weight);
+		});
+
+		it('should adjust main water to maintain hydration when reducing predough', () => {
+			const result = scaleRecipe(biga100Recipe, {
+				numberOfPizzas: 4,
+				doughBallWeight: 270,
+				predoughRatio: 0.5
+			});
+
+			const bigaWater = result.scaledIngredients.find((i) => i.id === 'biga-water');
+			const mainWater = result.scaledIngredients.find((i) => i.id === 'main-water');
+
+			// Biga water should be scaled down (44% * 0.5 = 22%)
+			expect(bigaWater?.percentage).toBeCloseTo(22, 1);
+
+			// Main water should increase to compensate (21% + 22% = 43%)
+			expect(mainWater?.percentage).toBeCloseTo(43, 1);
+
+			// Total water should still be 65% hydration
+			const totalWaterPct = (bigaWater?.percentage || 0) + (mainWater?.percentage || 0);
+			expect(totalWaterPct).toBeCloseTo(65, 1);
+		});
+
+		it('should not add main flour when predough ratio is 100%', () => {
+			const result = scaleRecipe(biga100Recipe, {
+				numberOfPizzas: 4,
+				doughBallWeight: 270,
+				predoughRatio: 1.0
+			});
+
+			const mainFlour = result.scaledIngredients.find((i) => i.id === 'main-flour');
+
+			// Main flour should NOT be added
+			expect(mainFlour).toBeUndefined();
+		});
+
+		it('should correctly scale predough yeast when adjusting ratio', () => {
+			const result = scaleRecipe(biga100Recipe, {
+				numberOfPizzas: 4,
+				doughBallWeight: 270,
+				predoughRatio: 0.5
+			});
+
+			const bigaYeast = result.scaledIngredients.find((i) => i.id === 'biga-yeast');
+
+			// Yeast should be scaled down (0.1% * 0.5 = 0.05%)
+			expect(bigaYeast?.percentage).toBeCloseTo(0.05, 2);
+		});
+	});
+
 	describe('Complex Multi-Stage Recipes', () => {
 		it('should handle recipe with autolyse stage', () => {
 			const autolysRecipe: Recipe = {

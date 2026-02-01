@@ -86,7 +86,7 @@ export function scaleRecipe(
 			: originalPredoughRatio;
 
 	// Calculate adjusted ingredients if predough ratio changed
-	let adjustedIngredients = recipe.ingredients;
+	let adjustedIngredients: RecipeIngredient[] = [...recipe.ingredients];
 	if (
 		hasPredough &&
 		effectivePredoughRatio !== null &&
@@ -95,6 +95,28 @@ export function scaleRecipe(
 		predoughRatio !== undefined
 	) {
 		const ratioMultiplier = predoughRatio / originalPredoughRatio;
+
+		// Calculate original predough water percentage to maintain total hydration
+		const originalPredoughWater = recipe.ingredients
+			.filter((ing) => ing.type === 'water' && isPredoughStage(ing.stage))
+			.reduce((sum, ing) => sum + ing.percentage, 0);
+
+		// Calculate new predough water percentage after scaling
+		const newPredoughWater = originalPredoughWater * ratioMultiplier;
+
+		// Calculate how much water was removed from predough
+		const waterDifference = originalPredoughWater - newPredoughWater;
+
+		// Check if main flour exists
+		const hasMainFlour = recipe.ingredients.some(
+			(ing) => ing.type === 'flour' && !isPredoughStage(ing.stage)
+		);
+
+		// Get predough stage name for creating new ingredients with correct names
+		const predoughIngredient = recipe.ingredients.find(
+			(ing) => ing.type === 'flour' && isPredoughStage(ing.stage)
+		);
+
 		adjustedIngredients = recipe.ingredients.map((ing) => {
 			if (isPredoughStage(ing.stage)) {
 				// Scale predough ingredients by the ratio change
@@ -107,9 +129,40 @@ export function scaleRecipe(
 				// Adjust main dough flour to compensate
 				const newMainFlourPct = 100 - predoughRatio * 100;
 				return { ...ing, percentage: newMainFlourPct };
+			} else if (ing.type === 'water' && !isPredoughStage(ing.stage)) {
+				// Adjust main dough water to maintain total hydration
+				return { ...ing, percentage: ing.percentage + waterDifference };
 			}
 			return ing;
 		});
+
+		// Add main flour if it doesn't exist and predough ratio is less than 100%
+		if (!hasMainFlour && predoughRatio < 1) {
+			const newMainFlourPct = 100 - predoughRatio * 100;
+			adjustedIngredients.push({
+				id: 'main-flour',
+				name: 'Main dough flour',
+				nameDa: 'Mel (hoveddej)',
+				percentage: newMainFlourPct,
+				type: 'flour',
+				stage: predoughIngredient?.stage === 'biga' ? 'main' : undefined
+			});
+		}
+
+		// Add main water if it doesn't exist and there's water to redistribute
+		const hasMainWater = recipe.ingredients.some(
+			(ing) => ing.type === 'water' && !isPredoughStage(ing.stage)
+		);
+		if (!hasMainWater && waterDifference > 0) {
+			adjustedIngredients.push({
+				id: 'main-water',
+				name: 'Main dough water',
+				nameDa: 'Vand (hoveddej)',
+				percentage: waterDifference,
+				type: 'water',
+				stage: predoughIngredient?.stage === 'biga' ? 'main' : undefined
+			});
+		}
 	}
 
 	// Get total percentage from adjusted ingredients
