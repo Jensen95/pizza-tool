@@ -35,7 +35,7 @@
 		{#if hasCompletedTimers}
 			<section class="timer-section">
 				<div class="section-header">
-					<h3 class="section-title">Faerdige timere</h3>
+					<h3 class="section-title">Færdige timere</h3>
 					<button class="btn btn-secondary clear-btn" onclick={clearCompleted}> Ryd alle </button>
 				</div>
 				<div class="timer-grid">

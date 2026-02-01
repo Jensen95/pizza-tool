@@ -111,8 +111,8 @@ export async function sendNotification(
  * Send a timer completion notification
  */
 export async function sendTimerNotification(timerName: string, timerId: string): Promise<boolean> {
-	return sendNotification('Timer faerdig!', {
-		body: `${timerName} er faerdig`,
+	return sendNotification('Timer færdig!', {
+		body: `${timerName} er færdig`,
 		tag: `timer-${timerId}`,
 		requireInteraction: true,
 		vibrate: [200, 100, 200, 100, 200],

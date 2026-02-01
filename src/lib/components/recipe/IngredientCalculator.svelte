@@ -97,7 +97,7 @@
 		biga: 'Biga',
 		preferment: 'Fordej',
 		autolyse: 'Autolyse',
-		bulk: 'Stuehaevning',
+		bulk: 'Stuehævning',
 		ball: 'Kugler',
 		final: 'Final',
 		hoveddej: 'Hoveddej',

@@ -49,7 +49,7 @@
 			<h3 class="timer-name">{timer.name}</h3>
 			<div class="timer-status">
 				{#if isCompleted}
-					<span class="status-badge completed">Faerdig!</span>
+					<span class="status-badge completed">Færdig!</span>
 				{:else if isPaused}
 					<span class="status-badge paused">Pauset</span>
 				{:else}
@@ -66,7 +66,7 @@
 			{#if isActive}
 				<button class="btn btn-secondary" onclick={handlePause}> Pause </button>
 			{:else if isPaused}
-				<button class="btn btn-primary" onclick={handleResume}> Fortsaet </button>
+				<button class="btn btn-primary" onclick={handleResume}> Fortsæt </button>
 			{/if}
 
 			<button class="btn btn-secondary delete-btn" onclick={handleCancel}>

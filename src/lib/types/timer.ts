@@ -38,14 +38,14 @@ export const defaultPresets: TimerPreset[] = [
 		name: 'Autolyse 1 hour',
 		nameDa: 'Autolyse 1 time',
 		duration: 60,
-		descriptionDa: 'Laengere hvile af mel og vand'
+		descriptionDa: 'Længere hvile af mel og vand'
 	},
 	{
 		id: 'bulk-2h',
 		name: 'Bulk fermentation 2h',
-		nameDa: 'Stuehaevning 2 timer',
+		nameDa: 'Stuehævning 2 timer',
 		duration: 120,
-		descriptionDa: 'Haevning ved stuetemperatur'
+		descriptionDa: 'Hævning ved stuetemperatur'
 	},
 	{
 		id: 'ball-rest',
@@ -66,21 +66,21 @@ export const defaultPresets: TimerPreset[] = [
 		name: 'Poolish 24h',
 		nameDa: 'Poolish 24 timer',
 		duration: 1440,
-		descriptionDa: 'Lang poolish haevning'
+		descriptionDa: 'Lang poolish hævning'
 	},
 	{
 		id: 'cold-24h',
 		name: 'Cold ferment 24h',
-		nameDa: 'Kold haevning 24 timer',
+		nameDa: 'Kold hævning 24 timer',
 		duration: 1440,
-		descriptionDa: 'Haevning i koeleskab'
+		descriptionDa: 'Hævning i køleskab'
 	},
 	{
 		id: 'cold-48h',
 		name: 'Cold ferment 48h',
-		nameDa: 'Kold haevning 48 timer',
+		nameDa: 'Kold hævning 48 timer',
 		duration: 2880,
-		descriptionDa: 'Lang haevning i koeleskab'
+		descriptionDa: 'Lang hævning i køleskab'
 	}
 ];
 

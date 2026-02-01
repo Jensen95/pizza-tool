@@ -42,10 +42,10 @@
 	{
 		"id": "tip-6",
 		"title": "Cold fermentation",
-		"titleDa": "Kold haevning",
+		"titleDa": "Kold hævning",
 		"category": "technique",
 		"content": "Cold fermentation benefits",
-		"contentDa": "Kold haevning i koeleskab giver mere smag og bedre tekstur. Minimum 24 timer anbefales."
+		"contentDa": "Kold hævning i køleskab giver mere smag og bedre tekstur. Minimum 24 timer anbefales."
 	},
 	{
 		"id": "tip-7",
@@ -58,9 +58,9 @@
 	{
 		"id": "tip-8",
 		"title": "Salt timing",
-		"titleDa": "Salt tilsaetning",
+		"titleDa": "Salt tilsætning",
 		"category": "technique",
 		"content": "When to add salt",
-		"contentDa": "Tilsaet salt efter gaeren er aktiveret. Salt hæmmer gaerens aktivitet og bør ikke tilsaettes samtidig."
+		"contentDa": "Tilsæt salt efter gæren er aktiveret. Salt hæmmer gærens aktivitet og bør ikke tilsættes samtidig."
 	}
 ]
