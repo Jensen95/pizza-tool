@@ -1,0 +1,32 @@
+[
+  {
+    "id": "fresh",
+    "type": "fresh",
+    "name": "Fresh yeast",
+    "nameDa": "Frisk gaer",
+    "conversionFactor": 1.0,
+    "notesDa": "Standard frisk gaer. Opbevares i koeleskab.",
+    "storageTempDa": "0-5°C",
+    "shelfLifeDa": "2-3 uger"
+  },
+  {
+    "id": "active-dry",
+    "type": "active-dry",
+    "name": "Active dry yeast",
+    "nameDa": "Aktiv toergaer",
+    "conversionFactor": 0.4,
+    "notesDa": "Skal aktiveres i lunkent vand foer brug.",
+    "storageTempDa": "Koelig og toer",
+    "shelfLifeDa": "12-18 måneder uåbnet"
+  },
+  {
+    "id": "instant",
+    "type": "instant",
+    "name": "Instant yeast",
+    "nameDa": "Instant gaer",
+    "conversionFactor": 0.33,
+    "notesDa": "Kan tilsaettes direkte til mel uden aktivering.",
+    "storageTempDa": "Koelig og toer",
+    "shelfLifeDa": "12-24 måneder uåbnet"
+  }
+]

@@ -1,0 +1,66 @@
+[
+  {
+    "id": "tip-1",
+    "title": "Hydration",
+    "titleDa": "Hydrering",
+    "category": "dough",
+    "content": "Hydration affects texture",
+    "contentDa": "Hydrering påvirker teksturen. 60-65% giver en let håndterbar dej, 70-75% giver mere luftig pizza."
+  },
+  {
+    "id": "tip-2",
+    "title": "Temperature",
+    "titleDa": "Temperatur",
+    "category": "dough",
+    "content": "Temperature affects fermentation",
+    "contentDa": "Temperaturen på dejen bør ikke overstige 27°C efter æltning. Brug koldt vand om sommeren."
+  },
+  {
+    "id": "tip-3",
+    "title": "Ready dough",
+    "titleDa": "Klar dej",
+    "category": "dough",
+    "content": "How to know when dough is ready",
+    "contentDa": "Dejen er klar når den er blank, glat og kan strækkes langt uden at gå i stykker (vinduestest)."
+  },
+  {
+    "id": "tip-4",
+    "title": "Poolish",
+    "titleDa": "Poolish",
+    "category": "technique",
+    "content": "Poolish benefits",
+    "contentDa": "Poolish er med til at udvikle smagen i brødet og giver en bedre skorpe og luftigere dej."
+  },
+  {
+    "id": "tip-5",
+    "title": "Flour strength",
+    "titleDa": "Melstyrke",
+    "category": "ingredients",
+    "content": "Flour W value",
+    "contentDa": "Vælg melstyrke (W-værdi) efter fermentationstid. Kort fermentering (4-8t): W200-250. Lang fermentering (24-72t): W300-400."
+  },
+  {
+    "id": "tip-6",
+    "title": "Cold fermentation",
+    "titleDa": "Kold haevning",
+    "category": "technique",
+    "content": "Cold fermentation benefits",
+    "contentDa": "Kold haevning i koeleskab giver mere smag og bedre tekstur. Minimum 24 timer anbefales."
+  },
+  {
+    "id": "tip-7",
+    "title": "Baking temperature",
+    "titleDa": "Ovntemperatur",
+    "category": "baking",
+    "content": "Baking temperature guide",
+    "contentDa": "Napolitansk: 450-500°C i 60-90 sekunder. NY style: 280-320°C i 5-7 minutter. Hjemmeovn: Så højt som muligt med pizzasten."
+  },
+  {
+    "id": "tip-8",
+    "title": "Salt timing",
+    "titleDa": "Salt tilsaetning",
+    "category": "technique",
+    "content": "When to add salt",
+    "contentDa": "Tilsaet salt efter gaeren er aktiveret. Salt hæmmer gaerens aktivitet og bør ikke tilsaettes samtidig."
+  }
+]

@@ -1,0 +1,492 @@
+<script lang="ts">
+	import type { Recipe } from '$lib/types';
+	import type { ScaledIngredient } from '$lib/types/ingredient';
+	import { calculator, totalWeight, flourWeight, recipeHistory } from '$lib/stores';
+	import { formatWeight } from '$lib/utils/baker-percentage';
+
+	let { recipe }: { recipe: Recipe } = $props();
+
+	let editingIngredient = $state<string | null>(null);
+	let editValue = $state('');
+
+	// Use calculator store values, initialize from store
+	let numberOfPizzas = $state($calculator.numberOfPizzas || 4);
+	let doughBallWeight = $state($calculator.doughBallWeight || 270);
+
+	// Set recipe in calculator when recipe changes
+	$effect(() => {
+		calculator.setRecipe(recipe);
+	});
+
+	// Keep local state in sync with calculator store
+	$effect(() => {
+		numberOfPizzas = $calculator.numberOfPizzas;
+		doughBallWeight = $calculator.doughBallWeight;
+	});
+
+	function handlePizzaCountChange() {
+		calculator.setNumberOfPizzas(numberOfPizzas);
+	}
+
+	function handleWeightChange() {
+		calculator.setDoughBallWeight(doughBallWeight);
+	}
+
+	function groupIngredientsByStage(ingredients: ScaledIngredient[]) {
+		const groups = new Map<string, ScaledIngredient[]>();
+
+		for (const ing of ingredients) {
+			const stage = ing.stage || 'hoveddej';
+			const existing = groups.get(stage) || [];
+			existing.push(ing);
+			groups.set(stage, existing);
+		}
+
+		return groups;
+	}
+
+	let ingredientGroups = $derived(groupIngredientsByStage($calculator.scaledIngredients));
+	let hasCustomizations = $derived(calculator.hasCustomizations());
+
+	const stageLabels: Record<string, string> = {
+		poolish: 'Poolish',
+		biga: 'Biga',
+		preferment: 'Fordej',
+		autolyse: 'Autolyse',
+		bulk: 'Stuehaevning',
+		ball: 'Kugler',
+		final: 'Final',
+		hoveddej: 'Hoveddej',
+		main: 'Hoveddej'
+	};
+
+	function decrementPizzas() {
+		numberOfPizzas = Math.max(1, numberOfPizzas - 1);
+		handlePizzaCountChange();
+	}
+
+	function incrementPizzas() {
+		numberOfPizzas = Math.min(100, numberOfPizzas + 1);
+		handlePizzaCountChange();
+	}
+
+	function decrementWeight() {
+		doughBallWeight = Math.max(100, doughBallWeight - 10);
+		handleWeightChange();
+	}
+
+	function incrementWeight() {
+		doughBallWeight = Math.min(500, doughBallWeight + 10);
+		handleWeightChange();
+	}
+
+	function startEditing(ingredientId: string, currentPercentage: number) {
+		editingIngredient = ingredientId;
+		editValue = currentPercentage.toFixed(1);
+	}
+
+	function cancelEditing() {
+		editingIngredient = null;
+		editValue = '';
+	}
+
+	function savePercentage(ingredientId: string) {
+		const value = parseFloat(editValue);
+		if (!isNaN(value) && value >= 0 && value <= 200) {
+			calculator.setIngredientPercentage(ingredientId, value);
+		}
+		cancelEditing();
+	}
+
+	function handleKeydown(event: KeyboardEvent, ingredientId: string) {
+		if (event.key === 'Enter') {
+			savePercentage(ingredientId);
+		} else if (event.key === 'Escape') {
+			cancelEditing();
+		}
+	}
+
+	function resetIngredient(ingredientId: string) {
+		calculator.resetIngredient(ingredientId);
+	}
+
+	function resetAllCustomizations() {
+		calculator.resetAllCustomizations();
+	}
+
+	function saveToHistory() {
+		const customIngredients = calculator.getCustomIngredients();
+		recipeHistory.saveToHistory(recipe, customIngredients, numberOfPizzas, doughBallWeight);
+	}
+
+	function isCustomized(ingredientId: string): boolean {
+		const customs = calculator.getCustomIngredients();
+		return ingredientId in customs;
+	}
+
+	function getOriginalPercentage(ingredientId: string): number | undefined {
+		const original = recipe.ingredients.find((i) => i.id === ingredientId);
+		return original?.percentage;
+	}
+</script>
+
+<div class="calculator">
+	<div class="inputs">
+		<div class="input-group">
+			<label class="label" for="pizza-count">Antal pizzaer</label>
+			<div class="input-with-buttons">
+				<button
+					class="btn btn-secondary"
+					onclick={decrementPizzas}
+					disabled={numberOfPizzas <= 1}
+				>-</button>
+				<input
+					id="pizza-count"
+					type="number"
+					class="input number-input"
+					bind:value={numberOfPizzas}
+					onchange={handlePizzaCountChange}
+					min="1"
+					max="100"
+				/>
+				<button
+					class="btn btn-secondary"
+					onclick={incrementPizzas}
+					disabled={numberOfPizzas >= 100}
+				>+</button>
+			</div>
+		</div>
+
+		<div class="input-group">
+			<label class="label" for="ball-weight">Kuglevaegt (g)</label>
+			<div class="input-with-buttons">
+				<button
+					class="btn btn-secondary"
+					onclick={decrementWeight}
+					disabled={doughBallWeight <= 100}
+				>-10</button>
+				<input
+					id="ball-weight"
+					type="number"
+					class="input number-input"
+					bind:value={doughBallWeight}
+					onchange={handleWeightChange}
+					min="100"
+					max="500"
+					step="10"
+				/>
+				<button
+					class="btn btn-secondary"
+					onclick={incrementWeight}
+					disabled={doughBallWeight >= 500}
+				>+10</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="totals">
+		<div class="total-item">
+			<span class="total-label">Total dej:</span>
+			<span class="total-value">{formatWeight($totalWeight)}</span>
+		</div>
+		<div class="total-item">
+			<span class="total-label">Total mel:</span>
+			<span class="total-value">{formatWeight($flourWeight)}</span>
+		</div>
+	</div>
+
+	{#if hasCustomizations}
+		<div class="customization-actions">
+			<button class="btn btn-secondary" onclick={resetAllCustomizations}>
+				Nulstil alle
+			</button>
+			<button class="btn btn-primary" onclick={saveToHistory}>
+				Gem til historik
+			</button>
+		</div>
+	{/if}
+
+	<div class="ingredients">
+		{#each ingredientGroups as [stage, ingredients]}
+			<div class="ingredient-group">
+				<h4 class="group-title">{stageLabels[stage] || stage}</h4>
+				<table class="ingredient-table">
+					<thead>
+						<tr>
+							<th>Ingrediens</th>
+							<th class="right">Procent</th>
+							<th class="right">Vaegt</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each ingredients as ingredient}
+							<tr class:customized={isCustomized(ingredient.id)}>
+								<td>{ingredient.nameDa}</td>
+								<td class="right percentage-cell">
+									{#if ingredient.type === 'flour'}
+										<span class="percentage-static">{ingredient.percentage.toFixed(1)}%</span>
+									{:else if editingIngredient === ingredient.id}
+										<div class="edit-percentage">
+											<input
+												type="number"
+												class="input percentage-input"
+												bind:value={editValue}
+												onkeydown={(e) => handleKeydown(e, ingredient.id)}
+												step="0.1"
+												min="0"
+												max="200"
+											/>
+											<button
+												class="btn-icon"
+												onclick={() => savePercentage(ingredient.id)}
+												title="Gem"
+											>
+												&#10003;
+											</button>
+											<button
+												class="btn-icon"
+												onclick={cancelEditing}
+												title="Annuller"
+											>
+												&#10005;
+											</button>
+										</div>
+									{:else}
+										<button
+											class="percentage-button"
+											onclick={() => startEditing(ingredient.id, ingredient.percentage)}
+											title="Klik for at redigere"
+										>
+											{ingredient.percentage.toFixed(1)}%
+											{#if isCustomized(ingredient.id)}
+												<span class="original-percentage">
+													(orig: {getOriginalPercentage(ingredient.id)?.toFixed(1)}%)
+												</span>
+											{/if}
+										</button>
+										{#if isCustomized(ingredient.id)}
+											<button
+												class="btn-icon reset-btn"
+												onclick={() => resetIngredient(ingredient.id)}
+												title="Nulstil"
+											>
+												&#8634;
+											</button>
+										{/if}
+									{/if}
+								</td>
+								<td class="right weight">{formatWeight(ingredient.weight)}</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
+		{/each}
+	</div>
+
+	<p class="hint">Klik paa en procent for at tilpasse ingrediensen (undtagen mel).</p>
+</div>
+
+<style>
+	.calculator {
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-md);
+	}
+
+	.inputs {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: var(--spacing-md);
+	}
+
+	@media (max-width: 400px) {
+		.inputs {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.input-group {
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-xs);
+	}
+
+	.input-with-buttons {
+		display: flex;
+		gap: 4px;
+	}
+
+	.input-with-buttons .btn {
+		padding: var(--spacing-sm);
+		min-width: 44px;
+	}
+
+	.number-input {
+		flex: 1;
+		text-align: center;
+		font-weight: 600;
+	}
+
+	.totals {
+		display: flex;
+		justify-content: space-around;
+		padding: var(--spacing-md);
+		background: var(--color-background);
+		border-radius: var(--radius-md);
+	}
+
+	.total-item {
+		text-align: center;
+	}
+
+	.total-label {
+		display: block;
+		font-size: var(--font-size-sm);
+		color: var(--color-text-secondary);
+	}
+
+	.total-value {
+		display: block;
+		font-size: var(--font-size-lg);
+		font-weight: 600;
+		color: var(--color-primary);
+	}
+
+	.ingredients {
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-md);
+	}
+
+	.ingredient-group {
+		background: var(--color-background);
+		border-radius: var(--radius-md);
+		padding: var(--spacing-md);
+	}
+
+	.group-title {
+		margin: 0 0 var(--spacing-sm);
+		font-size: var(--font-size-md);
+		color: var(--color-primary);
+	}
+
+	.ingredient-table {
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	.ingredient-table th,
+	.ingredient-table td {
+		padding: var(--spacing-xs) var(--spacing-sm);
+		text-align: left;
+	}
+
+	.ingredient-table th {
+		font-size: var(--font-size-sm);
+		color: var(--color-text-secondary);
+		font-weight: 500;
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.ingredient-table td {
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.ingredient-table tr:last-child td {
+		border-bottom: none;
+	}
+
+	.right {
+		text-align: right;
+	}
+
+	.weight {
+		font-weight: 600;
+		color: var(--color-primary);
+	}
+
+	.customization-actions {
+		display: flex;
+		gap: var(--spacing-sm);
+		justify-content: flex-end;
+	}
+
+	.percentage-cell {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 4px;
+	}
+
+	.percentage-button {
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 2px 6px;
+		border-radius: var(--radius-sm);
+		color: inherit;
+		font-size: inherit;
+		transition: background-color 0.2s;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+	}
+
+	.percentage-button:hover {
+		background: var(--color-surface);
+	}
+
+	.percentage-static {
+		padding: 2px 6px;
+		color: var(--color-text-secondary);
+	}
+
+	.original-percentage {
+		font-size: var(--font-size-xs);
+		color: var(--color-text-secondary);
+	}
+
+	.edit-percentage {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	.percentage-input {
+		width: 60px;
+		text-align: right;
+		padding: 2px 4px;
+		font-size: var(--font-size-sm);
+	}
+
+	.btn-icon {
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 4px;
+		font-size: var(--font-size-md);
+		color: var(--color-text-secondary);
+		line-height: 1;
+	}
+
+	.btn-icon:hover {
+		color: var(--color-primary);
+	}
+
+	.reset-btn {
+		font-size: var(--font-size-lg);
+	}
+
+	tr.customized td {
+		background: rgba(var(--color-primary-rgb), 0.1);
+	}
+
+	.hint {
+		margin: 0;
+		font-size: var(--font-size-sm);
+		color: var(--color-text-secondary);
+		text-align: center;
+		font-style: italic;
+	}
+</style>

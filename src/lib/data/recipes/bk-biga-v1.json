@@ -1,0 +1,85 @@
+{
+  "id": "bk-biga-v1",
+  "name": "BK Biga v1",
+  "nameDa": "BK Biga v1",
+  "category": "biga",
+  "baseWeight": 270,
+  "hydration": 65,
+  "yieldPizzas": 4,
+  "ingredients": [
+    {
+      "id": "biga-flour",
+      "name": "Biga flour",
+      "nameDa": "Mel (biga)",
+      "percentage": 100,
+      "type": "flour",
+      "stage": "biga"
+    },
+    {
+      "id": "biga-water",
+      "name": "Biga water",
+      "nameDa": "Vand (biga)",
+      "percentage": 44,
+      "type": "water",
+      "stage": "biga"
+    },
+    {
+      "id": "biga-yeast",
+      "name": "Biga yeast",
+      "nameDa": "Toergaer (biga)",
+      "percentage": 0.1,
+      "type": "yeast",
+      "stage": "biga"
+    },
+    {
+      "id": "main-water",
+      "name": "Main dough water",
+      "nameDa": "Vand (hoveddej)",
+      "percentage": 21,
+      "type": "water",
+      "stage": "main"
+    },
+    {
+      "id": "main-salt",
+      "name": "Salt",
+      "nameDa": "Salt",
+      "percentage": 2.7,
+      "type": "salt",
+      "stage": "main"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Biga",
+        "nameDa": "Dag 1 - Biga",
+        "duration": 1440,
+        "temperature": 4,
+        "location": "fridge",
+        "canSetTimer": true,
+        "instructionsDa": "Gaeren vendes i melet og vandet tilsaettes. Spred fingrene og bland til krummet konsistens. Lad hvile i koeleskab i 24 timer."
+      },
+      {
+        "id": "stage-2",
+        "name": "Main dough",
+        "nameDa": "Dag 2 - Hoveddej",
+        "duration": 180,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Bland biga med koldt vand og salt. Ael godt og lad haeve."
+      }
+    ],
+    "totalTime": 1620
+  },
+  "tipsDa": [
+    "Toergaeren arbejder bedst i bigaen naar vandet er 25-27 grader.",
+    "Vand i hoveddejen skal vaere det koldeste fra hanen.",
+    "Hoveddejen maa helst ikke overstige 20 grader.",
+    "Dejen er klar naar den er blank, glat og kan straekkes langt.",
+    "V1 er god om sommeren, da den koldhaever.",
+    "100% af melet fermenteres i bigaen for fuld smagsudvikling."
+  ],
+  "source": "BK_biga_v1"
+}

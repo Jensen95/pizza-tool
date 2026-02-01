@@ -1,0 +1,19 @@
+{
+	"name": "Pizza Tool",
+	"short_name": "Pizza",
+	"description": "Pizza dej opskrifter og beregner",
+	"start_url": "/",
+	"display": "standalone",
+	"theme_color": "#d32f2f",
+	"background_color": "#ffffff",
+	"lang": "da",
+	"orientation": "portrait-primary",
+	"icons": [
+		{
+			"src": "/icons/icon.svg",
+			"sizes": "any",
+			"type": "image/svg+xml"
+		}
+	],
+	"categories": ["food", "utilities"]
+}

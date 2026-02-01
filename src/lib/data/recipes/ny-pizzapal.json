@@ -1,0 +1,95 @@
+{
+  "id": "ny-pizzapal",
+  "name": "NY PizzaPal",
+  "nameDa": "NY PizzaPal",
+  "category": "ny-style",
+  "baseWeight": 270,
+  "hydration": 57,
+  "yieldPizzas": 4,
+  "ingredients": [
+    {
+      "id": "flour",
+      "name": "Flour",
+      "nameDa": "Mel",
+      "percentage": 100,
+      "type": "flour"
+    },
+    {
+      "id": "water",
+      "name": "Water",
+      "nameDa": "Vand",
+      "percentage": 57,
+      "type": "water"
+    },
+    {
+      "id": "salt",
+      "name": "Salt",
+      "nameDa": "Salt",
+      "percentage": 2.5,
+      "type": "salt"
+    },
+    {
+      "id": "yeast",
+      "name": "Dry yeast",
+      "nameDa": "Toergaer",
+      "percentage": 0.4,
+      "type": "yeast"
+    },
+    {
+      "id": "sugar",
+      "name": "Sugar",
+      "nameDa": "Sukker",
+      "percentage": 2.5,
+      "type": "sugar"
+    },
+    {
+      "id": "oil",
+      "name": "Olive oil",
+      "nameDa": "Olivenolie",
+      "percentage": 2,
+      "type": "oil"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Mix dough",
+        "nameDa": "Dag 1 - Bland dej",
+        "duration": 150,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Haeld vandet i en skaal. Tilsaet mel, salt, gaer og sukker. Ael godt og tilsaet olie til sidst."
+      },
+      {
+        "id": "stage-2",
+        "name": "Cold ferment",
+        "nameDa": "Dag 2-4 - Kold haevning",
+        "duration": 4320,
+        "temperature": 4,
+        "location": "fridge",
+        "canSetTimer": true,
+        "instructionsDa": "Lad haeve i koeleskab i 3-4 dage."
+      },
+      {
+        "id": "stage-3",
+        "name": "Temper",
+        "nameDa": "Temperering",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Tag ud af koeleskab 2 timer foer bagning."
+      }
+    ],
+    "totalTime": 4590
+  },
+  "tipsDa": [
+    "Anbefaling: Hvedemel med 13-14,5% protein (Manitoba).",
+    "Frisk gaer kan oploeses i koldt eller lunkent vand.",
+    "Olie tilsaettes dejen som det sidste for at bevare fugtigheden efter bagning.",
+    "Sukkeren bidrager til en gylden skorpe og giver naering til gaeren."
+  ],
+  "source": "NY_PizzaPal"
+}

@@ -1,0 +1,133 @@
+{
+  "id": "vito-poolish",
+  "name": "Vito's Poolish Pizza",
+  "nameDa": "Vito's Poolish Pizza",
+  "category": "poolish",
+  "baseWeight": 270,
+  "hydration": 65,
+  "yieldPizzas": 6,
+  "ingredients": [
+    {
+      "id": "poolish-flour",
+      "name": "Flour (poolish)",
+      "nameDa": "Mel (poolish)",
+      "percentage": 19.35,
+      "type": "flour",
+      "stage": "poolish"
+    },
+    {
+      "id": "poolish-water",
+      "name": "Water (poolish)",
+      "nameDa": "Vand (poolish)",
+      "percentage": 19.35,
+      "type": "water",
+      "stage": "poolish"
+    },
+    {
+      "id": "poolish-yeast",
+      "name": "Dry yeast (poolish)",
+      "nameDa": "Toerger (poolish)",
+      "percentage": 0.32,
+      "type": "yeast",
+      "stage": "poolish"
+    },
+    {
+      "id": "poolish-honey",
+      "name": "Honey (poolish)",
+      "nameDa": "Honning (poolish)",
+      "percentage": 0.32,
+      "type": "sugar",
+      "stage": "poolish"
+    },
+    {
+      "id": "main-flour",
+      "name": "Flour (main dough)",
+      "nameDa": "Mel (hoveddej)",
+      "percentage": 80.65,
+      "type": "flour",
+      "stage": "main"
+    },
+    {
+      "id": "main-water",
+      "name": "Water (main dough)",
+      "nameDa": "Vand (hoveddej)",
+      "percentage": 45.15,
+      "type": "water",
+      "stage": "main"
+    },
+    {
+      "id": "main-salt",
+      "name": "Salt",
+      "nameDa": "Salt",
+      "percentage": 2.6,
+      "type": "salt",
+      "stage": "main"
+    }
+  ],
+  "schedule": {
+    "stages": [
+      {
+        "id": "stage-1",
+        "name": "Poolish",
+        "nameDa": "Dag 1 - Poolish",
+        "duration": 1440,
+        "temperature": 4,
+        "location": "fridge",
+        "canSetTimer": true,
+        "instructionsDa": "Roer gaer og honning ud i vandet. Tilsaet melet og roer godt. Lad hvile 1 time ved stuetemperatur, derefter i koeleskab 16-24 timer.",
+        "ingredientsDa": [
+          "187 g vand (25 grader)",
+          "3,1 g toerger",
+          "3,1 g honning",
+          "187 g mel tipo 00"
+        ]
+      },
+      {
+        "id": "stage-2",
+        "name": "Main dough",
+        "nameDa": "Dag 2 - Hoveddej",
+        "duration": 30,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Lad poolish hvile 20 min ved stuetemperatur. Roer poolish ud i vandet og tilsaet halvdelen af melet. Tilsaet salt og resten af melet. Virk dejen til den er glat.",
+        "ingredientsDa": [
+          "436 g vand",
+          "Poolish fra dag 1",
+          "779 g mel tipo 00",
+          "25 g salt"
+        ]
+      },
+      {
+        "id": "stage-3",
+        "name": "Bulk fermentation",
+        "nameDa": "Stuehaevning",
+        "duration": 60,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Lad dejen haeve i en lukket skaal ved stuetemperatur."
+      },
+      {
+        "id": "stage-4",
+        "name": "Ball rest",
+        "nameDa": "Kuglehvile",
+        "duration": 120,
+        "temperature": 20,
+        "location": "room",
+        "canSetTimer": true,
+        "instructionsDa": "Del dejen i 6 kugler af ca. 270 g. Lad kuglerne hvile 2 timer for bagning."
+      }
+    ],
+    "totalTime": 1680
+  },
+  "tipsDa": [
+    "Vito bruger megen toerger! Du kan sagtens reducere til 0,2%",
+    "Honning kan undvaeres.",
+    "Den faerdige dej temperatur boer ikke overstige 27 grader.",
+    "Dejen er klar naar den er blank, glat og kan straekkes langt.",
+    "Tilberedningstid 21-29 timer",
+    "Poolish er med til at udvikle smagen i broedet og giver en bedre skorpe."
+  ],
+  "source": "Vito Iacopelli"
+}
