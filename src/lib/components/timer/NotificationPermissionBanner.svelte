@@ -51,9 +51,9 @@
 				<p class="banner-description">
 					{#if permissionStatus === 'denied'}
 						Du har blokeret notifikationer. Aktiver dem i browserens indstillinger for at
-						modtage beskeder når timere er faerdige.
+						modtage beskeder når timere er færdige.
 					{:else}
-						Tillad notifikationer for at få beskeder når dine timere er faerdige.
+						Tillad notifikationer for at få beskeder når dine timere er færdige.
 					{/if}
 				</p>
 			</div>
