@@ -1,5 +1,5 @@
 import type { Timer, TimerStatus } from '$lib/types/timer';
-import { sendNotification, requestPermission } from './notification';
+import { sendNotification } from './notification';
 import * as storage from './storage';
 
 const TIMERS_STORAGE_KEY = 'timers';
@@ -171,8 +171,9 @@ export async function checkTimers(): Promise<Timer[]> {
  * Returns a cleanup function
  */
 export function startTimerManager(onUpdate: (timers: Timer[]) => void): () => void {
-	// Request notification permission
-	requestPermission();
+	// Note: Do not auto-request notification permission here
+	// Firefox mobile requires permission to be requested from a user interaction
+	// The permission should be requested when the user creates their first timer
 
 	// Check immediately
 	checkTimers().then(onUpdate);
@@ -222,8 +223,9 @@ export class TimerManager {
 
 		this.isRunning = true;
 
-		// Request notification permission
-		requestPermission();
+		// Note: Do not auto-request notification permission here
+		// Firefox mobile requires permission to be requested from a user interaction
+		// The permission should be requested when the user creates their first timer
 
 		// Check immediately
 		checkTimers();

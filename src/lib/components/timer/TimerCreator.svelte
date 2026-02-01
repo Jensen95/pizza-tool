@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { timers } from '$lib/stores';
 	import { defaultPresets } from '$lib/types/timer';
+	import { requestPermission } from '$lib/utils/notification';
 
 	let { oncreated }: { oncreated?: () => void } = $props();
 
@@ -9,12 +10,14 @@
 	let minutes = $state(30);
 	let showCustom = $state(false);
 
-	function createFromPreset(preset: (typeof defaultPresets)[0]) {
+	async function createFromPreset(preset: (typeof defaultPresets)[0]) {
+		// Request notification permission when creating a timer (user interaction)
+		await requestPermission();
 		timers.create(preset.nameDa, preset.duration);
 		oncreated?.();
 	}
 
-	function createCustomTimer() {
+	async function createCustomTimer() {
 		if (!timerName.trim()) {
 			timerName = 'Timer';
 		}
@@ -22,6 +25,8 @@
 		const totalMinutes = hours * 60 + minutes;
 		if (totalMinutes <= 0) return;
 
+		// Request notification permission when creating a timer (user interaction)
+		await requestPermission();
 		timers.create(timerName, totalMinutes);
 
 		// Reset form

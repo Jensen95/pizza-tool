@@ -8,13 +8,15 @@ export interface Preferences {
 	defaultDoughWeight: number;
 	notificationsEnabled: boolean;
 	theme: 'light' | 'dark' | 'system';
+	notificationBannerDismissed: boolean;
 }
 
 const defaultPreferences: Preferences = {
 	defaultPizzaCount: 4,
 	defaultDoughWeight: 270,
 	notificationsEnabled: true,
-	theme: 'light'
+	theme: 'light',
+	notificationBannerDismissed: false
 };
 
 function loadPreferences(): Preferences {
@@ -99,6 +101,13 @@ function createPreferencesStore() {
 		 */
 		setTheme(theme: 'light' | 'dark' | 'system') {
 			this.updatePreference('theme', theme);
+		},
+
+		/**
+		 * Dismiss notification banner permanently
+		 */
+		dismissNotificationBanner() {
+			this.updatePreference('notificationBannerDismissed', true);
 		}
 	};
 }
