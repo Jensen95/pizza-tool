@@ -6,7 +6,7 @@
 
 ### What Was Done
 
-1. **Analyzed Excel file structure** 
+1. **Analyzed Excel file structure**
    - Identified 29 sheets (18 recipe sheets, 11 reference sheets)
    - Systematically examined all recipe sheets for multiple variants
 
@@ -44,13 +44,16 @@
 ## Files Created/Modified
 
 ### New Recipe Files
+
 - `src/lib/data/recipes/vito-poolish-autolysis.json`
 - `src/lib/data/recipes/vito-poolish-double.json`
 
 ### Modified Files
+
 - `src/lib/data/recipes/index.ts` - Added 2 new recipes to exports
 
 ### Documentation
+
 - `RECIPE_EXTRACTION.md` - Comprehensive documentation of the extraction process
 
 ## Verification
@@ -75,6 +78,7 @@
 ### No Additional Extraction Needed
 
 After comprehensive analysis, **no additional recipe variants** were found beyond the Vito poolish variants. All other multi-column sheets contain:
+
 - Calculation helpers (not recipes)
 - Optional technique variations (not separate recipes)
 - Already extracted as separate files (v1, v2)
