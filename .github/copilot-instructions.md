@@ -123,6 +123,45 @@ npm run format:check     # Check formatting
 npm run check            # TypeScript type checking
 ```
 
+## CI/CD Pipeline
+
+The project uses GitHub Actions for continuous integration. All pull requests must pass the following checks before merging:
+
+### CI Checks (in order)
+
+1. **Linting** - `npm run lint` - ESLint checks for code quality issues
+2. **Formatting** - `npm run format:check` - Prettier checks code formatting
+3. **Type Checking** - `npm run check` - TypeScript strict type checking
+4. **Unit Tests** - `npm run test:unit` - Run all unit tests with Vitest
+5. **Build** - `npm run build` - Verify production build succeeds
+6. **E2E Tests** - `npm run test:e2e` - Run end-to-end tests with Playwright
+
+### Running CI Checks Locally
+
+Before pushing code or requesting review, run all CI checks locally:
+
+```bash
+# Run all checks in sequence (same as CI)
+npm run lint && npm run format:check && npm run check && npm run test:unit && npm run build && npm run test:e2e
+
+# Or run individually to debug failures
+npm run lint           # Check linting
+npm run format:check   # Check formatting
+npm run check          # Check TypeScript types
+npm run test:unit      # Run unit tests
+npm run build          # Build for production
+npm run test:e2e       # Run E2E tests (requires successful build)
+```
+
+### Fixing Common CI Failures
+
+- **Linting errors**: Run `npm run lint:fix` to auto-fix most issues
+- **Formatting errors**: Run `npm run format` to auto-format all files
+- **Type errors**: Fix TypeScript errors manually, `npm run check` will show details
+- **Test failures**: Review test output and fix the failing tests
+- **Build failures**: Check for compilation errors in the build output
+- **E2E failures**: Review Playwright test output and screenshots in CI artifacts
+
 ## Important Conventions
 
 ### DO:
@@ -134,6 +173,7 @@ npm run check            # TypeScript type checking
 - Keep components small and focused
 - Use descriptive variable and function names
 - Run lint and format before committing
+- **Run CI checks locally before pushing** (`npm run lint && npm run format:check && npm run check && npm run test:unit`)
 
 ### DON'T:
 
@@ -143,6 +183,7 @@ npm run check            # TypeScript type checking
 - Don't skip type checking or tests
 - Don't remove or modify existing unit tests without good reason
 - Don't create class-based components (use functional patterns)
+- **Don't push code without running CI checks locally first**
 
 ## PWA Considerations
 

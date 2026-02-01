@@ -134,11 +134,94 @@
 		editValue = '';
 	}
 
+	/**
+	 * Get all flour ingredients in the same stage as the given ingredient
+	 */
+	function getFlourIngredientsInStage(ingredientId: string): ScaledIngredient[] {
+		const ingredient = $calculator.scaledIngredients.find((i) => i.id === ingredientId);
+		if (!ingredient || ingredient.type !== 'flour') return [];
+
+		const stage = ingredient.stage || 'main';
+		return $calculator.scaledIngredients.filter(
+			(i) => i.type === 'flour' && (i.stage || 'main') === stage
+		);
+	}
+
+	/**
+	 * Calculate the total original flour percentage for a stage
+	 */
+	function getOriginalFlourTotalForStage(stage: string): number {
+		const originalFlours = recipe.ingredients.filter(
+			(i) => i.type === 'flour' && (i.stage || 'main') === stage
+		);
+		return originalFlours.reduce((sum, i) => sum + i.percentage, 0);
+	}
+
+	/**
+	 * Convert stage percentage to recipe percentage
+	 */
+	function stagePercentageToRecipePercentage(stagePercent: number, stage: string): number {
+		const totalFlourInStage = getOriginalFlourTotalForStage(stage);
+		return (stagePercent / 100) * totalFlourInStage;
+	}
+
 	function savePercentage(ingredientId: string) {
 		const value = parseFloat(editValue);
-		if (!isNaN(value) && value >= 0 && value <= 200) {
+		if (isNaN(value) || value < 0) {
+			cancelEditing();
+			return;
+		}
+
+		const ingredient = $calculator.scaledIngredients.find((i) => i.id === ingredientId);
+		if (!ingredient) {
+			cancelEditing();
+			return;
+		}
+
+		// For flour ingredients, validate that total flour percentage remains constant
+		if (ingredient.type === 'flour') {
+			const floursInStage = getFlourIngredientsInStage(ingredientId);
+			const stage = ingredient.stage || 'main';
+			const originalTotal = getOriginalFlourTotalForStage(stage);
+
+			// Convert the entered stage percentage to recipe percentage
+			const recipePercentage = stagePercentageToRecipePercentage(value, stage);
+
+			// Calculate what the new total would be
+			const currentCustoms = calculator.getCustomIngredients();
+			let newTotal = 0;
+			for (const flour of floursInStage) {
+				if (flour.id === ingredientId) {
+					newTotal += recipePercentage;
+				} else {
+					// Use custom percentage if available, otherwise original
+					const original = recipe.ingredients.find((i) => i.id === flour.id);
+					newTotal += currentCustoms[flour.id] ?? original?.percentage ?? 0;
+				}
+			}
+
+			// Allow some tolerance for rounding (0.01%)
+			if (Math.abs(newTotal - originalTotal) > 0.01) {
+				alert(
+					`Total flour percentage for this stage must remain ${originalTotal.toFixed(2)}%. ` +
+						`Your change would make it ${newTotal.toFixed(2)}%. ` +
+						`Please adjust other flour types accordingly.`
+				);
+				cancelEditing();
+				return;
+			}
+
+			// Save the recipe percentage, not the stage percentage
+			calculator.setIngredientPercentage(ingredientId, recipePercentage);
+		} else {
+			// Non-flour ingredients: normal range check
+			if (value > 200) {
+				cancelEditing();
+				return;
+			}
 			calculator.setIngredientPercentage(ingredientId, value);
 		}
+
 		cancelEditing();
 	}
 
@@ -294,9 +377,7 @@
 									{/if}
 								</td>
 								<td class="right percentage-cell">
-									{#if ingredient.type === 'flour'}
-										<span class="percentage-static">{ingredient.stagePercentage.toFixed(2)}%</span>
-									{:else if editingIngredient === ingredient.id}
+									{#if editingIngredient === ingredient.id}
 										<div class="edit-percentage">
 											<input
 												type="number"
@@ -351,7 +432,9 @@
 		{/each}
 	</div>
 
-	<p class="hint">Klik paa en procent for at tilpasse ingrediensen (undtagen mel).</p>
+	<p class="hint">
+		Klik paa en procent for at tilpasse ingrediensen. For mel skal total procent forblive konstant.
+	</p>
 </div>
 
 <style>
@@ -593,11 +676,6 @@
 
 	.percentage-button:hover {
 		background: var(--color-surface);
-	}
-
-	.percentage-static {
-		padding: 2px 6px;
-		color: var(--color-text-secondary);
 	}
 
 	.original-percentage {
