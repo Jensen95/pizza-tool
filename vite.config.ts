@@ -5,13 +5,15 @@ export default defineConfig({
 	plugins: [sveltekit()],
 	test: {
 		globals: true,
-		environment: 'happy-dom',
+		environment: 'node',
 		setupFiles: ['./src/tests/setup.ts'],
+		// Only include unit tests, not e2e tests
 		include: ['src/**/*.{test,spec}.{js,ts}'],
+		exclude: ['**/node_modules/**', '**/dist/**', '**/e2e/**', '**/.{idea,git,cache,output,temp}/**'],
 		coverage: {
 			provider: 'v8',
 			reporter: ['text', 'json', 'html'],
-			exclude: ['node_modules/', 'src/tests/']
+			exclude: ['node_modules/', 'src/tests/e2e/', 'src/tests/setup.ts']
 		},
 		alias: {
 			$lib: '/src/lib'
