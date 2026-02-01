@@ -65,10 +65,13 @@ function createCalculatorStore() {
 			}))
 		};
 
-		const { scaledIngredients, totalFlourWeight, totalDoughWeight } = scaleRecipe(recipeWithCustoms, {
-			numberOfPizzas: state.numberOfPizzas,
-			doughBallWeight: state.doughBallWeight
-		});
+		const { scaledIngredients, totalFlourWeight, totalDoughWeight } = scaleRecipe(
+			recipeWithCustoms,
+			{
+				numberOfPizzas: state.numberOfPizzas,
+				doughBallWeight: state.doughBallWeight
+			}
+		);
 
 		return {
 			...state,

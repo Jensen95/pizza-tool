@@ -39,15 +39,18 @@
 		handleWeightChange();
 	}
 
-	function getFilteredRecipes(query: string, category: RecipeCategory | 'all', allRecipes: Recipe[]): Recipe[] {
+	function getFilteredRecipes(
+		query: string,
+		category: RecipeCategory | 'all',
+		allRecipes: Recipe[]
+	): Recipe[] {
 		let result = allRecipes;
 
 		if (query.trim()) {
 			const lowerQuery = query.toLowerCase();
 			result = result.filter(
 				(r) =>
-					r.name.toLowerCase().includes(lowerQuery) ||
-					r.nameDa.toLowerCase().includes(lowerQuery)
+					r.name.toLowerCase().includes(lowerQuery) || r.nameDa.toLowerCase().includes(lowerQuery)
 			);
 		}
 
@@ -73,7 +76,9 @@
 		<div class="setting-group">
 			<label class="setting-label" for="main-pizza-count">Antal pizzaer</label>
 			<div class="setting-controls">
-				<button class="btn btn-sm" onclick={decrementPizzas} disabled={numberOfPizzas <= 1}>-</button>
+				<button class="btn btn-sm" onclick={decrementPizzas} disabled={numberOfPizzas <= 1}
+					>-</button
+				>
 				<input
 					id="main-pizza-count"
 					type="number"
@@ -83,14 +88,18 @@
 					min="1"
 					max="100"
 				/>
-				<button class="btn btn-sm" onclick={incrementPizzas} disabled={numberOfPizzas >= 100}>+</button>
+				<button class="btn btn-sm" onclick={incrementPizzas} disabled={numberOfPizzas >= 100}
+					>+</button
+				>
 			</div>
 		</div>
 
 		<div class="setting-group">
 			<label class="setting-label" for="main-ball-weight">Kuglevaegt (g)</label>
 			<div class="setting-controls">
-				<button class="btn btn-sm" onclick={decrementWeight} disabled={doughBallWeight <= 100}>-10</button>
+				<button class="btn btn-sm" onclick={decrementWeight} disabled={doughBallWeight <= 100}
+					>-10</button
+				>
 				<input
 					id="main-ball-weight"
 					type="number"
@@ -101,7 +110,9 @@
 					max="500"
 					step="10"
 				/>
-				<button class="btn btn-sm" onclick={incrementWeight} disabled={doughBallWeight >= 500}>+10</button>
+				<button class="btn btn-sm" onclick={incrementWeight} disabled={doughBallWeight >= 500}
+					>+10</button
+				>
 			</div>
 		</div>
 	</div>
@@ -130,9 +141,7 @@
 		<div class="empty-state">
 			<p class="text-secondary">Ingen opskrifter fundet</p>
 			{#if searchQuery || selectedCategory !== 'all'}
-				<button class="btn btn-secondary" onclick={resetFilters}>
-					Nulstil filtre
-				</button>
+				<button class="btn btn-secondary" onclick={resetFilters}> Nulstil filtre </button>
 			{/if}
 		</div>
 	{:else}

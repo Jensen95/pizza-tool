@@ -8,7 +8,15 @@ export interface FlourType {
 	wValue?: number;
 	wValueMin?: number;
 	wValueMax?: number;
-	type: 'tipo-00' | 'tipo-0' | 'tipo-1' | 'bread' | 'all-purpose' | 'whole-wheat' | 'semolina' | 'other';
+	type:
+		| 'tipo-00'
+		| 'tipo-0'
+		| 'tipo-1'
+		| 'bread'
+		| 'all-purpose'
+		| 'whole-wheat'
+		| 'semolina'
+		| 'other';
 	origin?: string;
 	notes?: string;
 	notesDa?: string;

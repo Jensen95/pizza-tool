@@ -7,7 +7,8 @@
 
 <div class="flour-reference">
 	<p class="intro">
-		Oversigt over meltyper og deres egenskaber. Vaelg mel baseret på fermentationstid og oensket resultat.
+		Oversigt over meltyper og deres egenskaber. Vaelg mel baseret på fermentationstid og oensket
+		resultat.
 	</p>
 
 	<div class="flour-grid">

@@ -3,7 +3,14 @@
 	import { tipCategoryLabels } from '$lib/types';
 	import type { Tip } from '$lib/types';
 
-	const categories: Tip['category'][] = ['dough', 'technique', 'ingredients', 'baking', 'equipment', 'general'];
+	const categories: Tip['category'][] = [
+		'dough',
+		'technique',
+		'ingredients',
+		'baking',
+		'equipment',
+		'general'
+	];
 
 	let groupedTips = $derived(
 		categories

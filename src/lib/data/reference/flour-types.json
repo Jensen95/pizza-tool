@@ -1,217 +1,217 @@
 [
-  {
-    "id": "flour-1",
-    "name": "Caputo Fioreglut (gluten free)",
-    "nameDa": "Caputo Fioreglut (gluten free)",
-    "type": "other",
-    "proteinMin": 1.0,
-    "proteinMax": 1.0
-  },
-  {
-    "id": "flour-2",
-    "name": "Le 5 Stagioni Gluten free",
-    "nameDa": "Le 5 Stagioni Gluten free",
-    "type": "other",
-    "proteinMin": 2.0,
-    "proteinMax": 2.0
-  },
-  {
-    "id": "flour-3",
-    "name": "Finax Glutenfrit melmix, RØD",
-    "nameDa": "Finax Glutenfrit melmix, RØD",
-    "type": "other",
-    "proteinMin": 3.0,
-    "proteinMax": 3.0
-  },
-  {
-    "id": "flour-4",
-    "name": "Caputo Speciale",
-    "nameDa": "Caputo Speciale",
-    "type": "tipo-0",
-    "proteinMin": 11.0,
-    "proteinMax": 11.0,
-    "wValueMin": 210,
-    "wValueMax": 230,
-    "notesDa": "4-24 timer"
-  },
-  {
-    "id": "flour-5",
-    "name": "Caputo Classica",
-    "nameDa": "Caputo Classica",
-    "type": "tipo-00",
-    "proteinMin": 11.5,
-    "proteinMax": 11.5,
-    "wValueMin": 220,
-    "wValueMax": 240,
-    "notesDa": "4-24 timer"
-  },
-  {
-    "id": "flour-6",
-    "name": "Molini Pivetti Incanto (Biga/Poolish starter)",
-    "nameDa": "Molini Pivetti Incanto (Biga/Poolish starter)",
-    "type": "tipo-0",
-    "proteinMin": 12.0,
-    "proteinMax": 12.0,
-    "wValue": 300,
-    "notesDa": "18-48 timer"
-  },
-  {
-    "id": "flour-7",
-    "name": "Molini Pivetti Maggica (Deep Pan / Teglia)",
-    "nameDa": "Molini Pivetti Maggica (Deep Pan / Teglia)",
-    "type": "tipo-0",
-    "proteinMin": 12.0,
-    "proteinMax": 12.0,
-    "wValue": 320,
-    "notesDa": "24-48 timer"
-  },
-  {
-    "id": "flour-8",
-    "name": "Molini Pivetti Nafavola 270 (Napoletana)",
-    "nameDa": "Molini Pivetti Nafavola 270 (Napoletana)",
-    "type": "tipo-0",
-    "proteinMin": 12.0,
-    "proteinMax": 12.0,
-    "wValue": 270,
-    "notesDa": "10-26 timer"
-  },
-  {
-    "id": "flour-9",
-    "name": "Molini Pivetti Nafavola 320 (Napoletana)",
-    "nameDa": "Molini Pivetti Nafavola 320 (Napoletana)",
-    "type": "tipo-0",
-    "proteinMin": 12.0,
-    "proteinMax": 12.0,
-    "wValue": 320,
-    "notesDa": "26-72 timer"
-  },
-  {
-    "id": "flour-10",
-    "name": "Molini Pivetti Sorbole",
-    "nameDa": "Molini Pivetti Sorbole",
-    "type": "tipo-00",
-    "proteinMin": 12.0,
-    "proteinMax": 12.0,
-    "wValue": 220,
-    "notesDa": "3-24 timer"
-  },
-  {
-    "id": "flour-11",
-    "name": "Caputo Nuvola (lilla)",
-    "nameDa": "Caputo Nuvola (lilla)",
-    "type": "tipo-0",
-    "proteinMin": 12.5,
-    "proteinMax": 12.5,
-    "wValueMin": 270,
-    "wValueMax": 290,
-    "notesDa": "24-36 timer"
-  },
-  {
-    "id": "flour-12",
-    "name": "Caputo Pizzaria (rød)",
-    "nameDa": "Caputo Pizzaria (rød)",
-    "type": "tipo-00",
-    "proteinMin": 12.5,
-    "proteinMax": 12.5,
-    "wValueMin": 260,
-    "wValueMax": 270,
-    "notesDa": "8-24 timer"
-  },
-  {
-    "id": "flour-13",
-    "name": "Tosca Farina (by Valsemøllen) Pizzeria Grano Tenero.",
-    "nameDa": "Tosca Farina (by Valsemøllen) Pizzeria Grano Tenero.",
-    "type": "tipo-00",
-    "proteinMin": 12.5,
-    "proteinMax": 12.5,
-    "wValueMin": 280,
-    "wValueMax": 290,
-    "notesDa": "48-72 timer"
-  },
-  {
-    "id": "flour-14",
-    "name": "Caputo Cuoco / Saccorosso (rød)",
-    "nameDa": "Caputo Cuoco / Saccorosso (rød)",
-    "type": "tipo-00",
-    "proteinMin": 13.0,
-    "proteinMax": 13.0,
-    "wValueMin": 300,
-    "wValueMax": 320,
-    "notesDa": "24-48 timer"
-  },
-  {
-    "id": "flour-15",
-    "name": "Le 5 Stagioni Pizza Napoletana (Red)",
-    "nameDa": "Le 5 Stagioni Pizza Napoletana (Red)",
-    "type": "tipo-00",
-    "proteinMin": 13.0,
-    "proteinMax": 13.0,
-    "wValueMin": 300,
-    "wValueMax": 320,
-    "notesDa": "24-48 timer"
-  },
-  {
-    "id": "flour-16",
-    "name": "Caputo Nuvola Super (lilla)",
-    "nameDa": "Caputo Nuvola Super (lilla)",
-    "type": "tipo-0",
-    "proteinMin": 13.5,
-    "proteinMax": 13.5,
-    "wValueMin": 320,
-    "wValueMax": 340,
-    "notesDa": "48-72 timer"
-  },
-  {
-    "id": "flour-17",
-    "name": "Frumenta Manitoba",
-    "nameDa": "Frumenta Manitoba",
-    "type": "tipo-00",
-    "proteinMin": 14.0,
-    "proteinMax": 14.0,
-    "wValue": 400
-  },
-  {
-    "id": "flour-18",
-    "name": "Caputo '00' Americana",
-    "nameDa": "Caputo '00' Americana",
-    "type": "tipo-00",
-    "proteinMin": 14.2,
-    "proteinMax": 14.2,
-    "wValueMin": 360,
-    "wValueMax": 380,
-    "notesDa": "24-75 timer"
-  },
-  {
-    "id": "flour-19",
-    "name": "Caputo Manitoba",
-    "nameDa": "Caputo Manitoba",
-    "type": "tipo-0",
-    "proteinMin": 15.0,
-    "proteinMax": 15.0,
-    "wValueMin": 360,
-    "wValueMax": 380,
-    "notesDa": "24-75 timer"
-  },
-  {
-    "id": "flour-20",
-    "name": "San Felice Tradizionale",
-    "nameDa": "San Felice Tradizionale",
-    "type": "tipo-00",
-    "proteinMin": 13.0,
-    "proteinMax": 14.0,
-    "wValueMin": 300,
-    "wValueMax": 310,
-    "notesDa": "8-16 timer ved 25°"
-  },
-  {
-    "id": "flour-21",
-    "name": "San Felice Gold",
-    "nameDa": "San Felice Gold",
-    "type": "tipo-00",
-    "proteinMin": 14.0,
-    "proteinMax": 15.0,
-    "wValueMin": 350,
-    "wValueMax": 360,
-    "notesDa": "12-24 timer ved 25°"
-  }
+	{
+		"id": "flour-1",
+		"name": "Caputo Fioreglut (gluten free)",
+		"nameDa": "Caputo Fioreglut (gluten free)",
+		"type": "other",
+		"proteinMin": 1.0,
+		"proteinMax": 1.0
+	},
+	{
+		"id": "flour-2",
+		"name": "Le 5 Stagioni Gluten free",
+		"nameDa": "Le 5 Stagioni Gluten free",
+		"type": "other",
+		"proteinMin": 2.0,
+		"proteinMax": 2.0
+	},
+	{
+		"id": "flour-3",
+		"name": "Finax Glutenfrit melmix, RØD",
+		"nameDa": "Finax Glutenfrit melmix, RØD",
+		"type": "other",
+		"proteinMin": 3.0,
+		"proteinMax": 3.0
+	},
+	{
+		"id": "flour-4",
+		"name": "Caputo Speciale",
+		"nameDa": "Caputo Speciale",
+		"type": "tipo-0",
+		"proteinMin": 11.0,
+		"proteinMax": 11.0,
+		"wValueMin": 210,
+		"wValueMax": 230,
+		"notesDa": "4-24 timer"
+	},
+	{
+		"id": "flour-5",
+		"name": "Caputo Classica",
+		"nameDa": "Caputo Classica",
+		"type": "tipo-00",
+		"proteinMin": 11.5,
+		"proteinMax": 11.5,
+		"wValueMin": 220,
+		"wValueMax": 240,
+		"notesDa": "4-24 timer"
+	},
+	{
+		"id": "flour-6",
+		"name": "Molini Pivetti Incanto (Biga/Poolish starter)",
+		"nameDa": "Molini Pivetti Incanto (Biga/Poolish starter)",
+		"type": "tipo-0",
+		"proteinMin": 12.0,
+		"proteinMax": 12.0,
+		"wValue": 300,
+		"notesDa": "18-48 timer"
+	},
+	{
+		"id": "flour-7",
+		"name": "Molini Pivetti Maggica (Deep Pan / Teglia)",
+		"nameDa": "Molini Pivetti Maggica (Deep Pan / Teglia)",
+		"type": "tipo-0",
+		"proteinMin": 12.0,
+		"proteinMax": 12.0,
+		"wValue": 320,
+		"notesDa": "24-48 timer"
+	},
+	{
+		"id": "flour-8",
+		"name": "Molini Pivetti Nafavola 270 (Napoletana)",
+		"nameDa": "Molini Pivetti Nafavola 270 (Napoletana)",
+		"type": "tipo-0",
+		"proteinMin": 12.0,
+		"proteinMax": 12.0,
+		"wValue": 270,
+		"notesDa": "10-26 timer"
+	},
+	{
+		"id": "flour-9",
+		"name": "Molini Pivetti Nafavola 320 (Napoletana)",
+		"nameDa": "Molini Pivetti Nafavola 320 (Napoletana)",
+		"type": "tipo-0",
+		"proteinMin": 12.0,
+		"proteinMax": 12.0,
+		"wValue": 320,
+		"notesDa": "26-72 timer"
+	},
+	{
+		"id": "flour-10",
+		"name": "Molini Pivetti Sorbole",
+		"nameDa": "Molini Pivetti Sorbole",
+		"type": "tipo-00",
+		"proteinMin": 12.0,
+		"proteinMax": 12.0,
+		"wValue": 220,
+		"notesDa": "3-24 timer"
+	},
+	{
+		"id": "flour-11",
+		"name": "Caputo Nuvola (lilla)",
+		"nameDa": "Caputo Nuvola (lilla)",
+		"type": "tipo-0",
+		"proteinMin": 12.5,
+		"proteinMax": 12.5,
+		"wValueMin": 270,
+		"wValueMax": 290,
+		"notesDa": "24-36 timer"
+	},
+	{
+		"id": "flour-12",
+		"name": "Caputo Pizzaria (rød)",
+		"nameDa": "Caputo Pizzaria (rød)",
+		"type": "tipo-00",
+		"proteinMin": 12.5,
+		"proteinMax": 12.5,
+		"wValueMin": 260,
+		"wValueMax": 270,
+		"notesDa": "8-24 timer"
+	},
+	{
+		"id": "flour-13",
+		"name": "Tosca Farina (by Valsemøllen) Pizzeria Grano Tenero.",
+		"nameDa": "Tosca Farina (by Valsemøllen) Pizzeria Grano Tenero.",
+		"type": "tipo-00",
+		"proteinMin": 12.5,
+		"proteinMax": 12.5,
+		"wValueMin": 280,
+		"wValueMax": 290,
+		"notesDa": "48-72 timer"
+	},
+	{
+		"id": "flour-14",
+		"name": "Caputo Cuoco / Saccorosso (rød)",
+		"nameDa": "Caputo Cuoco / Saccorosso (rød)",
+		"type": "tipo-00",
+		"proteinMin": 13.0,
+		"proteinMax": 13.0,
+		"wValueMin": 300,
+		"wValueMax": 320,
+		"notesDa": "24-48 timer"
+	},
+	{
+		"id": "flour-15",
+		"name": "Le 5 Stagioni Pizza Napoletana (Red)",
+		"nameDa": "Le 5 Stagioni Pizza Napoletana (Red)",
+		"type": "tipo-00",
+		"proteinMin": 13.0,
+		"proteinMax": 13.0,
+		"wValueMin": 300,
+		"wValueMax": 320,
+		"notesDa": "24-48 timer"
+	},
+	{
+		"id": "flour-16",
+		"name": "Caputo Nuvola Super (lilla)",
+		"nameDa": "Caputo Nuvola Super (lilla)",
+		"type": "tipo-0",
+		"proteinMin": 13.5,
+		"proteinMax": 13.5,
+		"wValueMin": 320,
+		"wValueMax": 340,
+		"notesDa": "48-72 timer"
+	},
+	{
+		"id": "flour-17",
+		"name": "Frumenta Manitoba",
+		"nameDa": "Frumenta Manitoba",
+		"type": "tipo-00",
+		"proteinMin": 14.0,
+		"proteinMax": 14.0,
+		"wValue": 400
+	},
+	{
+		"id": "flour-18",
+		"name": "Caputo '00' Americana",
+		"nameDa": "Caputo '00' Americana",
+		"type": "tipo-00",
+		"proteinMin": 14.2,
+		"proteinMax": 14.2,
+		"wValueMin": 360,
+		"wValueMax": 380,
+		"notesDa": "24-75 timer"
+	},
+	{
+		"id": "flour-19",
+		"name": "Caputo Manitoba",
+		"nameDa": "Caputo Manitoba",
+		"type": "tipo-0",
+		"proteinMin": 15.0,
+		"proteinMax": 15.0,
+		"wValueMin": 360,
+		"wValueMax": 380,
+		"notesDa": "24-75 timer"
+	},
+	{
+		"id": "flour-20",
+		"name": "San Felice Tradizionale",
+		"nameDa": "San Felice Tradizionale",
+		"type": "tipo-00",
+		"proteinMin": 13.0,
+		"proteinMax": 14.0,
+		"wValueMin": 300,
+		"wValueMax": 310,
+		"notesDa": "8-16 timer ved 25°"
+	},
+	{
+		"id": "flour-21",
+		"name": "San Felice Gold",
+		"nameDa": "San Felice Gold",
+		"type": "tipo-00",
+		"proteinMin": 14.0,
+		"proteinMax": 15.0,
+		"wValueMin": 350,
+		"wValueMax": 360,
+		"notesDa": "12-24 timer ved 25°"
+	}
 ]

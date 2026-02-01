@@ -135,11 +135,9 @@
 		<div class="input-group">
 			<label class="label" for="pizza-count">Antal pizzaer</label>
 			<div class="input-with-buttons">
-				<button
-					class="btn btn-secondary"
-					onclick={decrementPizzas}
-					disabled={numberOfPizzas <= 1}
-				>-</button>
+				<button class="btn btn-secondary" onclick={decrementPizzas} disabled={numberOfPizzas <= 1}
+					>-</button
+				>
 				<input
 					id="pizza-count"
 					type="number"
@@ -149,11 +147,9 @@
 					min="1"
 					max="100"
 				/>
-				<button
-					class="btn btn-secondary"
-					onclick={incrementPizzas}
-					disabled={numberOfPizzas >= 100}
-				>+</button>
+				<button class="btn btn-secondary" onclick={incrementPizzas} disabled={numberOfPizzas >= 100}
+					>+</button
+				>
 			</div>
 		</div>
 
@@ -163,8 +159,8 @@
 				<button
 					class="btn btn-secondary"
 					onclick={decrementWeight}
-					disabled={doughBallWeight <= 100}
-				>-10</button>
+					disabled={doughBallWeight <= 100}>-10</button
+				>
 				<input
 					id="ball-weight"
 					type="number"
@@ -178,8 +174,8 @@
 				<button
 					class="btn btn-secondary"
 					onclick={incrementWeight}
-					disabled={doughBallWeight >= 500}
-				>+10</button>
+					disabled={doughBallWeight >= 500}>+10</button
+				>
 			</div>
 		</div>
 	</div>
@@ -197,12 +193,8 @@
 
 	{#if hasCustomizations}
 		<div class="customization-actions">
-			<button class="btn btn-secondary" onclick={resetAllCustomizations}>
-				Nulstil alle
-			</button>
-			<button class="btn btn-primary" onclick={saveToHistory}>
-				Gem til historik
-			</button>
+			<button class="btn btn-secondary" onclick={resetAllCustomizations}> Nulstil alle </button>
+			<button class="btn btn-primary" onclick={saveToHistory}> Gem til historik </button>
 		</div>
 	{/if}
 
@@ -243,11 +235,7 @@
 											>
 												&#10003;
 											</button>
-											<button
-												class="btn-icon"
-												onclick={cancelEditing}
-												title="Annuller"
-											>
+											<button class="btn-icon" onclick={cancelEditing} title="Annuller">
 												&#10005;
 											</button>
 										</div>

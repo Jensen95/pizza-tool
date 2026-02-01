@@ -1,10 +1,5 @@
 const CACHE_NAME = 'pizza-tool-v1';
-const STATIC_ASSETS = [
-	'/',
-	'/manifest.json',
-	'/icons/icon-192.png',
-	'/icons/icon-512.png'
-];
+const STATIC_ASSETS = ['/', '/manifest.json', '/icons/icon-192.png', '/icons/icon-512.png'];
 
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
@@ -43,38 +38,42 @@ self.addEventListener('fetch', (event) => {
 			if (cachedResponse) {
 				// Return cached response and update cache in background
 				event.waitUntil(
-					fetch(event.request).then((response) => {
-						if (response && response.status === 200) {
-							const responseClone = response.clone();
-							caches.open(CACHE_NAME).then((cache) => {
-								cache.put(event.request, responseClone);
-							});
-						}
-					}).catch(() => {
-						// Network request failed, cached response is still good
-					})
+					fetch(event.request)
+						.then((response) => {
+							if (response && response.status === 200) {
+								const responseClone = response.clone();
+								caches.open(CACHE_NAME).then((cache) => {
+									cache.put(event.request, responseClone);
+								});
+							}
+						})
+						.catch(() => {
+							// Network request failed, cached response is still good
+						})
 				);
 				return cachedResponse;
 			}
 
 			// No cache, try network
-			return fetch(event.request).then((response) => {
-				// Don't cache non-successful responses
-				if (!response || response.status !== 200 || response.type !== 'basic') {
+			return fetch(event.request)
+				.then((response) => {
+					// Don't cache non-successful responses
+					if (!response || response.status !== 200 || response.type !== 'basic') {
+						return response;
+					}
+
+					// Clone and cache the response
+					const responseClone = response.clone();
+					caches.open(CACHE_NAME).then((cache) => {
+						cache.put(event.request, responseClone);
+					});
+
 					return response;
-				}
-
-				// Clone and cache the response
-				const responseClone = response.clone();
-				caches.open(CACHE_NAME).then((cache) => {
-					cache.put(event.request, responseClone);
+				})
+				.catch(() => {
+					// Network failed and no cache - return offline page if available
+					return caches.match('/');
 				});
-
-				return response;
-			}).catch(() => {
-				// Network failed and no cache - return offline page if available
-				return caches.match('/');
-			});
 		})
 	);
 });
@@ -113,7 +112,5 @@ self.addEventListener('push', (event) => {
 		}
 	};
 
-	event.waitUntil(
-		self.registration.showNotification(data.title, options)
-	);
+	event.waitUntil(self.registration.showNotification(data.title, options));
 });

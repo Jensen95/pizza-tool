@@ -45,8 +45,15 @@
 				<h2 id="modal-title" class="modal-title">{title}</h2>
 				{#if showClose}
 					<button class="close-button" onclick={handleClose} aria-label="Luk">
-						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-							<path d="M18 6L6 18M6 6l12 12"/>
+						<svg
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+						>
+							<path d="M18 6L6 18M6 6l12 12" />
 						</svg>
 					</button>
 				{/if}

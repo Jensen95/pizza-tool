@@ -64,13 +64,9 @@
 
 		<div class="timer-actions">
 			{#if isActive}
-				<button class="btn btn-secondary" onclick={handlePause}>
-					Pause
-				</button>
+				<button class="btn btn-secondary" onclick={handlePause}> Pause </button>
 			{:else if isPaused}
-				<button class="btn btn-primary" onclick={handleResume}>
-					Fortsaet
-				</button>
+				<button class="btn btn-primary" onclick={handleResume}> Fortsaet </button>
 			{/if}
 
 			<button class="btn btn-secondary delete-btn" onclick={handleCancel}>

@@ -1,79 +1,79 @@
 {
-  "id": "bk-handaelt",
-  "name": "BK Handaeltet",
-  "nameDa": "BK Handaeltet",
-  "category": "neapolitan",
-  "baseWeight": 270,
-  "hydration": 60,
-  "yieldPizzas": 4,
-  "ingredients": [
-    {
-      "id": "flour",
-      "name": "Flour tipo 00",
-      "nameDa": "Mel tipo 00",
-      "percentage": 100,
-      "type": "flour"
-    },
-    {
-      "id": "water",
-      "name": "Water",
-      "nameDa": "Vand",
-      "percentage": 60,
-      "type": "water"
-    },
-    {
-      "id": "salt",
-      "name": "Salt",
-      "nameDa": "Salt",
-      "percentage": 3,
-      "type": "salt"
-    },
-    {
-      "id": "yeast",
-      "name": "Fresh yeast",
-      "nameDa": "Frisk gaer",
-      "percentage": 0.5,
-      "type": "yeast"
-    }
-  ],
-  "schedule": {
-    "stages": [
-      {
-        "id": "stage-1",
-        "name": "Mix",
-        "nameDa": "Bland dej",
-        "duration": 30,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": false,
-        "instructionsDa": "Kom vand (ca 15 grader) i en skaal og oploes gaeren. Tilsaet melet og ael dejen i haanden."
-      },
-      {
-        "id": "stage-2",
-        "name": "Bulk ferment",
-        "nameDa": "Stuehaevning",
-        "duration": 120,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": true,
-        "instructionsDa": "Lad haeve ved stuetemperatur."
-      },
-      {
-        "id": "stage-3",
-        "name": "Ball rest",
-        "nameDa": "Kuglehvile",
-        "duration": 180,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": true,
-        "instructionsDa": "Del i kugler og lad hvile."
-      }
-    ],
-    "totalTime": 330
-  },
-  "tipsDa": [
-    "Vil du bruge dejen paa dag 2, saa se tip under kold haevning.",
-    "Dejen er faerdigaeltet naar du kan trykke paa den og den springer tilbage."
-  ],
-  "source": "BK_Handaelt"
+	"id": "bk-handaelt",
+	"name": "BK Handaeltet",
+	"nameDa": "BK Handaeltet",
+	"category": "neapolitan",
+	"baseWeight": 270,
+	"hydration": 60,
+	"yieldPizzas": 4,
+	"ingredients": [
+		{
+			"id": "flour",
+			"name": "Flour tipo 00",
+			"nameDa": "Mel tipo 00",
+			"percentage": 100,
+			"type": "flour"
+		},
+		{
+			"id": "water",
+			"name": "Water",
+			"nameDa": "Vand",
+			"percentage": 60,
+			"type": "water"
+		},
+		{
+			"id": "salt",
+			"name": "Salt",
+			"nameDa": "Salt",
+			"percentage": 3,
+			"type": "salt"
+		},
+		{
+			"id": "yeast",
+			"name": "Fresh yeast",
+			"nameDa": "Frisk gaer",
+			"percentage": 0.5,
+			"type": "yeast"
+		}
+	],
+	"schedule": {
+		"stages": [
+			{
+				"id": "stage-1",
+				"name": "Mix",
+				"nameDa": "Bland dej",
+				"duration": 30,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": false,
+				"instructionsDa": "Kom vand (ca 15 grader) i en skaal og oploes gaeren. Tilsaet melet og ael dejen i haanden."
+			},
+			{
+				"id": "stage-2",
+				"name": "Bulk ferment",
+				"nameDa": "Stuehaevning",
+				"duration": 120,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Lad haeve ved stuetemperatur."
+			},
+			{
+				"id": "stage-3",
+				"name": "Ball rest",
+				"nameDa": "Kuglehvile",
+				"duration": 180,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Del i kugler og lad hvile."
+			}
+		],
+		"totalTime": 330
+	},
+	"tipsDa": [
+		"Vil du bruge dejen paa dag 2, saa se tip under kold haevning.",
+		"Dejen er faerdigaeltet naar du kan trykke paa den og den springer tilbage."
+	],
+	"source": "BK_Handaelt"
 }

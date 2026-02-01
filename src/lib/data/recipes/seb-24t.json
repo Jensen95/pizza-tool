@@ -1,79 +1,79 @@
 {
-  "id": "seb-24t",
-  "name": "Seb 24 timer",
-  "nameDa": "Seb 24 timer",
-  "category": "neapolitan",
-  "baseWeight": 270,
-  "hydration": 70,
-  "yieldPizzas": 4,
-  "ingredients": [
-    {
-      "id": "flour",
-      "name": "Flour tipo 0 or 00",
-      "nameDa": "Mel tipo 0 eller 00",
-      "percentage": 100,
-      "type": "flour"
-    },
-    {
-      "id": "water",
-      "name": "Water",
-      "nameDa": "Vand",
-      "percentage": 70,
-      "type": "water"
-    },
-    {
-      "id": "salt",
-      "name": "Salt",
-      "nameDa": "Salt",
-      "percentage": 3,
-      "type": "salt"
-    },
-    {
-      "id": "yeast",
-      "name": "Fresh yeast",
-      "nameDa": "Frisk gaer",
-      "percentage": 0.4,
-      "type": "yeast"
-    }
-  ],
-  "schedule": {
-    "stages": [
-      {
-        "id": "stage-1",
-        "name": "Mix",
-        "nameDa": "Bland dej",
-        "duration": 30,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": false,
-        "instructionsDa": "Oploes gaeren i vandet. Tilsaet mel og salt og ael godt."
-      },
-      {
-        "id": "stage-2",
-        "name": "Room ferment",
-        "nameDa": "Stuehaevning",
-        "duration": 1320,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": true,
-        "instructionsDa": "Lad haeve ved stuetemperatur i ca. 22 timer."
-      },
-      {
-        "id": "stage-3",
-        "name": "Ball rest",
-        "nameDa": "Kuglehvile",
-        "duration": 120,
-        "temperature": 20,
-        "location": "room",
-        "canSetTimer": true,
-        "instructionsDa": "Del i kugler og lad hvile."
-      }
-    ],
-    "totalTime": 1470
-  },
-  "tipsDa": [
-    "Opskriften er god hvis du ikke har plads til koldhaevning i koeleskabet.",
-    "Ja, det er den rette maengde gaer i denne opskrift."
-  ],
-  "source": "Seb_24t"
+	"id": "seb-24t",
+	"name": "Seb 24 timer",
+	"nameDa": "Seb 24 timer",
+	"category": "neapolitan",
+	"baseWeight": 270,
+	"hydration": 70,
+	"yieldPizzas": 4,
+	"ingredients": [
+		{
+			"id": "flour",
+			"name": "Flour tipo 0 or 00",
+			"nameDa": "Mel tipo 0 eller 00",
+			"percentage": 100,
+			"type": "flour"
+		},
+		{
+			"id": "water",
+			"name": "Water",
+			"nameDa": "Vand",
+			"percentage": 70,
+			"type": "water"
+		},
+		{
+			"id": "salt",
+			"name": "Salt",
+			"nameDa": "Salt",
+			"percentage": 3,
+			"type": "salt"
+		},
+		{
+			"id": "yeast",
+			"name": "Fresh yeast",
+			"nameDa": "Frisk gaer",
+			"percentage": 0.4,
+			"type": "yeast"
+		}
+	],
+	"schedule": {
+		"stages": [
+			{
+				"id": "stage-1",
+				"name": "Mix",
+				"nameDa": "Bland dej",
+				"duration": 30,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": false,
+				"instructionsDa": "Oploes gaeren i vandet. Tilsaet mel og salt og ael godt."
+			},
+			{
+				"id": "stage-2",
+				"name": "Room ferment",
+				"nameDa": "Stuehaevning",
+				"duration": 1320,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Lad haeve ved stuetemperatur i ca. 22 timer."
+			},
+			{
+				"id": "stage-3",
+				"name": "Ball rest",
+				"nameDa": "Kuglehvile",
+				"duration": 120,
+				"temperature": 20,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Del i kugler og lad hvile."
+			}
+		],
+		"totalTime": 1470
+	},
+	"tipsDa": [
+		"Opskriften er god hvis du ikke har plads til koldhaevning i koeleskabet.",
+		"Ja, det er den rette maengde gaer i denne opskrift."
+	],
+	"source": "Seb_24t"
 }

@@ -11,7 +11,14 @@ export type RecipeCategory =
 
 export type IngredientType = 'flour' | 'water' | 'yeast' | 'salt' | 'oil' | 'sugar' | 'other';
 
-export type FermentationStage = 'preferment' | 'poolish' | 'biga' | 'autolyse' | 'bulk' | 'ball' | 'final';
+export type FermentationStage =
+	| 'preferment'
+	| 'poolish'
+	| 'biga'
+	| 'autolyse'
+	| 'bulk'
+	| 'ball'
+	| 'final';
 
 export interface RecipeIngredient {
 	id: string;

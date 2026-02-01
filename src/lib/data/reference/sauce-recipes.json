@@ -1,110 +1,108 @@
 [
-  {
-    "id": "pizza-sauce-authentic",
-    "name": "Pizza Sauce (Authentic Italian)",
-    "nameDa": "Pizza sauce (Autentisk Italiensk)",
-    "descriptionDa": "Simpel ukogt tomatsauce",
-    "ingredients": [
-      {
-        "name": "Canned tomatoes",
-        "nameDa": "Hakkede tomater",
-        "amount": "400g",
-        "amountDa": "1 dåse (400g)"
-      },
-      {
-        "name": "Olive oil",
-        "nameDa": "Olivenolie",
-        "amount": "3 tsp",
-        "amountDa": "3 tsk"
-      },
-      {
-        "name": "Sea salt",
-        "nameDa": "Havsalt",
-        "amount": "1/4 tsp",
-        "amountDa": "1/4 tsk"
-      },
-      {
-        "name": "Dried oregano",
-        "nameDa": "Toerret oregano",
-        "amount": "2-3 pinches",
-        "amountDa": "2-3 fingerspidser"
-      },
-      {
-        "name": "Fresh basil",
-        "nameDa": "Frisk basilikum",
-        "amount": "2-3 leaves",
-        "amountDa": "2-3 blade"
-      },
-      {
-        "name": "Garlic",
-        "nameDa": "Hvidloeg",
-        "amount": "optional",
-        "amountDa": "evt. et fed"
-      }
-    ],
-    "instructionsDa": [
-      "Bland alle ingredienserne i en skål og roer dem godt sammen.",
-      "Smag til med havsalt."
-    ],
-    "yieldDa": "3-4 pizzaer",
-    "tipsDa": [
-      "Saucen kan holde sig i koeleskabet op til 3 dage. Kan også fryses."
-    ]
-  },
-  {
-    "id": "tomato-sauce-cooked",
-    "name": "Tomato Sauce (Cooked)",
-    "nameDa": "Tomat sauce (Kogt)",
-    "descriptionDa": "Kogt tomatsauce med urter",
-    "ingredients": [
-      {
-        "name": "Canned tomatoes",
-        "nameDa": "Hakkede tomater",
-        "amount": "400g",
-        "amountDa": "1 dåse (400g)"
-      },
-      {
-        "name": "Garlic",
-        "nameDa": "Hvidloeg",
-        "amount": "1 clove",
-        "amountDa": "1 fed, finthakket"
-      },
-      {
-        "name": "Dried oregano",
-        "nameDa": "Toerret oregano",
-        "amount": "1 tsp",
-        "amountDa": "1 tsk"
-      },
-      {
-        "name": "Fresh parsley",
-        "nameDa": "Frisk persille",
-        "amount": "handful",
-        "amountDa": "1 håndfuld, hakket"
-      },
-      {
-        "name": "Fresh basil",
-        "nameDa": "Frisk basilikum",
-        "amount": "handful",
-        "amountDa": "1 lille håndfuld, hakket"
-      },
-      {
-        "name": "Water",
-        "nameDa": "Vand",
-        "amount": "2 tbsp",
-        "amountDa": "2 spsk"
-      },
-      {
-        "name": "Olive oil",
-        "nameDa": "Olivenolie",
-        "amount": "1 tbsp",
-        "amountDa": "1 spsk"
-      }
-    ],
-    "instructionsDa": [
-      "Steg hvidloeg i olivenolie.",
-      "Tilsaet tomater, vand og krydderier.",
-      "Kog op og lad simre i 5-10 minutter."
-    ],
-    "yieldDa": "3-4 pizzaer"
-  }
+	{
+		"id": "pizza-sauce-authentic",
+		"name": "Pizza Sauce (Authentic Italian)",
+		"nameDa": "Pizza sauce (Autentisk Italiensk)",
+		"descriptionDa": "Simpel ukogt tomatsauce",
+		"ingredients": [
+			{
+				"name": "Canned tomatoes",
+				"nameDa": "Hakkede tomater",
+				"amount": "400g",
+				"amountDa": "1 dåse (400g)"
+			},
+			{
+				"name": "Olive oil",
+				"nameDa": "Olivenolie",
+				"amount": "3 tsp",
+				"amountDa": "3 tsk"
+			},
+			{
+				"name": "Sea salt",
+				"nameDa": "Havsalt",
+				"amount": "1/4 tsp",
+				"amountDa": "1/4 tsk"
+			},
+			{
+				"name": "Dried oregano",
+				"nameDa": "Toerret oregano",
+				"amount": "2-3 pinches",
+				"amountDa": "2-3 fingerspidser"
+			},
+			{
+				"name": "Fresh basil",
+				"nameDa": "Frisk basilikum",
+				"amount": "2-3 leaves",
+				"amountDa": "2-3 blade"
+			},
+			{
+				"name": "Garlic",
+				"nameDa": "Hvidloeg",
+				"amount": "optional",
+				"amountDa": "evt. et fed"
+			}
+		],
+		"instructionsDa": [
+			"Bland alle ingredienserne i en skål og roer dem godt sammen.",
+			"Smag til med havsalt."
+		],
+		"yieldDa": "3-4 pizzaer",
+		"tipsDa": ["Saucen kan holde sig i koeleskabet op til 3 dage. Kan også fryses."]
+	},
+	{
+		"id": "tomato-sauce-cooked",
+		"name": "Tomato Sauce (Cooked)",
+		"nameDa": "Tomat sauce (Kogt)",
+		"descriptionDa": "Kogt tomatsauce med urter",
+		"ingredients": [
+			{
+				"name": "Canned tomatoes",
+				"nameDa": "Hakkede tomater",
+				"amount": "400g",
+				"amountDa": "1 dåse (400g)"
+			},
+			{
+				"name": "Garlic",
+				"nameDa": "Hvidloeg",
+				"amount": "1 clove",
+				"amountDa": "1 fed, finthakket"
+			},
+			{
+				"name": "Dried oregano",
+				"nameDa": "Toerret oregano",
+				"amount": "1 tsp",
+				"amountDa": "1 tsk"
+			},
+			{
+				"name": "Fresh parsley",
+				"nameDa": "Frisk persille",
+				"amount": "handful",
+				"amountDa": "1 håndfuld, hakket"
+			},
+			{
+				"name": "Fresh basil",
+				"nameDa": "Frisk basilikum",
+				"amount": "handful",
+				"amountDa": "1 lille håndfuld, hakket"
+			},
+			{
+				"name": "Water",
+				"nameDa": "Vand",
+				"amount": "2 tbsp",
+				"amountDa": "2 spsk"
+			},
+			{
+				"name": "Olive oil",
+				"nameDa": "Olivenolie",
+				"amount": "1 tbsp",
+				"amountDa": "1 spsk"
+			}
+		],
+		"instructionsDa": [
+			"Steg hvidloeg i olivenolie.",
+			"Tilsaet tomater, vand og krydderier.",
+			"Kog op og lad simre i 5-10 minutter."
+		],
+		"yieldDa": "3-4 pizzaer"
+	}
 ]
