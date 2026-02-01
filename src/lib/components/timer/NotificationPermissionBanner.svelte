@@ -5,6 +5,7 @@
 		getPermissionStatus,
 		requestPermission
 	} from '$lib/utils/notification';
+	import { preferences } from '$lib/stores/preferences';
 
 	let { hasActiveTimers = false }: { hasActiveTimers?: boolean } = $props();
 
@@ -35,14 +36,20 @@
 		}
 	}
 
+	function handleDismiss() {
+		preferences.dismissNotificationBanner();
+	}
+
 	// Only show banner if:
 	// - There are active timers
 	// - Notifications are supported
 	// - Permission is not granted (either 'default' or 'denied')
+	// - Banner has not been permanently dismissed
 	let shouldShowBanner = $derived(
 		hasActiveTimers &&
 			isNotificationSupported() &&
-			(permissionStatus === 'default' || permissionStatus === 'denied')
+			(permissionStatus === 'default' || permissionStatus === 'denied') &&
+			!$preferences.notificationBannerDismissed
 	);
 </script>
 
@@ -61,6 +68,14 @@
 					{/if}
 				</p>
 			</div>
+			<button 
+				class="dismiss-button" 
+				onclick={handleDismiss}
+				aria-label="Luk banner"
+				title="Vis ikke denne besked igen"
+			>
+				✕
+			</button>
 		</div>
 		{#if permissionStatus === 'default'}
 			<button class="btn btn-primary banner-button" onclick={handleRequestPermission} disabled={isRequesting}>
@@ -109,6 +124,37 @@
 		color: var(--color-text-secondary);
 		font-size: var(--font-size-sm);
 		line-height: 1.4;
+	}
+
+	.dismiss-button {
+		background: none;
+		border: none;
+		color: var(--color-text-secondary);
+		cursor: pointer;
+		font-size: 1.5rem;
+		line-height: 1;
+		padding: 0;
+		margin-left: var(--spacing-xs);
+		flex-shrink: 0;
+		width: 24px;
+		height: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: var(--radius-sm);
+		transition: 
+			background-color 0.2s,
+			color 0.2s;
+	}
+
+	.dismiss-button:hover {
+		background-color: rgba(0, 0, 0, 0.1);
+		color: var(--color-text);
+	}
+
+	.dismiss-button:focus {
+		outline: 2px solid var(--color-primary, #007bff);
+		outline-offset: 2px;
 	}
 
 	.banner-button {
