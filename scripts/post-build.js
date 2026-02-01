@@ -16,5 +16,8 @@ try {
 	console.log('✓ Created 404.html for GitHub Pages SPA support');
 } catch (error) {
 	console.error('Failed to create 404.html:', error.message);
+	console.error(
+		'Ensure that the build directory exists and contains index.html. Run "npm run build" first.'
+	);
 	process.exit(1);
 }
