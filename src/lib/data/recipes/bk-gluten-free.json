@@ -38,7 +38,7 @@
 		{
 			"id": "yeast",
 			"name": "Dry yeast",
-			"nameDa": "Toergaer",
+			"nameDa": "Tørgær",
 			"percentage": 0.4,
 			"type": "yeast"
 		}
@@ -53,17 +53,17 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": false,
-				"instructionsDa": "Toergaeren vendes i den glutenfrie mel. Tilsaet vand og olie og bland godt."
+				"instructionsDa": "Tørgæren vendes i den glutenfrie mel. Tilsæt vand og olie og bland godt."
 			},
 			{
 				"id": "stage-2",
 				"name": "Bulk ferment",
-				"nameDa": "Stuehaevning",
+				"nameDa": "Stuehævning",
 				"duration": 120,
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Lad haeve ved stuetemperatur."
+				"instructionsDa": "Lad hæve ved stuetemperatur."
 			},
 			{
 				"id": "stage-3",
@@ -79,11 +79,11 @@
 		"totalTime": 330
 	},
 	"tipsDa": [
-		"Den faerdige dej-temperatur maa ikke overstige 27 grader.",
-		"Toergaeren arbejder bedst naar dejen bliver 25-27 grader.",
-		"Roed Finax melblanding er en af de bedre glutenfrie melblandinger.",
-		"Grundet det lave protein-indhold skal du vaere forsigtig med aeltning.",
-		"Der kan ogsaa bruges en anden glutenfri melblanding."
+		"Den færdige dej-temperatur må ikke overstige 27 grader.",
+		"Tørgæren arbejder bedst når dejen bliver 25-27 grader.",
+		"Rød Finax melblanding er en af de bedre glutenfrie melblandinger.",
+		"Grundet det lave protein-indhold skal du være forsigtig med æltning.",
+		"Der kan også bruges en anden glutenfri melblanding."
 	],
 	"source": "BK_glut_h"
 }

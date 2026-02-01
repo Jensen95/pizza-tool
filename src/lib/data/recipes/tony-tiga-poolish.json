@@ -26,7 +26,7 @@
 		{
 			"id": "poolish-yeast",
 			"name": "Poolish yeast",
-			"nameDa": "Toergaer (poolish)",
+			"nameDa": "Tørgær (poolish)",
 			"percentage": 0.1,
 			"type": "yeast",
 			"stage": "poolish"
@@ -58,7 +58,7 @@
 		{
 			"id": "main-yeast",
 			"name": "Main yeast",
-			"nameDa": "Toergaer (hoveddej)",
+			"nameDa": "Tørgær (hoveddej)",
 			"percentage": 0.4,
 			"type": "yeast",
 			"stage": "main"
@@ -90,7 +90,7 @@
 				"temperature": 4,
 				"location": "fridge",
 				"canSetTimer": true,
-				"instructionsDa": "Roer gaeren ud i koldt vand i 30 sek. indtil det skummer lidt. Bland med mel og lad hvile i koeleskab."
+				"instructionsDa": "Rør gæren ud i koldt vand i 30 sek. indtil det skummer lidt. Bland med mel og lad hvile i køleskab."
 			},
 			{
 				"id": "stage-2",
@@ -100,7 +100,7 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Bland poolish med mel, vand, salt, gaer, olie og malt. Ael godt og lad haeve."
+				"instructionsDa": "Bland poolish med mel, vand, salt, gær, olie og malt. Æl godt og lad hæve."
 			},
 			{
 				"id": "stage-3",
@@ -117,7 +117,7 @@
 	},
 	"tipsDa": [
 		"Anbefaling: Hvedemel med 13-14,5% protein.",
-		"En NY style pizza har typisk en hydrering paa 60-65%.",
+		"En NY style pizza har typisk en hydrering på 60-65%.",
 		"Diatistisk malt og bageenzym er generelt det samme.",
 		"Tony bruger altid koldt vand fra hanen i sine starters."
 	],

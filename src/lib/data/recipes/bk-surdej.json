@@ -46,7 +46,7 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Opfrisk surdejen 8-12 timer foer brug."
+				"instructionsDa": "Opfrisk surdejen 8-12 timer før brug."
 			},
 			{
 				"id": "stage-2",
@@ -56,35 +56,35 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": false,
-				"instructionsDa": "Bland mel, vand og surdej i roeremaskinen. Tilsaet salt og ael godt."
+				"instructionsDa": "Bland mel, vand og surdej i røremaskinen. Tilsæt salt og æl godt."
 			},
 			{
 				"id": "stage-3",
 				"name": "Bulk",
-				"nameDa": "Haevning",
+				"nameDa": "Hævning",
 				"duration": 240,
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Lad haeve ved stuetemperatur med strae og fold hver time."
+				"instructionsDa": "Lad hæve ved stuetemperatur med stræ og fold hver time."
 			},
 			{
 				"id": "stage-4",
 				"name": "Cold retard",
-				"nameDa": "Kold haevning",
+				"nameDa": "Kold hævning",
 				"duration": 1440,
 				"temperature": 4,
 				"location": "fridge",
 				"canSetTimer": true,
-				"instructionsDa": "Del i kugler og lad haeve i koeleskab natten over."
+				"instructionsDa": "Del i kugler og lad hæve i køleskab natten over."
 			}
 		],
 		"totalTime": 2430
 	},
 	"tipsDa": [
-		"Den faerdige dej temperatur skal ikke overstige 27 grader.",
-		"Husk: aeltetider er vejledende.",
-		"Dejen er klar naar den er blank, glat og kan straekkes langt."
+		"Den færdige dej temperatur skal ikke overstige 27 grader.",
+		"Husk: æltetider er vejledende.",
+		"Dejen er klar når den er blank, glat og kan strækkes langt."
 	],
 	"source": "BK_surdej"
 }

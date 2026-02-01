@@ -26,7 +26,7 @@
 		{
 			"id": "biga-yeast",
 			"name": "Biga yeast",
-			"nameDa": "Frisk gaer (biga)",
+			"nameDa": "Frisk gær (biga)",
 			"percentage": 0.3,
 			"type": "yeast",
 			"stage": "biga"
@@ -66,7 +66,7 @@
 		{
 			"id": "main-yeast",
 			"name": "Main yeast",
-			"nameDa": "Frisk gaer (hoveddej)",
+			"nameDa": "Frisk gær (hoveddej)",
 			"percentage": 0.7,
 			"type": "yeast",
 			"stage": "main"
@@ -82,7 +82,7 @@
 				"temperature": 4,
 				"location": "fridge",
 				"canSetTimer": true,
-				"instructionsDa": "Oploes gaeren i vandet og bland med melet. Lad hvile i koeleskab i 24 timer."
+				"instructionsDa": "Opløs gæren i vandet og bland med melet. Lad hvile i køleskab i 24 timer."
 			},
 			{
 				"id": "stage-2",
@@ -92,14 +92,14 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Bland biga med koldt vand, mel, salt og gaer. Ael godt og lad haeve."
+				"instructionsDa": "Bland biga med koldt vand, mel, salt og gær. Æl godt og lad hæve."
 			}
 		],
 		"totalTime": 1620
 	},
 	"tipsDa": [
 		"Bruges anden mel, anbefales styrke W300/310.",
-		"Vand i hoveddej skal vaere det koldeste fra hanen/koel.",
+		"Vand i hoveddej skal være det koldeste fra hanen/køl.",
 		"Den perfekte stuetemperatur for en biga er 18 grader."
 	],
 	"source": "Seb_biga"

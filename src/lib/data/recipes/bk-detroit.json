@@ -38,7 +38,7 @@
 		{
 			"id": "yeast",
 			"name": "Dry yeast",
-			"nameDa": "Toergaer",
+			"nameDa": "Tørgær",
 			"percentage": 0.6,
 			"type": "yeast"
 		}
@@ -53,35 +53,35 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Vand, mel og hvedesur roeres let sammen og hviler."
+				"instructionsDa": "Vand, mel og hvedesur røres let sammen og hviler."
 			},
 			{
 				"id": "stage-2",
 				"name": "Bulk ferment",
-				"nameDa": "Haevning",
+				"nameDa": "Hævning",
 				"duration": 120,
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Tilsaet salt og gaer og ael godt. Lad haeve."
+				"instructionsDa": "Tilsæt salt og gær og æl godt. Lad hæve."
 			},
 			{
 				"id": "stage-3",
 				"name": "Pan proof",
-				"nameDa": "Pande-haevning",
+				"nameDa": "Pande-hævning",
 				"duration": 60,
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Tryk ud i smoert pande og lad hvile."
+				"instructionsDa": "Tryk ud i smørt pande og lad hvile."
 			}
 		],
 		"totalTime": 225
 	},
 	"tipsDa": [
 		"Der anbefales en mel med protein-indhold 12,5-14,5%.",
-		"Pizzaen er faerdig naar osten ved kanterne er sydende og moerk.",
-		"De 290 g dej passer til en bradepande paa 20x25 cm."
+		"Pizzaen er færdig når osten ved kanterne er sydende og mørk.",
+		"De 290 g dej passer til en bradepande på 20x25 cm."
 	],
 	"source": "BK_detroit"
 }

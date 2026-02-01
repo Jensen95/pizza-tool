@@ -1,7 +1,7 @@
 {
 	"id": "bk-handaelt",
-	"name": "BK Handaeltet",
-	"nameDa": "BK Handaeltet",
+	"name": "BK Handæltet",
+	"nameDa": "BK Handæltet",
 	"category": "neapolitan",
 	"baseWeight": 270,
 	"hydration": 60,
@@ -31,7 +31,7 @@
 		{
 			"id": "yeast",
 			"name": "Fresh yeast",
-			"nameDa": "Frisk gaer",
+			"nameDa": "Frisk gær",
 			"percentage": 0.5,
 			"type": "yeast"
 		}
@@ -46,17 +46,17 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": false,
-				"instructionsDa": "Kom vand (ca 15 grader) i en skaal og oploes gaeren. Tilsaet melet og ael dejen i haanden."
+				"instructionsDa": "Kom vand (ca 15 grader) i en skål og opløs gæren. Tilsæt melet og æl dejen i hånden."
 			},
 			{
 				"id": "stage-2",
 				"name": "Bulk ferment",
-				"nameDa": "Stuehaevning",
+				"nameDa": "Stuehævning",
 				"duration": 120,
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Lad haeve ved stuetemperatur."
+				"instructionsDa": "Lad hæve ved stuetemperatur."
 			},
 			{
 				"id": "stage-3",
@@ -72,8 +72,8 @@
 		"totalTime": 330
 	},
 	"tipsDa": [
-		"Vil du bruge dejen paa dag 2, saa se tip under kold haevning.",
-		"Dejen er faerdigaeltet naar du kan trykke paa den og den springer tilbage."
+		"Vil du bruge dejen på dag 2, så se tip under kold hævning.",
+		"Dejen er færdigæltet når du kan trykke på den og den springer tilbage."
 	],
 	"source": "BK_Handaelt"
 }

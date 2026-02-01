@@ -31,7 +31,7 @@
 		{
 			"id": "yeast",
 			"name": "Dry yeast",
-			"nameDa": "Toergaer",
+			"nameDa": "Tørgær",
 			"percentage": 0.07,
 			"type": "yeast"
 		},
@@ -60,17 +60,17 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Bland de toerre ingredienser. Tilsaet vand og ael godt. Tilsaet olie til sidst."
+				"instructionsDa": "Bland de tørre ingredienser. Tilsæt vand og æl godt. Tilsæt olie til sidst."
 			},
 			{
 				"id": "stage-2",
 				"name": "Cold ferment",
-				"nameDa": "Dag 2-4 - Kold haevning",
+				"nameDa": "Dag 2-4 - Kold hævning",
 				"duration": 4320,
 				"temperature": 4,
 				"location": "fridge",
 				"canSetTimer": true,
-				"instructionsDa": "Lad haeve i koeleskab i 3-4 dage."
+				"instructionsDa": "Lad hæve i køleskab i 3-4 dage."
 			},
 			{
 				"id": "stage-3",
@@ -80,15 +80,15 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Tag ud af koeleskab 2 timer foer bagning."
+				"instructionsDa": "Tag ud af køleskab 2 timer før bagning."
 			}
 		],
 		"totalTime": 4590
 	},
 	"tipsDa": [
 		"Normalt anbefales mel med 13-14,5% protein til NY style.",
-		"En aegte New York style pizza er kendt for sin enkelte topping-stil.",
-		"Toergaeren arbejder bedst naar vandet er 25-27 grader."
+		"En ægte New York style pizza er kendt for sin enkelte topping-stil.",
+		"Tørgæren arbejder bedst når vandet er 25-27 grader."
 	],
 	"source": "PPAH_NY"
 }

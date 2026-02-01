@@ -45,7 +45,7 @@
 		{
 			"id": "yeast",
 			"name": "Dry yeast",
-			"nameDa": "Toergaer",
+			"nameDa": "Tørgær",
 			"percentage": 0.3,
 			"type": "yeast"
 		}
@@ -60,17 +60,17 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": false,
-				"instructionsDa": "Mel, surdej, bageenzym og vand roeres let sammen. Tilsaet salt og gaer."
+				"instructionsDa": "Mel, surdej, bageenzym og vand røres let sammen. Tilsæt salt og gær."
 			},
 			{
 				"id": "stage-2",
 				"name": "Bulk ferment",
-				"nameDa": "Stuehaevning",
+				"nameDa": "Stuehævning",
 				"duration": 120,
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Lad haeve ved stuetemperatur."
+				"instructionsDa": "Lad hæve ved stuetemperatur."
 			},
 			{
 				"id": "stage-3",
@@ -86,10 +86,10 @@
 		"totalTime": 330
 	},
 	"tipsDa": [
-		"Toergaeren arbejder bedst naar vandet er 25-27 grader.",
-		"Den faerdige dej temperatur maa ikke overstige 27 grader.",
-		"Dejen er klar naar den er blank, glat og kan straekkes langt.",
-		"Husk: aeltetider er vejlendende, da der er forskel paa maskiner."
+		"Tørgæren arbejder bedst når vandet er 25-27 grader.",
+		"Den færdige dej temperatur må ikke overstige 27 grader.",
+		"Dejen er klar når den er blank, glat og kan strækkes langt.",
+		"Husk: æltetider er vejlendende, da der er forskel på maskiner."
 	],
 	"source": "BK_bageenzym"
 }

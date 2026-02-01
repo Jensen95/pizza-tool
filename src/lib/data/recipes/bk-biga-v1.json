@@ -26,7 +26,7 @@
 		{
 			"id": "biga-yeast",
 			"name": "Biga yeast",
-			"nameDa": "Toergaer (biga)",
+			"nameDa": "Tørgær (biga)",
 			"percentage": 0.1,
 			"type": "yeast",
 			"stage": "biga"
@@ -58,7 +58,7 @@
 				"temperature": 4,
 				"location": "fridge",
 				"canSetTimer": true,
-				"instructionsDa": "Gaeren vendes i melet og vandet tilsaettes. Spred fingrene og bland til krummet konsistens. Lad hvile i koeleskab i 24 timer."
+				"instructionsDa": "Gæren vendes i melet og vandet tilsættes. Spred fingrene og bland til krummet konsistens. Lad hvile i køleskab i 24 timer."
 			},
 			{
 				"id": "stage-2",
@@ -68,17 +68,17 @@
 				"temperature": 20,
 				"location": "room",
 				"canSetTimer": true,
-				"instructionsDa": "Bland biga med koldt vand og salt. Ael godt og lad haeve."
+				"instructionsDa": "Bland biga med koldt vand og salt. Æl godt og lad hæve."
 			}
 		],
 		"totalTime": 1620
 	},
 	"tipsDa": [
-		"Toergaeren arbejder bedst i bigaen naar vandet er 25-27 grader.",
-		"Vand i hoveddejen skal vaere det koldeste fra hanen.",
-		"Hoveddejen maa helst ikke overstige 20 grader.",
-		"Dejen er klar naar den er blank, glat og kan straekkes langt.",
-		"V1 er god om sommeren, da den koldhaever.",
+		"Tørgæren arbejder bedst i bigaen når vandet er 25-27 grader.",
+		"Vand i hoveddejen skal være det koldeste fra hanen.",
+		"Hoveddejen må helst ikke overstige 20 grader.",
+		"Dejen er klar når den er blank, glat og kan strækkes langt.",
+		"V1 er god om sommeren, da den koldhæver.",
 		"100% af melet fermenteres i bigaen for fuld smagsudvikling."
 	],
 	"source": "BK_biga_v1"
