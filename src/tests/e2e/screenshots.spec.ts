@@ -1,31 +1,39 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
+import * as fs from 'fs';
+import * as path from 'path';
 
 /**
- * Visual regression tests for screenshot comparison
- * These tests are tagged with @screenshot to be used by the visual-comparison workflow
+ * Screenshot capture tests for visual comparison workflow
+ * These tests capture screenshots to files for upload to ImgBB
  */
+
+// Get screenshot output directory from env or use default
+const outputDir = process.env.SCREENSHOT_DIR || 'screenshots';
 
 test.describe('Visual Screenshots @screenshot', () => {
 	test('should capture main recipe page screenshot', async ({ page }) => {
 		await page.goto('/', { waitUntil: 'load' });
-		// Wait for main content to be visible
 		await page.locator('main').waitFor({ state: 'visible' });
 
-		// Take full page screenshot of the main recipe list page
-		await expect(page).toHaveScreenshot('main-recipe-page.png', {
+		// Create output directory if it doesn't exist
+		fs.mkdirSync(outputDir, { recursive: true });
+
+		// Capture screenshot to file
+		await page.screenshot({
+			path: path.join(outputDir, 'main-recipe-page.png'),
 			fullPage: true,
 			animations: 'disabled'
 		});
 	});
 
 	test('should capture specific recipe page screenshot', async ({ page }) => {
-		// Navigate to a specific recipe (using vito-poolish as example)
 		await page.goto('/recipe/vito-poolish', { waitUntil: 'load' });
-		// Wait for recipe content to be visible
 		await page.locator('main').waitFor({ state: 'visible' });
 
-		// Take full page screenshot of the recipe detail page
-		await expect(page).toHaveScreenshot('recipe-vito-poolish.png', {
+		fs.mkdirSync(outputDir, { recursive: true });
+
+		await page.screenshot({
+			path: path.join(outputDir, 'recipe-vito-poolish.png'),
 			fullPage: true,
 			animations: 'disabled'
 		});
@@ -33,11 +41,12 @@ test.describe('Visual Screenshots @screenshot', () => {
 
 	test('should capture timers page screenshot', async ({ page }) => {
 		await page.goto('/timers', { waitUntil: 'load' });
-		// Wait for main content to be visible
 		await page.locator('main').waitFor({ state: 'visible' });
 
-		// Take full page screenshot
-		await expect(page).toHaveScreenshot('timers-page.png', {
+		fs.mkdirSync(outputDir, { recursive: true });
+
+		await page.screenshot({
+			path: path.join(outputDir, 'timers-page.png'),
 			fullPage: true,
 			animations: 'disabled'
 		});
@@ -45,11 +54,12 @@ test.describe('Visual Screenshots @screenshot', () => {
 
 	test('should capture reference page screenshot', async ({ page }) => {
 		await page.goto('/reference', { waitUntil: 'load' });
-		// Wait for main content to be visible
 		await page.locator('main').waitFor({ state: 'visible' });
 
-		// Take full page screenshot
-		await expect(page).toHaveScreenshot('reference-page.png', {
+		fs.mkdirSync(outputDir, { recursive: true });
+
+		await page.screenshot({
+			path: path.join(outputDir, 'reference-page.png'),
 			fullPage: true,
 			animations: 'disabled'
 		});

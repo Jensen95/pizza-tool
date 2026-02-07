@@ -31,13 +31,14 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Take screenshots of PR version
+      - name: Capture PR screenshots
+        env:
+          SCREENSHOT_DIR: screenshots/pr
         run: |
-          mkdir -p screenshots/pr
-          npm run test:screenshots -- --project=chromium || true
-          # Copy screenshots from test-results (where Playwright actually saves them in CI)
-          find test-results -name "*.png" -exec cp {} screenshots/pr/ \; 2>/dev/null || true
-        continue-on-error: true
+          echo "Capturing PR screenshots..."
+          npm run test:screenshots -- --project=chromium
+          echo "PR screenshots captured:"
+          ls -lh screenshots/pr/ || echo "No screenshots found"
 
       - name: Checkout base branch
         uses: actions/checkout@v6
@@ -51,15 +52,16 @@ jobs:
       - name: Build base version
         run: npm run build
 
-      - name: Take screenshots of base version
+      - name: Capture base screenshots
+        env:
+          SCREENSHOT_DIR: screenshots/base
         run: |
-          mkdir -p screenshots/base
-          npm run test:screenshots -- --project=chromium || true
-          # Copy screenshots from test-results (where Playwright actually saves them in CI)
-          find test-results -name "*.png" -exec cp {} screenshots/base/ \; 2>/dev/null || true
-        continue-on-error: true
+          echo "Capturing base screenshots..."
+          npm run test:screenshots -- --project=chromium || echo "Base screenshots may not exist yet (first PR)"
+          echo "Base screenshots captured:"
+          ls -lh screenshots/base/ || echo "No base screenshots"
 
-      - name: Upload screenshots and create comment
+      - name: Upload to ImgBB and create comment
         uses: actions/github-script@v7
         if: always()
         env:
@@ -68,11 +70,13 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-            const https = require('https');
+
+            console.log('Starting visual comparison workflow...');
 
             // Function to upload image to ImgBB
             async function uploadToImgBB(imagePath, filename) {
               try {
+                console.log(`Uploading ${filename} to ImgBB...`);
                 const imageBuffer = fs.readFileSync(imagePath);
                 const base64Image = imageBuffer.toString('base64');
                 
@@ -115,24 +119,24 @@ jobs:
             let prScreenshots = [];
             let baseScreenshots = [];
 
-            try {
-              if (fs.existsSync(prScreenshotsDir)) {
-                prScreenshots = fs.readdirSync(prScreenshotsDir)
-                  .filter(f => f.endsWith('.png'))
-                  .sort();
-              }
-            } catch (e) {
-              console.log('No PR screenshots found');
+            // Check for PR screenshots
+            if (fs.existsSync(prScreenshotsDir)) {
+              prScreenshots = fs.readdirSync(prScreenshotsDir)
+                .filter(f => f.endsWith('.png'))
+                .sort();
+              console.log(`Found ${prScreenshots.length} PR screenshots:`, prScreenshots);
+            } else {
+              console.log('PR screenshots directory not found');
             }
 
-            try {
-              if (fs.existsSync(baseScreenshotsDir)) {
-                baseScreenshots = fs.readdirSync(baseScreenshotsDir)
-                  .filter(f => f.endsWith('.png'))
-                  .sort();
-              }
-            } catch (e) {
-              console.log('No base screenshots found');
+            // Check for base screenshots
+            if (fs.existsSync(baseScreenshotsDir)) {
+              baseScreenshots = fs.readdirSync(baseScreenshotsDir)
+                .filter(f => f.endsWith('.png'))
+                .sort();
+              console.log(`Found ${baseScreenshots.length} base screenshots:`, baseScreenshots);
+            } else {
+              console.log('Base screenshots directory not found');
             }
 
             // Build comment
@@ -140,16 +144,23 @@ jobs:
 
             if (prScreenshots.length === 0 && baseScreenshots.length === 0) {
               commentBody += '> ⚠️ No screenshots captured\n';
+              console.log('No screenshots found, posting warning comment');
             } else {
+              console.log('Building comparison comment...');
+              
               // Get unique screenshot names
               const allScreenshots = new Set([...prScreenshots, ...baseScreenshots]);
+              console.log(`Processing ${allScreenshots.size} unique screenshots`);
 
               for (const filename of Array.from(allScreenshots).sort()) {
+                console.log(`Processing screenshot: ${filename}`);
                 const basePath = path.join(baseScreenshotsDir, filename);
                 const prPath = path.join(prScreenshotsDir, filename);
 
                 const baseExists = fs.existsSync(basePath);
                 const prExists = fs.existsSync(prPath);
+
+                console.log(`  Base exists: ${baseExists}, PR exists: ${prExists}`);
 
                 // Use collapsible details block
                 commentBody += `<details>\n<summary><b>${filename}</b></summary>\n\n`;
@@ -185,25 +196,11 @@ jobs:
             }
 
             // Post comment
+            console.log('Posting comment to PR...');
             await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: commentBody
             });
-
-      - name: Upload base screenshots as artifact
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: base-screenshots
-          path: screenshots/base/
-          retention-days: 30
-
-      - name: Upload PR screenshots as artifact
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: pr-screenshots
-          path: screenshots/pr/
-          retention-days: 30
+            console.log('Comment posted successfully!');
