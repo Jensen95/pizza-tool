@@ -119,8 +119,8 @@ function createCalculatorStore() {
 		 */
 		setPredoughRatio(ratio: number | null) {
 			if (ratio !== null) {
-				if (ratio < 0.05) ratio = 0.05; // Minimum 5%
-				if (ratio > 0.95) ratio = 0.95; // Maximum 95%
+				if (ratio < 0) ratio = 0;
+				if (ratio > 1) ratio = 1;
 			}
 
 			update((state) => {
