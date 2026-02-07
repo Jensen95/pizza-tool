@@ -18,41 +18,54 @@ updates:
         patterns:
           - 'typescript'
         update-types:
+          - 'major'
           - 'minor'
           - 'patch'
-      # Svelte framework and ecosystem
-      svelte-ecosystem:
+      # Svelte core framework
+      svelte-core:
         patterns:
           - 'svelte'
           - 'svelte-check'
-          - '@sveltejs/*'
         update-types:
+          - 'major'
           - 'minor'
           - 'patch'
-      # Vite build tooling
-      vite-build:
+      # SvelteKit framework and adapters
+      sveltekit:
         patterns:
-          - 'vite'
+          - '@sveltejs/kit'
+          - '@sveltejs/adapter-*'
           - '@sveltejs/vite-plugin-svelte'
         update-types:
+          - 'major'
           - 'minor'
           - 'patch'
-      # Unit testing framework
-      testing-framework:
+      # Vite build tool
+      vite:
+        patterns:
+          - 'vite'
+        update-types:
+          - 'major'
+          - 'minor'
+          - 'patch'
+      # Unit testing framework and utilities
+      unit-testing:
         patterns:
           - 'vitest'
           - '@vitest/*'
+          - '@testing-library/*'
           - 'happy-dom'
           - 'jsdom'
         update-types:
+          - 'major'
           - 'minor'
           - 'patch'
       # End-to-end testing
       e2e-testing:
         patterns:
           - '@playwright/*'
-          - '@testing-library/*'
         update-types:
+          - 'major'
           - 'minor'
           - 'patch'
       # Linting tools
@@ -64,6 +77,7 @@ updates:
           - '@typescript-eslint/*'
           - 'globals'
         update-types:
+          - 'major'
           - 'minor'
           - 'patch'
       # Code formatting
@@ -72,20 +86,23 @@ updates:
           - 'prettier'
           - 'prettier-*'
         update-types:
+          - 'major'
           - 'minor'
           - 'patch'
-      # Utility libraries
-      utilities:
+      # Build utilities
+      build-utilities:
         patterns:
           - 'sharp'
         update-types:
+          - 'major'
           - 'minor'
           - 'patch'
       # Production dependencies
-      production-dependencies:
+      production:
         patterns:
           - 'workbox-*'
         update-types:
+          - 'major'
           - 'minor'
           - 'patch'
     labels:
@@ -109,6 +126,7 @@ updates:
         patterns:
           - '*'
         update-types:
+          - 'major'
           - 'minor'
           - 'patch'
     labels:

@@ -14,15 +14,19 @@ This document summarizes the Dependabot setup completed for the pizza-tool repos
 - Weekly updates for GitHub Actions (Mondays at 3:00 AM UTC)
 - Intelligent dependency grouping to reduce PR noise:
   - `typescript`: TypeScript compiler (standalone, not bundled)
-  - `svelte-ecosystem`: Svelte core, svelte-check, @sveltejs packages
-  - `vite-build`: Vite bundler and Svelte Vite plugin
-  - `testing-framework`: Vitest, test UI, DOM testing libraries
-  - `e2e-testing`: Playwright and Testing Library packages
+  - `svelte-core`: Svelte compiler and svelte-check
+  - `sveltekit`: SvelteKit framework, adapters, and Vite plugin
+  - `vite`: Vite build tool (standalone)
+  - `unit-testing`: Vitest, Testing Library, DOM testing utilities
+  - `e2e-testing`: Playwright for E2E testing
   - `linting`: ESLint and all linting-related packages
   - `formatting`: Prettier and its plugins
-  - `utilities`: Utility libraries like sharp
-  - `production-dependencies`: Production runtime dependencies
-  - `github-actions`: All GitHub Actions updates in a single PR
+  - `build-utilities`: Build-time utilities (sharp)
+  - `production`: Production runtime dependencies (workbox)
+  - `github-actions`: All GitHub Actions updates
+- All groups include major, minor, and patch updates
+- Major updates require manual review (not auto-merged)
+- Patch/minor updates are auto-merged after CI passes
 - Proper labeling: `dependencies`, `npm`, `github-actions`
 - Conventional commit messages: `chore(deps): ...`
 

@@ -65,19 +65,25 @@ Main Dependabot configuration file that defines:
 
 **NPM Dependencies are grouped by function:**
 
-1. **`typescript`**: TypeScript compiler (standalone updates)
-2. **`svelte-ecosystem`**: Svelte core, svelte-check, and @sveltejs packages
-3. **`vite-build`**: Vite bundler and Svelte Vite plugin
-4. **`testing-framework`**: Vitest, test UI, and DOM testing libraries (happy-dom, jsdom)
-5. **`e2e-testing`**: Playwright and Testing Library packages
-6. **`linting`**: ESLint and all linting-related packages
-7. **`formatting`**: Prettier and its plugins
-8. **`utilities`**: Utility libraries like sharp
-9. **`production-dependencies`**: Production runtime dependencies (workbox)
+1. **`typescript`**: TypeScript compiler (standalone, not bundled with anything)
+2. **`svelte-core`**: Svelte compiler and type checker (core framework only)
+3. **`sveltekit`**: SvelteKit framework, adapters, and Vite plugin
+4. **`vite`**: Vite build tool (standalone, critical infrastructure)
+5. **`unit-testing`**: Vitest, Testing Library, and DOM testing utilities
+6. **`e2e-testing`**: Playwright for end-to-end testing
+7. **`linting`**: ESLint and all linting-related packages
+8. **`formatting`**: Prettier and its plugins
+9. **`build-utilities`**: Build-time utilities like sharp (image processing)
+10. **`production`**: Production runtime dependencies (workbox for PWA)
+
+**All groups include major, minor, and patch updates.**
+
+- Patch/minor updates: Auto-merged after CI passes
+- Major updates: Require manual review (not auto-merged)
 
 **GitHub Actions are grouped as:**
 
-- `github-actions`: All action updates in a single PR
+- `github-actions`: All action updates (major, minor, patch)
 
 ### `.github/workflows/dependabot-auto-merge.yml`
 
