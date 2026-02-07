@@ -60,58 +60,95 @@ jobs:
           find test-results -name "*.png" -exec cp {} screenshots/base/ \; 2>/dev/null || true
         continue-on-error: true
 
-      - name: Create comment body with screenshots
-        id: build-comment
-        run: |
-          # Create comment body file
-          cat > comment-body.md << 'COMMENT_EOF'
-          ## 📸 Visual Comparison
+      - name: Upload screenshots and create comment
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
 
-          Screenshots captured for visual regression testing.
+            // Collect screenshots
+            const prScreenshotsDir = 'screenshots/pr';
+            const baseScreenshotsDir = 'screenshots/base';
 
-          COMMENT_EOF
+            let prScreenshots = [];
+            let baseScreenshots = [];
 
-          # Add screenshots if they exist
-          if [ -d "screenshots/pr" ] && [ "$(ls -A screenshots/pr/*.png 2>/dev/null)" ]; then
-            echo "" >> comment-body.md
-            echo "### PR Screenshots" >> comment-body.md
-            echo "" >> comment-body.md
-            
-            for img in screenshots/pr/*.png; do
-              if [ -f "$img" ]; then
-                filename=$(basename "$img")
-                echo "#### $filename" >> comment-body.md
-                echo "" >> comment-body.md
-                # The image will be uploaded by gh CLI automatically
-                echo "![PR: $filename]($img)" >> comment-body.md
-                echo "" >> comment-body.md
-              fi
-            done
-          fi
+            try {
+              if (fs.existsSync(prScreenshotsDir)) {
+                prScreenshots = fs.readdirSync(prScreenshotsDir)
+                  .filter(f => f.endsWith('.png'))
+                  .sort();
+              }
+            } catch (e) {
+              console.log('No PR screenshots found');
+            }
 
-          if [ -d "screenshots/base" ] && [ "$(ls -A screenshots/base/*.png 2>/dev/null)" ]; then
-            echo "" >> comment-body.md
-            echo "### Base Screenshots" >> comment-body.md
-            echo "" >> comment-body.md
-            
-            for img in screenshots/base/*.png; do
-              if [ -f "$img" ]; then
-                filename=$(basename "$img")
-                echo "#### $filename" >> comment-body.md
-                echo "" >> comment-body.md
-                echo "![Base: $filename]($img)" >> comment-body.md
-                echo "" >> comment-body.md
-              fi
-            done
-          fi
+            try {
+              if (fs.existsSync(baseScreenshotsDir)) {
+                baseScreenshots = fs.readdirSync(baseScreenshotsDir)
+                  .filter(f => f.endsWith('.png'))
+                  .sort();
+              }
+            } catch (e) {
+              console.log('No base screenshots found');
+            }
 
-          echo "" >> comment-body.md
-          echo "---" >> comment-body.md
-          echo "*Images are automatically uploaded to GitHub's hosting (user-attachments) by gh CLI*" >> comment-body.md
+            // Build comment with embedded images in collapsible details
+            let commentBody = '## 📸 Visual Comparison\n\n';
 
-      - name: Post comment with images
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Use gh CLI to post comment - it will automatically upload images
-          gh pr comment ${{ github.event.pull_request.number }} --body-file comment-body.md
+            if (prScreenshots.length === 0 && baseScreenshots.length === 0) {
+              commentBody += '> ⚠️ No screenshots were captured. Make sure tests are tagged with `@screenshot`.\n';
+            } else {
+              commentBody += `**Screenshots captured**: ${prScreenshots.length} PR screenshot(s), ${baseScreenshots.length} base screenshot(s)\n\n`;
+
+              // Get unique screenshot names
+              const allScreenshots = new Set([...prScreenshots, ...baseScreenshots]);
+
+              for (const filename of Array.from(allScreenshots).sort()) {
+                const basePath = path.join(baseScreenshotsDir, filename);
+                const prPath = path.join(prScreenshotsDir, filename);
+
+                const baseExists = fs.existsSync(basePath);
+                const prExists = fs.existsSync(prPath);
+
+                // Use collapsible details block for each screenshot
+                commentBody += `<details>\n<summary><b>${filename}</b></summary>\n\n`;
+                commentBody += '<table><tr><th>Base (main)</th><th>PR Changes</th></tr><tr>';
+
+                // Base screenshot
+                if (baseExists) {
+                  const baseImage = fs.readFileSync(basePath);
+                  const baseBase64 = baseImage.toString('base64');
+                  commentBody += `<td><img src="data:image/png;base64,${baseBase64}" width="400" /></td>`;
+                } else {
+                  commentBody += '<td>❌ Not found</td>';
+                }
+
+                // PR screenshot
+                if (prExists) {
+                  const prImage = fs.readFileSync(prPath);
+                  const prBase64 = prImage.toString('base64');
+                  commentBody += `<td><img src="data:image/png;base64,${prBase64}" width="400" /></td>`;
+                } else {
+                  commentBody += '<td>❌ Not found</td>';
+                }
+
+                commentBody += '</tr></table>\n\n';
+                commentBody += '</details>\n\n';
+              }
+
+              commentBody += '\n> 💡 **Note**: Screenshots are embedded as base64 data URLs. Click to expand each screenshot comparison.\n';
+            }
+
+            commentBody += '\n---\n';
+            commentBody += `*Workflow run: [${context.runId}](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})*\n`;
+
+            // Post comment
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: commentBody
+            });
