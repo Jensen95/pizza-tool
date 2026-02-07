@@ -13,8 +13,15 @@ This document summarizes the Dependabot setup completed for the pizza-tool repos
 - Weekly updates for NPM packages (Mondays at 3:00 AM UTC)
 - Weekly updates for GitHub Actions (Mondays at 3:00 AM UTC)
 - Intelligent dependency grouping to reduce PR noise:
-  - `dev-dependencies`: All development dependencies grouped together
-  - `production-dependencies`: Production dependencies grouped together
+  - `typescript`: TypeScript compiler (standalone, not bundled)
+  - `svelte-ecosystem`: Svelte core, svelte-check, @sveltejs packages
+  - `vite-build`: Vite bundler and Svelte Vite plugin
+  - `testing-framework`: Vitest, test UI, DOM testing libraries
+  - `e2e-testing`: Playwright and Testing Library packages
+  - `linting`: ESLint and all linting-related packages
+  - `formatting`: Prettier and its plugins
+  - `utilities`: Utility libraries like sharp
+  - `production-dependencies`: Production runtime dependencies
   - `github-actions`: All GitHub Actions updates in a single PR
 - Proper labeling: `dependencies`, `npm`, `github-actions`
 - Conventional commit messages: `chore(deps): ...`

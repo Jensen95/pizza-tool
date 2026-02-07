@@ -63,10 +63,17 @@ Main Dependabot configuration file that defines:
 - Dependency grouping
 - Labels and commit message conventions
 
-**NPM Dependencies are grouped as:**
+**NPM Dependencies are grouped by function:**
 
-- `dev-dependencies`: All development dependencies (grouped for easier review)
-- `production-dependencies`: Production dependencies
+1. **`typescript`**: TypeScript compiler (standalone updates)
+2. **`svelte-ecosystem`**: Svelte core, svelte-check, and @sveltejs packages
+3. **`vite-build`**: Vite bundler and Svelte Vite plugin
+4. **`testing-framework`**: Vitest, test UI, and DOM testing libraries (happy-dom, jsdom)
+5. **`e2e-testing`**: Playwright and Testing Library packages
+6. **`linting`**: ESLint and all linting-related packages
+7. **`formatting`**: Prettier and its plugins
+8. **`utilities`**: Utility libraries like sharp
+9. **`production-dependencies`**: Production runtime dependencies (workbox)
 
 **GitHub Actions are grouped as:**
 

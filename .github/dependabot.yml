@@ -13,23 +13,75 @@ updates:
       timezone: 'UTC'
     open-pull-requests-limit: 10
     groups:
-      # Group all dev dependencies together for minor and patch updates
-      dev-dependencies:
+      # TypeScript - standalone, not bundled with anything
+      typescript:
         patterns:
-          - '@*'
-          - 'eslint*'
-          - 'prettier*'
           - 'typescript'
-          - 'vite*'
-          - 'vitest*'
-          - 'svelte*'
+        update-types:
+          - 'minor'
+          - 'patch'
+      # Svelte framework and ecosystem
+      svelte-ecosystem:
+        patterns:
+          - 'svelte'
+          - 'svelte-check'
           - '@sveltejs/*'
+        update-types:
+          - 'minor'
+          - 'patch'
+      # Vite build tooling
+      vite-build:
+        patterns:
+          - 'vite'
+          - '@sveltejs/vite-plugin-svelte'
+        update-types:
+          - 'minor'
+          - 'patch'
+      # Unit testing framework
+      testing-framework:
+        patterns:
+          - 'vitest'
+          - '@vitest/*'
+          - 'happy-dom'
+          - 'jsdom'
+        update-types:
+          - 'minor'
+          - 'patch'
+      # End-to-end testing
+      e2e-testing:
+        patterns:
           - '@playwright/*'
           - '@testing-library/*'
         update-types:
           - 'minor'
           - 'patch'
-      # Group production dependencies separately
+      # Linting tools
+      linting:
+        patterns:
+          - 'eslint'
+          - '@eslint/*'
+          - 'eslint-*'
+          - '@typescript-eslint/*'
+          - 'globals'
+        update-types:
+          - 'minor'
+          - 'patch'
+      # Code formatting
+      formatting:
+        patterns:
+          - 'prettier'
+          - 'prettier-*'
+        update-types:
+          - 'minor'
+          - 'patch'
+      # Utility libraries
+      utilities:
+        patterns:
+          - 'sharp'
+        update-types:
+          - 'minor'
+          - 'patch'
+      # Production dependencies
       production-dependencies:
         patterns:
           - 'workbox-*'
