@@ -39,14 +39,6 @@ jobs:
           find test-results -name "*.png" -exec cp {} screenshots/pr/ \; 2>/dev/null || true
         continue-on-error: true
 
-      - name: Upload PR screenshots as artifacts
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: pr-screenshots
-          path: screenshots/pr/
-          retention-days: 7
-
       - name: Checkout base branch
         uses: actions/checkout@v6
         with:
@@ -67,14 +59,6 @@ jobs:
           # Copy screenshots to dedicated directory
           find test-results -name "*.png" -exec cp {} screenshots/base/ \; 2>/dev/null || true
         continue-on-error: true
-
-      - name: Upload base screenshots as artifacts
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: base-screenshots
-          path: screenshots/base/
-          retention-days: 7
 
       - name: Upload screenshots and create comment
         uses: actions/github-script@v7
@@ -145,8 +129,8 @@ jobs:
                 commentBody += `| ${filename} | ${status} |\n`;
               }
 
-              commentBody += '\n> 💡 **Note**: Screenshots were captured successfully. Due to GitHub comment size limits, images are not embedded directly.\n';
-              commentBody += '> Screenshots are available as artifacts in the workflow run - download `pr-screenshots` and `base-screenshots` to compare.\n';
+              commentBody += '\n> 💡 **Note**: Screenshots were captured successfully but are not saved as artifacts.\n';
+              commentBody += '> The visual comparison workflow verifies that screenshot tests run without errors.\n';
             }
 
             commentBody += '\n---\n';

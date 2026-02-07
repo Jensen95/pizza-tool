@@ -23,7 +23,7 @@ test.describe('Visual Screenshots @screenshot', () => {
 		await page.waitForLoadState('networkidle');
 
 		// Take full page screenshot of the recipe detail page
-		await expect(page).toHaveScreenshot('recipe-detail-page.png', {
+		await expect(page).toHaveScreenshot('recipe-vito-poolish.png', {
 			fullPage: true,
 			animations: 'disabled'
 		});
