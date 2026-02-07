@@ -1,0 +1,137 @@
+# Dependabot configuration for pizza-tool
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  # NPM package dependencies
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '03:00'
+      timezone: 'UTC'
+    open-pull-requests-limit: 10
+    groups:
+      # TypeScript - standalone, not bundled with anything
+      typescript:
+        patterns:
+          - 'typescript'
+        update-types:
+          - 'major'
+          - 'minor'
+          - 'patch'
+      # Svelte core framework
+      svelte-core:
+        patterns:
+          - 'svelte'
+          - 'svelte-check'
+        update-types:
+          - 'major'
+          - 'minor'
+          - 'patch'
+      # SvelteKit framework and adapters
+      sveltekit:
+        patterns:
+          - '@sveltejs/kit'
+          - '@sveltejs/adapter-*'
+          - '@sveltejs/vite-plugin-svelte'
+        update-types:
+          - 'major'
+          - 'minor'
+          - 'patch'
+      # Vite build tool
+      vite:
+        patterns:
+          - 'vite'
+        update-types:
+          - 'major'
+          - 'minor'
+          - 'patch'
+      # Unit testing framework and utilities
+      unit-testing:
+        patterns:
+          - 'vitest'
+          - '@vitest/*'
+          - '@testing-library/*'
+          - 'happy-dom'
+          - 'jsdom'
+        update-types:
+          - 'major'
+          - 'minor'
+          - 'patch'
+      # End-to-end testing
+      e2e-testing:
+        patterns:
+          - '@playwright/*'
+        update-types:
+          - 'major'
+          - 'minor'
+          - 'patch'
+      # Linting tools
+      linting:
+        patterns:
+          - 'eslint'
+          - '@eslint/*'
+          - 'eslint-*'
+          - '@typescript-eslint/*'
+          - 'globals'
+        update-types:
+          - 'major'
+          - 'minor'
+          - 'patch'
+      # Code formatting
+      formatting:
+        patterns:
+          - 'prettier'
+          - 'prettier-*'
+        update-types:
+          - 'major'
+          - 'minor'
+          - 'patch'
+      # Build utilities
+      build-utilities:
+        patterns:
+          - 'sharp'
+        update-types:
+          - 'major'
+          - 'minor'
+          - 'patch'
+      # Production dependencies
+      production:
+        patterns:
+          - 'workbox-*'
+        update-types:
+          - 'major'
+          - 'minor'
+          - 'patch'
+    labels:
+      - 'dependencies'
+      - 'npm'
+    commit-message:
+      prefix: 'chore(deps)'
+      include: 'scope'
+
+  # GitHub Actions dependencies
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '03:00'
+      timezone: 'UTC'
+    open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns:
+          - '*'
+        update-types:
+          - 'major'
+          - 'minor'
+          - 'patch'
+    labels:
+      - 'dependencies'
+      - 'github-actions'
+    commit-message:
+      prefix: 'chore(deps)'
+      include: 'scope'
