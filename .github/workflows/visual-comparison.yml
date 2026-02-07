@@ -59,3 +59,59 @@ jobs:
           # Copy screenshots to dedicated directory
           find test-results -name "*.png" -exec cp {} screenshots/base/ \; 2>/dev/null || true
         continue-on-error: true
+
+      - name: Create comment body with screenshots
+        id: build-comment
+        run: |
+          # Create comment body file
+          cat > comment-body.md << 'COMMENT_EOF'
+          ## 📸 Visual Comparison
+
+          Screenshots captured for visual regression testing.
+
+          COMMENT_EOF
+
+          # Add screenshots if they exist
+          if [ -d "screenshots/pr" ] && [ "$(ls -A screenshots/pr/*.png 2>/dev/null)" ]; then
+            echo "" >> comment-body.md
+            echo "### PR Screenshots" >> comment-body.md
+            echo "" >> comment-body.md
+            
+            for img in screenshots/pr/*.png; do
+              if [ -f "$img" ]; then
+                filename=$(basename "$img")
+                echo "#### $filename" >> comment-body.md
+                echo "" >> comment-body.md
+                # The image will be uploaded by gh CLI automatically
+                echo "![PR: $filename]($img)" >> comment-body.md
+                echo "" >> comment-body.md
+              fi
+            done
+          fi
+
+          if [ -d "screenshots/base" ] && [ "$(ls -A screenshots/base/*.png 2>/dev/null)" ]; then
+            echo "" >> comment-body.md
+            echo "### Base Screenshots" >> comment-body.md
+            echo "" >> comment-body.md
+            
+            for img in screenshots/base/*.png; do
+              if [ -f "$img" ]; then
+                filename=$(basename "$img")
+                echo "#### $filename" >> comment-body.md
+                echo "" >> comment-body.md
+                echo "![Base: $filename]($img)" >> comment-body.md
+                echo "" >> comment-body.md
+              fi
+            done
+          fi
+
+          echo "" >> comment-body.md
+          echo "---" >> comment-body.md
+          echo "*Images are automatically uploaded to GitHub's hosting (user-attachments) by gh CLI*" >> comment-body.md
+
+      - name: Post comment with images
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Use gh CLI to post comment - it will automatically upload images
+          gh pr comment ${{ github.event.pull_request.number }} --body-file comment-body.md
