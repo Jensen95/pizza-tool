@@ -345,8 +345,8 @@
 								class="slider"
 								bind:value={mainDoughFlourPercent}
 								oninput={handleMainDoughFlourChange}
-								min="5"
-								max="95"
+								min="0"
+								max="100"
 								step="1"
 							/>
 							<span class="flour-split-value">{mainDoughFlourPercent}%</span>
