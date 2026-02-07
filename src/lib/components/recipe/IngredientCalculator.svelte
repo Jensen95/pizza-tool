@@ -2,7 +2,7 @@
 	import type { Recipe } from '$lib/types';
 	import type { ScaledIngredient } from '$lib/types/ingredient';
 	import { calculator, totalWeight, flourWeight, recipeHistory, predoughRatio } from '$lib/stores';
-	import { formatWeight } from '$lib/utils/baker-percentage';
+	import { formatWeight, isPredoughStage } from '$lib/utils/baker-percentage';
 
 	let { recipe }: { recipe: Recipe } = $props();
 
@@ -17,8 +17,7 @@
 	let originalPredoughRatio = $derived(calculator.getOriginalPredoughRatio());
 	let hasPredough = $derived(originalPredoughRatio !== null);
 
-	// Local state for main dough flour percentage (for slider)
-	// This is the inverse: 100% - predough% = main%
+	// Track main dough flour percentage for detecting customization
 	let mainDoughFlourPercent = $state<number>(100);
 
 	// Set recipe in calculator when recipe changes
@@ -50,12 +49,6 @@
 
 	function handleWeightChange() {
 		calculator.setDoughBallWeight(doughBallWeight);
-	}
-
-	function handleMainDoughFlourChange() {
-		// Convert main dough % to predough ratio (predough = 100% - main%)
-		const predoughRatio = (100 - mainDoughFlourPercent) / 100;
-		calculator.setPredoughRatio(predoughRatio);
 	}
 
 	function resetFlourSplit() {
@@ -178,7 +171,27 @@
 			return;
 		}
 
-		// For flour ingredients, validate that total flour percentage remains constant
+		// Handle flour split for predough recipes
+		// The user edits the % of total flour for each stage
+		if (hasPredough && ingredient.type === 'flour') {
+			if (value > 100) {
+				cancelEditing();
+				return;
+			}
+
+			if (isPredoughStage(ingredient.stage)) {
+				// Editing predough flour: predough ratio = value / 100
+				calculator.setPredoughRatio(value / 100);
+			} else {
+				// Editing main flour: predough ratio = complement
+				calculator.setPredoughRatio((100 - value) / 100);
+			}
+
+			cancelEditing();
+			return;
+		}
+
+		// For flour ingredients without predough, validate that total flour percentage remains constant
 		if (ingredient.type === 'flour') {
 			const floursInStage = getFlourIngredientsInStage(ingredientId);
 			const stage = ingredient.stage || 'main';
@@ -330,33 +343,6 @@
 			<div class="ingredient-group">
 				<h4 class="group-title">{stageLabels[stage] || stage}</h4>
 
-				{#if hasPredough && (stage === 'main' || stage === 'hoveddej')}
-					<div class="flour-split-control">
-						<div class="flour-split-header">
-							<span class="flour-split-label">Mel i hoveddej</span>
-							{#if hasFlourSplitChanged}
-								<button class="btn-link" onclick={resetFlourSplit}>Nulstil</button>
-							{/if}
-						</div>
-						<div class="flour-split-slider">
-							<input
-								id="main-flour-percent"
-								type="range"
-								class="slider"
-								bind:value={mainDoughFlourPercent}
-								oninput={handleMainDoughFlourChange}
-								min="0"
-								max="100"
-								step="1"
-							/>
-							<span class="flour-split-value">{mainDoughFlourPercent}%</span>
-						</div>
-						<p class="flour-split-hint">
-							Fordej: {100 - mainDoughFlourPercent}% &middot; Hoveddej: {mainDoughFlourPercent}%
-						</p>
-					</div>
-				{/if}
-
 				<table class="ingredient-table">
 					<thead>
 						<tr>
@@ -367,14 +353,9 @@
 					</thead>
 					<tbody>
 						{#each ingredients as ingredient}
-							<tr class:customized={isCustomized(ingredient.id)}>
+							<tr class:customized={isCustomized(ingredient.id) || (hasPredough && ingredient.type === 'flour' && hasFlourSplitChanged)}>
 								<td>
 									{ingredient.nameDa}
-									{#if hasPredough && ingredient.type === 'flour'}
-										<span class="flour-ratio-badge">
-											{ingredient.percentage.toFixed(0)}% af total
-										</span>
-									{/if}
 								</td>
 								<td class="right percentage-cell">
 									{#if editingIngredient === ingredient.id}
@@ -386,7 +367,7 @@
 												onkeydown={(e) => handleKeydown(e, ingredient.id)}
 												step="0.1"
 												min="0"
-												max="200"
+												max={hasPredough && ingredient.type === 'flour' ? '100' : '200'}
 											/>
 											<button
 												class="btn-icon"
@@ -402,17 +383,34 @@
 									{:else}
 										<button
 											class="percentage-button"
-											onclick={() => startEditing(ingredient.id, ingredient.stagePercentage)}
+											onclick={() => startEditing(ingredient.id, hasPredough && ingredient.type === 'flour' ? ingredient.percentage : ingredient.stagePercentage)}
 											title="Klik for at redigere"
 										>
-											{ingredient.stagePercentage.toFixed(2)}%
-											{#if isCustomized(ingredient.id)}
+											{#if hasPredough && ingredient.type === 'flour'}
+												{ingredient.percentage.toFixed(2)}%
+												<span class="flour-split-suffix">af total mel</span>
+											{:else}
+												{ingredient.stagePercentage.toFixed(2)}%
+											{/if}
+											{#if hasPredough && ingredient.type === 'flour' && hasFlourSplitChanged}
+												<span class="original-percentage">
+													(orig: {getOriginalPercentage(ingredient.id)?.toFixed(2)}%)
+												</span>
+											{:else if isCustomized(ingredient.id)}
 												<span class="original-percentage">
 													(orig: {getOriginalPercentage(ingredient.id)?.toFixed(2)}%)
 												</span>
 											{/if}
 										</button>
-										{#if isCustomized(ingredient.id)}
+										{#if hasPredough && ingredient.type === 'flour' && hasFlourSplitChanged}
+											<button
+												class="btn-icon reset-btn"
+												onclick={resetFlourSplit}
+												title="Nulstil fordeling"
+											>
+												&#8634;
+											</button>
+										{:else if isCustomized(ingredient.id)}
 											<button
 												class="btn-icon reset-btn"
 												onclick={() => resetIngredient(ingredient.id)}
@@ -433,7 +431,7 @@
 	</div>
 
 	<p class="hint">
-		Klik paa en procent for at tilpasse ingrediensen. For mel skal total procent forblive konstant.
+		Klik paa en procent for at tilpasse.{#if hasPredough} Melprocent styrer fordelingen mellem fordej og hoveddej.{/if}
 	</p>
 </div>
 
@@ -503,95 +501,10 @@
 		color: var(--color-primary);
 	}
 
-	.flour-split-control {
-		padding: var(--spacing-sm);
-		margin-bottom: var(--spacing-sm);
-		background: var(--color-surface);
-		border-radius: var(--radius-sm);
-		border-left: 3px solid var(--color-primary);
-	}
-
-	.flour-split-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: var(--spacing-xs);
-	}
-
-	.flour-split-label {
-		font-size: var(--font-size-sm);
-		font-weight: 500;
-		color: var(--color-text);
-	}
-
-	.flour-split-slider {
-		display: flex;
-		align-items: center;
-		gap: var(--spacing-sm);
-	}
-
-	.slider {
-		flex: 1;
-		height: 8px;
-		border-radius: 4px;
-		background: var(--color-border);
-		appearance: none;
-		cursor: pointer;
-	}
-
-	.slider::-webkit-slider-thumb {
-		appearance: none;
-		width: 20px;
-		height: 20px;
-		border-radius: 50%;
-		background: var(--color-primary);
-		cursor: pointer;
-	}
-
-	.slider::-moz-range-thumb {
-		width: 20px;
-		height: 20px;
-		border-radius: 50%;
-		background: var(--color-primary);
-		cursor: pointer;
-		border: none;
-	}
-
-	.flour-split-value {
-		font-weight: 600;
-		color: var(--color-primary);
-		min-width: 45px;
-		text-align: right;
-	}
-
-	.flour-split-hint {
-		margin: var(--spacing-xs) 0 0;
+	.flour-split-suffix {
 		font-size: var(--font-size-xs);
 		color: var(--color-text-secondary);
-	}
-
-	.flour-ratio-badge {
-		display: inline-block;
-		font-size: var(--font-size-xs);
-		color: var(--color-text-secondary);
-		background: var(--color-surface);
-		padding: 1px 6px;
-		border-radius: var(--radius-sm);
-		margin-left: var(--spacing-xs);
-	}
-
-	.btn-link {
-		background: none;
-		border: none;
-		color: var(--color-primary);
-		cursor: pointer;
-		font-size: var(--font-size-sm);
-		text-decoration: underline;
-		padding: 0;
-	}
-
-	.btn-link:hover {
-		color: var(--color-primary-dark, var(--color-primary));
+		font-weight: 400;
 	}
 
 	.ingredients {
