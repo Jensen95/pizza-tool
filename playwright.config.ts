@@ -6,7 +6,8 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
 	testDir: './src/tests/e2e',
-	testIgnore: '**/screenshots.spec.ts', // Exclude screenshot tests from default runs
+	// Exclude screenshot tests from default runs, but allow them when SCREENSHOT_DIR is set
+	testIgnore: process.env.SCREENSHOT_DIR ? undefined : '**/screenshots.spec.ts',
 	fullyParallel: true,
 	forbidOnly: !!process.env.CI,
 	retries: process.env.CI ? 2 : 0,
