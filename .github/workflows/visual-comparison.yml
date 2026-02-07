@@ -34,7 +34,7 @@ jobs:
       - name: Take screenshots of PR version
         run: |
           mkdir -p screenshots/pr
-          npx playwright test --grep "@screenshot" --project=chromium || true
+          npm run test:screenshots -- --project=chromium || true
           # Copy screenshots from snapshot directory (where toHaveScreenshot saves them)
           find src/tests/e2e -name "*-snapshots" -type d -exec cp {}/*.png screenshots/pr/ \; 2>/dev/null || true
         continue-on-error: true
@@ -54,7 +54,7 @@ jobs:
       - name: Take screenshots of base version
         run: |
           mkdir -p screenshots/base
-          npx playwright test --grep "@screenshot" --project=chromium || true
+          npm run test:screenshots -- --project=chromium || true
           # Copy screenshots from snapshot directory (where toHaveScreenshot saves them)
           find src/tests/e2e -name "*-snapshots" -type d -exec cp {}/*.png screenshots/base/ \; 2>/dev/null || true
         continue-on-error: true

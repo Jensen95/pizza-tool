@@ -42,7 +42,7 @@ jobs:
         run: npm run build
 
       - name: Run e2e tests
-        run: npm run test:e2e -- --grep-invert "@screenshot"
+        run: npm run test:e2e
 
       - name: Upload Playwright report
         if: always()
