@@ -1,0 +1,67 @@
+# Dependabot configuration for pizza-tool
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  # NPM package dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 10
+    groups:
+      # Group all dev dependencies together for minor and patch updates
+      dev-dependencies:
+        patterns:
+          - "@*"
+          - "eslint*"
+          - "prettier*"
+          - "typescript"
+          - "vite*"
+          - "vitest*"
+          - "svelte*"
+          - "@sveltejs/*"
+          - "@playwright/*"
+          - "@testing-library/*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group production dependencies separately
+      production-dependencies:
+        patterns:
+          - "workbox-*"
+        update-types:
+          - "minor"
+          - "patch"
+    labels:
+      - "dependencies"
+      - "npm"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+
+  # GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
