@@ -6,23 +6,24 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('Visual Screenshots @screenshot', () => {
-	test('should capture home page screenshot', async ({ page }) => {
+	test('should capture main recipe page screenshot', async ({ page }) => {
 		await page.goto('/');
 		await page.waitForLoadState('networkidle');
 
-		// Take full page screenshot
-		await expect(page).toHaveScreenshot('home-page.png', {
+		// Take full page screenshot of the main recipe list page
+		await expect(page).toHaveScreenshot('main-recipe-page.png', {
 			fullPage: true,
 			animations: 'disabled'
 		});
 	});
 
-	test('should capture reference page screenshot', async ({ page }) => {
-		await page.goto('/reference');
+	test('should capture specific recipe page screenshot', async ({ page }) => {
+		// Navigate to a specific recipe (using vito-poolish as example)
+		await page.goto('/recipe/vito-poolish');
 		await page.waitForLoadState('networkidle');
 
-		// Take full page screenshot
-		await expect(page).toHaveScreenshot('reference-page.png', {
+		// Take full page screenshot of the recipe detail page
+		await expect(page).toHaveScreenshot('recipe-detail-page.png', {
 			fullPage: true,
 			animations: 'disabled'
 		});
@@ -39,20 +40,14 @@ test.describe('Visual Screenshots @screenshot', () => {
 		});
 	});
 
-	test('should capture calculator interaction screenshot', async ({ page }) => {
-		await page.goto('/');
+	test('should capture reference page screenshot', async ({ page }) => {
+		await page.goto('/reference');
 		await page.waitForLoadState('networkidle');
 
-		// Interact with calculator if visible
-		const numberInput = page.locator('input[type="number"]').first();
-		if (await numberInput.isVisible()) {
-			await numberInput.fill('6');
-			await page.waitForLoadState('networkidle');
-
-			await expect(page).toHaveScreenshot('calculator-with-data.png', {
-				fullPage: true,
-				animations: 'disabled'
-			});
-		}
+		// Take full page screenshot
+		await expect(page).toHaveScreenshot('reference-page.png', {
+			fullPage: true,
+			animations: 'disabled'
+		});
 	});
 });
