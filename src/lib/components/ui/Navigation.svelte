@@ -98,4 +98,10 @@
 		justify-content: center;
 		font-weight: 600;
 	}
+
+	@media print {
+		.navigation {
+			position: relative;
+		}
+	}
 </style>
