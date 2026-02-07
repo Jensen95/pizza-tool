@@ -74,16 +74,16 @@ jobs:
         with:
           script: |
             const message = `## 📸 Visual Comparison
-            
+
             Screenshots have been captured for this PR. You can download and compare them from the workflow artifacts:
-            
+
             - **PR Version**: Available in \`pr-screenshots\` artifact
             - **Base Version**: Available in \`base-screenshots\` artifact
-            
+
             To view the artifacts, click on "Details" next to this check, then scroll to the "Artifacts" section at the bottom of the workflow run page.
-            
+
             > **Note**: Visual comparison screenshots are only generated when tests are tagged with \`@screenshot\`.`;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,

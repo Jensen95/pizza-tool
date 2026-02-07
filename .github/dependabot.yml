@@ -4,64 +4,64 @@
 version: 2
 updates:
   # NPM package dependencies
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "03:00"
-      timezone: "UTC"
+      interval: 'weekly'
+      day: 'monday'
+      time: '03:00'
+      timezone: 'UTC'
     open-pull-requests-limit: 10
     groups:
       # Group all dev dependencies together for minor and patch updates
       dev-dependencies:
         patterns:
-          - "@*"
-          - "eslint*"
-          - "prettier*"
-          - "typescript"
-          - "vite*"
-          - "vitest*"
-          - "svelte*"
-          - "@sveltejs/*"
-          - "@playwright/*"
-          - "@testing-library/*"
+          - '@*'
+          - 'eslint*'
+          - 'prettier*'
+          - 'typescript'
+          - 'vite*'
+          - 'vitest*'
+          - 'svelte*'
+          - '@sveltejs/*'
+          - '@playwright/*'
+          - '@testing-library/*'
         update-types:
-          - "minor"
-          - "patch"
+          - 'minor'
+          - 'patch'
       # Group production dependencies separately
       production-dependencies:
         patterns:
-          - "workbox-*"
+          - 'workbox-*'
         update-types:
-          - "minor"
-          - "patch"
+          - 'minor'
+          - 'patch'
     labels:
-      - "dependencies"
-      - "npm"
+      - 'dependencies'
+      - 'npm'
     commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
+      prefix: 'chore(deps)'
+      include: 'scope'
 
   # GitHub Actions dependencies
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "03:00"
-      timezone: "UTC"
+      interval: 'weekly'
+      day: 'monday'
+      time: '03:00'
+      timezone: 'UTC'
     open-pull-requests-limit: 5
     groups:
       github-actions:
         patterns:
-          - "*"
+          - '*'
         update-types:
-          - "minor"
-          - "patch"
+          - 'minor'
+          - 'patch'
     labels:
-      - "dependencies"
-      - "github-actions"
+      - 'dependencies'
+      - 'github-actions'
     commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
+      prefix: 'chore(deps)'
+      include: 'scope'

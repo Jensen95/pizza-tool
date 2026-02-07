@@ -11,6 +11,7 @@ Dependabot is configured to automatically monitor and update dependencies in thi
 ### 1. Automated Dependency Updates
 
 Dependabot will:
+
 - Check for NPM package updates weekly (Mondays at 3:00 AM UTC)
 - Check for GitHub Actions updates weekly (Mondays at 3:00 AM UTC)
 - Create pull requests for dependency updates
@@ -19,15 +20,18 @@ Dependabot will:
 ### 2. Auto-Merge for Safe Updates
 
 The repository is configured to **automatically merge** Dependabot PRs for:
+
 - ✅ **Patch updates** (e.g., 1.0.0 → 1.0.1) - Bug fixes
 - ✅ **Minor updates** (e.g., 1.0.0 → 1.1.0) - New features (backward compatible)
 
 The repository requires **manual review** for:
+
 - ⚠️ **Major updates** (e.g., 1.0.0 → 2.0.0) - Breaking changes
 
 ### 3. Test Suite Protection
 
 Auto-merge is safe because:
+
 - **46 unit tests** covering core functionality (baker's percentage calculations)
 - **2 E2E tests** covering critical user workflows
 - **Comprehensive CI pipeline** running on every PR:
@@ -43,6 +47,7 @@ Auto-merge will only occur **after all CI checks pass**.
 ### 4. Visual Comparison (Bonus Feature)
 
 For PRs that modify the UI, a visual comparison workflow will:
+
 - Build both the PR branch and base branch
 - Capture screenshots of key pages
 - Upload artifacts for manual comparison
@@ -53,20 +58,24 @@ For PRs that modify the UI, a visual comparison workflow will:
 ### `.github/dependabot.yml`
 
 Main Dependabot configuration file that defines:
+
 - Update schedules
 - Dependency grouping
 - Labels and commit message conventions
 
 **NPM Dependencies are grouped as:**
+
 - `dev-dependencies`: All development dependencies (grouped for easier review)
 - `production-dependencies`: Production dependencies
 
 **GitHub Actions are grouped as:**
+
 - `github-actions`: All action updates in a single PR
 
 ### `.github/workflows/dependabot-auto-merge.yml`
 
 Workflow that automatically merges Dependabot PRs:
+
 - Runs only on Dependabot PRs
 - Checks the update type (patch, minor, major)
 - Enables auto-merge for patch and minor updates
@@ -75,6 +84,7 @@ Workflow that automatically merges Dependabot PRs:
 ### `.github/workflows/visual-comparison.yml`
 
 Workflow that captures before/after screenshots:
+
 - Runs on all PRs
 - Builds both base and PR versions
 - Takes screenshots using Playwright
@@ -105,6 +115,7 @@ Workflow that captures before/after screenshots:
 ### View Dependabot Status
 
 Navigate to:
+
 ```
 Repository → Insights → Dependency graph → Dependabot
 ```
@@ -112,12 +123,14 @@ Repository → Insights → Dependency graph → Dependabot
 ### Manually Trigger Updates
 
 You can manually trigger Dependabot updates:
+
 1. Go to the Dependabot tab in your repository
 2. Click "Check for updates" on any ecosystem
 
 ### Reviewing Dependabot PRs
 
 All Dependabot PRs include:
+
 - **Labels**: `dependencies`, `npm` or `github-actions`
 - **Commit message**: Follows conventional commits (`chore(deps): ...`)
 - **Metadata**: Update type, package name, version change
@@ -128,6 +141,7 @@ All Dependabot PRs include:
 ### Vulnerability Updates
 
 Dependabot also monitors for security vulnerabilities:
+
 - Creates PRs for security updates immediately (not on schedule)
 - These are **always** labeled with `security`
 - Consider manual review even for patch updates with security fixes
@@ -135,6 +149,7 @@ Dependabot also monitors for security vulnerabilities:
 ### Permissions
 
 The auto-merge workflow requires:
+
 - `contents: write` - To merge PRs
 - `pull-requests: write` - To comment and enable auto-merge
 
@@ -148,15 +163,16 @@ Edit `.github/dependabot.yml`:
 
 ```yaml
 schedule:
-  interval: "daily"  # Options: daily, weekly, monthly
-  day: "monday"      # For weekly: monday-sunday
-  time: "03:00"      # 24-hour format
-  timezone: "UTC"
+  interval: 'daily' # Options: daily, weekly, monthly
+  day: 'monday' # For weekly: monday-sunday
+  time: '03:00' # 24-hour format
+  timezone: 'UTC'
 ```
 
 ### Disabling Auto-Merge
 
 To disable auto-merge while keeping Dependabot:
+
 1. Delete or disable `.github/workflows/dependabot-auto-merge.yml`
 2. Dependabot will still create PRs but won't merge them
 
@@ -177,12 +193,12 @@ Edit `.github/dependabot.yml`:
 groups:
   testing-dependencies:
     patterns:
-      - "@playwright/*"
-      - "@testing-library/*"
-      - "vitest"
+      - '@playwright/*'
+      - '@testing-library/*'
+      - 'vitest'
     update-types:
-      - "minor"
-      - "patch"
+      - 'minor'
+      - 'patch'
 ```
 
 ## Best Practices

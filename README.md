@@ -137,6 +137,27 @@ This project uses GitHub Actions for continuous integration:
   - Builds the application
   - Deploys to GitHub Pages
 
+- **Dependabot Auto-Merge** (`.github/workflows/dependabot-auto-merge.yml`): Automatically merges safe dependency updates
+  - Auto-merges patch and minor updates after CI passes
+  - Requires manual review for major updates
+  - Adds comments explaining merge status
+
+- **Visual Comparison** (`.github/workflows/visual-comparison.yml`): Captures before/after screenshots for UI changes
+  - Takes screenshots of both base and PR versions
+  - Uploads artifacts for visual comparison
+  - Comments on PRs with download instructions
+
+## Dependency Management
+
+This project uses [Dependabot](https://docs.github.com/en/code-security/dependabot) for automated dependency updates:
+
+- **NPM packages** are checked weekly and grouped by type (dev/production dependencies)
+- **GitHub Actions** are checked weekly and grouped together
+- **Auto-merge enabled** for patch and minor updates (safe updates only)
+- **Manual review required** for major updates (breaking changes)
+
+See [DEPENDABOT_GUIDE.md](./DEPENDABOT_GUIDE.md) for detailed configuration and customization options.
+
 ## Project Structure
 
 ```
