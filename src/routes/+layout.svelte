@@ -43,6 +43,11 @@
 		min-height: 100dvh;
 	}
 
+	/* In screenshot mode, ensure app container spans full page height */
+	:global(body.screenshot-mode) .app {
+		min-height: 100%;
+	}
+
 	.main-content {
 		flex: 1;
 		padding: var(--spacing-md);

@@ -11,6 +11,16 @@ import * as path from 'path';
 const outputDir = process.env.SCREENSHOT_DIR || 'screenshots';
 
 test.describe('Visual Screenshots @screenshot', () => {
+	// Add screenshot mode class before each test to fix navigation positioning
+	test.beforeEach(async ({ page }) => {
+		await page.addInitScript(() => {
+			// This runs before page load, so we need to add the class after DOM is ready
+			document.addEventListener('DOMContentLoaded', () => {
+				document.body.classList.add('screenshot-mode');
+			});
+		});
+	});
+
 	test('should capture main recipe page screenshot', async ({ page }) => {
 		await page.goto('/', { waitUntil: 'load' });
 		await page.locator('main').waitFor({ state: 'visible' });

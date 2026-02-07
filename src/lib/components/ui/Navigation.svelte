@@ -98,4 +98,9 @@
 		justify-content: center;
 		font-weight: 600;
 	}
+
+	/* Fix navigation positioning for full-page screenshots */
+	:global(body.screenshot-mode) .navigation {
+		position: static;
+	}
 </style>
