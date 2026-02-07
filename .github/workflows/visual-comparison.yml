@@ -60,70 +60,15 @@ jobs:
           find test-results -name "*.png" -exec cp {} screenshots/base/ \; 2>/dev/null || true
         continue-on-error: true
 
-      - name: Upload screenshots and create comment
+      - name: Create summary and upload artifacts
         uses: actions/github-script@v7
         if: always()
         with:
           script: |
             const fs = require('fs');
             const path = require('path');
-            const https = require('https');
 
-            // Function to upload image to GitHub's CDN
-            async function uploadImageToGitHub(imagePath, filename) {
-              try {
-                const imageBuffer = fs.readFileSync(imagePath);
-                
-                // Step 1: Get upload policy from GitHub
-                // This is the same endpoint the UI uses when you drag/drop images
-                const policyResponse = await fetch('https://github.com/upload/policies/assets', {
-                  method: 'POST',
-                  headers: {
-                    'Accept': 'application/json',
-                    'Authorization': `token ${process.env.GITHUB_TOKEN}`,
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    name: filename,
-                    size: imageBuffer.length,
-                    content_type: 'image/png',
-                    repository_id: context.payload.repository.id,
-                  })
-                });
-
-                if (!policyResponse.ok) {
-                  const errorText = await policyResponse.text();
-                  console.error(`Failed to get upload policy for ${filename}: ${policyResponse.status} - ${errorText}`);
-                  return null;
-                }
-
-                const policy = await policyResponse.json();
-                
-                // Step 2: Upload image to the provided URL
-                const uploadResponse = await fetch(policy.upload_url, {
-                  method: 'PUT',
-                  headers: {
-                    'Content-Type': 'image/png',
-                    'Content-Length': imageBuffer.length.toString(),
-                    ...policy.headers,
-                  },
-                  body: imageBuffer,
-                });
-
-                if (!uploadResponse.ok) {
-                  console.error(`Failed to upload ${filename}: ${uploadResponse.status}`);
-                  return null;
-                }
-
-                // Step 3: Return the asset URL
-                return policy.asset_url || policy.url;
-              } catch (error) {
-                console.error(`Error uploading ${imagePath}:`, error);
-                return null;
-              }
-            }
-
-            // Collect screenshots
+            // Collect screenshot files
             const prScreenshotsDir = 'screenshots/pr';
             const baseScreenshotsDir = 'screenshots/base';
 
@@ -150,7 +95,7 @@ jobs:
               console.log('No base screenshots found');
             }
 
-            // Build comment with uploaded images in collapsible details
+            // Build comment
             let commentBody = '## 📸 Visual Comparison\n\n';
 
             if (prScreenshots.length === 0 && baseScreenshots.length === 0) {
@@ -161,48 +106,25 @@ jobs:
               // Get unique screenshot names
               const allScreenshots = new Set([...prScreenshots, ...baseScreenshots]);
 
+              commentBody += '<details>\n<summary><b>📋 Screenshot List</b></summary>\n\n';
+              
               for (const filename of Array.from(allScreenshots).sort()) {
-                const basePath = path.join(baseScreenshotsDir, filename);
-                const prPath = path.join(prScreenshotsDir, filename);
+                const baseExists = fs.existsSync(path.join(baseScreenshotsDir, filename));
+                const prExists = fs.existsSync(path.join(prScreenshotsDir, filename));
 
-                const baseExists = fs.existsSync(basePath);
-                const prExists = fs.existsSync(prPath);
-
-                // Use collapsible details block for each screenshot
-                commentBody += `<details>\n<summary><b>${filename}</b></summary>\n\n`;
-                commentBody += '<table><tr><th>Base (main)</th><th>PR Changes</th></tr><tr>';
-
-                // Base screenshot - upload to GitHub CDN
-                if (baseExists) {
-                  console.log(`Uploading base screenshot: ${filename}`);
-                  const baseUrl = await uploadImageToGitHub(basePath, `base-${filename}`);
-                  if (baseUrl) {
-                    commentBody += `<td><img src="${baseUrl}" width="400" /></td>`;
-                  } else {
-                    commentBody += '<td>❌ Upload failed</td>';
-                  }
-                } else {
-                  commentBody += '<td>❌ Not found</td>';
-                }
-
-                // PR screenshot - upload to GitHub CDN
-                if (prExists) {
-                  console.log(`Uploading PR screenshot: ${filename}`);
-                  const prUrl = await uploadImageToGitHub(prPath, `pr-${filename}`);
-                  if (prUrl) {
-                    commentBody += `<td><img src="${prUrl}" width="400" /></td>`;
-                  } else {
-                    commentBody += '<td>❌ Upload failed</td>';
-                  }
-                } else {
-                  commentBody += '<td>❌ Not found</td>';
-                }
-
-                commentBody += '</tr></table>\n\n';
-                commentBody += '</details>\n\n';
+                commentBody += `- **${filename}**:`;
+                if (baseExists) commentBody += ' Base ✅';
+                if (prExists) commentBody += ' PR ✅';
+                commentBody += '\n';
               }
 
-              commentBody += '\n> 💡 **Note**: Screenshots uploaded to GitHub CDN (user-attachments). Click to expand each comparison.\n';
+              commentBody += '\n</details>\n\n';
+              commentBody += '> 💡 **How to view screenshots**:\n';
+              commentBody += '> 1. Download the artifacts from this workflow run\n';
+              commentBody += '> 2. Compare `base-screenshots` vs `pr-screenshots`\n';
+              commentBody += '>\n';
+              commentBody += '> **Note**: GitHub API does not support uploading images to user-attachments CDN programmatically.\n';
+              commentBody += '> Options: Use base64 (large comments), external CDN (requires API key), or manual artifact download.\n';
             }
 
             commentBody += '\n---\n';
@@ -215,3 +137,19 @@ jobs:
               repo: context.repo.repo,
               body: commentBody
             });
+
+      - name: Upload base screenshots as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: base-screenshots
+          path: screenshots/base/
+          retention-days: 30
+
+      - name: Upload PR screenshots as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr-screenshots
+          path: screenshots/pr/
+          retention-days: 30
