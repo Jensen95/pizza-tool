@@ -33,21 +33,17 @@ jobs:
 
       - name: Take screenshots of PR version
         run: |
+          mkdir -p screenshots/pr
           npx playwright test --grep "@screenshot" --project=chromium || true
+          # Copy screenshots to dedicated directory
+          find test-results -name "*.png" -exec cp {} screenshots/pr/ \; 2>/dev/null || true
         continue-on-error: true
-
-      - name: Upload PR screenshots
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: pr-screenshots
-          path: test-results/
-          retention-days: 7
 
       - name: Checkout base branch
         uses: actions/checkout@v6
         with:
           ref: ${{ github.base_ref }}
+          clean: false
 
       - name: Install dependencies (base)
         run: npm ci
@@ -57,36 +53,98 @@ jobs:
 
       - name: Take screenshots of base version
         run: |
+          mkdir -p screenshots/base
+          rm -rf test-results
           npx playwright test --grep "@screenshot" --project=chromium || true
+          # Copy screenshots to dedicated directory
+          find test-results -name "*.png" -exec cp {} screenshots/base/ \; 2>/dev/null || true
         continue-on-error: true
 
-      - name: Upload base screenshots
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: base-screenshots
-          path: test-results/
-          retention-days: 7
-
-      - name: Comment on PR
+      - name: Upload screenshots and create comment
         uses: actions/github-script@v7
         if: always()
         with:
           script: |
-            const message = `## 📸 Visual Comparison
+            const fs = require('fs');
+            const path = require('path');
 
-            Screenshots have been captured for this PR. You can download and compare them from the workflow artifacts:
+            // Collect screenshots
+            const prScreenshotsDir = 'screenshots/pr';
+            const baseScreenshotsDir = 'screenshots/base';
 
-            - **PR Version**: Available in \`pr-screenshots\` artifact
-            - **Base Version**: Available in \`base-screenshots\` artifact
+            let prScreenshots = [];
+            let baseScreenshots = [];
 
-            To view the artifacts, click on "Details" next to this check, then scroll to the "Artifacts" section at the bottom of the workflow run page.
+            try {
+              if (fs.existsSync(prScreenshotsDir)) {
+                prScreenshots = fs.readdirSync(prScreenshotsDir)
+                  .filter(f => f.endsWith('.png'))
+                  .sort();
+              }
+            } catch (e) {
+              console.log('No PR screenshots found');
+            }
 
-            > **Note**: Visual comparison screenshots are only generated when tests are tagged with \`@screenshot\`.`;
+            try {
+              if (fs.existsSync(baseScreenshotsDir)) {
+                baseScreenshots = fs.readdirSync(baseScreenshotsDir)
+                  .filter(f => f.endsWith('.png'))
+                  .sort();
+              }
+            } catch (e) {
+              console.log('No base screenshots found');
+            }
 
-            github.rest.issues.createComment({
+            // Build comment with embedded images
+            let commentBody = '## 📸 Visual Comparison\n\n';
+
+            if (prScreenshots.length === 0 && baseScreenshots.length === 0) {
+              commentBody += '> ⚠️ No screenshots were captured. Make sure tests are tagged with `@screenshot`.\n';
+            } else {
+              commentBody += `**Screenshots captured**: ${prScreenshots.length} PR screenshot(s), ${baseScreenshots.length} base screenshot(s)\n\n`;
+
+              // Get unique screenshot names
+              const allScreenshots = new Set([...prScreenshots, ...baseScreenshots]);
+
+              for (const filename of Array.from(allScreenshots).sort()) {
+                const basePath = path.join(baseScreenshotsDir, filename);
+                const prPath = path.join(prScreenshotsDir, filename);
+
+                const baseExists = fs.existsSync(basePath);
+                const prExists = fs.existsSync(prPath);
+
+                commentBody += `### ${filename}\n\n`;
+                commentBody += '<table><tr><th>Base (main)</th><th>PR Changes</th></tr><tr>';
+
+                // Base screenshot
+                if (baseExists) {
+                  const baseImage = fs.readFileSync(basePath);
+                  const baseBase64 = baseImage.toString('base64');
+                  commentBody += `<td><img src="data:image/png;base64,${baseBase64}" width="400" /></td>`;
+                } else {
+                  commentBody += '<td>❌ Not found</td>';
+                }
+
+                // PR screenshot
+                if (prExists) {
+                  const prImage = fs.readFileSync(prPath);
+                  const prBase64 = prImage.toString('base64');
+                  commentBody += `<td><img src="data:image/png;base64,${prBase64}" width="400" /></td>`;
+                } else {
+                  commentBody += '<td>❌ Not found</td>';
+                }
+
+                commentBody += '</tr></table>\n\n';
+              }
+            }
+
+            commentBody += '\n---\n';
+            commentBody += `*Workflow run: [${context.runId}](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})*\n`;
+
+            // Post comment
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: message
+              body: commentBody
             });

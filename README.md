@@ -144,8 +144,8 @@ This project uses GitHub Actions for continuous integration:
 
 - **Visual Comparison** (`.github/workflows/visual-comparison.yml`): Captures before/after screenshots for UI changes
   - Takes screenshots of both base and PR versions
-  - Uploads artifacts for visual comparison
-  - Comments on PRs with download instructions
+  - Embeds images directly in PR comments
+  - Creates side-by-side comparison tables
 
 ## Dependency Management
 

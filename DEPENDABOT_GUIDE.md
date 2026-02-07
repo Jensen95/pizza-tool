@@ -88,7 +88,8 @@ Workflow that captures before/after screenshots:
 - Runs on all PRs
 - Builds both base and PR versions
 - Takes screenshots using Playwright
-- Uploads artifacts for comparison
+- **Embeds screenshots directly in PR comments** for easy side-by-side comparison
+- Uses base64 encoding to display images inline
 
 ## How It Works
 
