@@ -353,7 +353,10 @@
 					</thead>
 					<tbody>
 						{#each ingredients as ingredient}
-							<tr class:customized={isCustomized(ingredient.id) || (hasPredough && ingredient.type === 'flour' && hasFlourSplitChanged)}>
+							<tr
+								class:customized={isCustomized(ingredient.id) ||
+									(hasPredough && ingredient.type === 'flour' && hasFlourSplitChanged)}
+							>
 								<td>
 									{ingredient.nameDa}
 								</td>
@@ -383,7 +386,13 @@
 									{:else}
 										<button
 											class="percentage-button"
-											onclick={() => startEditing(ingredient.id, hasPredough && ingredient.type === 'flour' ? ingredient.percentage : ingredient.stagePercentage)}
+											onclick={() =>
+												startEditing(
+													ingredient.id,
+													hasPredough && ingredient.type === 'flour'
+														? ingredient.percentage
+														: ingredient.stagePercentage
+												)}
 											title="Klik for at redigere"
 										>
 											{#if hasPredough && ingredient.type === 'flour'}
@@ -431,7 +440,8 @@
 	</div>
 
 	<p class="hint">
-		Klik paa en procent for at tilpasse.{#if hasPredough} Melprocent styrer fordelingen mellem fordej og hoveddej.{/if}
+		Klik paa en procent for at tilpasse.{#if hasPredough}
+			Melprocent styrer fordelingen mellem fordej og hoveddej.{/if}
 	</p>
 </div>
 
