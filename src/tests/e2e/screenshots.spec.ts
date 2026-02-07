@@ -10,9 +10,6 @@ test.describe('Visual Screenshots @screenshot', () => {
 		await page.goto('/');
 		await page.waitForLoadState('networkidle');
 
-		// Wait for any animations to complete
-		await page.waitForTimeout(500);
-
 		// Take full page screenshot
 		await expect(page).toHaveScreenshot('home-page.png', {
 			fullPage: true,
@@ -24,9 +21,6 @@ test.describe('Visual Screenshots @screenshot', () => {
 		await page.goto('/reference');
 		await page.waitForLoadState('networkidle');
 
-		// Wait for any animations to complete
-		await page.waitForTimeout(500);
-
 		// Take full page screenshot
 		await expect(page).toHaveScreenshot('reference-page.png', {
 			fullPage: true,
@@ -37,9 +31,6 @@ test.describe('Visual Screenshots @screenshot', () => {
 	test('should capture timers page screenshot', async ({ page }) => {
 		await page.goto('/timers');
 		await page.waitForLoadState('networkidle');
-
-		// Wait for any animations to complete
-		await page.waitForTimeout(500);
 
 		// Take full page screenshot
 		await expect(page).toHaveScreenshot('timers-page.png', {
@@ -56,7 +47,7 @@ test.describe('Visual Screenshots @screenshot', () => {
 		const numberInput = page.locator('input[type="number"]').first();
 		if (await numberInput.isVisible()) {
 			await numberInput.fill('6');
-			await page.waitForTimeout(500);
+			await page.waitForLoadState('networkidle');
 
 			await expect(page).toHaveScreenshot('calculator-with-data.png', {
 				fullPage: true,

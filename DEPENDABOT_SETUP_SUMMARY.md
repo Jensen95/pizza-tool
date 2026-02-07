@@ -57,7 +57,7 @@ Auto-merge only occurs **after** all CI checks pass:
 - Supports screenshot tests tagged with `@screenshot`
 - No need to download artifacts - images are visible directly in the PR
 
-### ✅ 4. Screenshot Tests (`.src/tests/e2e/screenshots.spec.ts`)
+### ✅ 4. Screenshot Tests (`src/tests/e2e/screenshots.spec.ts`)
 
 **Features:**
 
