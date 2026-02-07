@@ -85,6 +85,33 @@
 			mainDoughFlourPercent !== originalMainDoughPercent
 	);
 
+	// Predough flour split row: synthetic ingredient ID for the split control in the main section
+	const PREDOUGH_SPLIT_ID = '__predough-flour-split__';
+
+	let predoughFlourPercent = $derived(
+		$calculator.scaledIngredients
+			.filter((i) => i.type === 'flour' && isPredoughStage(i.stage))
+			.reduce((sum, i) => sum + i.percentage, 0)
+	);
+
+	let predoughFlourWeight = $derived(
+		$calculator.scaledIngredients
+			.filter((i) => i.type === 'flour' && isPredoughStage(i.stage))
+			.reduce((sum, i) => sum + i.weight, 0)
+	);
+
+	let predoughStageLabel = $derived.by(() => {
+		const predoughIng = $calculator.scaledIngredients.find((i) => isPredoughStage(i.stage));
+		if (predoughIng?.stage) {
+			return stageLabels[predoughIng.stage] || predoughIng.stage;
+		}
+		return 'Fordej';
+	});
+
+	let originalPredoughFlourPercent = $derived(
+		originalPredoughRatio !== null ? Math.round(originalPredoughRatio * 100) : 0
+	);
+
 	const stageLabels: Record<string, string> = {
 		poolish: 'Poolish',
 		biga: 'Biga',
@@ -165,33 +192,24 @@
 			return;
 		}
 
+		// Handle predough flour split control row
+		if (ingredientId === PREDOUGH_SPLIT_ID) {
+			if (value < 0 || value > 100) {
+				cancelEditing();
+				return;
+			}
+			calculator.setPredoughRatio(value / 100);
+			cancelEditing();
+			return;
+		}
+
 		const ingredient = $calculator.scaledIngredients.find((i) => i.id === ingredientId);
 		if (!ingredient) {
 			cancelEditing();
 			return;
 		}
 
-		// Handle flour split for predough recipes
-		// The user edits the % of total flour for each stage
-		if (hasPredough && ingredient.type === 'flour') {
-			if (value > 100) {
-				cancelEditing();
-				return;
-			}
-
-			if (isPredoughStage(ingredient.stage)) {
-				// Editing predough flour: predough ratio = value / 100
-				calculator.setPredoughRatio(value / 100);
-			} else {
-				// Editing main flour: predough ratio = complement
-				calculator.setPredoughRatio((100 - value) / 100);
-			}
-
-			cancelEditing();
-			return;
-		}
-
-		// For flour ingredients without predough, validate that total flour percentage remains constant
+		// For flour ingredients, validate that total flour percentage remains constant
 		if (ingredient.type === 'flour') {
 			const floursInStage = getFlourIngredientsInStage(ingredientId);
 			const stage = ingredient.stage || 'main';
@@ -352,29 +370,27 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each ingredients as ingredient}
-							<tr
-								class:customized={isCustomized(ingredient.id) ||
-									(hasPredough && ingredient.type === 'flour' && hasFlourSplitChanged)}
-							>
+						{#if hasPredough && (stage === 'main' || stage === 'hoveddej')}
+							<tr class:customized={hasFlourSplitChanged}>
 								<td>
-									{ingredient.nameDa}
+									{predoughStageLabel} mel
+									<span class="flour-split-suffix">af total mel</span>
 								</td>
 								<td class="right percentage-cell">
-									{#if editingIngredient === ingredient.id}
+									{#if editingIngredient === PREDOUGH_SPLIT_ID}
 										<div class="edit-percentage">
 											<input
 												type="number"
 												class="input percentage-input"
 												bind:value={editValue}
-												onkeydown={(e) => handleKeydown(e, ingredient.id)}
-												step="0.1"
+												onkeydown={(e) => handleKeydown(e, PREDOUGH_SPLIT_ID)}
+												step="1"
 												min="0"
-												max={hasPredough && ingredient.type === 'flour' ? '100' : '200'}
+												max="100"
 											/>
 											<button
 												class="btn-icon"
-												onclick={() => savePercentage(ingredient.id)}
+												onclick={() => savePercentage(PREDOUGH_SPLIT_ID)}
 												title="Gem"
 											>
 												&#10003;
@@ -386,32 +402,17 @@
 									{:else}
 										<button
 											class="percentage-button"
-											onclick={() =>
-												startEditing(
-													ingredient.id,
-													hasPredough && ingredient.type === 'flour'
-														? ingredient.percentage
-														: ingredient.stagePercentage
-												)}
-											title="Klik for at redigere"
+											onclick={() => startEditing(PREDOUGH_SPLIT_ID, predoughFlourPercent)}
+											title="Klik for at redigere fordeling"
 										>
-											{#if hasPredough && ingredient.type === 'flour'}
-												{ingredient.percentage.toFixed(2)}%
-												<span class="flour-split-suffix">af total mel</span>
-											{:else}
-												{ingredient.stagePercentage.toFixed(2)}%
-											{/if}
-											{#if hasPredough && ingredient.type === 'flour' && hasFlourSplitChanged}
+											{predoughFlourPercent.toFixed(2)}%
+											{#if hasFlourSplitChanged}
 												<span class="original-percentage">
-													(orig: {getOriginalPercentage(ingredient.id)?.toFixed(2)}%)
-												</span>
-											{:else if isCustomized(ingredient.id)}
-												<span class="original-percentage">
-													(orig: {getOriginalPercentage(ingredient.id)?.toFixed(2)}%)
+													(orig: {originalPredoughFlourPercent}%)
 												</span>
 											{/if}
 										</button>
-										{#if hasPredough && ingredient.type === 'flour' && hasFlourSplitChanged}
+										{#if hasFlourSplitChanged}
 											<button
 												class="btn-icon reset-btn"
 												onclick={resetFlourSplit}
@@ -419,19 +420,77 @@
 											>
 												&#8634;
 											</button>
-										{:else if isCustomized(ingredient.id)}
-											<button
-												class="btn-icon reset-btn"
-												onclick={() => resetIngredient(ingredient.id)}
-												title="Nulstil"
-											>
-												&#8634;
-											</button>
 										{/if}
 									{/if}
 								</td>
-								<td class="right weight">{formatWeight(ingredient.weight)}</td>
+								<td class="right weight">
+									{formatWeight(predoughFlourWeight)}
+								</td>
 							</tr>
+						{/if}
+						{#each ingredients as ingredient}
+							{#if !(hasPredough && ingredient.type === 'flour' && ingredient.weight <= 0)}
+								<tr class:customized={isCustomized(ingredient.id)}>
+									<td>
+										{ingredient.nameDa}
+										{#if hasPredough && ingredient.type === 'flour' && isPredoughStage(ingredient.stage)}
+											<span class="flour-ratio-badge">
+												{ingredient.percentage.toFixed(0)}% af total
+											</span>
+										{/if}
+									</td>
+									<td class="right percentage-cell">
+										{#if editingIngredient === ingredient.id}
+											<div class="edit-percentage">
+												<input
+													type="number"
+													class="input percentage-input"
+													bind:value={editValue}
+													onkeydown={(e) => handleKeydown(e, ingredient.id)}
+													step="0.1"
+													min="0"
+													max="200"
+												/>
+												<button
+													class="btn-icon"
+													onclick={() => savePercentage(ingredient.id)}
+													title="Gem"
+												>
+													&#10003;
+												</button>
+												<button class="btn-icon" onclick={cancelEditing} title="Annuller">
+													&#10005;
+												</button>
+											</div>
+										{:else}
+											<button
+												class="percentage-button"
+												onclick={() => startEditing(ingredient.id, ingredient.stagePercentage)}
+												title="Klik for at redigere"
+											>
+												{ingredient.stagePercentage.toFixed(2)}%
+												{#if isCustomized(ingredient.id)}
+													<span class="original-percentage">
+														(orig: {getOriginalPercentage(ingredient.id)?.toFixed(2)}%)
+													</span>
+												{/if}
+											</button>
+											{#if isCustomized(ingredient.id)}
+												<button
+													class="btn-icon reset-btn"
+													onclick={() => resetIngredient(ingredient.id)}
+													title="Nulstil"
+												>
+													&#8634;
+												</button>
+											{/if}
+										{/if}
+									</td>
+									<td class="right weight">
+										{formatWeight(ingredient.weight)}
+									</td>
+								</tr>
+							{/if}
 						{/each}
 					</tbody>
 				</table>
@@ -515,6 +574,16 @@
 		font-size: var(--font-size-xs);
 		color: var(--color-text-secondary);
 		font-weight: 400;
+	}
+
+	.flour-ratio-badge {
+		display: inline-block;
+		font-size: var(--font-size-xs);
+		color: var(--color-text-secondary);
+		background: var(--color-surface);
+		padding: 1px 6px;
+		border-radius: var(--radius-sm);
+		margin-left: var(--spacing-xs);
 	}
 
 	.ingredients {
