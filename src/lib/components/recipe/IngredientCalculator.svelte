@@ -2,7 +2,11 @@
 	import type { Recipe } from '$lib/types';
 	import type { ScaledIngredient } from '$lib/types/ingredient';
 	import { calculator, totalWeight, flourWeight, recipeHistory, predoughRatio } from '$lib/stores';
-	import { formatWeight } from '$lib/utils/baker-percentage';
+	import {
+		formatWeight,
+		isPredoughStage,
+		getOriginalPredoughRatio as getRecipePredoughRatio
+	} from '$lib/utils/baker-percentage';
 
 	let { recipe }: { recipe: Recipe } = $props();
 
@@ -13,12 +17,11 @@
 	let numberOfPizzas = $state($calculator.numberOfPizzas || 4);
 	let doughBallWeight = $state($calculator.doughBallWeight || 270);
 
-	// Get original predough ratio from recipe
-	let originalPredoughRatio = $derived(calculator.getOriginalPredoughRatio());
+	// Get original predough ratio from recipe prop (reactive)
+	let originalPredoughRatio = $derived(getRecipePredoughRatio(recipe));
 	let hasPredough = $derived(originalPredoughRatio !== null);
 
-	// Local state for main dough flour percentage (for slider)
-	// This is the inverse: 100% - predough% = main%
+	// Track main dough flour percentage for detecting customization
 	let mainDoughFlourPercent = $state<number>(100);
 
 	// Set recipe in calculator when recipe changes
@@ -50,12 +53,6 @@
 
 	function handleWeightChange() {
 		calculator.setDoughBallWeight(doughBallWeight);
-	}
-
-	function handleMainDoughFlourChange() {
-		// Convert main dough % to predough ratio (predough = 100% - main%)
-		const predoughRatio = (100 - mainDoughFlourPercent) / 100;
-		calculator.setPredoughRatio(predoughRatio);
 	}
 
 	function resetFlourSplit() {
@@ -90,6 +87,33 @@
 		$predoughRatio !== null &&
 			originalPredoughRatio !== null &&
 			mainDoughFlourPercent !== originalMainDoughPercent
+	);
+
+	// Predough flour split row: synthetic ingredient ID for the split control in the main section
+	const PREDOUGH_SPLIT_ID = '__predough-flour-split__';
+
+	let predoughFlourPercent = $derived(
+		$calculator.scaledIngredients
+			.filter((i) => i.type === 'flour' && isPredoughStage(i.stage))
+			.reduce((sum, i) => sum + i.percentage, 0)
+	);
+
+	let predoughFlourWeight = $derived(
+		$calculator.scaledIngredients
+			.filter((i) => i.type === 'flour' && isPredoughStage(i.stage))
+			.reduce((sum, i) => sum + i.weight, 0)
+	);
+
+	let predoughStageLabel = $derived.by(() => {
+		const predoughIng = $calculator.scaledIngredients.find((i) => isPredoughStage(i.stage));
+		if (predoughIng?.stage) {
+			return stageLabels[predoughIng.stage] || predoughIng.stage;
+		}
+		return 'Fordej';
+	});
+
+	let originalPredoughFlourPercent = $derived(
+		originalPredoughRatio !== null ? Math.round(originalPredoughRatio * 100) : 0
 	);
 
 	const stageLabels: Record<string, string> = {
@@ -168,6 +192,17 @@
 	function savePercentage(ingredientId: string) {
 		const value = parseFloat(editValue);
 		if (isNaN(value) || value < 0) {
+			cancelEditing();
+			return;
+		}
+
+		// Handle predough flour split control row
+		if (ingredientId === PREDOUGH_SPLIT_ID) {
+			if (value < 0 || value > 100) {
+				cancelEditing();
+				return;
+			}
+			calculator.setPredoughRatio(value / 100);
 			cancelEditing();
 			return;
 		}
@@ -330,33 +365,6 @@
 			<div class="ingredient-group">
 				<h4 class="group-title">{stageLabels[stage] || stage}</h4>
 
-				{#if hasPredough && (stage === 'main' || stage === 'hoveddej')}
-					<div class="flour-split-control">
-						<div class="flour-split-header">
-							<span class="flour-split-label">Mel i hoveddej</span>
-							{#if hasFlourSplitChanged}
-								<button class="btn-link" onclick={resetFlourSplit}>Nulstil</button>
-							{/if}
-						</div>
-						<div class="flour-split-slider">
-							<input
-								id="main-flour-percent"
-								type="range"
-								class="slider"
-								bind:value={mainDoughFlourPercent}
-								oninput={handleMainDoughFlourChange}
-								min="0"
-								max="100"
-								step="1"
-							/>
-							<span class="flour-split-value">{mainDoughFlourPercent}%</span>
-						</div>
-						<p class="flour-split-hint">
-							Fordej: {100 - mainDoughFlourPercent}% &middot; Hoveddej: {mainDoughFlourPercent}%
-						</p>
-					</div>
-				{/if}
-
 				<table class="ingredient-table">
 					<thead>
 						<tr>
@@ -366,31 +374,27 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each ingredients as ingredient}
-							<tr class:customized={isCustomized(ingredient.id)}>
+						{#if hasPredough && (stage === 'main' || stage === 'hoveddej')}
+							<tr class:customized={hasFlourSplitChanged}>
 								<td>
-									{ingredient.nameDa}
-									{#if hasPredough && ingredient.type === 'flour'}
-										<span class="flour-ratio-badge">
-											{ingredient.percentage.toFixed(0)}% af total
-										</span>
-									{/if}
+									{predoughStageLabel} mel
+									<span class="flour-split-suffix">af total mel</span>
 								</td>
 								<td class="right percentage-cell">
-									{#if editingIngredient === ingredient.id}
+									{#if editingIngredient === PREDOUGH_SPLIT_ID}
 										<div class="edit-percentage">
 											<input
 												type="number"
 												class="input percentage-input"
 												bind:value={editValue}
-												onkeydown={(e) => handleKeydown(e, ingredient.id)}
-												step="0.1"
+												onkeydown={(e) => handleKeydown(e, PREDOUGH_SPLIT_ID)}
+												step="1"
 												min="0"
-												max="200"
+												max="100"
 											/>
 											<button
 												class="btn-icon"
-												onclick={() => savePercentage(ingredient.id)}
+												onclick={() => savePercentage(PREDOUGH_SPLIT_ID)}
 												title="Gem"
 											>
 												&#10003;
@@ -402,29 +406,95 @@
 									{:else}
 										<button
 											class="percentage-button"
-											onclick={() => startEditing(ingredient.id, ingredient.stagePercentage)}
-											title="Klik for at redigere"
+											onclick={() => startEditing(PREDOUGH_SPLIT_ID, predoughFlourPercent)}
+											title="Klik for at redigere fordeling"
 										>
-											{ingredient.stagePercentage.toFixed(2)}%
-											{#if isCustomized(ingredient.id)}
+											{predoughFlourPercent.toFixed(2)}%
+											{#if hasFlourSplitChanged}
 												<span class="original-percentage">
-													(orig: {getOriginalPercentage(ingredient.id)?.toFixed(2)}%)
+													(orig: {originalPredoughFlourPercent}%)
 												</span>
 											{/if}
 										</button>
-										{#if isCustomized(ingredient.id)}
+										{#if hasFlourSplitChanged}
 											<button
 												class="btn-icon reset-btn"
-												onclick={() => resetIngredient(ingredient.id)}
-												title="Nulstil"
+												onclick={resetFlourSplit}
+												title="Nulstil fordeling"
 											>
 												&#8634;
 											</button>
 										{/if}
 									{/if}
 								</td>
-								<td class="right weight">{formatWeight(ingredient.weight)}</td>
+								<td class="right weight">
+									{formatWeight(predoughFlourWeight)}
+								</td>
 							</tr>
+						{/if}
+						{#each ingredients as ingredient}
+							{#if !(hasPredough && ingredient.type === 'flour' && ingredient.weight <= 0)}
+								<tr class:customized={isCustomized(ingredient.id)}>
+									<td>
+										{ingredient.nameDa}
+										{#if hasPredough && ingredient.type === 'flour' && isPredoughStage(ingredient.stage)}
+											<span class="flour-ratio-badge">
+												{ingredient.percentage.toFixed(0)}% af total
+											</span>
+										{/if}
+									</td>
+									<td class="right percentage-cell">
+										{#if editingIngredient === ingredient.id}
+											<div class="edit-percentage">
+												<input
+													type="number"
+													class="input percentage-input"
+													bind:value={editValue}
+													onkeydown={(e) => handleKeydown(e, ingredient.id)}
+													step="0.1"
+													min="0"
+													max="200"
+												/>
+												<button
+													class="btn-icon"
+													onclick={() => savePercentage(ingredient.id)}
+													title="Gem"
+												>
+													&#10003;
+												</button>
+												<button class="btn-icon" onclick={cancelEditing} title="Annuller">
+													&#10005;
+												</button>
+											</div>
+										{:else}
+											<button
+												class="percentage-button"
+												onclick={() => startEditing(ingredient.id, ingredient.stagePercentage)}
+												title="Klik for at redigere"
+											>
+												{ingredient.stagePercentage.toFixed(2)}%
+												{#if isCustomized(ingredient.id)}
+													<span class="original-percentage">
+														(orig: {getOriginalPercentage(ingredient.id)?.toFixed(2)}%)
+													</span>
+												{/if}
+											</button>
+											{#if isCustomized(ingredient.id)}
+												<button
+													class="btn-icon reset-btn"
+													onclick={() => resetIngredient(ingredient.id)}
+													title="Nulstil"
+												>
+													&#8634;
+												</button>
+											{/if}
+										{/if}
+									</td>
+									<td class="right weight">
+										{formatWeight(ingredient.weight)}
+									</td>
+								</tr>
+							{/if}
 						{/each}
 					</tbody>
 				</table>
@@ -433,7 +503,8 @@
 	</div>
 
 	<p class="hint">
-		Klik paa en procent for at tilpasse ingrediensen. For mel skal total procent forblive konstant.
+		Klik paa en procent for at tilpasse.{#if hasPredough}
+			Melprocent styrer fordelingen mellem fordej og hoveddej.{/if}
 	</p>
 </div>
 
@@ -503,71 +574,10 @@
 		color: var(--color-primary);
 	}
 
-	.flour-split-control {
-		padding: var(--spacing-sm);
-		margin-bottom: var(--spacing-sm);
-		background: var(--color-surface);
-		border-radius: var(--radius-sm);
-		border-left: 3px solid var(--color-primary);
-	}
-
-	.flour-split-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: var(--spacing-xs);
-	}
-
-	.flour-split-label {
-		font-size: var(--font-size-sm);
-		font-weight: 500;
-		color: var(--color-text);
-	}
-
-	.flour-split-slider {
-		display: flex;
-		align-items: center;
-		gap: var(--spacing-sm);
-	}
-
-	.slider {
-		flex: 1;
-		height: 8px;
-		border-radius: 4px;
-		background: var(--color-border);
-		appearance: none;
-		cursor: pointer;
-	}
-
-	.slider::-webkit-slider-thumb {
-		appearance: none;
-		width: 20px;
-		height: 20px;
-		border-radius: 50%;
-		background: var(--color-primary);
-		cursor: pointer;
-	}
-
-	.slider::-moz-range-thumb {
-		width: 20px;
-		height: 20px;
-		border-radius: 50%;
-		background: var(--color-primary);
-		cursor: pointer;
-		border: none;
-	}
-
-	.flour-split-value {
-		font-weight: 600;
-		color: var(--color-primary);
-		min-width: 45px;
-		text-align: right;
-	}
-
-	.flour-split-hint {
-		margin: var(--spacing-xs) 0 0;
+	.flour-split-suffix {
 		font-size: var(--font-size-xs);
 		color: var(--color-text-secondary);
+		font-weight: 400;
 	}
 
 	.flour-ratio-badge {
@@ -578,20 +588,6 @@
 		padding: 1px 6px;
 		border-radius: var(--radius-sm);
 		margin-left: var(--spacing-xs);
-	}
-
-	.btn-link {
-		background: none;
-		border: none;
-		color: var(--color-primary);
-		cursor: pointer;
-		font-size: var(--font-size-sm);
-		text-decoration: underline;
-		padding: 0;
-	}
-
-	.btn-link:hover {
-		color: var(--color-primary-dark, var(--color-primary));
 	}
 
 	.ingredients {

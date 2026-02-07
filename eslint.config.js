@@ -3,7 +3,7 @@ import tsPlugin from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import sveltePlugin from 'eslint-plugin-svelte';
 import svelteParser from 'svelte-eslint-parser';
-import prettier from 'eslint-config-prettier';
+import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import globals from 'globals';
 
 export default [
@@ -51,7 +51,7 @@ export default [
 			...sveltePlugin.configs.recommended.rules
 		}
 	},
-	prettier,
+	prettierRecommended,
 	{
 		ignores: [
 			'node_modules/',
