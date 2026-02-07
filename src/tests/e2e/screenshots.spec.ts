@@ -11,15 +11,22 @@ import * as path from 'path';
 const outputDir = process.env.SCREENSHOT_DIR || 'screenshots';
 
 test.describe('Visual Screenshots @screenshot', () => {
+	// Add screenshot mode class before each test to fix navigation positioning
+	test.beforeEach(async ({ page }) => {
+		await page.addInitScript(() => {
+			// This runs before page load, so we need to add the class after DOM is ready
+			document.addEventListener('DOMContentLoaded', () => {
+				document.body.classList.add('screenshot-mode');
+			});
+		});
+	});
+
 	test('should capture main recipe page screenshot', async ({ page }) => {
 		await page.goto('/', { waitUntil: 'load' });
 		await page.locator('main').waitFor({ state: 'visible' });
 
 		// Create output directory if it doesn't exist
 		fs.mkdirSync(outputDir, { recursive: true });
-
-		// Add screenshot mode class to fix navigation positioning
-		await page.evaluate(() => document.body.classList.add('screenshot-mode'));
 
 		// Capture screenshot to file
 		await page.screenshot({
@@ -35,9 +42,6 @@ test.describe('Visual Screenshots @screenshot', () => {
 
 		fs.mkdirSync(outputDir, { recursive: true });
 
-		// Add screenshot mode class to fix navigation positioning
-		await page.evaluate(() => document.body.classList.add('screenshot-mode'));
-
 		await page.screenshot({
 			path: path.join(outputDir, 'recipe-vito-poolish.png'),
 			fullPage: true,
@@ -51,9 +55,6 @@ test.describe('Visual Screenshots @screenshot', () => {
 
 		fs.mkdirSync(outputDir, { recursive: true });
 
-		// Add screenshot mode class to fix navigation positioning
-		await page.evaluate(() => document.body.classList.add('screenshot-mode'));
-
 		await page.screenshot({
 			path: path.join(outputDir, 'timers-page.png'),
 			fullPage: true,
@@ -66,9 +67,6 @@ test.describe('Visual Screenshots @screenshot', () => {
 		await page.locator('main').waitFor({ state: 'visible' });
 
 		fs.mkdirSync(outputDir, { recursive: true });
-
-		// Add screenshot mode class to fix navigation positioning
-		await page.evaluate(() => document.body.classList.add('screenshot-mode'));
 
 		await page.screenshot({
 			path: path.join(outputDir, 'reference-page.png'),
