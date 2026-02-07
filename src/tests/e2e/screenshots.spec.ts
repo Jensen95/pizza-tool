@@ -18,6 +18,9 @@ test.describe('Visual Screenshots @screenshot', () => {
 		// Create output directory if it doesn't exist
 		fs.mkdirSync(outputDir, { recursive: true });
 
+		// Add screenshot mode class to fix navigation positioning
+		await page.evaluate(() => document.body.classList.add('screenshot-mode'));
+
 		// Capture screenshot to file
 		await page.screenshot({
 			path: path.join(outputDir, 'main-recipe-page.png'),
@@ -32,6 +35,9 @@ test.describe('Visual Screenshots @screenshot', () => {
 
 		fs.mkdirSync(outputDir, { recursive: true });
 
+		// Add screenshot mode class to fix navigation positioning
+		await page.evaluate(() => document.body.classList.add('screenshot-mode'));
+
 		await page.screenshot({
 			path: path.join(outputDir, 'recipe-vito-poolish.png'),
 			fullPage: true,
@@ -45,6 +51,9 @@ test.describe('Visual Screenshots @screenshot', () => {
 
 		fs.mkdirSync(outputDir, { recursive: true });
 
+		// Add screenshot mode class to fix navigation positioning
+		await page.evaluate(() => document.body.classList.add('screenshot-mode'));
+
 		await page.screenshot({
 			path: path.join(outputDir, 'timers-page.png'),
 			fullPage: true,
@@ -57,6 +66,9 @@ test.describe('Visual Screenshots @screenshot', () => {
 		await page.locator('main').waitFor({ state: 'visible' });
 
 		fs.mkdirSync(outputDir, { recursive: true });
+
+		// Add screenshot mode class to fix navigation positioning
+		await page.evaluate(() => document.body.classList.add('screenshot-mode'));
 
 		await page.screenshot({
 			path: path.join(outputDir, 'reference-page.png'),

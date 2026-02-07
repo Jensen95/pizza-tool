@@ -99,9 +99,8 @@
 		font-weight: 600;
 	}
 
-	@media print {
-		.navigation {
-			position: relative;
-		}
+	/* Fix navigation positioning for full-page screenshots */
+	:global(body.screenshot-mode) .navigation {
+		position: static;
 	}
 </style>
