@@ -35,8 +35,8 @@ jobs:
         run: |
           mkdir -p screenshots/pr
           npm run test:screenshots -- --project=chromium || true
-          # Copy screenshots from snapshot directory (where toHaveScreenshot saves them)
-          find src/tests/e2e -name "*-snapshots" -type d -exec cp {}/*.png screenshots/pr/ \; 2>/dev/null || true
+          # Copy screenshots from test-results (where Playwright actually saves them in CI)
+          find test-results -name "*.png" -exec cp {} screenshots/pr/ \; 2>/dev/null || true
         continue-on-error: true
 
       - name: Checkout base branch
@@ -55,8 +55,8 @@ jobs:
         run: |
           mkdir -p screenshots/base
           npm run test:screenshots -- --project=chromium || true
-          # Copy screenshots from snapshot directory (where toHaveScreenshot saves them)
-          find src/tests/e2e -name "*-snapshots" -type d -exec cp {}/*.png screenshots/base/ \; 2>/dev/null || true
+          # Copy screenshots from test-results (where Playwright actually saves them in CI)
+          find test-results -name "*.png" -exec cp {} screenshots/base/ \; 2>/dev/null || true
         continue-on-error: true
 
       - name: Upload screenshots and create comment
