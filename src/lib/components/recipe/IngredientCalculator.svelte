@@ -2,7 +2,11 @@
 	import type { Recipe } from '$lib/types';
 	import type { ScaledIngredient } from '$lib/types/ingredient';
 	import { calculator, totalWeight, flourWeight, recipeHistory, predoughRatio } from '$lib/stores';
-	import { formatWeight, isPredoughStage } from '$lib/utils/baker-percentage';
+	import {
+		formatWeight,
+		isPredoughStage,
+		getOriginalPredoughRatio as getRecipePredoughRatio
+	} from '$lib/utils/baker-percentage';
 
 	let { recipe }: { recipe: Recipe } = $props();
 
@@ -13,8 +17,8 @@
 	let numberOfPizzas = $state($calculator.numberOfPizzas || 4);
 	let doughBallWeight = $state($calculator.doughBallWeight || 270);
 
-	// Get original predough ratio from recipe
-	let originalPredoughRatio = $derived(calculator.getOriginalPredoughRatio());
+	// Get original predough ratio from recipe prop (reactive)
+	let originalPredoughRatio = $derived(getRecipePredoughRatio(recipe));
 	let hasPredough = $derived(originalPredoughRatio !== null);
 
 	// Track main dough flour percentage for detecting customization
