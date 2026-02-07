@@ -10,7 +10,11 @@ import * as path from 'path';
 // Get screenshot output directory from env or use default
 const outputDir = process.env.SCREENSHOT_DIR || 'screenshots';
 
-async function captureFullPage(page: import('@playwright/test').Page, url: string, filename: string) {
+async function captureFullPage(
+	page: import('@playwright/test').Page,
+	url: string,
+	filename: string
+) {
 	await page.goto(url, { waitUntil: 'networkidle' });
 	await page.locator('main').waitFor({ state: 'visible' });
 	await page.waitForTimeout(500);
