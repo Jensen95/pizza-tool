@@ -10,9 +10,24 @@ import * as path from 'path';
 // Get screenshot output directory from env or use default
 const outputDir = process.env.SCREENSHOT_DIR || 'screenshots';
 
+async function captureFullPage(page: import('@playwright/test').Page, url: string, filename: string) {
+	await page.goto(url, { waitUntil: 'networkidle' });
+	await page.locator('main').waitFor({ state: 'visible' });
+	await page.waitForTimeout(500);
+
+	fs.mkdirSync(outputDir, { recursive: true });
+
+	await page.screenshot({
+		path: path.join(outputDir, filename),
+		fullPage: true,
+		animations: 'disabled'
+	});
+}
+
 test.describe('Visual Screenshots @screenshot', () => {
 	// Add screenshot mode class before each test to fix navigation positioning
 	test.beforeEach(async ({ page }) => {
+		await page.setViewportSize({ width: 1280, height: 2400 });
 		await page.addInitScript(() => {
 			// This runs before page load, so we need to add the class after DOM is ready
 			document.addEventListener('DOMContentLoaded', () => {
@@ -22,56 +37,30 @@ test.describe('Visual Screenshots @screenshot', () => {
 	});
 
 	test('should capture main recipe page screenshot', async ({ page }) => {
-		await page.goto('/', { waitUntil: 'load' });
-		await page.locator('main').waitFor({ state: 'visible' });
-
-		// Create output directory if it doesn't exist
-		fs.mkdirSync(outputDir, { recursive: true });
-
-		// Capture screenshot to file
-		await page.screenshot({
-			path: path.join(outputDir, 'main-recipe-page.png'),
-			fullPage: true,
-			animations: 'disabled'
-		});
+		await captureFullPage(page, '/', 'main-recipe-page.png');
 	});
 
 	test('should capture specific recipe page screenshot', async ({ page }) => {
-		await page.goto('/recipe/vito-poolish', { waitUntil: 'load' });
-		await page.locator('main').waitFor({ state: 'visible' });
+		await captureFullPage(page, '/recipe/vito-poolish', 'recipe-vito-poolish.png');
+	});
 
-		fs.mkdirSync(outputDir, { recursive: true });
+	test('should capture biga recipe screenshot', async ({ page }) => {
+		await captureFullPage(page, '/recipe/seb-biga', 'recipe-seb-biga.png');
+	});
 
-		await page.screenshot({
-			path: path.join(outputDir, 'recipe-vito-poolish.png'),
-			fullPage: true,
-			animations: 'disabled'
-		});
+	test('should capture direct dough recipe screenshot', async ({ page }) => {
+		await captureFullPage(page, '/recipe/bk-bageenzym', 'recipe-bk-bageenzym.png');
+	});
+
+	test('should capture gluten-free recipe screenshot', async ({ page }) => {
+		await captureFullPage(page, '/recipe/bk-gluten-free', 'recipe-bk-gluten-free.png');
 	});
 
 	test('should capture timers page screenshot', async ({ page }) => {
-		await page.goto('/timers', { waitUntil: 'load' });
-		await page.locator('main').waitFor({ state: 'visible' });
-
-		fs.mkdirSync(outputDir, { recursive: true });
-
-		await page.screenshot({
-			path: path.join(outputDir, 'timers-page.png'),
-			fullPage: true,
-			animations: 'disabled'
-		});
+		await captureFullPage(page, '/timers', 'timers-page.png');
 	});
 
 	test('should capture reference page screenshot', async ({ page }) => {
-		await page.goto('/reference', { waitUntil: 'load' });
-		await page.locator('main').waitFor({ state: 'visible' });
-
-		fs.mkdirSync(outputDir, { recursive: true });
-
-		await page.screenshot({
-			path: path.join(outputDir, 'reference-page.png'),
-			fullPage: true,
-			animations: 'disabled'
-		});
+		await captureFullPage(page, '/reference', 'reference-page.png');
 	});
 });
