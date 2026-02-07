@@ -67,6 +67,61 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
+            const https = require('https');
+
+            // Function to upload image to GitHub's CDN
+            async function uploadImageToGitHub(imagePath, filename) {
+              try {
+                const imageBuffer = fs.readFileSync(imagePath);
+                
+                // Step 1: Get upload policy from GitHub
+                // This is the same endpoint the UI uses when you drag/drop images
+                const policyResponse = await fetch('https://github.com/upload/policies/assets', {
+                  method: 'POST',
+                  headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `token ${process.env.GITHUB_TOKEN}`,
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    name: filename,
+                    size: imageBuffer.length,
+                    content_type: 'image/png',
+                    repository_id: context.payload.repository.id,
+                  })
+                });
+
+                if (!policyResponse.ok) {
+                  const errorText = await policyResponse.text();
+                  console.error(`Failed to get upload policy for ${filename}: ${policyResponse.status} - ${errorText}`);
+                  return null;
+                }
+
+                const policy = await policyResponse.json();
+                
+                // Step 2: Upload image to the provided URL
+                const uploadResponse = await fetch(policy.upload_url, {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'image/png',
+                    'Content-Length': imageBuffer.length.toString(),
+                    ...policy.headers,
+                  },
+                  body: imageBuffer,
+                });
+
+                if (!uploadResponse.ok) {
+                  console.error(`Failed to upload ${filename}: ${uploadResponse.status}`);
+                  return null;
+                }
+
+                // Step 3: Return the asset URL
+                return policy.asset_url || policy.url;
+              } catch (error) {
+                console.error(`Error uploading ${imagePath}:`, error);
+                return null;
+              }
+            }
 
             // Collect screenshots
             const prScreenshotsDir = 'screenshots/pr';
@@ -95,7 +150,7 @@ jobs:
               console.log('No base screenshots found');
             }
 
-            // Build comment with embedded images in collapsible details
+            // Build comment with uploaded images in collapsible details
             let commentBody = '## 📸 Visual Comparison\n\n';
 
             if (prScreenshots.length === 0 && baseScreenshots.length === 0) {
@@ -117,20 +172,28 @@ jobs:
                 commentBody += `<details>\n<summary><b>${filename}</b></summary>\n\n`;
                 commentBody += '<table><tr><th>Base (main)</th><th>PR Changes</th></tr><tr>';
 
-                // Base screenshot
+                // Base screenshot - upload to GitHub CDN
                 if (baseExists) {
-                  const baseImage = fs.readFileSync(basePath);
-                  const baseBase64 = baseImage.toString('base64');
-                  commentBody += `<td><img src="data:image/png;base64,${baseBase64}" width="400" /></td>`;
+                  console.log(`Uploading base screenshot: ${filename}`);
+                  const baseUrl = await uploadImageToGitHub(basePath, `base-${filename}`);
+                  if (baseUrl) {
+                    commentBody += `<td><img src="${baseUrl}" width="400" /></td>`;
+                  } else {
+                    commentBody += '<td>❌ Upload failed</td>';
+                  }
                 } else {
                   commentBody += '<td>❌ Not found</td>';
                 }
 
-                // PR screenshot
+                // PR screenshot - upload to GitHub CDN
                 if (prExists) {
-                  const prImage = fs.readFileSync(prPath);
-                  const prBase64 = prImage.toString('base64');
-                  commentBody += `<td><img src="data:image/png;base64,${prBase64}" width="400" /></td>`;
+                  console.log(`Uploading PR screenshot: ${filename}`);
+                  const prUrl = await uploadImageToGitHub(prPath, `pr-${filename}`);
+                  if (prUrl) {
+                    commentBody += `<td><img src="${prUrl}" width="400" /></td>`;
+                  } else {
+                    commentBody += '<td>❌ Upload failed</td>';
+                  }
                 } else {
                   commentBody += '<td>❌ Not found</td>';
                 }
@@ -139,7 +202,7 @@ jobs:
                 commentBody += '</details>\n\n';
               }
 
-              commentBody += '\n> 💡 **Note**: Screenshots are embedded as base64 data URLs. Click to expand each screenshot comparison.\n';
+              commentBody += '\n> 💡 **Note**: Screenshots uploaded to GitHub CDN (user-attachments). Click to expand each comparison.\n';
             }
 
             commentBody += '\n---\n';
