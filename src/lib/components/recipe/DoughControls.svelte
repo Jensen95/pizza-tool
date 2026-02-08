@@ -681,6 +681,28 @@
 		font-weight: 600;
 		cursor: pointer;
 		list-style: none;
+		padding: var(--spacing-xs) var(--spacing-sm);
+		border-radius: var(--radius-sm);
+		transition:
+			background 0.15s ease,
+			color 0.15s ease;
+	}
+
+	.section-summary::before {
+		content: '▸';
+		display: inline-block;
+		margin-right: 6px;
+		color: var(--color-text-secondary);
+		transition: transform 0.2s ease;
+	}
+
+	details[open] .section-summary::before {
+		transform: rotate(90deg);
+	}
+
+	.section-summary:hover {
+		background: rgba(var(--color-primary-rgb), 0.08);
+		color: var(--color-primary);
 	}
 
 	.section-summary::-webkit-details-marker {
