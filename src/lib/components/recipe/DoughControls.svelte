@@ -13,6 +13,18 @@
 	let numberOfPizzas = $state($calculator.numberOfPizzas || 4);
 	let doughBallWeight = $state($calculator.doughBallWeight || 270);
 
+	const stageLabels: Record<string, string> = {
+		poolish: 'Poolish',
+		biga: 'Biga',
+		preferment: 'Fordej',
+		autolyse: 'Autolyse',
+		bulk: 'Stuehavning',
+		ball: 'Kugler',
+		final: 'Final',
+		hoveddej: 'Hoveddej',
+		main: 'Hoveddej'
+	};
+
 	// Keep local state in sync with calculator store
 	$effect(() => {
 		numberOfPizzas = $calculator.numberOfPizzas;
@@ -319,6 +331,9 @@
 			<h4 class="section-title">Melblanding</h4>
 			{#each flourBlends as blend}
 				<div class="flour-blend">
+					<div class="flour-stage">
+						<span class="stage-chip">{stageLabels[blend.stage] || blend.stage}</span>
+					</div>
 					{#each blend.flours as flour}
 						<div class="flour-blend-item">
 							<div class="flour-header">
@@ -502,6 +517,24 @@
 		flex-direction: column;
 		gap: var(--spacing-sm);
 		padding: var(--spacing-sm) 0;
+	}
+
+	.flour-stage {
+		display: flex;
+		align-items: center;
+	}
+
+	.stage-chip {
+		display: inline-flex;
+		align-items: center;
+		padding: 2px 8px;
+		border-radius: 999px;
+		background: var(--color-surface);
+		color: var(--color-text-secondary);
+		font-size: var(--font-size-xs);
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
 	}
 
 	.flour-blend-item {
