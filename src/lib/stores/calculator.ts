@@ -1,17 +1,28 @@
 import { writable, derived, get } from 'svelte/store';
-import type { Recipe } from '$lib/types/recipe';
-import type { CalculatorState, ScaledIngredient, RecipeControls } from '$lib/types/ingredient';
+import type { Recipe, RecipeIngredient, FermentationStage } from '$lib/types/recipe';
+import type {
+	CalculatorState,
+	ScaledIngredient,
+	RecipeControls,
+	CustomFlour,
+	CustomFlourState
+} from '$lib/types/ingredient';
+import type { FlourTypeOption } from '$lib/types/reference';
 import {
 	scaleRecipe,
 	getOriginalPredoughRatio,
 	getControllableIngredients,
 	rebalanceFlourBlend,
-	calculateHydration
+	calculateHydration,
+	addFlourToStage,
+	removeFlourFromStage
 } from '$lib/utils/baker-percentage';
+import { flourTypes as flourTypeOptions } from '$lib/data/reference/flour-types';
 import * as storage from '$lib/utils/storage';
 
 const CALCULATOR_STORAGE_KEY = 'calculator';
 const HYDRATION_STORAGE_KEY = 'hydration-overrides';
+const CUSTOM_FLOUR_STORAGE_KEY = 'custom-flours';
 
 const defaultState: CalculatorState = {
 	recipeId: null,
@@ -21,11 +32,15 @@ const defaultState: CalculatorState = {
 	totalFlourWeight: 0,
 	hydration: null,
 	predoughRatio: null,
-	scaledIngredients: []
+	scaledIngredients: [],
+	customFlours: {}
 };
 
 // Store for custom ingredient percentages per recipe
 const customIngredientsStore = writable<Record<string, Record<string, number>>>({});
+
+// Store for custom flours per recipe and stage
+const customFloursStore = writable<CustomFlourState>({});
 
 // Store for hydration overrides per recipe
 const hydrationOverridesStore = writable<Record<string, number>>({});
@@ -51,6 +66,14 @@ function saveCustomIngredients(data: Record<string, Record<string, number>>) {
 	storage.set('custom-ingredients', data);
 }
 
+function loadCustomFlours(): CustomFlourState {
+	return storage.get<CustomFlourState>(CUSTOM_FLOUR_STORAGE_KEY, {});
+}
+
+function saveCustomFlours(data: CustomFlourState) {
+	storage.set(CUSTOM_FLOUR_STORAGE_KEY, data);
+}
+
 function loadHydrationOverrides(): Record<string, number> {
 	return storage.get<Record<string, number>>(HYDRATION_STORAGE_KEY, {});
 }
@@ -59,14 +82,112 @@ function saveHydrationOverrides(data: Record<string, number>) {
 	storage.set(HYDRATION_STORAGE_KEY, data);
 }
 
+function getStageKey(stage?: string): string {
+	return stage || 'main';
+}
+
 function createCalculatorStore() {
 	const { subscribe, set, update } = writable<CalculatorState>(loadState());
 
 	// Initialize custom ingredients from localStorage
 	customIngredientsStore.set(loadCustomIngredients());
+	customFloursStore.set(loadCustomFlours());
 	hydrationOverridesStore.set(loadHydrationOverrides());
 
 	let currentRecipe: Recipe | null = null;
+
+	function getCustomFloursForRecipe(recipeId: string): Record<string, CustomFlour[]> {
+		return get(customFloursStore)[recipeId] || {};
+	}
+
+	function buildIngredientsWithCustomizations(recipe: Recipe): RecipeIngredient[] {
+		const customIngredients = get(customIngredientsStore)[recipe.id] || {};
+		const recipeCustomFlours = getCustomFloursForRecipe(recipe.id);
+
+		const baseIngredients = recipe.ingredients
+			.map((ing) => {
+				const override = customIngredients[ing.id];
+				const percentage = override !== undefined ? override : ing.percentage;
+				return { ...ing, percentage };
+			})
+			.filter((ing) => !(ing.type === 'flour' && customIngredients[ing.id] === 0));
+
+		const customFlourIngredients: RecipeIngredient[] = [];
+		for (const [stage, flours] of Object.entries(recipeCustomFlours)) {
+			const stageKey = getStageKey(stage);
+			for (const flour of flours) {
+				const flourType = flourTypeOptions.find((f) => f.id === flour.flourTypeId);
+				const override = customIngredients[flour.flourId];
+				const percentage = override !== undefined ? override : flour.percentage;
+				customFlourIngredients.push({
+					id: flour.flourId,
+					name: flourType?.name || flour.flourTypeId,
+					nameDa: flourType?.nameDa || flourType?.name || flour.flourTypeId,
+					percentage,
+					type: 'flour',
+					stage: stageKey === 'main' ? undefined : (stageKey as FermentationStage)
+				});
+			}
+		}
+
+		return [...baseIngredients, ...customFlourIngredients];
+	}
+
+	function persistStageFlours(
+		recipeId: string,
+		stage: string,
+		updatedIngredients: RecipeIngredient[],
+		removedFlourId?: string
+	) {
+		const stageKey = getStageKey(stage);
+		const stageFlours = updatedIngredients.filter(
+			(ing) => ing.type === 'flour' && getStageKey(ing.stage) === stageKey
+		);
+
+		customIngredientsStore.update((state) => {
+			const recipeCustoms = { ...(state[recipeId] || {}) };
+
+			if (removedFlourId && !removedFlourId.startsWith('custom-flour-')) {
+				recipeCustoms[removedFlourId] = 0;
+			}
+
+			for (const flour of stageFlours) {
+				if (!flour.id.startsWith('custom-flour-')) {
+					recipeCustoms[flour.id] = flour.percentage;
+				}
+			}
+
+			const newState = { ...state, [recipeId]: recipeCustoms };
+			saveCustomIngredients(newState);
+			return newState;
+		});
+
+		customFloursStore.update((state) => {
+			const recipeFlours = { ...(state[recipeId] || {}) };
+			const existingStageFlours = recipeFlours[stageKey] || [];
+
+			const updatedStageCustoms: CustomFlour[] = stageFlours
+				.filter((flour) => flour.id.startsWith('custom-flour-'))
+				.map((flour) => {
+					const existing = existingStageFlours.find((f) => f.flourId === flour.id);
+					return {
+						flourId: flour.id,
+						flourTypeId: existing?.flourTypeId || flour.id.replace(`custom-flour-${stageKey}-`, ''),
+						percentage: flour.percentage
+					};
+				});
+
+			const newState = {
+				...state,
+				[recipeId]: {
+					...recipeFlours,
+					[stageKey]: updatedStageCustoms
+				}
+			};
+			saveCustomFlours(newState);
+			return newState;
+		});
+	}
 
 	function recalculate(state: CalculatorState): CalculatorState {
 		if (!currentRecipe) {
@@ -76,15 +197,18 @@ function createCalculatorStore() {
 				totalFlourWeight: 0,
 				totalDoughWeight: state.numberOfPizzas * state.doughBallWeight,
 				hydration: null,
-				predoughRatio: null
+				predoughRatio: null,
+				customFlours: {}
 			};
 		}
 
 		// Apply custom ingredients if available
 		const customIngredients = get(customIngredientsStore)[currentRecipe.id] || {};
+		const recipeCustomFlours = getCustomFloursForRecipe(currentRecipe.id);
+		const recipeIngredients = buildIngredientsWithCustomizations(currentRecipe);
 		const recipeWithCustoms: Recipe = {
 			...currentRecipe,
-			ingredients: currentRecipe.ingredients.map((ing) => ({
+			ingredients: recipeIngredients.map((ing) => ({
 				...ing,
 				percentage: customIngredients[ing.id] ?? ing.percentage
 			}))
@@ -110,7 +234,8 @@ function createCalculatorStore() {
 			hydration: hydrationOverride,
 			scaledIngredients,
 			totalFlourWeight,
-			totalDoughWeight
+			totalDoughWeight,
+			customFlours: recipeCustomFlours
 		};
 	}
 
@@ -215,40 +340,78 @@ function createCalculatorStore() {
 		setFlourBlend(flourId: string, newPercentage: number) {
 			if (!currentRecipe) return;
 
-			// Find the flour ingredient and its stage
-			const flour = currentRecipe.ingredients.find((i) => i.id === flourId);
-			if (!flour || flour.type !== 'flour') return;
+			const activeIngredients = buildIngredientsWithCustomizations(currentRecipe);
+			const flour = activeIngredients.find((i) => i.id === flourId && i.type === 'flour');
+			if (!flour) return;
 
-			const stage = flour.stage || 'main';
+			const stage = getStageKey(flour.stage);
 
-			// Get current custom ingredients
-			const customIngredients = get(customIngredientsStore)[currentRecipe.id] || {};
-			const currentIngredients = currentRecipe.ingredients.map((ing) => ({
-				...ing,
-				percentage: customIngredients[ing.id] ?? ing.percentage
-			}));
+			const rebalanced = rebalanceFlourBlend(activeIngredients, flourId, newPercentage, stage);
 
-			// Rebalance the flour blend
-			const rebalanced = rebalanceFlourBlend(currentIngredients, flourId, newPercentage, stage);
-
-			// Save all changed flour percentages as custom ingredients
-			customIngredientsStore.update((state) => {
-				const recipeId = currentRecipe!.id;
-				const recipeCustoms = { ...(state[recipeId] || {}) };
-
-				for (const ing of rebalanced) {
-					if (ing.type === 'flour' && (ing.stage || 'main') === stage) {
-						recipeCustoms[ing.id] = ing.percentage;
-					}
-				}
-
-				const newState = { ...state, [recipeId]: recipeCustoms };
-				saveCustomIngredients(newState);
-				return newState;
-			});
+			persistStageFlours(currentRecipe.id, stage, rebalanced);
 
 			// Trigger recalculation
 			update((state) => recalculate(state));
+		},
+
+		addFlourType(stage: string, flourTypeId: string, initialPercentage: number) {
+			if (!currentRecipe) return;
+
+			const flourType = flourTypeOptions.find((f) => f.id === flourTypeId);
+			if (!flourType) return;
+
+			const stageKey = getStageKey(stage);
+			const currentIngredients = buildIngredientsWithCustomizations(currentRecipe);
+			const updatedIngredients = addFlourToStage(
+				currentIngredients,
+				stageKey,
+				flourType,
+				initialPercentage
+			);
+
+			if (
+				updatedIngredients === currentIngredients ||
+				updatedIngredients.length === currentIngredients.length
+			) {
+				return;
+			}
+
+			persistStageFlours(currentRecipe.id, stageKey, updatedIngredients);
+
+			update((state) => recalculate(state));
+		},
+
+		removeFlourType(stage: string, flourId: string) {
+			if (!currentRecipe) return;
+
+			const stageKey = getStageKey(stage);
+			const currentIngredients = buildIngredientsWithCustomizations(currentRecipe);
+
+			const updatedIngredients = removeFlourFromStage(currentIngredients, stageKey, flourId);
+			if (updatedIngredients.length === currentIngredients.length) return;
+
+			persistStageFlours(currentRecipe.id, stageKey, updatedIngredients, flourId);
+
+			customIngredientsStore.update((state) => {
+				const recipeCustoms = { ...(state[currentRecipe!.id] || {}) };
+				if (recipeCustoms[flourId] !== undefined) {
+					const { [flourId]: _, ...rest } = recipeCustoms;
+					const newState = { ...state, [currentRecipe!.id]: rest };
+					saveCustomIngredients(newState);
+					return newState;
+				}
+				return state;
+			});
+
+			update((state) => recalculate(state));
+		},
+
+		getAvailableFlourTypes(stage: string): FlourTypeOption[] {
+			if (!currentRecipe) return [];
+			const stageKey = getStageKey(stage);
+			const recipeFlours = get(customFloursStore)[currentRecipe.id] || {};
+			const usedIds = new Set((recipeFlours[stageKey] || []).map((f) => f.flourTypeId));
+			return flourTypeOptions.filter((type) => !usedIds.has(type.id));
 		},
 
 		/**
@@ -285,7 +448,11 @@ function createCalculatorStore() {
 		getRecipeControls(): RecipeControls | null {
 			if (!currentRecipe) return null;
 			const customIngredients = get(customIngredientsStore)[currentRecipe.id] || {};
-			return getControllableIngredients(currentRecipe, customIngredients);
+			const recipeWithCustoms: Recipe = {
+				...currentRecipe,
+				ingredients: buildIngredientsWithCustomizations(currentRecipe)
+			};
+			return getControllableIngredients(recipeWithCustoms, customIngredients);
 		},
 
 		/**
@@ -407,6 +574,12 @@ function createCalculatorStore() {
 				return rest;
 			});
 
+			customFloursStore.update((state) => {
+				const { [currentRecipe!.id]: _, ...rest } = state;
+				saveCustomFlours(rest);
+				return rest;
+			});
+
 			// Also reset hydration
 			hydrationOverridesStore.update((state) => {
 				const { [currentRecipe!.id]: _, ...rest } = state;
@@ -440,7 +613,11 @@ function createCalculatorStore() {
 			const customs = get(customIngredientsStore)[currentRecipe.id];
 			const hasIngredientCustoms = customs !== undefined && Object.keys(customs).length > 0;
 			const hasHydrationCustom = get(hydrationOverridesStore)[currentRecipe.id] !== undefined;
-			return hasIngredientCustoms || hasHydrationCustom;
+			const customFlours = get(customFloursStore)[currentRecipe.id];
+			const hasCustomFlours = customFlours
+				? Object.values(customFlours).some((flours) => flours.length > 0)
+				: false;
+			return hasIngredientCustoms || hasHydrationCustom || hasCustomFlours;
 		},
 
 		/**

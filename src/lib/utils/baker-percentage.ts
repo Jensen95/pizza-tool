@@ -6,12 +6,17 @@ import type {
 	FlourBlendInfo,
 	ExtraIngredientInfo
 } from '$lib/types/ingredient';
+import type { FlourTypeOption } from '$lib/types/reference';
 
 // Predough stage types
 const PREDOUGH_STAGES: FermentationStage[] = ['poolish', 'biga', 'preferment'];
 
 // Non-controllable ingredient types (flour and water are controlled via hydration/blend)
 const NON_EXTRA_TYPES = ['flour', 'water'] as const;
+
+function getStageKey(stage?: string): string {
+	return stage || 'main';
+}
 
 /**
  * Calculate ingredient weight from flour weight and percentage
@@ -33,6 +38,85 @@ export function getTotalPercentage(ingredients: RecipeIngredient[]): number {
  */
 export function isPredoughStage(stage?: FermentationStage): boolean {
 	return stage !== undefined && PREDOUGH_STAGES.includes(stage);
+}
+
+export function addFlourToStage(
+	ingredients: RecipeIngredient[],
+	stage: string,
+	flourType: FlourTypeOption,
+	percentage: number
+): RecipeIngredient[] {
+	const stageKey = getStageKey(stage);
+	const floursInStage = ingredients.filter(
+		(ing) => ing.type === 'flour' && getStageKey(ing.stage) === stageKey
+	);
+
+	if (floursInStage.length === 0) return ingredients;
+
+	const flourId = `custom-flour-${stageKey}-${flourType.id}`;
+	if (ingredients.some((ing) => ing.id === flourId)) return ingredients;
+
+	const largest = floursInStage.reduce((max, current) =>
+		current.percentage > max.percentage ? current : max
+	);
+	const adjustment = Math.min(percentage, largest.percentage);
+
+	const updatedIngredients = ingredients.map((ing) => {
+		if (ing.id === largest.id) {
+			const newPct = Math.max(0, ing.percentage - adjustment);
+			return { ...ing, percentage: Math.round(newPct * 100) / 100 };
+		}
+		return ing;
+	});
+
+	const newFlour: RecipeIngredient = {
+		id: flourId,
+		name: flourType.name,
+		nameDa: flourType.nameDa,
+		percentage: Math.round(adjustment * 100) / 100,
+		type: 'flour',
+		stage: stageKey === 'main' ? undefined : (stageKey as FermentationStage)
+	};
+
+	return [...updatedIngredients, newFlour];
+}
+
+export function removeFlourFromStage(
+	ingredients: RecipeIngredient[],
+	stage: string,
+	flourId: string
+): RecipeIngredient[] {
+	const stageKey = getStageKey(stage);
+	const floursInStage = ingredients.filter(
+		(ing) => ing.type === 'flour' && getStageKey(ing.stage) === stageKey
+	);
+
+	if (floursInStage.length <= 1) return ingredients;
+
+	const flourToRemove = floursInStage.find((f) => f.id === flourId);
+	if (!flourToRemove) return ingredients;
+
+	const remaining = floursInStage.filter((f) => f.id !== flourId);
+	if (remaining.length === 0) return ingredients;
+
+	const remainingTotal = remaining.reduce((sum, f) => sum + f.percentage, 0);
+	const redistribute = flourToRemove.percentage;
+
+	const updatedStageFlours = remaining.map((flour) => {
+		const baseShare = remainingTotal > 0 ? flour.percentage / remainingTotal : 1 / remaining.length;
+		const adjusted = flour.percentage + redistribute * baseShare;
+		return { ...flour, percentage: Math.round(adjusted * 100) / 100 };
+	});
+
+	return ingredients
+		.filter((ing) => ing.id !== flourId)
+		.map((ing) => {
+			if (ing.type === 'flour' && getStageKey(ing.stage) === stageKey) {
+				const replacement = updatedStageFlours.find((f) => f.id === ing.id);
+				if (replacement) return replacement;
+			}
+			return ing;
+		});
 }
 
 /**
@@ -90,8 +174,9 @@ export function rebalanceFlourBlend(
 	newPercentage: number,
 	stage: string
 ): RecipeIngredient[] {
+	const stageKey = getStageKey(stage);
 	const floursInStage = ingredients.filter(
-		(ing) => ing.type === 'flour' && (ing.stage || 'main') === stage
+		(ing) => ing.type === 'flour' && getStageKey(ing.stage) === stageKey
 	);
 
 	if (floursInStage.length < 2) return ingredients;
@@ -154,7 +239,7 @@ export function getControllableIngredients(
 	// Predough ratio
 	const predoughRatio = getOriginalPredoughRatio(recipe);
 
-	// Flour blends: only stages with 2+ flour types
+	// Flour blends: stages with flour types (single or multiple)
 	const flours: FlourBlendInfo[] = [];
 	const stageMap = new Map<string, RecipeIngredient[]>();
 	for (const ing of recipe.ingredients) {
@@ -166,7 +251,7 @@ export function getControllableIngredients(
 		}
 	}
 	for (const [stage, stageFlours] of stageMap) {
-		if (stageFlours.length >= 2) {
+		if (stageFlours.length >= 1) {
 			flours.push({
 				stage,
 				flours: stageFlours.map((f) => ({

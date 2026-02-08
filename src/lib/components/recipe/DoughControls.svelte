@@ -6,11 +6,24 @@
 		getOriginalPredoughRatio as getRecipePredoughRatio,
 		calculateHydration
 	} from '$lib/utils/baker-percentage';
+	import type { FlourTypeOption } from '$lib/types';
 
 	let { recipe }: { recipe: Recipe } = $props();
 
 	let numberOfPizzas = $state($calculator.numberOfPizzas || 4);
 	let doughBallWeight = $state($calculator.doughBallWeight || 270);
+
+	const stageLabels: Record<string, string> = {
+		poolish: 'Poolish',
+		biga: 'Biga',
+		preferment: 'Fordej',
+		autolyse: 'Autolyse',
+		bulk: 'Stuehavning',
+		ball: 'Kugler',
+		final: 'Final',
+		hoveddej: 'Hoveddej',
+		main: 'Hoveddej'
+	};
 
 	// Keep local state in sync with calculator store
 	$effect(() => {
@@ -44,12 +57,32 @@
 		$calculator.hydration !== null && $calculator.hydration !== originalHydration
 	);
 
-	// Flour blends: stages with 2+ flour types
+	// Flour blends by stage
 	let flourBlends = $derived.by(() => {
 		// Read $calculator to subscribe to store changes
 		void $calculator.scaledIngredients;
 		const controls = calculator.getRecipeControls();
 		return controls?.flours ?? [];
+	});
+
+	let flourStageTotals = $derived.by(() => {
+		const totals: Record<string, number> = {};
+		for (const blend of flourBlends) {
+			totals[blend.stage] = blend.flours.reduce((sum, flour) => sum + flour.percentage, 0);
+		}
+		return totals;
+	});
+
+	let selectedFlourTypes = $state<Record<string, string>>({});
+
+	let availableFlourTypesByStage = $derived.by(() => {
+		// Read $calculator to subscribe to store changes
+		void $calculator.scaledIngredients;
+		const map: Record<string, FlourTypeOption[]> = {};
+		for (const blend of flourBlends) {
+			map[blend.stage] = calculator.getAvailableFlourTypes(blend.stage);
+		}
+		return map;
 	});
 
 	// Extra ingredients (salt, yeast, oil, sugar)
@@ -120,10 +153,17 @@
 	}
 
 	// Flour blend handler
-	function handleFlourBlendChange(flourId: string, value: string) {
+	function handleFlourBlendChange(stage: string, flourId: string, value: string) {
 		const pct = parseFloat(value);
-		if (isNaN(pct) || pct < 0) return;
-		calculator.setFlourBlend(flourId, pct);
+		const stageTotal = flourStageTotals[stage] ?? 0;
+		if (isNaN(pct) || pct < 0 || stageTotal <= 0) return;
+		const absolutePct = (pct / 100) * stageTotal;
+		calculator.setFlourBlend(flourId, absolutePct);
+	}
+
+	function getStageFlourPercent(flour: { percentage: number }, stage: string) {
+		const total = flourStageTotals[stage] || 1;
+		return (flour.percentage / total) * 100;
 	}
 
 	// Extra ingredient handler
@@ -135,6 +175,21 @@
 
 	function resetExtra(ingredientId: string) {
 		calculator.resetIngredient(ingredientId);
+	}
+
+	function handleAddFlour(stage: string) {
+		const selected = selectedFlourTypes[stage];
+		if (!selected) return;
+		calculator.addFlourType(stage, selected, 10);
+		selectedFlourTypes = { ...selectedFlourTypes, [stage]: '' };
+	}
+
+	function removeFlour(stage: string, flourId: string) {
+		calculator.removeFlourType(stage, flourId);
+	}
+
+	function setSelectedFlourType(stage: string, value: string) {
+		selectedFlourTypes = { ...selectedFlourTypes, [stage]: value };
 	}
 
 	function isExtraCustomized(extra: {
@@ -285,29 +340,72 @@
 		{/if}
 	</div>
 
-	<!-- Row 3: Flour blends (only for stages with 2+ flour types) -->
+	<!-- Row 3: Flour blends -->
 	{#if flourBlends.length > 0}
 		<div class="controls-section">
 			<h4 class="section-title">Melblanding</h4>
 			{#each flourBlends as blend}
 				<div class="flour-blend">
+					<div class="flour-stage">
+						<span class="stage-chip">{stageLabels[blend.stage] || blend.stage}</span>
+					</div>
 					{#each blend.flours as flour}
 						<div class="flour-blend-item">
-							<label class="label flour-label" for="flour-{flour.id}">{flour.nameDa}</label>
-							<input
-								id="flour-{flour.id}"
-								type="number"
-								class="input compact-input"
-								value={flour.percentage.toFixed(1)}
-								onchange={(e) =>
-									handleFlourBlendChange(flour.id, (e.target as HTMLInputElement).value)}
-								min="0"
-								max="100"
-								step="1"
-							/>
-							<span class="unit">%</span>
+							<div class="flour-header">
+								<label class="label flour-label" for="flour-{flour.id}">{flour.nameDa}</label>
+								<button
+									class="btn-icon flour-remove"
+									onclick={() => removeFlour(blend.stage, flour.id)}
+									disabled={blend.flours.length <= 1}
+									title="Fjern meltype"
+								>
+									&times;
+								</button>
+							</div>
+							<div class="flour-input">
+								<input
+									id="flour-{flour.id}"
+									type="number"
+									class="input compact-input"
+									value={getStageFlourPercent(flour, blend.stage).toFixed(1)}
+									onchange={(e) =>
+										handleFlourBlendChange(
+											blend.stage,
+											flour.id,
+											(e.target as HTMLInputElement).value
+										)}
+									min="0"
+									max="100"
+									step="1"
+								/>
+								<span class="unit">%</span>
+							</div>
 						</div>
 					{/each}
+					{#if (availableFlourTypesByStage[blend.stage] ?? []).length > 0}
+						<div class="flour-add">
+							<select
+								class="input select-input"
+								id="add-flour-{blend.stage}"
+								value={selectedFlourTypes[blend.stage] ?? ''}
+								onchange={(e) =>
+									setSelectedFlourType(blend.stage, (e.target as HTMLSelectElement).value)}
+							>
+								<option value="">Vælg meltype</option>
+								{#each availableFlourTypesByStage[blend.stage] ?? [] as flourType}
+									<option value={flourType.id}>{flourType.nameDa}</option>
+								{/each}
+							</select>
+							<button
+								class="btn btn-secondary add-flour-btn"
+								onclick={() => handleAddFlour(blend.stage)}
+								disabled={!selectedFlourTypes[blend.stage]}
+								title="Tilføj meltype"
+							>
+								+
+							</button>
+						</div>
+					{/if}
 				</div>
 			{/each}
 		</div>
@@ -435,19 +533,52 @@
 
 	.flour-blend {
 		display: flex;
-		gap: var(--spacing-md);
-		flex-wrap: wrap;
+		flex-direction: column;
+		gap: var(--spacing-sm);
+		padding: var(--spacing-sm) 0;
+	}
+
+	.flour-stage {
+		display: flex;
+		align-items: center;
+	}
+
+	.stage-chip {
+		display: inline-flex;
+		align-items: center;
+		padding: 2px 8px;
+		border-radius: 999px;
+		background: var(--color-surface);
+		color: var(--color-text-secondary);
+		font-size: var(--font-size-xs);
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
 	}
 
 	.flour-blend-item {
 		display: flex;
-		align-items: center;
-		gap: var(--spacing-xs);
+		flex-direction: column;
+		gap: 2px;
+		padding: 2px 0;
 	}
 
 	.flour-label {
 		font-size: var(--font-size-sm);
 		white-space: nowrap;
+	}
+
+	.flour-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--spacing-xs);
+	}
+
+	.flour-input {
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-xs);
 	}
 
 	.compact-input {
@@ -464,6 +595,37 @@
 	.unit {
 		font-size: var(--font-size-sm);
 		color: var(--color-text-secondary);
+	}
+
+	.flour-add {
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-xs);
+	}
+
+	.select-input {
+		min-width: 160px;
+	}
+
+	.add-flour-btn {
+		min-width: 40px;
+	}
+
+	.btn-icon {
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 4px;
+		color: var(--color-text-secondary);
+	}
+
+	.btn-icon:disabled {
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
+
+	.btn-icon:not(:disabled):hover {
+		color: var(--color-primary);
 	}
 
 	.extras-grid {

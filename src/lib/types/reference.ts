@@ -114,3 +114,9 @@ export const tipCategoryLabels: Record<Tip['category'], string> = {
 	equipment: 'Udstyr',
 	general: 'Generelt'
 };
+
+export interface FlourTypeOption {
+	id: string;
+	name: string;
+	nameDa: string;
+}
