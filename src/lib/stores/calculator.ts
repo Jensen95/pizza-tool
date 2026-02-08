@@ -119,10 +119,13 @@ function createCalculatorStore() {
 				const flourType = flourTypeOptions.find((f) => f.id === flour.flourTypeId);
 				const override = customIngredients[flour.flourId];
 				const percentage = override !== undefined ? override : flour.percentage;
+				const customName = flour.customName;
+				const name = customName || flourType?.name || flour.flourTypeId;
+				const nameDa = customName || flourType?.nameDa || flourType?.name || flour.flourTypeId;
 				customFlourIngredients.push({
 					id: flour.flourId,
-					name: flourType?.name || flour.flourTypeId,
-					nameDa: flourType?.nameDa || flourType?.name || flour.flourTypeId,
+					name,
+					nameDa,
 					percentage,
 					type: 'flour',
 					stage: stageKey === 'main' ? undefined : (stageKey as FermentationStage)
@@ -137,7 +140,8 @@ function createCalculatorStore() {
 		recipeId: string,
 		stage: string,
 		updatedIngredients: RecipeIngredient[],
-		removedFlourId?: string
+		removedFlourId?: string,
+		customFlourMeta: Record<string, Partial<CustomFlour>> = {}
 	) {
 		const stageKey = getStageKey(stage);
 		const stageFlours = updatedIngredients.filter(
@@ -169,11 +173,18 @@ function createCalculatorStore() {
 			const updatedStageCustoms: CustomFlour[] = stageFlours
 				.filter((flour) => flour.id.startsWith('custom-flour-'))
 				.map((flour) => {
+					const meta = customFlourMeta[flour.id] || {};
 					const existing = existingStageFlours.find((f) => f.flourId === flour.id);
+					const flourTypeId =
+						meta.flourTypeId ||
+						existing?.flourTypeId ||
+						flour.id.replace(`custom-flour-${stageKey}-`, '');
 					return {
 						flourId: flour.id,
-						flourTypeId: existing?.flourTypeId || flour.id.replace(`custom-flour-${stageKey}-`, ''),
-						percentage: flour.percentage
+						flourTypeId,
+						percentage: flour.percentage,
+						customName: meta.customName ?? existing?.customName,
+						flourType: meta.flourType ?? existing?.flourType
 					};
 				});
 
@@ -354,13 +365,22 @@ function createCalculatorStore() {
 			update((state) => recalculate(state));
 		},
 
-		addFlourType(stage: string, flourTypeId: string, initialPercentage: number) {
+		addFlourType(
+			stage: string,
+			flourTypeId: string,
+			initialPercentage: number,
+			options?: Pick<CustomFlour, 'customName' | 'flourType'>
+		) {
 			if (!currentRecipe) return;
 
-			const flourType = flourTypeOptions.find((f) => f.id === flourTypeId);
+			const flourType =
+				options?.customName !== undefined
+					? { id: flourTypeId, name: options.customName, nameDa: options.customName }
+					: flourTypeOptions.find((f) => f.id === flourTypeId);
 			if (!flourType) return;
 
 			const stageKey = getStageKey(stage);
+			const flourId = `custom-flour-${stageKey}-${flourType.id}`;
 			const currentIngredients = buildIngredientsWithCustomizations(currentRecipe);
 			const updatedIngredients = addFlourToStage(
 				currentIngredients,
@@ -376,7 +396,18 @@ function createCalculatorStore() {
 				return;
 			}
 
-			persistStageFlours(currentRecipe.id, stageKey, updatedIngredients);
+			const customMeta =
+				options?.customName || options?.flourType
+					? {
+							[flourId]: {
+								flourTypeId: flourType.id,
+								customName: options?.customName,
+								flourType: options?.flourType
+							}
+						}
+					: {};
+
+			persistStageFlours(currentRecipe.id, stageKey, updatedIngredients, undefined, customMeta);
 
 			update((state) => recalculate(state));
 		},
@@ -411,6 +442,12 @@ function createCalculatorStore() {
 			const stageKey = getStageKey(stage);
 			const recipeFlours = get(customFloursStore)[currentRecipe.id] || {};
 			const usedIds = new Set((recipeFlours[stageKey] || []).map((f) => f.flourTypeId));
+			const baseStageFlours = currentRecipe.ingredients.filter(
+				(ing) => ing.type === 'flour' && getStageKey(ing.stage) === stageKey
+			);
+			for (const flour of baseStageFlours) {
+				usedIds.add(flour.id);
+			}
 			return flourTypeOptions.filter((type) => !usedIds.has(type.id));
 		},
 

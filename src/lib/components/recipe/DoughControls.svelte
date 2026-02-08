@@ -6,7 +6,8 @@
 		getOriginalPredoughRatio as getRecipePredoughRatio,
 		calculateHydration
 	} from '$lib/utils/baker-percentage';
-	import type { FlourTypeOption } from '$lib/types';
+	import type { FlourTypeOption, FlourType } from '$lib/types';
+	import { flourTypeLabels } from '$lib/types';
 
 	let { recipe }: { recipe: Recipe } = $props();
 
@@ -65,6 +66,8 @@
 		return controls?.flours ?? [];
 	});
 
+	let customFloursByStage = $derived($calculator.customFlours || {});
+
 	let flourStageTotals = $derived.by(() => {
 		const totals: Record<string, number> = {};
 		for (const blend of flourBlends) {
@@ -74,6 +77,11 @@
 	});
 
 	let selectedFlourTypes = $state<Record<string, string>>({});
+	let customFlourNames = $state<Record<string, string>>({});
+	let customFlourTypes = $state<Record<string, FlourType['type']>>({});
+
+	const customFlourOption = '__custom__';
+	const fullGrainFlourIds = ['whole-wheat', 'rye', 'spelt'];
 
 	let availableFlourTypesByStage = $derived.by(() => {
 		// Read $calculator to subscribe to store changes
@@ -105,6 +113,37 @@
 			numberOfPizzas !== recipe.yieldPizzas ||
 			doughBallWeight !== recipe.baseWeight
 	);
+
+	let fullGrainPercentage = $derived.by(() => {
+		let total = 0;
+		let fullGrain = 0;
+
+		for (const blend of flourBlends) {
+			const stageCustoms = customFloursByStage[blend.stage] || [];
+			for (const flour of blend.flours) {
+				const customMatch = stageCustoms.find((f) => f.flourId === flour.id);
+				const flourTypeId = customMatch?.flourTypeId || flour.id;
+				const flourType = customMatch?.flourType;
+				const isFullGrain = fullGrainFlourIds.includes(flourTypeId) || flourType === 'whole-wheat';
+				total += flour.percentage;
+				if (isFullGrain) {
+					fullGrain += flour.percentage;
+				}
+			}
+		}
+
+		if (total <= 0) return 0;
+		return (fullGrain / total) * 100;
+	});
+
+	function slugifyName(value: string) {
+		const slug = value
+			.trim()
+			.toLowerCase()
+			.replace(/[^a-z0-9]+/g, '-')
+			.replace(/^-+|-+$/g, '');
+		return slug || 'custom';
+	}
 
 	// Pizza count handlers
 	function decrementPizzas() {
@@ -186,6 +225,20 @@
 	function handleAddFlour(stage: string) {
 		const selected = selectedFlourTypes[stage];
 		if (!selected) return;
+		if (selected === customFlourOption) {
+			const name = (customFlourNames[stage] || '').trim();
+			if (!name) return;
+			const flourTypeId = `custom-${slugifyName(name)}`;
+			const flourType = customFlourTypes[stage] || 'other';
+			calculator.addFlourType(stage, flourTypeId, 10, {
+				customName: name,
+				flourType
+			});
+			selectedFlourTypes = { ...selectedFlourTypes, [stage]: '' };
+			customFlourNames = { ...customFlourNames, [stage]: '' };
+			customFlourTypes = { ...customFlourTypes, [stage]: 'other' };
+			return;
+		}
 		calculator.addFlourType(stage, selected, 10);
 		selectedFlourTypes = { ...selectedFlourTypes, [stage]: '' };
 	}
@@ -196,6 +249,23 @@
 
 	function setSelectedFlourType(stage: string, value: string) {
 		selectedFlourTypes = { ...selectedFlourTypes, [stage]: value };
+		if (value !== customFlourOption) {
+			customFlourNames = { ...customFlourNames, [stage]: '' };
+			customFlourTypes = { ...customFlourTypes, [stage]: 'other' };
+		}
+	}
+
+	function shouldShowCustomFlourFields(stage: string) {
+		return selectedFlourTypes[stage] === customFlourOption;
+	}
+
+	function isAddFlourDisabled(stage: string) {
+		const selected = selectedFlourTypes[stage];
+		if (!selected) return true;
+		if (selected === customFlourOption) {
+			return !(customFlourNames[stage] || '').trim();
+		}
+		return false;
 	}
 
 	function isExtraCustomized(extra: {
@@ -362,113 +432,161 @@
 		{/if}
 	</div>
 
-	<!-- Row 3: Flour blends -->
-	{#if flourBlends.length > 0}
-		<div class="controls-section">
-			<h4 class="section-title">Melblanding</h4>
-			{#each flourBlends as blend}
-				<div class="flour-blend">
-					<div class="flour-stage">
-						<span class="stage-chip">{stageLabels[blend.stage] || blend.stage}</span>
-					</div>
-					{#each blend.flours as flour}
-						<div class="flour-blend-item">
-							<div class="flour-header">
-								<label class="label flour-label" for="flour-{flour.id}">{flour.nameDa}</label>
-								<button
-									class="btn-icon flour-remove"
-									onclick={() => removeFlour(blend.stage, flour.id)}
-									disabled={blend.flours.length <= 1}
-									title="Fjern meltype"
-								>
-									&times;
-								</button>
-							</div>
-							<div class="flour-input">
-								<input
-									id="flour-{flour.id}"
-									type="number"
-									class="input compact-input"
-									value={getStageFlourPercent(flour, blend.stage).toFixed(1)}
-									onchange={(e) =>
-										handleFlourBlendChange(
-											blend.stage,
-											flour.id,
-											(e.target as HTMLInputElement).value
-										)}
-									min="0"
-									max="100"
-									step="1"
-								/>
-								<span class="unit">%</span>
-							</div>
-						</div>
-					{/each}
-					{#if (availableFlourTypesByStage[blend.stage] ?? []).length > 0}
-						<div class="flour-add">
-							<select
-								class="input select-input"
-								id="add-flour-{blend.stage}"
-								value={selectedFlourTypes[blend.stage] ?? ''}
-								onchange={(e) =>
-									setSelectedFlourType(blend.stage, (e.target as HTMLSelectElement).value)}
-							>
-								<option value="">Vælg meltype</option>
-								{#each availableFlourTypesByStage[blend.stage] ?? [] as flourType}
-									<option value={flourType.id}>{flourType.nameDa}</option>
+	{#if flourBlends.length > 0 || extras.length > 0}
+		<details class="controls-section advanced-section">
+			<summary class="section-summary">Melblanding & ekstra</summary>
+			<div class="details-body">
+				{#if flourBlends.length > 0}
+					<div class="controls-section">
+						<h4 class="section-title">Melblanding</h4>
+						{#each flourBlends as blend}
+							<div class="flour-blend">
+								<div class="flour-stage">
+									<span class="stage-chip">{stageLabels[blend.stage] || blend.stage}</span>
+								</div>
+								{#each blend.flours as flour}
+									<div class="flour-blend-item">
+										<div class="flour-header">
+											<label class="label flour-label" for="flour-{flour.id}">
+												{flour.nameDa}
+											</label>
+											<button
+												class="btn-icon flour-remove"
+												onclick={() => removeFlour(blend.stage, flour.id)}
+												disabled={blend.flours.length <= 1}
+												title="Fjern meltype"
+											>
+												&times;
+											</button>
+										</div>
+										<div class="flour-input">
+											<input
+												id="flour-{flour.id}"
+												type="number"
+												class="input compact-input"
+												value={getStageFlourPercent(flour, blend.stage).toFixed(1)}
+												onchange={(e) =>
+													handleFlourBlendChange(
+														blend.stage,
+														flour.id,
+														(e.target as HTMLInputElement).value
+													)}
+												min="0"
+												max="100"
+												step="1"
+											/>
+											<span class="unit">%</span>
+										</div>
+									</div>
 								{/each}
-							</select>
-							<button
-								class="btn btn-secondary add-flour-btn"
-								onclick={() => handleAddFlour(blend.stage)}
-								disabled={!selectedFlourTypes[blend.stage]}
-								title="Tilføj meltype"
+								<div class="flour-add">
+									<select
+										class="input select-input"
+										id="add-flour-{blend.stage}"
+										value={selectedFlourTypes[blend.stage] ?? ''}
+										onchange={(e) =>
+											setSelectedFlourType(blend.stage, (e.target as HTMLSelectElement).value)}
+									>
+										<option value="">Vælg meltype</option>
+										{#each availableFlourTypesByStage[blend.stage] ?? [] as flourType}
+											<option value={flourType.id}>{flourType.nameDa}</option>
+										{/each}
+										<option value={customFlourOption}>Anden meltype...</option>
+									</select>
+									<button
+										class="btn btn-secondary add-flour-btn"
+										onclick={() => handleAddFlour(blend.stage)}
+										disabled={isAddFlourDisabled(blend.stage)}
+										title="Tilføj meltype"
+									>
+										+
+									</button>
+								</div>
+								{#if shouldShowCustomFlourFields(blend.stage)}
+									<div class="custom-flour-fields">
+										<input
+											type="text"
+											class="input"
+											placeholder="Caputo Nuvola Super"
+											value={customFlourNames[blend.stage] ?? ''}
+											oninput={(e) =>
+												(customFlourNames = {
+													...customFlourNames,
+													[blend.stage]: (e.target as HTMLInputElement).value
+												})}
+										/>
+										<select
+											class="input select-input"
+											value={customFlourTypes[blend.stage] ?? 'other'}
+											onchange={(e) =>
+												(customFlourTypes = {
+													...customFlourTypes,
+													[blend.stage]: (e.target as HTMLSelectElement).value as FlourType['type']
+												})}
+										>
+											{#each Object.entries(flourTypeLabels) as [type, label]}
+												<option value={type}>{label}</option>
+											{/each}
+										</select>
+									</div>
+								{/if}
+							</div>
+						{/each}
+					</div>
+					{#if fullGrainPercentage > 20}
+						<div class="info-banner">
+							<span class="banner-dot">i</span>
+							<span
+								>Din melblanding er {fullGrainPercentage.toFixed(1)}% fuldkorn. Over 20% kan give en
+								tungere dej – justér efter smag.</span
 							>
-								+
-							</button>
 						</div>
 					{/if}
-				</div>
-			{/each}
-		</div>
-	{/if}
+				{/if}
 
-	<!-- Row 4: Extra ingredients (salt, yeast, oil, sugar) -->
-	{#if extras.length > 0}
-		<div class="controls-section">
-			<h4 class="section-title">Tilpas ingredienser</h4>
-			<div class="extras-grid">
-				{#each extras as extra}
-					<div class="extra-item">
-						<label class="label extra-label" for="extra-{extra.id}">
-							{extra.nameDa}
-							{#if isExtraCustomized(extra)}
-								<button class="btn-reset" onclick={() => resetExtra(extra.id)} title="Nulstil">
-									&#8634;
-								</button>
-							{/if}
-						</label>
-						<div class="extra-input-row">
-							<input
-								id="extra-{extra.id}"
-								type="number"
-								class="input compact-input"
-								class:customized={isExtraCustomized(extra)}
-								value={extra.percentage.toFixed(2)}
-								onchange={(e) => handleExtraChange(extra.id, (e.target as HTMLInputElement).value)}
-								min="0"
-								max="200"
-								step="0.1"
-							/>
-							<span class="unit">%</span>
+				{#if extras.length > 0}
+					<div class="controls-section">
+						<h4 class="section-title">Tilpas ingredienser</h4>
+						<div class="extras-grid">
+							{#each extras as extra}
+								<div class="extra-item">
+									<label class="label extra-label" for="extra-{extra.id}">
+										{extra.nameDa}
+										{#if isExtraCustomized(extra)}
+											<button
+												class="btn-reset"
+												onclick={() => resetExtra(extra.id)}
+												title="Nulstil"
+											>
+												&#8634;
+											</button>
+										{/if}
+									</label>
+									<div class="extra-input-row">
+										<input
+											id="extra-{extra.id}"
+											type="number"
+											class="input compact-input"
+											class:customized={isExtraCustomized(extra)}
+											value={extra.percentage.toFixed(2)}
+											onchange={(e) =>
+												handleExtraChange(extra.id, (e.target as HTMLInputElement).value)}
+											min="0"
+											max="200"
+											step="0.1"
+										/>
+										<span class="unit">%</span>
+									</div>
+									{#if isExtraCustomized(extra)}
+										<span class="original-hint">orig: {extra.originalPercentage.toFixed(2)}%</span>
+									{/if}
+								</div>
+							{/each}
 						</div>
-						{#if isExtraCustomized(extra)}
-							<span class="original-hint">orig: {extra.originalPercentage.toFixed(2)}%</span>
-						{/if}
 					</div>
-				{/each}
+				{/if}
 			</div>
-		</div>
+		</details>
 	{/if}
 
 	<!-- Totals bar -->
@@ -546,6 +664,56 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--spacing-sm);
+	}
+
+	.advanced-section {
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		padding: var(--spacing-sm);
+		background: var(--color-background);
+	}
+
+	.section-summary {
+		margin: 0;
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-xs);
+		font-weight: 600;
+		cursor: pointer;
+		list-style: none;
+		padding: var(--spacing-xs) var(--spacing-sm);
+		border-radius: var(--radius-sm);
+		transition:
+			background 0.15s ease,
+			color 0.15s ease;
+	}
+
+	.section-summary::before {
+		content: '▸';
+		display: inline-block;
+		margin-right: 6px;
+		color: var(--color-text-secondary);
+		transition: transform 0.2s ease;
+	}
+
+	details[open] .section-summary::before {
+		transform: rotate(90deg);
+	}
+
+	.section-summary:hover {
+		background: rgba(var(--color-primary-rgb), 0.08);
+		color: var(--color-primary);
+	}
+
+	.section-summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.details-body {
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-md);
+		margin-top: var(--spacing-sm);
 	}
 
 	.section-title {
@@ -626,6 +794,19 @@
 		display: flex;
 		align-items: center;
 		gap: var(--spacing-xs);
+	}
+
+	.custom-flour-fields {
+		display: grid;
+		grid-template-columns: 1fr minmax(140px, 200px);
+		gap: var(--spacing-xs);
+		margin-top: var(--spacing-xs);
+	}
+
+	@media (max-width: 500px) {
+		.custom-flour-fields {
+			grid-template-columns: 1fr;
+		}
 	}
 
 	.select-input {
@@ -726,5 +907,29 @@
 		display: flex;
 		gap: var(--spacing-sm);
 		justify-content: flex-end;
+	}
+
+	.info-banner {
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-sm);
+		background: rgba(var(--color-primary-rgb), 0.08);
+		border: 1px solid rgba(var(--color-primary-rgb), 0.15);
+		border-radius: var(--radius-md);
+		padding: var(--spacing-sm);
+		color: var(--color-text-secondary);
+		font-size: var(--font-size-sm);
+	}
+
+	.banner-dot {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 24px;
+		height: 24px;
+		border-radius: 50%;
+		background: rgba(var(--color-primary-rgb), 0.16);
+		color: var(--color-primary);
+		font-weight: 700;
 	}
 </style>

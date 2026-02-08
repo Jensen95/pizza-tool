@@ -116,6 +116,15 @@ const predoughRecipe: Recipe = {
 	]
 };
 
+const typedFlourRecipe: Recipe = {
+	...baseRecipe,
+	id: 'typed-flour',
+	ingredients: [
+		{ id: 'semola', name: 'Semola', nameDa: 'Semola', percentage: 100, type: 'flour' },
+		{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
+	]
+};
+
 async function loadCalculator() {
 	const mod = await import('$lib/stores/calculator');
 	return mod.calculator;
@@ -209,6 +218,35 @@ describe('calculator custom flours', () => {
 
 		const stored = storage.get<CustomFlourState>('custom-flours', {});
 		expect(stored[baseRecipe.id]?.main?.[0]?.flourTypeId).toBe('semola');
+	});
+
+	it('stores custom flour name and type for custom additions', async () => {
+		const calculator = await loadCalculator();
+		calculator.setRecipe(baseRecipe);
+
+		calculator.addFlourType('main', 'custom-nuvola', 10, {
+			customName: 'Caputo Nuvola Super',
+			flourType: 'whole-wheat'
+		});
+
+		const stored = storage.get<CustomFlourState>('custom-flours', {});
+		const flour = stored[baseRecipe.id]?.main?.[0];
+		expect(flour?.customName).toBe('Caputo Nuvola Super');
+		expect(flour?.flourType).toBe('whole-wheat');
+
+		const state = get(calculator);
+		const customFlour = state.scaledIngredients.find(
+			(i) => i.id === 'custom-flour-main-custom-nuvola'
+		);
+		expect(customFlour?.nameDa).toBe('Caputo Nuvola Super');
+	});
+
+	it('excludes original flour type from available options', async () => {
+		const calculator = await loadCalculator();
+		calculator.setRecipe(typedFlourRecipe);
+
+		const available = calculator.getAvailableFlourTypes('main');
+		expect(available.find((f) => f.id === 'semola')).toBeUndefined();
 	});
 
 	it('removes custom flour and updates storage', async () => {
