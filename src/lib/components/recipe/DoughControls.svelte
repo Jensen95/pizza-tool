@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Recipe } from '$lib/types';
-	import { calculator, totalWeight, flourWeight, predoughRatio } from '$lib/stores';
+	import { calculator, totalWeight, flourWeight, predoughRatio, recipeHistory } from '$lib/stores';
 	import {
 		formatWeight,
 		getOriginalPredoughRatio as getRecipePredoughRatio,
@@ -100,6 +100,12 @@
 		return calculator.hasCustomizations();
 	});
 
+	let hasRecipeChanges = $derived(
+		hasCustomizations ||
+			numberOfPizzas !== recipe.yieldPizzas ||
+			doughBallWeight !== recipe.baseWeight
+	);
+
 	// Pizza count handlers
 	function decrementPizzas() {
 		numberOfPizzas = Math.max(1, numberOfPizzas - 1);
@@ -198,6 +204,22 @@
 		originalPercentage: number;
 	}): boolean {
 		return Math.abs(extra.percentage - extra.originalPercentage) > 0.01;
+	}
+
+	function saveCustomRecipe() {
+		if (!hasRecipeChanges) return;
+
+		const hydrationOverride = $calculator.hydration ?? null;
+		const predoughOverride = $calculator.predoughRatio ?? null;
+
+		recipeHistory.saveToHistory(
+			recipe,
+			calculator.getCustomIngredients(),
+			numberOfPizzas,
+			doughBallWeight,
+			hydrationOverride,
+			predoughOverride
+		);
 	}
 
 	// Reset all
@@ -465,9 +487,12 @@
 		</div>
 	</div>
 
-	{#if hasCustomizations}
+	{#if hasRecipeChanges}
 		<div class="customization-actions">
-			<button class="btn btn-secondary" onclick={resetAllCustomizations}>Nulstil alle</button>
+			<button class="btn btn-primary" onclick={saveCustomRecipe}>Gem til historik</button>
+			{#if hasCustomizations}
+				<button class="btn btn-secondary" onclick={resetAllCustomizations}>Nulstil alle</button>
+			{/if}
 		</div>
 	{/if}
 </div>
