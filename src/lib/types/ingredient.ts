@@ -1,4 +1,5 @@
 import type { RecipeIngredient, FermentationStage, IngredientType } from './recipe';
+import type { FlourType } from './reference';
 
 export interface ScaledIngredient {
 	id: string;
@@ -88,6 +89,8 @@ export interface CustomFlour {
 	flourId: string;
 	flourTypeId: string;
 	percentage: number;
+	customName?: string;
+	flourType?: FlourType['type'];
 }
 
 export type CustomFlourState = Record<string, Record<string, CustomFlour[]>>;
