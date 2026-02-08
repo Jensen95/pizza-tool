@@ -10,7 +10,7 @@
 		{
 			"id": "biga-flour",
 			"name": "Biga flour",
-			"nameDa": "Mel (biga)",
+			"nameDa": "Mel",
 			"percentage": 50,
 			"type": "flour",
 			"stage": "biga"
@@ -18,7 +18,7 @@
 		{
 			"id": "biga-water",
 			"name": "Biga water",
-			"nameDa": "Vand (biga)",
+			"nameDa": "Vand",
 			"percentage": 22,
 			"type": "water",
 			"stage": "biga"
@@ -26,7 +26,7 @@
 		{
 			"id": "biga-yeast",
 			"name": "Biga yeast",
-			"nameDa": "Frisk gær (biga)",
+			"nameDa": "Frisk gær",
 			"percentage": 0.3,
 			"type": "yeast",
 			"stage": "biga"
@@ -34,7 +34,7 @@
 		{
 			"id": "main-flour",
 			"name": "Main dough flour",
-			"nameDa": "Mel (hoveddej)",
+			"nameDa": "Mel",
 			"percentage": 50,
 			"type": "flour",
 			"stage": "main"
@@ -42,7 +42,7 @@
 		{
 			"id": "main-water",
 			"name": "Main dough water",
-			"nameDa": "Vand (hoveddej)",
+			"nameDa": "Vand",
 			"percentage": 41,
 			"type": "water",
 			"stage": "main"

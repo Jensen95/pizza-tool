@@ -1,8 +1,17 @@
 import type { Recipe, RecipeIngredient, FermentationStage } from '$lib/types/recipe';
-import type { ScaledIngredient, CalculatorInput } from '$lib/types/ingredient';
+import type {
+	ScaledIngredient,
+	CalculatorInput,
+	RecipeControls,
+	FlourBlendInfo,
+	ExtraIngredientInfo
+} from '$lib/types/ingredient';
 
 // Predough stage types
 const PREDOUGH_STAGES: FermentationStage[] = ['poolish', 'biga', 'preferment'];
+
+// Extra ingredient types that can be controlled
+const EXTRA_TYPES = ['salt', 'yeast', 'oil', 'sugar'] as const;
 
 /**
  * Calculate ingredient weight from flour weight and percentage
@@ -50,6 +59,159 @@ export function getOriginalPredoughRatio(recipe: Recipe): number | null {
 }
 
 /**
+ * Redistribute water ingredients when hydration changes.
+ * Preserves proportional split between stages (if poolish had 30% of total water, it keeps 30%).
+ */
+export function redistributeWater(
+	ingredients: RecipeIngredient[],
+	newHydration: number,
+	oldHydration: number
+): RecipeIngredient[] {
+	if (oldHydration === 0) return ingredients;
+
+	const ratio = newHydration / oldHydration;
+
+	return ingredients.map((ing) => {
+		if (ing.type === 'water') {
+			return { ...ing, percentage: Math.round(ing.percentage * ratio * 100) / 100 };
+		}
+		return ing;
+	});
+}
+
+/**
+ * Rebalance flour blend when one flour in a stage changes.
+ * For 2 flours: other flour = stageTotal - newPercentage.
+ * For 3+ flours: distribute the delta proportionally across remaining flours.
+ */
+export function rebalanceFlourBlend(
+	ingredients: RecipeIngredient[],
+	changedFlourId: string,
+	newPercentage: number,
+	stage: string
+): RecipeIngredient[] {
+	const floursInStage = ingredients.filter(
+		(ing) => ing.type === 'flour' && (ing.stage || 'main') === stage
+	);
+
+	if (floursInStage.length < 2) return ingredients;
+
+	const stageFlourTotal = floursInStage.reduce((sum, ing) => sum + ing.percentage, 0);
+	const changedFlour = floursInStage.find((f) => f.id === changedFlourId);
+	if (!changedFlour) return ingredients;
+
+	const oldPercentage = changedFlour.percentage;
+	const delta = newPercentage - oldPercentage;
+	const otherFlours = floursInStage.filter((f) => f.id !== changedFlourId);
+
+	if (otherFlours.length === 1) {
+		// For 2 flours: simply set the other to the remaining
+		const otherNewPct = stageFlourTotal - newPercentage;
+		return ingredients.map((ing) => {
+			if (ing.id === changedFlourId) {
+				return { ...ing, percentage: newPercentage };
+			}
+			if (ing.id === otherFlours[0].id) {
+				return { ...ing, percentage: Math.max(0, otherNewPct) };
+			}
+			return ing;
+		});
+	}
+
+	// For 3+ flours: distribute delta proportionally across remaining flours
+	const otherTotal = otherFlours.reduce((sum, f) => sum + f.percentage, 0);
+
+	return ingredients.map((ing) => {
+		if (ing.id === changedFlourId) {
+			return { ...ing, percentage: newPercentage };
+		}
+		const isOtherFlour = otherFlours.some((f) => f.id === ing.id);
+		if (isOtherFlour && otherTotal > 0) {
+			const proportion = ing.percentage / otherTotal;
+			const adjusted = ing.percentage - delta * proportion;
+			return { ...ing, percentage: Math.max(0, Math.round(adjusted * 100) / 100) };
+		}
+		return ing;
+	});
+}
+
+/**
+ * Extract controllable ingredients from a recipe for the UI to render.
+ */
+export function getControllableIngredients(
+	recipe: Recipe,
+	customIngredients?: Record<string, number>
+): RecipeControls {
+	const customs = customIngredients || {};
+
+	// Calculate hydration from current ingredients (considering customizations)
+	const ingredientsWithCustoms = recipe.ingredients.map((ing) => ({
+		...ing,
+		percentage: customs[ing.id] ?? ing.percentage
+	}));
+	const hydration = calculateHydration(ingredientsWithCustoms);
+
+	// Predough ratio
+	const predoughRatio = getOriginalPredoughRatio(recipe);
+
+	// Flour blends: only stages with 2+ flour types
+	const flours: FlourBlendInfo[] = [];
+	const stageMap = new Map<string, RecipeIngredient[]>();
+	for (const ing of recipe.ingredients) {
+		if (ing.type === 'flour') {
+			const stage = ing.stage || 'main';
+			const existing = stageMap.get(stage) || [];
+			existing.push(ing);
+			stageMap.set(stage, existing);
+		}
+	}
+	for (const [stage, stageFlours] of stageMap) {
+		if (stageFlours.length >= 2) {
+			flours.push({
+				stage,
+				flours: stageFlours.map((f) => ({
+					id: f.id,
+					name: f.name,
+					nameDa: f.nameDa,
+					percentage: customs[f.id] ?? f.percentage
+				}))
+			});
+		}
+	}
+
+	// Extra ingredients: salt, yeast, oil, sugar — one entry per unique type across all stages
+	const extras: ExtraIngredientInfo[] = [];
+	const seenTypes = new Set<string>();
+	for (const ing of recipe.ingredients) {
+		if ((EXTRA_TYPES as readonly string[]).includes(ing.type) && !seenTypes.has(ing.type)) {
+			seenTypes.add(ing.type);
+			// Sum percentages across stages for this type
+			const totalPct = recipe.ingredients
+				.filter((i) => i.type === ing.type)
+				.reduce((sum, i) => sum + (customs[i.id] ?? i.percentage), 0);
+			const originalPct = recipe.ingredients
+				.filter((i) => i.type === ing.type)
+				.reduce((sum, i) => sum + i.percentage, 0);
+			extras.push({
+				id: ing.id,
+				name: ing.name,
+				nameDa: ing.nameDa,
+				type: ing.type,
+				percentage: totalPct,
+				originalPercentage: originalPct
+			});
+		}
+	}
+
+	return {
+		hydration,
+		predoughRatio,
+		flours,
+		extras
+	};
+}
+
+/**
  * Calculate total flour weight needed for target dough weight
  * Formula: flourWeight = totalDoughWeight / (totalPercentage / 100)
  */
@@ -65,13 +227,13 @@ export function calculateTotalFlour(
 
 /**
  * Scale entire recipe to desired number of pizzas and ball weight
- * Supports adjustable predough ratio
+ * Supports adjustable predough ratio and hydration override
  */
 export function scaleRecipe(
 	recipe: Recipe,
 	input: CalculatorInput
 ): { scaledIngredients: ScaledIngredient[]; totalFlourWeight: number; totalDoughWeight: number } {
-	const { numberOfPizzas, doughBallWeight, predoughRatio } = input;
+	const { numberOfPizzas, doughBallWeight, predoughRatio, hydration: hydrationOverride } = input;
 	const totalDoughWeight = numberOfPizzas * doughBallWeight;
 
 	// Get original predough ratio from recipe
@@ -142,7 +304,7 @@ export function scaleRecipe(
 			adjustedIngredients.push({
 				id: 'main-flour',
 				name: 'Main dough flour',
-				nameDa: 'Mel (hoveddej)',
+				nameDa: 'Mel',
 				percentage: newMainFlourPct,
 				type: 'flour',
 				stage: predoughIngredient?.stage === 'biga' ? 'main' : undefined
@@ -157,11 +319,23 @@ export function scaleRecipe(
 			adjustedIngredients.push({
 				id: 'main-water',
 				name: 'Main dough water',
-				nameDa: 'Vand (hoveddej)',
+				nameDa: 'Vand',
 				percentage: waterDifference,
 				type: 'water',
 				stage: predoughIngredient?.stage === 'biga' ? 'main' : undefined
 			});
+		}
+	}
+
+	// Apply hydration override if provided
+	if (hydrationOverride !== null && hydrationOverride !== undefined) {
+		const currentHydration = calculateHydration(adjustedIngredients);
+		if (currentHydration > 0) {
+			adjustedIngredients = redistributeWater(
+				adjustedIngredients,
+				hydrationOverride,
+				currentHydration
+			);
 		}
 	}
 
