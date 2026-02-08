@@ -132,14 +132,13 @@ export function getPredoughStageName(recipe: Recipe): FermentationStage | null {
  * Returns the percentage of total flour that goes into the predough (as a decimal, e.g., 0.1935 for 19.35%)
  */
 export function getOriginalPredoughRatio(recipe: Recipe): number | null {
-	const predoughFlour = recipe.ingredients.find(
-		(ing) => ing.type === 'flour' && isPredoughStage(ing.stage)
-	);
+	const predoughFlourTotal = recipe.ingredients
+		.filter((ing) => ing.type === 'flour' && isPredoughStage(ing.stage))
+		.reduce((sum, ing) => sum + ing.percentage, 0);
 
-	if (!predoughFlour) return null;
+	if (predoughFlourTotal === 0) return null;
 
-	// The predough flour percentage is already the ratio (e.g., 19.35% means 19.35% of total flour)
-	return predoughFlour.percentage / 100;
+	return predoughFlourTotal / 100;
 }
 
 /**
@@ -334,6 +333,19 @@ export function scaleRecipe(
 		predoughRatio !== undefined
 	) {
 		const ratioMultiplier = predoughRatio / originalPredoughRatio;
+		const targetPredoughFlourPct = predoughRatio * 100;
+		const targetMainFlourPct = 100 - targetPredoughFlourPct;
+
+		const originalPredoughFlourTotal = recipe.ingredients
+			.filter((ing) => ing.type === 'flour' && isPredoughStage(ing.stage))
+			.reduce((sum, ing) => sum + ing.percentage, 0);
+		const originalMainFlourTotal = recipe.ingredients
+			.filter((ing) => ing.type === 'flour' && !isPredoughStage(ing.stage))
+			.reduce((sum, ing) => sum + ing.percentage, 0);
+		const predoughFlourMultiplier =
+			originalPredoughFlourTotal > 0 ? targetPredoughFlourPct / originalPredoughFlourTotal : 0;
+		const mainFlourMultiplier =
+			originalMainFlourTotal > 0 ? targetMainFlourPct / originalMainFlourTotal : 0;
 
 		// Calculate original predough water percentage to maintain total hydration
 		const originalPredoughWater = recipe.ingredients
@@ -351,23 +363,20 @@ export function scaleRecipe(
 			(ing) => ing.type === 'flour' && !isPredoughStage(ing.stage)
 		);
 
-		// Get predough stage name for creating new ingredients with correct names
-		const predoughIngredient = recipe.ingredients.find(
-			(ing) => ing.type === 'flour' && isPredoughStage(ing.stage)
-		);
+		const mainStage =
+			recipe.ingredients.find((ing) => !isPredoughStage(ing.stage))?.stage ?? 'main';
 
 		adjustedIngredients = recipe.ingredients.map((ing) => {
 			if (isPredoughStage(ing.stage)) {
 				// Scale predough ingredients by the ratio change
 				if (ing.type === 'flour') {
-					return { ...ing, percentage: predoughRatio * 100 };
+					return { ...ing, percentage: ing.percentage * predoughFlourMultiplier };
 				}
 				// Scale other predough ingredients proportionally
 				return { ...ing, percentage: ing.percentage * ratioMultiplier };
 			} else if (ing.type === 'flour' && !isPredoughStage(ing.stage)) {
-				// Adjust main dough flour to compensate
-				const newMainFlourPct = 100 - predoughRatio * 100;
-				return { ...ing, percentage: newMainFlourPct };
+				// Adjust main dough flour proportionally to maintain total flour at 100%
+				return { ...ing, percentage: ing.percentage * mainFlourMultiplier };
 			} else if (ing.type === 'water' && !isPredoughStage(ing.stage)) {
 				// Adjust main dough water to maintain total hydration
 				return { ...ing, percentage: ing.percentage + waterDifference };
@@ -384,7 +393,7 @@ export function scaleRecipe(
 				nameDa: 'Mel',
 				percentage: newMainFlourPct,
 				type: 'flour',
-				stage: predoughIngredient?.stage === 'biga' ? 'main' : undefined
+				stage: mainStage
 			});
 		}
 
@@ -399,7 +408,7 @@ export function scaleRecipe(
 				nameDa: 'Vand',
 				percentage: waterDifference,
 				type: 'water',
-				stage: predoughIngredient?.stage === 'biga' ? 'main' : undefined
+				stage: mainStage
 			});
 		}
 	}

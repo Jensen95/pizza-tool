@@ -122,6 +122,83 @@ const biga100Recipe: Recipe = {
 	schedule: { stages: [], totalTime: 0 }
 };
 
+const blendedPoolishRecipe: Recipe = {
+	id: 'test-poolish-blend',
+	name: 'Test Poolish Blend',
+	nameDa: 'Test Poolish Blend',
+	category: 'poolish',
+	baseWeight: 270,
+	hydration: 65,
+	yieldPizzas: 4,
+	ingredients: [
+		{
+			id: 'poolish-flour-a',
+			name: 'Poolish flour A',
+			nameDa: 'Poolish mel A',
+			percentage: 12,
+			type: 'flour',
+			stage: 'poolish'
+		},
+		{
+			id: 'poolish-flour-b',
+			name: 'Poolish flour B',
+			nameDa: 'Poolish mel B',
+			percentage: 8,
+			type: 'flour',
+			stage: 'poolish'
+		},
+		{
+			id: 'poolish-water',
+			name: 'Poolish water',
+			nameDa: 'Vand (poolish)',
+			percentage: 20,
+			type: 'water',
+			stage: 'poolish'
+		},
+		{
+			id: 'poolish-yeast',
+			name: 'Poolish yeast',
+			nameDa: 'Gaer (poolish)',
+			percentage: 0.1,
+			type: 'yeast',
+			stage: 'poolish'
+		},
+		{
+			id: 'main-flour-a',
+			name: 'Main flour A',
+			nameDa: 'Mel A (hoveddej)',
+			percentage: 60,
+			type: 'flour',
+			stage: 'main'
+		},
+		{
+			id: 'main-flour-b',
+			name: 'Main flour B',
+			nameDa: 'Mel B (hoveddej)',
+			percentage: 20,
+			type: 'flour',
+			stage: 'main'
+		},
+		{
+			id: 'main-water',
+			name: 'Main dough water',
+			nameDa: 'Vand (hoveddej)',
+			percentage: 45,
+			type: 'water',
+			stage: 'main'
+		},
+		{
+			id: 'main-salt',
+			name: 'Salt',
+			nameDa: 'Salt',
+			percentage: 2.5,
+			type: 'salt',
+			stage: 'main'
+		}
+	],
+	schedule: { stages: [], totalTime: 0 }
+};
+
 const defaultInput = { numberOfPizzas: 4, doughBallWeight: 270 };
 
 describe('Predough flour split - UI data layer', () => {
@@ -353,6 +430,39 @@ describe('Predough flour split - UI data layer', () => {
 			expect(predoughFlour?.percentage).toBe(0);
 			expect(predoughFlour?.weight).toBe(0);
 			expect(mainFlour?.percentage).toBe(100);
+		});
+	});
+
+	describe('Multiple flours keep proportions when split changes', () => {
+		it('scales each flour by its stage share instead of resetting to 100%', () => {
+			const result = scaleRecipe(blendedPoolishRecipe, {
+				...defaultInput,
+				predoughRatio: 0.35
+			});
+
+			const predoughFlours = result.scaledIngredients.filter(
+				(i) => i.type === 'flour' && isPredoughStage(i.stage)
+			);
+			const mainFlours = result.scaledIngredients.filter(
+				(i) => i.type === 'flour' && !isPredoughStage(i.stage)
+			);
+
+			const predoughTotal = predoughFlours.reduce((sum, f) => sum + f.percentage, 0);
+			const mainTotal = mainFlours.reduce((sum, f) => sum + f.percentage, 0);
+
+			expect(predoughTotal).toBeCloseTo(35, 2);
+			expect(mainTotal).toBeCloseTo(65, 2);
+
+			expect(predoughFlours.find((f) => f.id === 'poolish-flour-a')?.stagePercentage).toBeCloseTo(
+				60,
+				2
+			);
+			expect(predoughFlours.find((f) => f.id === 'poolish-flour-b')?.stagePercentage).toBeCloseTo(
+				40,
+				2
+			);
+			expect(mainFlours.find((f) => f.id === 'main-flour-a')?.stagePercentage).toBeCloseTo(75, 2);
+			expect(mainFlours.find((f) => f.id === 'main-flour-b')?.stagePercentage).toBeCloseTo(25, 2);
 		});
 	});
 
