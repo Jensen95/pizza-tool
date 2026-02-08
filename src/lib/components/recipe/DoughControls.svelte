@@ -46,18 +46,26 @@
 
 	// Flour blends: stages with 2+ flour types
 	let flourBlends = $derived.by(() => {
+		// Read $calculator to subscribe to store changes
+		void $calculator.scaledIngredients;
 		const controls = calculator.getRecipeControls();
 		return controls?.flours ?? [];
 	});
 
 	// Extra ingredients (salt, yeast, oil, sugar)
 	let extras = $derived.by(() => {
+		// Read $calculator to subscribe to store changes
+		void $calculator.scaledIngredients;
 		const controls = calculator.getRecipeControls();
 		return controls?.extras ?? [];
 	});
 
 	// Has any customizations
-	let hasCustomizations = $derived(calculator.hasCustomizations());
+	let hasCustomizations = $derived.by(() => {
+		// Read $calculator to subscribe to store changes
+		void $calculator.scaledIngredients;
+		return calculator.hasCustomizations();
+	});
 
 	// Pizza count handlers
 	function decrementPizzas() {

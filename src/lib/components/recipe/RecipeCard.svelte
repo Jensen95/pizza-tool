@@ -12,9 +12,9 @@
 
 <a href="/recipe/{recipe.id}" class="recipe-card">
 	<div class="card-header">
+		<h3 class="recipe-name">{recipe.nameDa}</h3>
 		<span class="category-badge">{categoryLabel}</span>
 	</div>
-	<h3 class="recipe-name">{recipe.nameDa}</h3>
 	<div class="recipe-stats">
 		<div class="stat">
 			<span class="stat-value">{recipe.hydration}%</span>
@@ -56,6 +56,8 @@
 	.card-header {
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
+		gap: var(--spacing-sm);
 	}
 
 	.category-badge {
@@ -65,6 +67,8 @@
 		border-radius: var(--radius-full);
 		font-size: var(--font-size-xs);
 		font-weight: 500;
+		flex-shrink: 0;
+		white-space: nowrap;
 	}
 
 	.recipe-name {
@@ -72,6 +76,8 @@
 		font-size: var(--font-size-md);
 		font-weight: 600;
 		color: var(--color-text);
+		flex: 1;
+		min-width: 0;
 	}
 
 	.recipe-stats {
