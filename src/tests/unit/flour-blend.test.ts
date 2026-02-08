@@ -389,7 +389,8 @@ describe('getControllableIngredients', () => {
 
 		expect(controls.hydration).toBe(65);
 		expect(controls.predoughRatio).toBeNull();
-		expect(controls.flours).toHaveLength(0);
+		expect(controls.flours).toHaveLength(1);
+		expect(controls.flours[0].flours[0].percentage).toBe(100);
 		expect(controls.extras.length).toBeGreaterThanOrEqual(2);
 
 		const salt = controls.extras.find((e) => e.type === 'salt');
@@ -414,12 +415,14 @@ describe('getControllableIngredients', () => {
 	it('should return flour blend info for multi-flour recipe', () => {
 		const controls = getControllableIngredients(multiFlourRecipe);
 
-		expect(controls.flours).toHaveLength(1); // only main stage has 2+ flours
-		expect(controls.flours[0].stage).toBe('main');
-		expect(controls.flours[0].flours).toHaveLength(2);
+		expect(controls.flours).toHaveLength(2);
+		const biga = controls.flours.find((f) => f.stage === 'biga');
+		const main = controls.flours.find((f) => f.stage === 'main');
+		expect(biga?.flours).toHaveLength(1);
+		expect(main?.flours).toHaveLength(2);
 
-		const nuvola = controls.flours[0].flours.find((f) => f.id === 'main-nuvola');
-		const pizzeria = controls.flours[0].flours.find((f) => f.id === 'main-pizzeria');
+		const nuvola = main?.flours.find((f) => f.id === 'main-nuvola');
+		const pizzeria = main?.flours.find((f) => f.id === 'main-pizzeria');
 		expect(nuvola?.percentage).toBe(20);
 		expect(pizzeria?.percentage).toBe(30);
 	});

@@ -21,6 +21,7 @@ export interface CalculatorState {
 	hydration: number | null; // custom hydration override (null = use recipe default)
 	predoughRatio: number | null; // ratio of predough to total flour (e.g., 0.2 = 20%)
 	scaledIngredients: ScaledIngredient[];
+	customFlours: Record<string, CustomFlour[]>;
 }
 
 export interface CalculatorInput {
@@ -72,7 +73,8 @@ export const defaultCalculatorState: CalculatorState = {
 	totalFlourWeight: 0,
 	hydration: null,
 	predoughRatio: null,
-	scaledIngredients: []
+	scaledIngredients: [],
+	customFlours: {}
 };
 
 export const defaultCalculatorInput: CalculatorInput = {
@@ -81,3 +83,11 @@ export const defaultCalculatorInput: CalculatorInput = {
 	hydration: null,
 	predoughRatio: null
 };
+
+export interface CustomFlour {
+	flourId: string;
+	flourTypeId: string;
+	percentage: number;
+}
+
+export type CustomFlourState = Record<string, Record<string, CustomFlour[]>>;
