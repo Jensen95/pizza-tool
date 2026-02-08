@@ -400,12 +400,15 @@ describe('getControllableIngredients', () => {
 		expect(yeast?.percentage).toBe(0.3);
 	});
 
-	it('should return predough ratio for poolish recipe', () => {
+	it('should return predough ratio and per-ingredient extras for poolish recipe', () => {
 		const controls = getControllableIngredients(poolishRecipe);
 
 		expect(controls.hydration).toBe(65);
 		expect(controls.predoughRatio).toBeCloseTo(0.2, 2);
-		expect(controls.extras.length).toBeGreaterThanOrEqual(1);
+		// Should have poolish-yeast and main-salt as individual extras
+		expect(controls.extras).toHaveLength(2);
+		expect(controls.extras.find((e) => e.id === 'poolish-yeast')).toBeDefined();
+		expect(controls.extras.find((e) => e.id === 'main-salt')).toBeDefined();
 	});
 
 	it('should return flour blend info for multi-flour recipe', () => {
@@ -442,5 +445,131 @@ describe('getControllableIngredients', () => {
 		const salt = controls.extras.find((e) => e.type === 'salt');
 		expect(salt?.percentage).toBe(3.0);
 		expect(salt?.originalPercentage).toBe(2.7);
+	});
+
+	it('should include other type ingredients (bageenzym, sourdough)', () => {
+		const enzymeRecipe: Recipe = {
+			id: 'test-enzyme',
+			name: 'Enzyme',
+			nameDa: 'Enzym',
+			category: 'direct',
+			baseWeight: 270,
+			hydration: 65,
+			yieldPizzas: 4,
+			ingredients: [
+				{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+				{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
+				{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.5, type: 'salt' },
+				{
+					id: 'sourdough',
+					name: 'Sourdough',
+					nameDa: 'Speltsur',
+					percentage: 5,
+					type: 'other'
+				},
+				{
+					id: 'enzyme',
+					name: 'Baking enzyme',
+					nameDa: 'Bageenzym',
+					percentage: 1,
+					type: 'other'
+				}
+			],
+			schedule: { stages: [], totalTime: 0 }
+		};
+
+		const controls = getControllableIngredients(enzymeRecipe);
+
+		const sourdough = controls.extras.find((e) => e.id === 'sourdough');
+		const enzyme = controls.extras.find((e) => e.id === 'enzyme');
+
+		expect(sourdough).toBeDefined();
+		expect(sourdough?.percentage).toBe(5);
+		expect(enzyme).toBeDefined();
+		expect(enzyme?.percentage).toBe(1);
+	});
+
+	it('should list multi-stage yeast as separate entries', () => {
+		const multiYeastRecipe: Recipe = {
+			id: 'test-multi-yeast',
+			name: 'Multi Yeast',
+			nameDa: 'Multi gaer',
+			category: 'poolish',
+			baseWeight: 270,
+			hydration: 65,
+			yieldPizzas: 4,
+			ingredients: [
+				{
+					id: 'poolish-flour',
+					name: 'Poolish flour',
+					nameDa: 'Mel',
+					percentage: 10,
+					type: 'flour',
+					stage: 'poolish'
+				},
+				{
+					id: 'poolish-water',
+					name: 'Poolish water',
+					nameDa: 'Vand',
+					percentage: 10,
+					type: 'water',
+					stage: 'poolish'
+				},
+				{
+					id: 'poolish-yeast',
+					name: 'Poolish yeast',
+					nameDa: 'Gaer',
+					percentage: 0.1,
+					type: 'yeast',
+					stage: 'poolish'
+				},
+				{
+					id: 'main-flour',
+					name: 'Main flour',
+					nameDa: 'Mel',
+					percentage: 90,
+					type: 'flour',
+					stage: 'main'
+				},
+				{
+					id: 'main-water',
+					name: 'Main water',
+					nameDa: 'Vand',
+					percentage: 55,
+					type: 'water',
+					stage: 'main'
+				},
+				{
+					id: 'main-yeast',
+					name: 'Main yeast',
+					nameDa: 'Gaer',
+					percentage: 0.4,
+					type: 'yeast',
+					stage: 'main'
+				},
+				{
+					id: 'main-salt',
+					name: 'Salt',
+					nameDa: 'Salt',
+					percentage: 1.8,
+					type: 'salt',
+					stage: 'main'
+				}
+			],
+			schedule: { stages: [], totalTime: 0 }
+		};
+
+		const controls = getControllableIngredients(multiYeastRecipe);
+
+		// Should have 3 extras: poolish-yeast, main-yeast, main-salt
+		expect(controls.extras).toHaveLength(3);
+
+		const poolishYeast = controls.extras.find((e) => e.id === 'poolish-yeast');
+		const mainYeast = controls.extras.find((e) => e.id === 'main-yeast');
+
+		expect(poolishYeast).toBeDefined();
+		expect(poolishYeast?.percentage).toBe(0.1);
+		expect(mainYeast).toBeDefined();
+		expect(mainYeast?.percentage).toBe(0.4);
 	});
 });

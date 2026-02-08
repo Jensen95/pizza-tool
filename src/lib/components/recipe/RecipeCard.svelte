@@ -7,24 +7,26 @@
 
 	let categoryLabel = $derived(categoryLabels[recipe.category]);
 	let totalTimeFormatted = $derived(formatDuration(recipe.schedule.totalTime));
+	let ingredientCount = $derived(recipe.ingredients.length);
 </script>
 
 <a href="/recipe/{recipe.id}" class="recipe-card">
-	<div class="recipe-info">
-		<h3 class="recipe-name">{recipe.nameDa}</h3>
-		<div class="recipe-meta">
-			<span class="category-badge">{categoryLabel}</span>
-			<span class="hydration">{recipe.hydration}% hydrering</span>
-		</div>
+	<div class="card-header">
+		<span class="category-badge">{categoryLabel}</span>
 	</div>
-	<div class="recipe-details">
-		<div class="detail">
-			<span class="detail-icon">⏱️</span>
-			<span class="detail-value">{totalTimeFormatted}</span>
+	<h3 class="recipe-name">{recipe.nameDa}</h3>
+	<div class="recipe-stats">
+		<div class="stat">
+			<span class="stat-value">{recipe.hydration}%</span>
+			<span class="stat-label">Hydrering</span>
 		</div>
-		<div class="detail">
-			<span class="detail-icon">🍕</span>
-			<span class="detail-value">{recipe.yieldPizzas} stk</span>
+		<div class="stat">
+			<span class="stat-value">{totalTimeFormatted}</span>
+			<span class="stat-label">Tid</span>
+		</div>
+		<div class="stat">
+			<span class="stat-value">{ingredientCount}</span>
+			<span class="stat-label">Ingredienser</span>
 		</div>
 	</div>
 </a>
@@ -51,54 +53,49 @@
 		text-decoration: none;
 	}
 
-	.recipe-info {
-		flex: 1;
-	}
-
-	.recipe-name {
-		margin: 0 0 var(--spacing-xs);
-		font-size: var(--font-size-md);
-		font-weight: 600;
-		color: var(--color-text);
-	}
-
-	.recipe-meta {
+	.card-header {
 		display: flex;
-		flex-wrap: wrap;
-		gap: var(--spacing-xs);
 		align-items: center;
 	}
 
 	.category-badge {
 		background: var(--color-primary);
 		color: var(--color-text-light);
-		padding: 2px 8px;
+		padding: 2px 10px;
 		border-radius: var(--radius-full);
 		font-size: var(--font-size-xs);
 		font-weight: 500;
 	}
 
-	.hydration {
-		color: var(--color-text-secondary);
-		font-size: var(--font-size-sm);
+	.recipe-name {
+		margin: 0;
+		font-size: var(--font-size-md);
+		font-weight: 600;
+		color: var(--color-text);
 	}
 
-	.recipe-details {
+	.recipe-stats {
 		display: flex;
 		gap: var(--spacing-md);
 		padding-top: var(--spacing-sm);
 		border-top: 1px solid var(--color-border);
 	}
 
-	.detail {
-		display: flex;
-		align-items: center;
-		gap: 4px;
-		font-size: var(--font-size-sm);
-		color: var(--color-text-secondary);
+	.stat {
+		flex: 1;
+		text-align: center;
 	}
 
-	.detail-icon {
-		font-size: 1rem;
+	.stat-value {
+		display: block;
+		font-size: var(--font-size-sm);
+		font-weight: 600;
+		color: var(--color-primary);
+	}
+
+	.stat-label {
+		display: block;
+		font-size: var(--font-size-xs);
+		color: var(--color-text-secondary);
 	}
 </style>

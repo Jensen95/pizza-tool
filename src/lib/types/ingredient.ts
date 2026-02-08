@@ -52,6 +52,7 @@ export interface ExtraIngredientInfo {
 	name: string;
 	nameDa: string;
 	type: IngredientType;
+	stage?: string;
 	percentage: number;
 	originalPercentage: number;
 }

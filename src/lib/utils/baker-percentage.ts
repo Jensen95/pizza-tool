@@ -10,8 +10,8 @@ import type {
 // Predough stage types
 const PREDOUGH_STAGES: FermentationStage[] = ['poolish', 'biga', 'preferment'];
 
-// Extra ingredient types that can be controlled
-const EXTRA_TYPES = ['salt', 'yeast', 'oil', 'sugar'] as const;
+// Non-controllable ingredient types (flour and water are controlled via hydration/blend)
+const NON_EXTRA_TYPES = ['flour', 'water'] as const;
 
 /**
  * Calculate ingredient weight from flour weight and percentage
@@ -179,26 +179,18 @@ export function getControllableIngredients(
 		}
 	}
 
-	// Extra ingredients: salt, yeast, oil, sugar — one entry per unique type across all stages
+	// Extra ingredients: every non-flour, non-water ingredient as its own control
 	const extras: ExtraIngredientInfo[] = [];
-	const seenTypes = new Set<string>();
 	for (const ing of recipe.ingredients) {
-		if ((EXTRA_TYPES as readonly string[]).includes(ing.type) && !seenTypes.has(ing.type)) {
-			seenTypes.add(ing.type);
-			// Sum percentages across stages for this type
-			const totalPct = recipe.ingredients
-				.filter((i) => i.type === ing.type)
-				.reduce((sum, i) => sum + (customs[i.id] ?? i.percentage), 0);
-			const originalPct = recipe.ingredients
-				.filter((i) => i.type === ing.type)
-				.reduce((sum, i) => sum + i.percentage, 0);
+		if (!(NON_EXTRA_TYPES as readonly string[]).includes(ing.type)) {
 			extras.push({
 				id: ing.id,
 				name: ing.name,
 				nameDa: ing.nameDa,
 				type: ing.type,
-				percentage: totalPct,
-				originalPercentage: originalPct
+				stage: ing.stage,
+				percentage: customs[ing.id] ?? ing.percentage,
+				originalPercentage: ing.percentage
 			});
 		}
 	}
