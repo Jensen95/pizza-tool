@@ -6,6 +6,7 @@ import {
 	getControllableIngredients
 } from '$lib/utils/baker-percentage';
 import type { Recipe, RecipeIngredient } from '$lib/types/recipe';
+import type { CustomFlourState } from '$lib/types/ingredient';
 import * as storage from '$lib/utils/storage';
 
 class MemoryStorage {
@@ -206,7 +207,7 @@ describe('calculator custom flours', () => {
 
 		calculator.addFlourType('main', 'semola', 10);
 
-		const stored = storage.get('custom-flours', {});
+		const stored = storage.get<CustomFlourState>('custom-flours', {});
 		expect(stored[baseRecipe.id]?.main?.[0]?.flourTypeId).toBe('semola');
 	});
 
@@ -217,7 +218,7 @@ describe('calculator custom flours', () => {
 
 		calculator.removeFlourType('main', 'custom-flour-main-semola');
 
-		const stored = storage.get('custom-flours', {});
+		const stored = storage.get<CustomFlourState>('custom-flours', {});
 		expect(stored[baseRecipe.id]?.main ?? []).toHaveLength(0);
 	});
 
@@ -228,7 +229,7 @@ describe('calculator custom flours', () => {
 
 		calculator.resetAllCustomizations();
 
-		const stored = storage.get('custom-flours', {});
+		const stored = storage.get<CustomFlourState>('custom-flours', {});
 		expect(stored[baseRecipe.id]).toBeUndefined();
 	});
 
@@ -237,7 +238,7 @@ describe('calculator custom flours', () => {
 		calculator.setRecipe(baseRecipe);
 		calculator.addFlourType('main', 'semola', 10);
 
-		const storedBefore = storage.get('custom-flours', {});
+		const storedBefore = storage.get<CustomFlourState>('custom-flours', {});
 		expect(storedBefore[baseRecipe.id]?.main?.[0]?.flourTypeId).toBe('semola');
 
 		vi.resetModules();
