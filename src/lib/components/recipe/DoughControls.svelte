@@ -65,6 +65,14 @@
 		return controls?.flours ?? [];
 	});
 
+	let flourStageTotals = $derived.by(() => {
+		const totals: Record<string, number> = {};
+		for (const blend of flourBlends) {
+			totals[blend.stage] = blend.flours.reduce((sum, flour) => sum + flour.percentage, 0);
+		}
+		return totals;
+	});
+
 	let selectedFlourTypes = $state<Record<string, string>>({});
 
 	let availableFlourTypesByStage = $derived.by(() => {
@@ -145,10 +153,17 @@
 	}
 
 	// Flour blend handler
-	function handleFlourBlendChange(flourId: string, value: string) {
+	function handleFlourBlendChange(stage: string, flourId: string, value: string) {
 		const pct = parseFloat(value);
-		if (isNaN(pct) || pct < 0) return;
-		calculator.setFlourBlend(flourId, pct);
+		const stageTotal = flourStageTotals[stage] ?? 0;
+		if (isNaN(pct) || pct < 0 || stageTotal <= 0) return;
+		const absolutePct = (pct / 100) * stageTotal;
+		calculator.setFlourBlend(flourId, absolutePct);
+	}
+
+	function getStageFlourPercent(flour: { percentage: number }, stage: string) {
+		const total = flourStageTotals[stage] || 1;
+		return (flour.percentage / total) * 100;
 	}
 
 	// Extra ingredient handler
@@ -352,9 +367,13 @@
 									id="flour-{flour.id}"
 									type="number"
 									class="input compact-input"
-									value={flour.percentage.toFixed(1)}
+									value={getStageFlourPercent(flour, blend.stage).toFixed(1)}
 									onchange={(e) =>
-										handleFlourBlendChange(flour.id, (e.target as HTMLInputElement).value)}
+										handleFlourBlendChange(
+											blend.stage,
+											flour.id,
+											(e.target as HTMLInputElement).value
+										)}
 									min="0"
 									max="100"
 									step="1"
