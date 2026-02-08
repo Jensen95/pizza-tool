@@ -21,6 +21,8 @@ export interface RecipeHistoryEntry {
 	ingredients: Record<string, number>;
 	numberOfPizzas: number;
 	doughBallWeight: number;
+	hydration?: number | null;
+	predoughRatio?: number | null;
 	createdAt: string;
 }
 
@@ -167,7 +169,9 @@ function createHistoryStore() {
 			recipe: Recipe,
 			customIngredients: Record<string, number>,
 			numberOfPizzas: number,
-			doughBallWeight: number
+			doughBallWeight: number,
+			hydration: number | null = null,
+			predoughRatio: number | null = null
 		) {
 			update((state) => {
 				const entry: RecipeHistoryEntry = {
@@ -177,6 +181,8 @@ function createHistoryStore() {
 					ingredients: customIngredients,
 					numberOfPizzas,
 					doughBallWeight,
+					hydration,
+					predoughRatio,
 					createdAt: new Date().toISOString()
 				};
 

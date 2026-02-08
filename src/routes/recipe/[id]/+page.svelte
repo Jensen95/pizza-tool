@@ -57,6 +57,14 @@
 		// Apply pizza count and weight
 		calculator.setNumberOfPizzas(entry.numberOfPizzas);
 		calculator.setDoughBallWeight(entry.doughBallWeight);
+		// Apply hydration and predough
+		const hydration = entry.hydration ?? null;
+		if (hydration === null) {
+			calculator.resetHydration();
+		} else {
+			calculator.setHydration(hydration);
+		}
+		calculator.setPredoughRatio(entry.predoughRatio ?? null);
 		// Close history panel
 		showHistory = false;
 	}
