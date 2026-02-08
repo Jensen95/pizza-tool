@@ -10,7 +10,7 @@
 		{
 			"id": "poolish-flour",
 			"name": "Poolish flour",
-			"nameDa": "Mel (poolish)",
+			"nameDa": "Mel",
 			"percentage": 20,
 			"type": "flour",
 			"stage": "poolish"
@@ -18,7 +18,7 @@
 		{
 			"id": "poolish-water",
 			"name": "Poolish water",
-			"nameDa": "Vand (poolish)",
+			"nameDa": "Vand",
 			"percentage": 20,
 			"type": "water",
 			"stage": "poolish"
@@ -26,7 +26,7 @@
 		{
 			"id": "poolish-yeast",
 			"name": "Poolish yeast",
-			"nameDa": "Tørgær (poolish)",
+			"nameDa": "Tørgær",
 			"percentage": 0.1,
 			"type": "yeast",
 			"stage": "poolish"
@@ -34,7 +34,7 @@
 		{
 			"id": "main-flour",
 			"name": "Main dough flour",
-			"nameDa": "Mel (hoveddej)",
+			"nameDa": "Mel",
 			"percentage": 80,
 			"type": "flour",
 			"stage": "main"
@@ -42,7 +42,7 @@
 		{
 			"id": "main-water",
 			"name": "Main dough water",
-			"nameDa": "Vand (hoveddej)",
+			"nameDa": "Vand",
 			"percentage": 45,
 			"type": "water",
 			"stage": "main"

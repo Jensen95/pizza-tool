@@ -1,4 +1,4 @@
-import type { RecipeIngredient, FermentationStage } from './recipe';
+import type { RecipeIngredient, FermentationStage, IngredientType } from './recipe';
 
 export interface ScaledIngredient {
 	id: string;
@@ -18,6 +18,7 @@ export interface CalculatorState {
 	doughBallWeight: number;
 	totalDoughWeight: number;
 	totalFlourWeight: number;
+	hydration: number | null; // custom hydration override (null = use recipe default)
 	predoughRatio: number | null; // ratio of predough to total flour (e.g., 0.2 = 20%)
 	scaledIngredients: ScaledIngredient[];
 }
@@ -25,7 +26,42 @@ export interface CalculatorState {
 export interface CalculatorInput {
 	numberOfPizzas: number;
 	doughBallWeight: number;
+	hydration?: number | null;
 	predoughRatio?: number | null;
+}
+
+export interface ControllableIngredient {
+	id: string;
+	name: string;
+	nameDa: string;
+	type: IngredientType;
+	percentage: number;
+	originalPercentage: number;
+	min: number;
+	max: number;
+	step: number;
+}
+
+export interface FlourBlendInfo {
+	stage: string;
+	flours: { id: string; name: string; nameDa: string; percentage: number }[];
+}
+
+export interface ExtraIngredientInfo {
+	id: string;
+	name: string;
+	nameDa: string;
+	type: IngredientType;
+	stage?: string;
+	percentage: number;
+	originalPercentage: number;
+}
+
+export interface RecipeControls {
+	hydration: number;
+	predoughRatio: number | null;
+	flours: FlourBlendInfo[];
+	extras: ExtraIngredientInfo[];
 }
 
 export const defaultCalculatorState: CalculatorState = {
@@ -34,6 +70,7 @@ export const defaultCalculatorState: CalculatorState = {
 	doughBallWeight: 250,
 	totalDoughWeight: 1000,
 	totalFlourWeight: 0,
+	hydration: null,
 	predoughRatio: null,
 	scaledIngredients: []
 };
@@ -41,5 +78,6 @@ export const defaultCalculatorState: CalculatorState = {
 export const defaultCalculatorInput: CalculatorInput = {
 	numberOfPizzas: 4,
 	doughBallWeight: 250,
+	hydration: null,
 	predoughRatio: null
 };

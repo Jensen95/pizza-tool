@@ -12,7 +12,8 @@ export {
 	totalWeight,
 	flourWeight,
 	ingredientsByStage,
-	predoughRatio
+	predoughRatio,
+	hydration
 } from './calculator';
 export { preferences, type Preferences } from './preferences';
 export {

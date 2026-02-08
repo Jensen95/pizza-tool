@@ -1,43 +1,12 @@
 <script lang="ts">
 	import { get } from 'svelte/store';
 	import type { Recipe, RecipeCategory } from '$lib/types';
-	import { recipes, calculator } from '$lib/stores';
+	import { recipes } from '$lib/stores';
 	import RecipeCard from './RecipeCard.svelte';
 	import { categoryLabels } from '$lib/types';
 
 	let searchQuery = $state('');
 	let selectedCategory = $state<RecipeCategory | 'all'>('all');
-
-	let numberOfPizzas = $state($calculator.numberOfPizzas || 4);
-	let doughBallWeight = $state($calculator.doughBallWeight || 270);
-
-	function handlePizzaCountChange() {
-		calculator.setNumberOfPizzas(numberOfPizzas);
-	}
-
-	function handleWeightChange() {
-		calculator.setDoughBallWeight(doughBallWeight);
-	}
-
-	function decrementPizzas() {
-		numberOfPizzas = Math.max(1, numberOfPizzas - 1);
-		handlePizzaCountChange();
-	}
-
-	function incrementPizzas() {
-		numberOfPizzas = Math.min(100, numberOfPizzas + 1);
-		handlePizzaCountChange();
-	}
-
-	function decrementWeight() {
-		doughBallWeight = Math.max(100, doughBallWeight - 5);
-		handleWeightChange();
-	}
-
-	function incrementWeight() {
-		doughBallWeight = Math.min(500, doughBallWeight + 5);
-		handleWeightChange();
-	}
 
 	function getFilteredRecipes(
 		query: string,
@@ -72,51 +41,6 @@
 </script>
 
 <div class="recipe-list">
-	<div class="pizza-settings">
-		<div class="setting-group">
-			<label class="setting-label" for="main-pizza-count">Antal pizzaer</label>
-			<div class="setting-controls">
-				<button class="btn btn-sm" onclick={decrementPizzas} disabled={numberOfPizzas <= 1}
-					>-</button
-				>
-				<input
-					id="main-pizza-count"
-					type="number"
-					class="input number-input"
-					bind:value={numberOfPizzas}
-					onchange={handlePizzaCountChange}
-					min="1"
-					max="100"
-				/>
-				<button class="btn btn-sm" onclick={incrementPizzas} disabled={numberOfPizzas >= 100}
-					>+</button
-				>
-			</div>
-		</div>
-
-		<div class="setting-group">
-			<label class="setting-label" for="main-ball-weight">Kuglevægt (g)</label>
-			<div class="setting-controls">
-				<button class="btn btn-sm" onclick={decrementWeight} disabled={doughBallWeight <= 100}
-					>-5</button
-				>
-				<input
-					id="main-ball-weight"
-					type="number"
-					class="input number-input"
-					bind:value={doughBallWeight}
-					onchange={handleWeightChange}
-					min="100"
-					max="500"
-					step="5"
-				/>
-				<button class="btn btn-sm" onclick={incrementWeight} disabled={doughBallWeight >= 500}
-					>+5</button
-				>
-			</div>
-		</div>
-	</div>
-
 	<div class="filters">
 		<div class="search-wrapper">
 			<input
@@ -158,52 +82,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--spacing-md);
-	}
-
-	.pizza-settings {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: var(--spacing-md);
-		padding: var(--spacing-md);
-		background: var(--color-surface);
-		border-radius: var(--radius-md);
-	}
-
-	@media (max-width: 400px) {
-		.pizza-settings {
-			grid-template-columns: 1fr;
-		}
-	}
-
-	.setting-group {
-		display: flex;
-		flex-direction: column;
-		gap: var(--spacing-xs);
-	}
-
-	.setting-label {
-		font-size: var(--font-size-sm);
-		color: var(--color-text-secondary);
-	}
-
-	.setting-controls {
-		display: flex;
-		gap: 4px;
-	}
-
-	.setting-controls .btn {
-		padding: var(--spacing-sm);
-		min-width: 44px;
-	}
-
-	.setting-controls .btn-sm {
-		font-size: var(--font-size-sm);
-	}
-
-	.number-input {
-		flex: 1;
-		text-align: center;
-		font-weight: 600;
 	}
 
 	.filters {
