@@ -227,9 +227,12 @@
 		background: var(--color-surface);
 		text-transform: uppercase;
 		letter-spacing: 0.02em;
+		border-left: 4px solid var(--color-primary);
 	}
 
 	.flour-row td {
 		padding-left: var(--spacing-md);
+		background: var(--color-surface);
+		border-left: 4px solid var(--color-primary);
 	}
 </style>
