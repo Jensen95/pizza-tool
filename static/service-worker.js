@@ -1,5 +1,5 @@
 /* global clients */
-const CACHE_NAME = 'pizza-tool-v1';
+const CACHE_NAME = 'pizza-tool-v2';
 const STATIC_ASSETS = [
 	'/',
 	'/manifest.json',
@@ -36,6 +36,13 @@ self.addEventListener('activate', (event) => {
 		})
 	);
 	self.clients.claim();
+});
+
+// Allow clients to trigger immediate activation for updates
+self.addEventListener('message', (event) => {
+	if (event.data?.type === 'SKIP_WAITING') {
+		self.skipWaiting();
+	}
 });
 
 // Fetch event - serve from cache, fallback to network

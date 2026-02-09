@@ -13,8 +13,14 @@
 		<div style="display: contents">%sveltekit.body%</div>
 		<script>
 			if ('serviceWorker' in navigator) {
+				const assetBase = '%sveltekit.assets%'.replace(/\/$/, '');
+				const serviceWorkerPath = `${assetBase || ''}/service-worker.js`;
+				const serviceWorkerScope = assetBase || '/';
+
 				window.addEventListener('load', () => {
-					navigator.serviceWorker.register('/service-worker.js');
+					navigator.serviceWorker
+						.register(serviceWorkerPath, { scope: serviceWorkerScope })
+						.catch((error) => console.error('Service worker registration failed', error));
 				});
 			}
 		</script>

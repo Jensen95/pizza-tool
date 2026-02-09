@@ -28,6 +28,27 @@ test.describe('PWA Service Worker', () => {
 		expect(swRegistered.state).toBe('activated');
 	});
 
+	test('should show install banner when install prompt is available', async ({ page }) => {
+		await page.goto('/');
+		await page.waitForLoadState('networkidle');
+
+		await page.evaluate(async () => {
+			const event = new Event('beforeinstallprompt') as Event & {
+				prompt: () => Promise<void>;
+				userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+			};
+
+			event.preventDefault();
+			event.prompt = () => Promise.resolve();
+			event.userChoice = Promise.resolve({ outcome: 'accepted' });
+
+			window.dispatchEvent(event);
+		});
+
+		await expect(page.getByRole('heading', { name: 'Installer Pizza Tool' })).toBeVisible();
+		await expect(page.getByRole('button', { name: 'Installer app' })).toBeVisible();
+	});
+
 	test('should have manifest.json accessible', async ({ page }) => {
 		const response = await page.goto('/manifest.json');
 		expect(response?.status()).toBe(200);

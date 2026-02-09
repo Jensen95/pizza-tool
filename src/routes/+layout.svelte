@@ -3,6 +3,7 @@
 	import Header from '$lib/components/ui/Header.svelte';
 	import Navigation from '$lib/components/ui/Navigation.svelte';
 	import NotificationPermissionBanner from '$lib/components/timer/NotificationPermissionBanner.svelte';
+	import PwaPrompts from '$lib/components/ui/PwaPrompts.svelte';
 	import { onMount } from 'svelte';
 	import { timers, activeTimers } from '$lib/stores';
 
@@ -29,6 +30,7 @@
 <div class="app">
 	<Header />
 	<main class="main-content">
+		<PwaPrompts />
 		<NotificationPermissionBanner {hasActiveTimers} />
 		{@render children()}
 	</main>
