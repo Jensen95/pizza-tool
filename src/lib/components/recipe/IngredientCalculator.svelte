@@ -28,7 +28,7 @@
 		const groups = new Map<string, ScaledIngredient[]>();
 
 		for (const ing of ingredients) {
-			const stage = ing.stage || 'hoveddej';
+			const stage = ing.stage || 'main';
 			const existing = groups.get(stage) || [];
 			existing.push(ing);
 			groups.set(stage, existing);
