@@ -24,7 +24,42 @@
 		main: 'Hoveddej'
 	};
 
-	function groupIngredientsByStage(ingredients: ScaledIngredient[]) {
+	type StageIngredientGroup = {
+		stage: string;
+		flours: ScaledIngredient[];
+		others: ScaledIngredient[];
+	};
+
+	function createPredoughSummary(ingredients: ScaledIngredient[]): ScaledIngredient | null {
+		const predoughIngredients = ingredients.filter((ing) => isPredoughStage(ing.stage));
+		if (predoughIngredients.length === 0) return null;
+
+		const totalPredoughWeight = predoughIngredients.reduce((sum, ing) => sum + ing.weight, 0);
+		if (totalPredoughWeight <= 0) return null;
+
+		const mainFlourWeight = ingredients
+			.filter((ing) => ing.type === 'flour' && !isPredoughStage(ing.stage))
+			.reduce((sum, ing) => sum + ing.weight, 0);
+
+		const stagePercentage =
+			mainFlourWeight > 0 ? Math.round((totalPredoughWeight / mainFlourWeight) * 10000) / 100 : 0;
+
+		const stageLabel = stageLabels[predoughIngredients[0].stage || 'preferment'] || 'Fordej';
+		const totalPercentage = predoughIngredients.reduce((sum, ing) => sum + ing.percentage, 0);
+
+		return {
+			id: 'predough-total',
+			name: `${stageLabel} predough`,
+			nameDa: stageLabel,
+			percentage: totalPercentage,
+			stagePercentage,
+			weight: totalPredoughWeight,
+			type: 'other',
+			stage: 'main'
+		};
+	}
+
+	function groupIngredientsByStage(ingredients: ScaledIngredient[]): StageIngredientGroup[] {
 		const groups = new Map<string, ScaledIngredient[]>();
 
 		for (const ing of ingredients) {
@@ -34,7 +69,19 @@
 			groups.set(stage, existing);
 		}
 
-		return groups;
+		const predoughSummary = createPredoughSummary(ingredients);
+		if (predoughSummary) {
+			const mainGroup = groups.get('main') || [];
+			if (!mainGroup.find((ing) => ing.id === predoughSummary.id)) {
+				groups.set('main', [predoughSummary, ...mainGroup]);
+			}
+		}
+
+		return Array.from(groups.entries()).map(([stage, stageIngredients]) => ({
+			stage,
+			flours: stageIngredients.filter((ing) => ing.type === 'flour'),
+			others: stageIngredients.filter((ing) => ing.type !== 'flour')
+		}));
 	}
 
 	let ingredientGroups = $derived(groupIngredientsByStage($calculator.scaledIngredients));
@@ -45,9 +92,9 @@
 	<DoughControls {recipe} />
 
 	<div class="ingredients">
-		{#each ingredientGroups as [stage, ingredients]}
+		{#each ingredientGroups as group}
 			<div class="ingredient-group">
-				<h4 class="group-title">{stageLabels[stage] || stage}</h4>
+				<h4 class="group-title">{stageLabels[group.stage] || group.stage}</h4>
 
 				<table class="ingredient-table">
 					<thead>
@@ -58,10 +105,15 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each ingredients as ingredient}
+						{#if group.flours.length > 1}
+							<tr class="flour-heading">
+								<td colspan="3">Mel ({group.flours.length} typer)</td>
+							</tr>
+						{/if}
+						{#each group.flours as ingredient}
 							{#if !(hasPredough && ingredient.type === 'flour' && ingredient.weight <= 0)}
-								<tr>
-									<td>
+								<tr class="flour-row">
+									<td class="flour-bar">
 										{ingredient.nameDa}
 										{#if hasPredough && ingredient.type === 'flour' && isPredoughStage(ingredient.stage)}
 											<span class="flour-ratio-badge">
@@ -69,6 +121,20 @@
 											</span>
 										{/if}
 									</td>
+									<td class="right">
+										{ingredient.stagePercentage.toFixed(2)}%
+									</td>
+									<td class="right weight">
+										{formatWeight(ingredient.weight)}
+									</td>
+								</tr>
+							{/if}
+						{/each}
+
+						{#each group.others as ingredient}
+							{#if !(hasPredough && ingredient.type === 'flour' && ingredient.weight <= 0)}
+								<tr>
+									<td>{ingredient.nameDa}</td>
 									<td class="right">
 										{ingredient.stagePercentage.toFixed(2)}%
 									</td>
@@ -153,5 +219,20 @@
 		padding: 1px 6px;
 		border-radius: var(--radius-sm);
 		margin-left: var(--spacing-xs);
+	}
+
+	.flour-heading td {
+		font-weight: 600;
+		color: var(--color-text-secondary);
+		background: var(--color-surface);
+		text-transform: uppercase;
+		letter-spacing: 0.02em;
+		border-left: 4px solid var(--color-primary);
+	}
+
+	.flour-bar {
+		padding-left: var(--spacing-md);
+		background: var(--color-surface);
+		border-left: 4px solid var(--color-primary);
 	}
 </style>
