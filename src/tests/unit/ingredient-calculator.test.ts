@@ -165,4 +165,22 @@ describe('IngredientCalculator grouping', () => {
 
 		expect(flourHeadings?.length ?? 0).toBe(0);
 	});
+
+	it('applies flour grouping style only to ingredient column', async () => {
+		render(IngredientCalculator, { props: { recipe: poolishRecipe } });
+
+		const poolishHeading = await screen.findByRole('heading', { name: 'Poolish' });
+		const poolishGroup = poolishHeading.closest('.ingredient-group');
+		const flourRows = poolishGroup?.querySelectorAll('tr.flour-row');
+		const firstFlourRow = flourRows?.[0];
+
+		expect(firstFlourRow).toBeTruthy();
+
+		const cells = firstFlourRow ? Array.from(firstFlourRow.querySelectorAll('td')) : [];
+
+		expect(cells.length).toBeGreaterThanOrEqual(3);
+		expect(cells[0]?.classList.contains('flour-bar')).toBe(true);
+		expect(cells[1]?.classList.contains('flour-bar')).toBe(false);
+		expect(cells[2]?.classList.contains('flour-bar')).toBe(false);
+	});
 });

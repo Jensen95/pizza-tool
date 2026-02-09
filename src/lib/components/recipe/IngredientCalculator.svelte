@@ -113,7 +113,7 @@
 						{#each group.flours as ingredient}
 							{#if !(hasPredough && ingredient.type === 'flour' && ingredient.weight <= 0)}
 								<tr class="flour-row">
-									<td>
+									<td class="flour-bar">
 										{ingredient.nameDa}
 										{#if hasPredough && ingredient.type === 'flour' && isPredoughStage(ingredient.stage)}
 											<span class="flour-ratio-badge">
@@ -230,7 +230,7 @@
 		border-left: 4px solid var(--color-primary);
 	}
 
-	.flour-row td {
+	.flour-bar {
 		padding-left: var(--spacing-md);
 		background: var(--color-surface);
 		border-left: 4px solid var(--color-primary);
