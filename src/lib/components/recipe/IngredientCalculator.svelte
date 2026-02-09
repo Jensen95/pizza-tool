@@ -105,31 +105,31 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#if group.flours.length > 0}
+						{#if group.flours.length > 1}
 							<tr class="flour-heading">
-								<td colspan="3">Mel</td>
+								<td colspan="3">Mel ({group.flours.length} typer)</td>
 							</tr>
-							{#each group.flours as ingredient}
-								{#if !(hasPredough && ingredient.type === 'flour' && ingredient.weight <= 0)}
-									<tr>
-										<td>
-											{ingredient.nameDa}
-											{#if hasPredough && ingredient.type === 'flour' && isPredoughStage(ingredient.stage)}
-												<span class="flour-ratio-badge">
-													{ingredient.percentage.toFixed(0)}% af total
-												</span>
-											{/if}
-										</td>
-										<td class="right">
-											{ingredient.stagePercentage.toFixed(2)}%
-										</td>
-										<td class="right weight">
-											{formatWeight(ingredient.weight)}
-										</td>
-									</tr>
-								{/if}
-							{/each}
 						{/if}
+						{#each group.flours as ingredient}
+							{#if !(hasPredough && ingredient.type === 'flour' && ingredient.weight <= 0)}
+								<tr class="flour-row">
+									<td>
+										{ingredient.nameDa}
+										{#if hasPredough && ingredient.type === 'flour' && isPredoughStage(ingredient.stage)}
+											<span class="flour-ratio-badge">
+												{ingredient.percentage.toFixed(0)}% af total
+											</span>
+										{/if}
+									</td>
+									<td class="right">
+										{ingredient.stagePercentage.toFixed(2)}%
+									</td>
+									<td class="right weight">
+										{formatWeight(ingredient.weight)}
+									</td>
+								</tr>
+							{/if}
+						{/each}
 
 						{#each group.others as ingredient}
 							{#if !(hasPredough && ingredient.type === 'flour' && ingredient.weight <= 0)}
@@ -225,5 +225,11 @@
 		font-weight: 600;
 		color: var(--color-text-secondary);
 		background: var(--color-surface);
+		text-transform: uppercase;
+		letter-spacing: 0.02em;
+	}
+
+	.flour-row td {
+		padding-left: var(--spacing-md);
 	}
 </style>

@@ -155,4 +155,14 @@ describe('IngredientCalculator grouping', () => {
 
 		expect(flourHeadings?.length).toBe(1);
 	});
+
+	it('omits flour heading when a stage has only one flour', async () => {
+		render(IngredientCalculator, { props: { recipe: poolishRecipe } });
+
+		const mainHeading = await screen.findByRole('heading', { name: 'Hoveddej' });
+		const mainGroup = mainHeading.closest('.ingredient-group');
+		const flourHeadings = mainGroup?.querySelectorAll('.flour-heading');
+
+		expect(flourHeadings?.length ?? 0).toBe(0);
+	});
 });
