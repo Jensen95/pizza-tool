@@ -463,10 +463,21 @@ export function scaleRecipe(
 	// Calculate flour weight needed
 	const totalFlourWeight = calculateTotalFlour(numberOfPizzas, doughBallWeight, totalPercentage);
 
-	// Calculate predough flour weight for stage percentage calculation
-	const predoughFlourWeight =
-		hasPredough && effectivePredoughRatio !== null ? totalFlourWeight * effectivePredoughRatio : 0;
-	const mainFlourWeight = totalFlourWeight - predoughFlourWeight;
+	// Calculate stage flour weights from actual flour distribution
+	const flourIngredients = adjustedIngredients.filter((ing) => ing.type === 'flour');
+	const totalFlourPercentage = flourIngredients.reduce((sum, ing) => sum + ing.percentage, 0);
+	const predoughFlourPercentage = flourIngredients
+		.filter((ing) => isPredoughStage(ing.stage))
+		.reduce((sum, ing) => sum + ing.percentage, 0);
+	const mainFlourPercentage = totalFlourPercentage - predoughFlourPercentage;
+
+	let predoughFlourWeight = 0;
+	let mainFlourWeight = 0;
+
+	if (totalFlourPercentage > 0) {
+		predoughFlourWeight = (predoughFlourPercentage / totalFlourPercentage) * totalFlourWeight;
+		mainFlourWeight = (mainFlourPercentage / totalFlourPercentage) * totalFlourWeight;
+	}
 
 	// Scale each ingredient and calculate stage percentages
 	const scaledIngredients: ScaledIngredient[] = adjustedIngredients.map((ing) => {

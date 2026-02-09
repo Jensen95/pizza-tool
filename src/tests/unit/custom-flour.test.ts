@@ -310,6 +310,41 @@ describe('calculator custom flours', () => {
 		expect(state.customFlours.main?.[0]?.flourTypeId).toBe('semola');
 	});
 
+	it('keeps stage percentages sane when adding flours to predough and main', async () => {
+		const calculator = await loadCalculator();
+		calculator.setRecipe(predoughRecipe);
+
+		calculator.addFlourType('poolish', 'spelt', 5);
+		calculator.addFlourType('main', 'semola', 10);
+
+		const stagePercentages = get(calculator)
+			.scaledIngredients.filter((i) => i.type === 'flour' || i.type === 'water')
+			.map((i) => ({
+				id: i.id,
+				stage: i.stage ?? 'main',
+				type: i.type,
+				stagePercentage: i.stagePercentage
+			}));
+
+		const flourStageTotals = new Map<string, number>();
+		for (const ingredient of stagePercentages.filter((i) => i.type === 'flour')) {
+			flourStageTotals.set(
+				ingredient.stage,
+				(flourStageTotals.get(ingredient.stage) ?? 0) + ingredient.stagePercentage
+			);
+			expect(ingredient.stagePercentage).toBeLessThanOrEqual(100);
+		}
+
+		for (const total of flourStageTotals.values()) {
+			expect(total).toBeCloseTo(100, 2);
+		}
+
+		for (const water of stagePercentages.filter((i) => i.type === 'water')) {
+			expect(water.stagePercentage).toBeLessThanOrEqual(100);
+			expect(water.stagePercentage).toBeGreaterThanOrEqual(0);
+		}
+	});
+
 	it('keeps flour blends stable when hydration changes', async () => {
 		const calculator = await loadCalculator();
 		calculator.setRecipe(twoFlourRecipe);
