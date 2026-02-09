@@ -56,6 +56,68 @@ const mixedStageRecipe: Recipe = {
 	schedule: { stages: [], totalTime: 0 }
 };
 
+const poolishRecipe: Recipe = {
+	id: 'poolish-stage',
+	name: 'Poolish Dough',
+	nameDa: 'Poolish Dej',
+	category: 'poolish',
+	baseWeight: 270,
+	hydration: 65,
+	yieldPizzas: 4,
+	ingredients: [
+		{
+			id: 'poolish-flour-a',
+			name: 'Poolish flour A',
+			nameDa: 'Poolish mel A',
+			percentage: 10,
+			type: 'flour',
+			stage: 'poolish'
+		},
+		{
+			id: 'poolish-flour-b',
+			name: 'Poolish flour B',
+			nameDa: 'Poolish mel B',
+			percentage: 10,
+			type: 'flour',
+			stage: 'poolish'
+		},
+		{
+			id: 'poolish-water',
+			name: 'Poolish water',
+			nameDa: 'Vand (poolish)',
+			percentage: 20,
+			type: 'water',
+			stage: 'poolish'
+		},
+		{
+			id: 'poolish-yeast',
+			name: 'Poolish yeast',
+			nameDa: 'Gaer (poolish)',
+			percentage: 0.1,
+			type: 'yeast',
+			stage: 'poolish'
+		},
+		{
+			id: 'main-flour',
+			name: 'Main dough flour',
+			nameDa: 'Mel (hoveddej)',
+			percentage: 80,
+			type: 'flour',
+			stage: 'main'
+		},
+		{
+			id: 'main-water',
+			name: 'Main dough water',
+			nameDa: 'Vand (hoveddej)',
+			percentage: 45,
+			type: 'water',
+			stage: 'main'
+		},
+		{ id: 'main-salt', name: 'Salt', nameDa: 'Salt', percentage: 2.5, type: 'salt' }
+	],
+	schedule: { stages: [], totalTime: 0 }
+};
+
 beforeEach(() => {
 	const memoryStorage = new MemoryStorage();
 	(window as unknown as { localStorage: MemoryStorage }).localStorage = memoryStorage;
@@ -69,5 +131,28 @@ describe('IngredientCalculator grouping', () => {
 
 		const headings = await screen.findAllByRole('heading', { name: 'Hoveddej' });
 		expect(headings).toHaveLength(1);
+	});
+
+	it('adds predough summary into the main dough ingredient list', async () => {
+		render(IngredientCalculator, { props: { recipe: poolishRecipe } });
+
+		const mainHeading = await screen.findByRole('heading', { name: 'Hoveddej' });
+		const mainGroup = mainHeading.closest('.ingredient-group');
+
+		const predoughCell = Array.from(mainGroup?.querySelectorAll('td') || []).find((cell) =>
+			cell.textContent?.trim().startsWith('Poolish')
+		);
+
+		expect(predoughCell).toBeTruthy();
+	});
+
+	it('groups flours under a single heading per stage', async () => {
+		render(IngredientCalculator, { props: { recipe: poolishRecipe } });
+
+		const poolishHeading = await screen.findByRole('heading', { name: 'Poolish' });
+		const poolishGroup = poolishHeading.closest('.ingredient-group');
+		const flourHeadings = poolishGroup?.querySelectorAll('.flour-heading');
+
+		expect(flourHeadings?.length).toBe(1);
 	});
 });
