@@ -185,6 +185,64 @@ describe("Baker's Percentage - Recipe Scaling", () => {
 			});
 		});
 
+		it('normalizes flour blends that exceed 100% and keeps hydration stable', () => {
+			const messyRecipe: Recipe = {
+				id: 'messy-flour-blend',
+				name: 'Messy Blend',
+				nameDa: 'Rodet blanding',
+				category: 'direct',
+				baseWeight: 250,
+				hydration: 65,
+				yieldPizzas: 2,
+				ingredients: [
+					{
+						id: 'main-flour',
+						name: 'Flour',
+						nameDa: 'Mel',
+						percentage: 100,
+						type: 'flour'
+					},
+					{
+						id: 'tipo-00',
+						name: 'Tipo 00',
+						nameDa: 'Tipo 00',
+						percentage: 60,
+						type: 'flour'
+					},
+					{
+						id: 'tipo-0',
+						name: 'Tipo 0',
+						nameDa: 'Tipo 0',
+						percentage: 40,
+						type: 'flour'
+					},
+					{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
+					{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.7, type: 'salt' }
+				],
+				schedule: {
+					stages: [],
+					totalTime: 0
+				}
+			};
+
+			const result = scaleRecipe(messyRecipe, {
+				numberOfPizzas: 2,
+				doughBallWeight: 250
+			});
+
+			const flourIngredients = result.scaledIngredients.filter((i) => i.type === 'flour');
+			const totalFlourPct = flourIngredients.reduce((sum, i) => sum + i.percentage, 0);
+			expect(totalFlourPct).toBeCloseTo(100, 2);
+
+			const totalFlourWeight = flourIngredients.reduce((sum, i) => sum + i.weight, 0);
+			expect(totalFlourWeight).toBeCloseTo(result.totalFlourWeight, 2);
+
+			const totalWaterPct = result.scaledIngredients
+				.filter((i) => i.type === 'water')
+				.reduce((sum, i) => sum + i.percentage, 0);
+			expect(totalWaterPct).toBeCloseTo(65, 2);
+		});
+
 		it('should scale to different pizza counts', () => {
 			const result = scaleRecipe(simpleRecipe, {
 				numberOfPizzas: 10,
