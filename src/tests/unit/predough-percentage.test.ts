@@ -615,6 +615,76 @@ describe('Predough Percentage Calculations', () => {
 			expect(totalWater).toBeCloseTo(expectedWater, 1);
 		});
 	});
+
+	describe('Flour normalization across stages', () => {
+		it('keeps predough ratio based on total flour even when flours exceed 100%', () => {
+			const recipe: Recipe = {
+				id: 'inflated-poolish',
+				name: 'Inflated Poolish',
+				nameDa: 'Oppustet poolish',
+				category: 'poolish',
+				baseWeight: 270,
+				hydration: 65,
+				yieldPizzas: 4,
+				ingredients: [
+					{
+						id: 'poolish-flour',
+						name: 'Poolish flour',
+						nameDa: 'Mel (poolish)',
+						percentage: 30,
+						type: 'flour',
+						stage: 'poolish'
+					},
+					{
+						id: 'poolish-water',
+						name: 'Poolish water',
+						nameDa: 'Vand (poolish)',
+						percentage: 20,
+						type: 'water',
+						stage: 'poolish'
+					},
+					{
+						id: 'main-flour',
+						name: 'Main flour',
+						nameDa: 'Mel (hoveddej)',
+						percentage: 90,
+						type: 'flour',
+						stage: 'main'
+					},
+					{
+						id: 'main-water',
+						name: 'Main water',
+						nameDa: 'Vand (hoveddej)',
+						percentage: 45,
+						type: 'water',
+						stage: 'main'
+					},
+					{
+						id: 'main-salt',
+						name: 'Salt',
+						nameDa: 'Salt',
+						percentage: 2.7,
+						type: 'salt',
+						stage: 'main'
+					}
+				],
+				schedule: { stages: [], totalTime: 0 }
+			};
+
+			const result = scaleRecipe(recipe, { numberOfPizzas: 4, doughBallWeight: 270 });
+			const poolishFlour = result.scaledIngredients.find((i) => i.id === 'poolish-flour');
+			const mainFlour = result.scaledIngredients.find((i) => i.id === 'main-flour');
+
+			const totalFlourPct = (poolishFlour?.percentage || 0) + (mainFlour?.percentage || 0);
+			expect(totalFlourPct).toBeCloseTo(100, 2);
+			expect(poolishFlour?.percentage).toBeCloseTo(25, 2);
+
+			const totalWaterPct = result.scaledIngredients
+				.filter((i) => i.type === 'water')
+				.reduce((sum, i) => sum + i.percentage, 0);
+			expect(totalWaterPct).toBeCloseTo(65, 1);
+		});
+	});
 });
 
 describe('Recipe Page Gram Display', () => {
