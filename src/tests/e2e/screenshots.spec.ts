@@ -28,6 +28,24 @@ async function captureFullPage(
 	});
 }
 
+async function captureElement(
+	page: import('@playwright/test').Page,
+	url: string,
+	selector: string,
+	filename: string
+) {
+	await page.goto(url, { waitUntil: 'networkidle' });
+	const element = page.locator(selector).first();
+	await element.waitFor({ state: 'visible' });
+	await element.scrollIntoViewIfNeeded();
+
+	fs.mkdirSync(outputDir, { recursive: true });
+
+	await element.screenshot({
+		path: path.join(outputDir, filename)
+	});
+}
+
 test.describe('Visual Screenshots @screenshot', () => {
 	// Add screenshot mode class before each test to fix navigation positioning
 	test.beforeEach(async ({ page }) => {
@@ -66,5 +84,22 @@ test.describe('Visual Screenshots @screenshot', () => {
 
 	test('should capture reference page screenshot', async ({ page }) => {
 		await captureFullPage(page, '/reference', 'reference-page.png');
+	});
+
+	test('should capture tools page screenshot', async ({ page }) => {
+		await captureFullPage(page, '/tools', 'tools-page.png');
+	});
+
+	test('should capture yeast converter tool', async ({ page }) => {
+		await captureElement(
+			page,
+			'/tools',
+			'[data-testid="yeast-converter"]',
+			'tools-yeast-converter.png'
+		);
+	});
+
+	test('should capture baker math tool', async ({ page }) => {
+		await captureElement(page, '/tools', '[data-testid="baker-math-lab"]', 'tools-baker-math.png');
 	});
 });

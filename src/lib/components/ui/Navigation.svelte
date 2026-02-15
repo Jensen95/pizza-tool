@@ -11,6 +11,7 @@
 	const navItems: NavItem[] = [
 		{ href: '/', label: 'Opskrifter', icon: '📖' },
 		{ href: '/timers', label: 'Timere', icon: '⏱️' },
+		{ href: '/tools', label: 'Værktøjer', icon: '🛠️' },
 		{ href: '/reference', label: 'Reference', icon: '📚' }
 	];
 
