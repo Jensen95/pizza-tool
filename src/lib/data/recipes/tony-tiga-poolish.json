@@ -3,6 +3,7 @@
 	"name": "Tony Tiga + Poolish",
 	"nameDa": "Tony Tiga + Poolish",
 	"category": "poolish",
+	"yeastType": "active-dry",
 	"baseWeight": 270,
 	"hydration": 65,
 	"yieldPizzas": 4,

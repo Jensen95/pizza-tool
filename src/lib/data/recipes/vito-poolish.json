@@ -3,6 +3,7 @@
 	"name": "Vito's Poolish Pizza",
 	"nameDa": "Vito's Poolish Pizza",
 	"category": "poolish",
+	"yeastType": "active-dry",
 	"baseWeight": 270,
 	"hydration": 65,
 	"yieldPizzas": 6,

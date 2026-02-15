@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Recipe } from '$lib/types';
+	import type { Recipe, YeastInfo } from '$lib/types';
 	import { calculator, totalWeight, flourWeight, predoughRatio, recipeHistory } from '$lib/stores';
 	import {
 		formatWeight,
@@ -7,7 +7,9 @@
 		calculateHydration
 	} from '$lib/utils/baker-percentage';
 	import type { FlourTypeOption, FlourType } from '$lib/types';
-	import { flourTypeLabels } from '$lib/types';
+	import { flourTypeLabels, yeastTypeLabels } from '$lib/types';
+	import { yeastInfo } from '$lib/data/reference';
+	import { getRecipeYeastType } from '$lib/utils/yeast';
 
 	let { recipe }: { recipe: Recipe } = $props();
 
@@ -57,6 +59,10 @@
 	let hydrationChanged = $derived(
 		$calculator.hydration !== null && $calculator.hydration !== originalHydration
 	);
+
+	let hasYeast = $derived(recipe.ingredients.some((ing) => ing.type === 'yeast'));
+	let baseYeastType = $derived(getRecipeYeastType(recipe));
+	let selectedYeastType = $derived($calculator.yeastType ?? baseYeastType);
 
 	// Flour blends by stage
 	let flourBlends = $derived.by(() => {
@@ -195,6 +201,10 @@
 	}
 	function resetPredough() {
 		calculator.setPredoughRatio(null);
+	}
+
+	function handleYeastTypeChange(type: YeastInfo['type']) {
+		calculator.setYeastType(type);
 	}
 
 	// Flour blend handler
@@ -544,6 +554,25 @@
 					{/if}
 				{/if}
 
+				{#if hasYeast}
+					<div class="controls-section">
+						<h4 class="section-title">Gærtype</h4>
+						<div class="yeast-row">
+							<select
+								class="input select-input"
+								value={selectedYeastType}
+								onchange={(e) =>
+									handleYeastTypeChange((e.target as HTMLSelectElement).value as YeastInfo['type'])}
+							>
+								{#each yeastInfo as option}
+									<option value={option.type}>{yeastTypeLabels[option.type]}</option>
+								{/each}
+							</select>
+							<span class="yeast-hint">Konverterer mellem frisk og tør gær</span>
+						</div>
+					</div>
+				{/if}
+
 				{#if extras.length > 0}
 					<div class="controls-section">
 						<h4 class="section-title">Tilpas ingredienser</h4>
@@ -815,6 +844,17 @@
 
 	.add-flour-btn {
 		min-width: 40px;
+	}
+
+	.yeast-row {
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-sm);
+	}
+
+	.yeast-hint {
+		color: var(--color-text-secondary);
+		font-size: var(--font-size-sm);
 	}
 
 	.btn-icon {

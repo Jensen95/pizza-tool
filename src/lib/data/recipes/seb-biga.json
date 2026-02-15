@@ -3,6 +3,7 @@
 	"name": "Seb Biga",
 	"nameDa": "Seb Biga",
 	"category": "biga",
+	"yeastType": "fresh",
 	"baseWeight": 270,
 	"hydration": 72,
 	"yieldPizzas": 4,

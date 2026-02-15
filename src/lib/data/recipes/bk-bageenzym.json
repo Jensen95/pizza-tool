@@ -3,6 +3,7 @@
 	"name": "BK Bageenzym",
 	"nameDa": "BK Bageenzym",
 	"category": "direct",
+	"yeastType": "active-dry",
 	"baseWeight": 270,
 	"hydration": 64,
 	"yieldPizzas": 4,

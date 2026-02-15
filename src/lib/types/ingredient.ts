@@ -1,5 +1,5 @@
 import type { RecipeIngredient, FermentationStage, IngredientType } from './recipe';
-import type { FlourType } from './reference';
+import type { FlourType, YeastInfo } from './reference';
 
 export interface ScaledIngredient {
 	id: string;
@@ -21,6 +21,7 @@ export interface CalculatorState {
 	totalFlourWeight: number;
 	hydration: number | null; // custom hydration override (null = use recipe default)
 	predoughRatio: number | null; // ratio of predough to total flour (e.g., 0.2 = 20%)
+	yeastType: YeastInfo['type'] | null;
 	scaledIngredients: ScaledIngredient[];
 	customFlours: Record<string, CustomFlour[]>;
 }
@@ -74,6 +75,7 @@ export const defaultCalculatorState: CalculatorState = {
 	totalFlourWeight: 0,
 	hydration: null,
 	predoughRatio: null,
+	yeastType: null,
 	scaledIngredients: [],
 	customFlours: {}
 };

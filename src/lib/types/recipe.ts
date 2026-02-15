@@ -1,3 +1,5 @@
+import type { YeastInfo } from './reference';
+
 export type RecipeCategory =
 	| 'neapolitan'
 	| 'ny-style'
@@ -60,6 +62,7 @@ export interface Recipe {
 	description?: string;
 	descriptionDa?: string;
 	category: RecipeCategory;
+	yeastType?: YeastInfo['type'];
 	baseWeight: number; // default dough ball weight in grams
 	hydration: number; // percentage (e.g., 65 for 65%)
 	yieldPizzas: number; // default number of pizzas

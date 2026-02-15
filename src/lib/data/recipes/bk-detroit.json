@@ -3,6 +3,7 @@
 	"name": "BK Detroit",
 	"nameDa": "BK Detroit",
 	"category": "detroit",
+	"yeastType": "active-dry",
 	"baseWeight": 290,
 	"hydration": 72,
 	"yieldPizzas": 4,
