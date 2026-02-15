@@ -10,6 +10,11 @@ A SvelteKit application for pizza recipe management with baker's percentage calc
 - 📖 Reference materials (flour types, sauces, tips)
 - 📱 Progressive Web App (PWA) support
 
+### PWA install support
+
+- The in-app install banner relies on the `beforeinstallprompt` event, which is available in Chromium-based browsers (Chrome, Edge, Brave) and will surface when the app meets install criteria.
+- Firefox for Android does not fire `beforeinstallprompt`, so the banner will not appear there. Users can still install via Firefox's menu (⋮) → Add to Home screen/Install; the manifest and service worker continue to work after installation.
+
 ## Development
 
 Once you've installed dependencies with `npm install`, start a development server:
