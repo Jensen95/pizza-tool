@@ -60,7 +60,7 @@
 	}
 </script>
 
-<div class="tool-card">
+<div class="tool-card" data-testid="baker-math-lab">
 	<div class="card-header">
 		<div>
 			<p class="eyebrow">Bager-matematik</p>

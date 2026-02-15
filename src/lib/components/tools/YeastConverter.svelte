@@ -36,7 +36,7 @@
 	}
 </script>
 
-<div class="tool-card">
+<div class="tool-card" data-testid="yeast-converter">
 	<div class="card-header">
 		<div>
 			<p class="eyebrow">Gær-konvertering</p>
