@@ -6,25 +6,15 @@
 	const yeastOptions = yeastInfo;
 
 	let amount = $state(2);
-	let flourWeight = $state(1000);
 	let fromType = $state<YeastInfo['type']>('fresh');
 	let toType = $state<YeastInfo['type']>('instant');
 
 	let fromInfo = $derived(yeastOptions.find((info) => info.type === fromType));
 	let toInfo = $derived(yeastOptions.find((info) => info.type === toType));
 
-	let flourPercentage = $derived(
-		flourWeight > 0 ? Math.round(((amount / flourWeight) * 100 + Number.EPSILON) * 1000) / 1000 : 0
+	let convertedAmount = $derived(
+		Math.round(convertYeastPercentage(amount, fromType, toType) * 100) / 100
 	);
-	let convertedPercentage = $derived(
-		flourWeight > 0 ? convertYeastPercentage(flourPercentage, fromType, toType) : 0
-	);
-	let convertedAmount = $derived(() => {
-		if (flourWeight > 0) {
-			return Math.round(((flourWeight * convertedPercentage) / 100 + Number.EPSILON) * 100) / 100;
-		}
-		return Math.round(convertYeastPercentage(amount, fromType, toType) * 100) / 100;
-	});
 	let conversionRatio = $derived(
 		Math.round(convertYeastPercentage(1, fromType, toType) * 1000) / 1000
 	);
@@ -42,8 +32,8 @@
 			<p class="eyebrow">Gær-konvertering</p>
 			<h2>Byt gærtype uden at ændre dejen</h2>
 			<p class="muted">
-				Konverter mellem frisk, tør og instant gær. Angiv gerne din melmængde for at se
-				bagerprocenten.
+				Konverter mellem frisk, tør og instant gær. Indtast gærmængden i gram og se den tilsvarende
+				mængde for en anden gærtype.
 			</p>
 		</div>
 	</div>
@@ -83,21 +73,6 @@
 				{/each}
 			</select>
 		</label>
-
-		<label class="field full-width">
-			<span class="label">Mel i opskriften (valgfrit)</span>
-			<div class="input-with-unit">
-				<input
-					class="input"
-					type="number"
-					min="0"
-					step="10"
-					bind:value={flourWeight}
-					aria-label="Mængde mel i gram"
-				/>
-				<span class="unit">g</span>
-			</div>
-		</label>
 	</div>
 
 	<div class="results">
@@ -107,11 +82,6 @@
 				{convertedAmount}
 				<span class="unit">g</span>
 			</div>
-			{#if flourWeight > 0}
-				<div class="subline">
-					≈ {convertedPercentage.toFixed(3)}% af melet som {toInfo?.name ?? toType}
-				</div>
-			{/if}
 		</div>
 
 		<div class="grid-2 stats">
@@ -119,9 +89,6 @@
 				<div class="muted">Udgangspunkt</div>
 				<div class="stat-value">
 					{fromInfo?.name ?? fromType}
-					{#if flourWeight > 0}
-						<span class="badge">{flourPercentage.toFixed(3)}%</span>
-					{/if}
 				</div>
 			</div>
 			<div class="stat">
@@ -183,10 +150,6 @@
 		gap: var(--spacing-xs);
 	}
 
-	.full-width {
-		grid-column: 1 / -1;
-	}
-
 	.input-with-unit {
 		display: grid;
 		grid-template-columns: 1fr auto;
@@ -234,12 +197,6 @@
 		display: flex;
 		align-items: baseline;
 		gap: var(--spacing-xs);
-	}
-
-	.subline {
-		color: var(--color-text-secondary);
-		font-size: var(--font-size-sm);
-		margin-top: var(--spacing-xs);
 	}
 
 	.stats {
