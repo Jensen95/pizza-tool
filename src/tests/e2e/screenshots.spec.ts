@@ -67,4 +67,8 @@ test.describe('Visual Screenshots @screenshot', () => {
 	test('should capture reference page screenshot', async ({ page }) => {
 		await captureFullPage(page, '/reference', 'reference-page.png');
 	});
+
+	test('should capture tools page screenshot', async ({ page }) => {
+		await captureFullPage(page, '/tools', 'tools-page.png');
+	});
 });
