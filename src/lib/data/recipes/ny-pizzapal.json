@@ -3,6 +3,7 @@
 	"name": "NY PizzaPal",
 	"nameDa": "NY PizzaPal",
 	"category": "ny-style",
+	"yeastType": "active-dry",
 	"baseWeight": 270,
 	"hydration": 57,
 	"yieldPizzas": 4,

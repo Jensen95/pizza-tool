@@ -3,6 +3,7 @@
 	"name": "BK Biga v1",
 	"nameDa": "BK Biga v1",
 	"category": "biga",
+	"yeastType": "active-dry",
 	"baseWeight": 270,
 	"hydration": 65,
 	"yieldPizzas": 4,

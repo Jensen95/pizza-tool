@@ -3,6 +3,7 @@
 	"name": "Seb 24 timer",
 	"nameDa": "Seb 24 timer",
 	"category": "neapolitan",
+	"yeastType": "fresh",
 	"baseWeight": 270,
 	"hydration": 70,
 	"yieldPizzas": 4,

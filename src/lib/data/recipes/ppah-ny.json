@@ -3,6 +3,7 @@
 	"name": "PPAH NY Style",
 	"nameDa": "PPAH NY Style",
 	"category": "ny-style",
+	"yeastType": "active-dry",
 	"baseWeight": 270,
 	"hydration": 58,
 	"yieldPizzas": 4,

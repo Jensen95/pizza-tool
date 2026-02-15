@@ -3,6 +3,7 @@
 	"name": "BK Handæltet",
 	"nameDa": "BK Handæltet",
 	"category": "neapolitan",
+	"yeastType": "fresh",
 	"baseWeight": 270,
 	"hydration": 60,
 	"yieldPizzas": 4,
