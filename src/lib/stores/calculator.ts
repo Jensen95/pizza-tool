@@ -7,7 +7,7 @@ import type {
 	CustomFlour,
 	CustomFlourState
 } from '$lib/types/ingredient';
-import type { FlourTypeOption } from '$lib/types/reference';
+import type { FlourTypeOption, YeastInfo } from '$lib/types/reference';
 import {
 	scaleRecipe,
 	getOriginalPredoughRatio,
@@ -18,11 +18,13 @@ import {
 	removeFlourFromStage
 } from '$lib/utils/baker-percentage';
 import { flourTypes as flourTypeOptions } from '$lib/data/reference/flour-types';
+import { convertYeastPercentage, getRecipeYeastType } from '$lib/utils/yeast';
 import * as storage from '$lib/utils/storage';
 
 const CALCULATOR_STORAGE_KEY = 'calculator';
 const HYDRATION_STORAGE_KEY = 'hydration-overrides';
 const CUSTOM_FLOUR_STORAGE_KEY = 'custom-flours';
+const YEAST_TYPE_STORAGE_KEY = 'yeast-type-overrides';
 
 const defaultState: CalculatorState = {
 	recipeId: null,
@@ -32,6 +34,7 @@ const defaultState: CalculatorState = {
 	totalFlourWeight: 0,
 	hydration: null,
 	predoughRatio: null,
+	yeastType: null,
 	scaledIngredients: [],
 	customFlours: {}
 };
@@ -44,6 +47,8 @@ const customFloursStore = writable<CustomFlourState>({});
 
 // Store for hydration overrides per recipe
 const hydrationOverridesStore = writable<Record<string, number>>({});
+// Store for yeast type overrides per recipe
+const yeastTypeOverridesStore = writable<Record<string, YeastInfo['type']>>({});
 
 function loadState(): CalculatorState {
 	const stored = storage.get<Partial<CalculatorState>>(CALCULATOR_STORAGE_KEY, {});
@@ -54,7 +59,8 @@ function loadState(): CalculatorState {
 		scaledIngredients: [],
 		totalFlourWeight: 0,
 		hydration: null,
-		predoughRatio: null
+		predoughRatio: null,
+		yeastType: null
 	};
 }
 
@@ -82,6 +88,14 @@ function saveHydrationOverrides(data: Record<string, number>) {
 	storage.set(HYDRATION_STORAGE_KEY, data);
 }
 
+function loadYeastTypeOverrides(): Record<string, YeastInfo['type']> {
+	return storage.get<Record<string, YeastInfo['type']>>(YEAST_TYPE_STORAGE_KEY, {});
+}
+
+function saveYeastTypeOverrides(data: Record<string, YeastInfo['type']>) {
+	storage.set(YEAST_TYPE_STORAGE_KEY, data);
+}
+
 function getStageKey(stage?: string): string {
 	return stage || 'main';
 }
@@ -93,11 +107,16 @@ function createCalculatorStore() {
 	customIngredientsStore.set(loadCustomIngredients());
 	customFloursStore.set(loadCustomFlours());
 	hydrationOverridesStore.set(loadHydrationOverrides());
+	yeastTypeOverridesStore.set(loadYeastTypeOverrides());
 
 	let currentRecipe: Recipe | null = null;
 
 	function getCustomFloursForRecipe(recipeId: string): Record<string, CustomFlour[]> {
 		return get(customFloursStore)[recipeId] || {};
+	}
+
+	function getSelectedYeastType(recipe: Recipe): YeastInfo['type'] {
+		return get(yeastTypeOverridesStore)[recipe.id] ?? getRecipeYeastType(recipe);
 	}
 
 	function buildIngredientsWithCustomizations(recipe: Recipe): RecipeIngredient[] {
@@ -209,6 +228,7 @@ function createCalculatorStore() {
 				totalDoughWeight: state.numberOfPizzas * state.doughBallWeight,
 				hydration: null,
 				predoughRatio: null,
+				yeastType: null,
 				customFlours: {}
 			};
 		}
@@ -243,6 +263,7 @@ function createCalculatorStore() {
 			...state,
 			recipeId: currentRecipe.id,
 			hydration: hydrationOverride,
+			yeastType: getSelectedYeastType(currentRecipe),
 			scaledIngredients,
 			totalFlourWeight,
 			totalDoughWeight,
@@ -320,6 +341,72 @@ function createCalculatorStore() {
 				recalculate({
 					...state,
 					hydration: null
+				})
+			);
+		},
+
+		/**
+		 * Set yeast type and convert yeast amounts accordingly
+		 */
+		setYeastType(type: YeastInfo['type']) {
+			if (!currentRecipe) return;
+
+			const recipeId = currentRecipe.id;
+			const baseType = getRecipeYeastType(currentRecipe);
+			const currentType = getSelectedYeastType(currentRecipe);
+			if (type === currentType) return;
+
+			const yeastIngredients = buildIngredientsWithCustomizations(currentRecipe).filter(
+				(ing) => ing.type === 'yeast'
+			);
+
+			if (yeastIngredients.length > 0) {
+				customIngredientsStore.update((state) => {
+					const recipeCustoms = { ...(state[recipeId] || {}) };
+
+					for (const yeast of yeastIngredients) {
+						const existing = recipeCustoms[yeast.id] ?? yeast.percentage;
+						const converted = convertYeastPercentage(existing, currentType, type);
+						recipeCustoms[yeast.id] = converted;
+					}
+
+					if (type === baseType) {
+						const baseYeasts = currentRecipe!.ingredients.filter((ing) => ing.type === 'yeast');
+						for (const yeast of baseYeasts) {
+							const stored = recipeCustoms[yeast.id];
+							if (stored !== undefined && Math.abs(stored - yeast.percentage) < 0.0001) {
+								delete recipeCustoms[yeast.id];
+							}
+						}
+					}
+
+					if (Object.keys(recipeCustoms).length === 0) {
+						const { [recipeId]: _, ...rest } = state;
+						saveCustomIngredients(rest);
+						return rest;
+					}
+
+					const newState = { ...state, [recipeId]: recipeCustoms };
+					saveCustomIngredients(newState);
+					return newState;
+				});
+			}
+
+			yeastTypeOverridesStore.update((state) => {
+				if (type === baseType) {
+					const { [recipeId]: _, ...rest } = state;
+					saveYeastTypeOverrides(rest);
+					return rest;
+				}
+				const newState = { ...state, [recipeId]: type };
+				saveYeastTypeOverrides(newState);
+				return newState;
+			});
+
+			update((state) =>
+				recalculate({
+					...state,
+					yeastType: type
 				})
 			);
 		},
@@ -624,6 +711,12 @@ function createCalculatorStore() {
 				return rest;
 			});
 
+			yeastTypeOverridesStore.update((state) => {
+				const { [currentRecipe!.id]: _, ...rest } = state;
+				saveYeastTypeOverrides(rest);
+				return rest;
+			});
+
 			// Trigger recalculation
 			update((state) =>
 				recalculate({
@@ -654,7 +747,10 @@ function createCalculatorStore() {
 			const hasCustomFlours = customFlours
 				? Object.values(customFlours).some((flours) => flours.length > 0)
 				: false;
-			return hasIngredientCustoms || hasHydrationCustom || hasCustomFlours;
+			const yeastOverride = get(yeastTypeOverridesStore)[currentRecipe.id];
+			const hasYeastOverride =
+				yeastOverride !== undefined && yeastOverride !== getRecipeYeastType(currentRecipe);
+			return hasIngredientCustoms || hasHydrationCustom || hasCustomFlours || hasYeastOverride;
 		},
 
 		/**
