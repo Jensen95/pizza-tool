@@ -9,6 +9,7 @@ export interface Preferences {
 	notificationsEnabled: boolean;
 	theme: 'light' | 'dark' | 'system';
 	notificationBannerDismissed: boolean;
+	keepScreenAwake: boolean;
 }
 
 const defaultPreferences: Preferences = {
@@ -16,7 +17,8 @@ const defaultPreferences: Preferences = {
 	defaultDoughWeight: 270,
 	notificationsEnabled: true,
 	theme: 'light',
-	notificationBannerDismissed: false
+	notificationBannerDismissed: false,
+	keepScreenAwake: false
 };
 
 function loadPreferences(): Preferences {
@@ -108,6 +110,17 @@ function createPreferencesStore() {
 		 */
 		dismissNotificationBanner() {
 			this.updatePreference('notificationBannerDismissed', true);
+		},
+
+		/**
+		 * Toggle keeping the screen awake
+		 */
+		toggleKeepScreenAwake() {
+			update((prefs) => {
+				const newPrefs = { ...prefs, keepScreenAwake: !prefs.keepScreenAwake };
+				save(newPrefs);
+				return newPrefs;
+			});
 		}
 	};
 }
