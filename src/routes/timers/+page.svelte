@@ -1,7 +1,6 @@
 <script lang="ts">
 	import TimerList from '$lib/components/timer/TimerList.svelte';
 	import TimerCreator from '$lib/components/timer/TimerCreator.svelte';
-	import KeepAwakeToggle from '$lib/components/timer/KeepAwakeToggle.svelte';
 </script>
 
 <svelte:head>
@@ -10,8 +9,6 @@
 
 <div class="timers-page">
 	<h1 class="page-title">Timere</h1>
-
-	<KeepAwakeToggle />
 
 	<TimerList />
 

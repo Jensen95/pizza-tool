@@ -4,6 +4,7 @@
 	import RecipeDetail from '$lib/components/recipe/RecipeDetail.svelte';
 	import IngredientCalculator from '$lib/components/recipe/IngredientCalculator.svelte';
 	import FermentationSchedule from '$lib/components/recipe/FermentationSchedule.svelte';
+	import KeepAwakeToggle from '$lib/components/timer/KeepAwakeToggle.svelte';
 	import type { RecipeHistoryEntry } from '$lib/stores';
 
 	let recipeId = $derived(page.params.id);
@@ -77,6 +78,7 @@
 {#if recipe}
 	<div class="recipe-page">
 		<a href="/" class="back-link">&larr; Tilbage til opskrifter</a>
+		<KeepAwakeToggle />
 		<RecipeDetail {recipe} />
 
 		<section class="recipe-section">
