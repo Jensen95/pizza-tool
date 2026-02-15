@@ -78,7 +78,10 @@ export function summarizeBakerMath(
 	};
 }
 
-export function calculateTargetWater(flourWeight: number, targetHydration: number): {
+export function calculateTargetWater(
+	flourWeight: number,
+	targetHydration: number
+): {
 	waterWeight: number;
 	waterPercentage: number;
 } {

@@ -20,9 +20,7 @@
 	let summary = $derived(summarizeBakerMath(flourWeight, ingredients));
 	let targetWater = $derived(calculateTargetWater(flourWeight, targetHydration));
 	let hydrationDelta = $derived(
-		Math.round(
-			(targetWater.waterWeight - summary.waterWeight + Number.EPSILON) * 100
-		) / 100
+		Math.round((targetWater.waterWeight - summary.waterWeight + Number.EPSILON) * 100) / 100
 	);
 	let totalPercentage = $derived(
 		summary.ingredients.reduce((sum, ingredient) => sum + ingredient.percentage, 0)
@@ -152,7 +150,11 @@
 							type="text"
 							value={ingredient.name}
 							oninput={(event) =>
-								updateIngredient(ingredient.id, 'name', (event.currentTarget as HTMLInputElement).value)}
+								updateIngredient(
+									ingredient.id,
+									'name',
+									(event.currentTarget as HTMLInputElement).value
+								)}
 						/>
 					</div>
 
@@ -213,8 +215,8 @@
 
 	<div class="footnote">
 		<p class="muted">
-			Hydration beregnes kun ud fra ingredienser markeret som vand. Brug flere vand-linjer til f.eks.
-			for- eller autolyse.
+			Hydration beregnes kun ud fra ingredienser markeret som vand. Brug flere vand-linjer til
+			f.eks. for- eller autolyse.
 		</p>
 	</div>
 </div>

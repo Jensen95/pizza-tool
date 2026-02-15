@@ -14,19 +14,14 @@
 	let toInfo = $derived(yeastOptions.find((info) => info.type === toType));
 
 	let flourPercentage = $derived(
-		flourWeight > 0
-			? Math.round(((amount / flourWeight) * 100 + Number.EPSILON) * 1000) / 1000
-			: 0
+		flourWeight > 0 ? Math.round(((amount / flourWeight) * 100 + Number.EPSILON) * 1000) / 1000 : 0
 	);
 	let convertedPercentage = $derived(
 		flourWeight > 0 ? convertYeastPercentage(flourPercentage, fromType, toType) : 0
 	);
 	let convertedAmount = $derived(() => {
 		if (flourWeight > 0) {
-			return (
-				Math.round(((flourWeight * convertedPercentage) / 100 + Number.EPSILON) * 100) /
-				100
-			);
+			return Math.round(((flourWeight * convertedPercentage) / 100 + Number.EPSILON) * 100) / 100;
 		}
 		return Math.round(convertYeastPercentage(amount, fromType, toType) * 100) / 100;
 	});
@@ -78,9 +73,7 @@
 			</select>
 		</label>
 
-		<button class="swap" type="button" aria-label="Byt gærtyper" onclick={swapTypes}>
-			↔
-		</button>
+		<button class="swap" type="button" aria-label="Byt gærtyper" onclick={swapTypes}> ↔ </button>
 
 		<label class="field">
 			<span class="label">Til</span>
