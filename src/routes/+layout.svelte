@@ -5,7 +5,8 @@
 	import NotificationPermissionBanner from '$lib/components/timer/NotificationPermissionBanner.svelte';
 	import PwaPrompts from '$lib/components/ui/PwaPrompts.svelte';
 	import { onMount } from 'svelte';
-	import { timers, activeTimers } from '$lib/stores';
+	import { timers, activeTimers, preferences } from '$lib/stores';
+	import { setupWakeLockVisibilityHandler, syncWakeLock } from '$lib/utils/wake-lock';
 
 	let { children } = $props();
 
@@ -13,13 +14,22 @@
 		// Initialize timers store (loads from localStorage and starts checking)
 		timers.init();
 
+		const removeVisibilityHandler = setupWakeLockVisibilityHandler();
+
 		return () => {
 			timers.destroy();
+			removeVisibilityHandler();
+			void syncWakeLock(false);
 		};
 	});
 
 	// Check if there are active timers
 	let hasActiveTimers = $derived($activeTimers.length > 0);
+	let keepScreenAwake = $derived($preferences.keepScreenAwake && hasActiveTimers);
+
+	$effect(() => {
+		void syncWakeLock(keepScreenAwake);
+	});
 </script>
 
 <svelte:head>
