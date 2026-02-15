@@ -144,10 +144,11 @@
 			{#each summary.ingredients as ingredient}
 				<div class="ingredient-row">
 					<div class="stack">
-						<label class="label">Navn</label>
+						<label class="label" for={`${ingredient.id}-name`}>Navn</label>
 						<input
 							class="input"
 							type="text"
+							id={`${ingredient.id}-name`}
 							value={ingredient.name}
 							oninput={(event) =>
 								updateIngredient(
@@ -159,9 +160,10 @@
 					</div>
 
 					<div class="stack">
-						<label class="label">Type</label>
+						<label class="label" for={`${ingredient.id}-type`}>Type</label>
 						<select
 							class="input"
+							id={`${ingredient.id}-type`}
 							value={ingredient.type}
 							onchange={(event) =>
 								updateIngredient(
@@ -176,13 +178,14 @@
 					</div>
 
 					<div class="stack">
-						<label class="label">Procent af mel</label>
+						<label class="label" for={`${ingredient.id}-percentage`}>Procent af mel</label>
 						<div class="input-with-unit">
 							<input
 								class="input"
 								type="number"
 								min="0"
 								step="0.1"
+								id={`${ingredient.id}-percentage`}
 								value={ingredient.percentage}
 								oninput={(event) =>
 									updateIngredient(
@@ -196,7 +199,7 @@
 					</div>
 
 					<div class="stack">
-						<label class="label">Vægt</label>
+						<div class="label">Vægt</div>
 						<div class="weight-readout">{formatWeight(ingredient.weight)}</div>
 					</div>
 

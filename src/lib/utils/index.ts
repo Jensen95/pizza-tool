@@ -1,5 +1,12 @@
 export * from './baker-percentage';
-export * from './baker-math';
+export {
+	attachIngredientWeights,
+	calculateDoughTotalWeight,
+	calculateHydrationPercentage,
+	calculateTargetWater,
+	summarizeBakerMath,
+	calculateWaterWeight
+} from './baker-math';
 export * from './storage';
 export * from './timer-manager';
 export * from './notification';
