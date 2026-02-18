@@ -20,6 +20,8 @@ import bkBigaV1 from './bk-biga-v1.json';
 import bkBigaV2 from './bk-biga-v2.json';
 import bkDetroit from './bk-detroit.json';
 import bkGlutenFree from './bk-gluten-free.json';
+import romaTegliaBonci from './roma-teglia-bonci.json';
+import romaTegliaBigaGiorilli from './roma-teglia-biga-giorilli.json';
 
 export const recipes: Recipe[] = [
 	vitoPoolish as Recipe,
@@ -41,7 +43,9 @@ export const recipes: Recipe[] = [
 	bkBigaV1 as Recipe,
 	bkBigaV2 as Recipe,
 	bkDetroit as Recipe,
-	bkGlutenFree as Recipe
+	bkGlutenFree as Recipe,
+	romaTegliaBonci as Recipe,
+	romaTegliaBigaGiorilli as Recipe
 ];
 
 export function getRecipeById(id: string): Recipe | undefined {
