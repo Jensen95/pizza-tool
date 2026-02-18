@@ -13,6 +13,9 @@ const config = {
 		prerender: {
 			handleHttpError: 'warn',
 			handleMissingId: 'warn'
+		},
+		alias: {
+			'content-collections': './.content-collections/generated'
 		}
 	}
 };

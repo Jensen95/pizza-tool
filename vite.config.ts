@@ -1,8 +1,11 @@
-import { defineConfig } from 'vitest/config';
 import { sveltekit } from '@sveltejs/kit/vite';
+import contentCollections from '@content-collections/vite';
+import { defineConfig } from 'vitest/config';
+
+const isTest = process.env.VITEST === 'true';
 
 export default defineConfig({
-	plugins: [sveltekit()],
+	plugins: [!isTest && contentCollections(), sveltekit()].filter(Boolean),
 	test: {
 		globals: true,
 		environment: 'node',
