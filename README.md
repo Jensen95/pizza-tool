@@ -187,6 +187,7 @@ See [DEPENDABOT_GUIDE.md](./DEPENDABOT_GUIDE.md) for detailed configuration and 
 - Recipe JSON files now include a `_meta` block inspired by the [content-collections SvelteKit quickstart](https://www.content-collections.dev/docs/quickstart/svelte-kit) so each document carries its own collection-aware metadata.
 - Required fields: `collection`, `id`, `slug`, `source`; optional field: `locale`.
 - Content schemas are validated with Zod via `@content-collections/core` and `@content-collections/vite` (see `content-collections.ts`), ensuring the JSON stays structured.
+- Why keep `_meta`? It mirrors the shape emitted by content-collections in production, providing stable `slug`, `id`, and `source` info for linking/debugging, and prevents mismatches when the generator backfills metadata.
 - Example recipe file header:
 
 ```json
