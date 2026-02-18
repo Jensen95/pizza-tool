@@ -1,0 +1,129 @@
+{
+	"id": "roma-teglia-biga-giorilli",
+	"name": "Roma Teglia Biga (Piergiorgio Giorilli)",
+	"nameDa": "Roma teglia biga (Piergiorgio Giorilli)",
+	"category": "roman",
+	"yeastType": "fresh",
+	"baseWeight": 900,
+	"hydration": 75,
+	"yieldPizzas": 1,
+	"ingredients": [
+		{
+			"id": "biga-flour",
+			"name": "Flour (biga)",
+			"nameDa": "Mel (biga)",
+			"percentage": 70,
+			"type": "flour",
+			"stage": "biga"
+		},
+		{
+			"id": "biga-water",
+			"name": "Water (biga)",
+			"nameDa": "Vand (biga)",
+			"percentage": 31.5,
+			"type": "water",
+			"stage": "biga"
+		},
+		{
+			"id": "biga-yeast",
+			"name": "Fresh yeast (biga)",
+			"nameDa": "Frisk gær (biga)",
+			"percentage": 0.1,
+			"type": "yeast",
+			"stage": "biga"
+		},
+		{
+			"id": "main-flour",
+			"name": "Flour (final dough)",
+			"nameDa": "Mel (hoveddej)",
+			"percentage": 30,
+			"type": "flour",
+			"stage": "main"
+		},
+		{
+			"id": "main-water",
+			"name": "Water (final dough)",
+			"nameDa": "Vand (hoveddej)",
+			"percentage": 43.5,
+			"type": "water",
+			"stage": "main"
+		},
+		{
+			"id": "oil",
+			"name": "Extra virgin olive oil",
+			"nameDa": "Ekstra jomfruolivenolie",
+			"percentage": 3,
+			"type": "oil",
+			"stage": "main"
+		},
+		{
+			"id": "salt",
+			"name": "Fine sea salt",
+			"nameDa": "Fint havsalt",
+			"percentage": 2.5,
+			"type": "salt",
+			"stage": "main"
+		}
+	],
+	"schedule": {
+		"stages": [
+			{
+				"id": "stage-1",
+				"name": "Biga ferment",
+				"nameDa": "Biga hævning",
+				"duration": 960,
+				"temperature": 18,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Smuldr gær i vandet og vend med melet til en kornet dej, der ikke hænger sammen. Hæv tildækket 14-18 timer ved ca. 18 grader."
+			},
+			{
+				"id": "stage-2",
+				"name": "Final dough mix",
+				"nameDa": "Hoveddej",
+				"duration": 25,
+				"temperature": 22,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Rør biga ud i hoveddej-vandet, tilsæt resten af melet og ælt til dejen samler sig. Tilføj salt og olie og ælt til dejen er glat og elastisk."
+			},
+			{
+				"id": "stage-3",
+				"name": "Bench rest",
+				"nameDa": "Hvil og fold",
+				"duration": 30,
+				"temperature": 22,
+				"location": "room",
+				"canSetTimer": true,
+				"instructionsDa": "Lad dejen hvile 20-30 minutter og giv et par foldninger for at bygge spænding uden at rive glutenmasken."
+			},
+			{
+				"id": "stage-4",
+				"name": "Cold ferment",
+				"nameDa": "Koldhævning",
+				"duration": 1440,
+				"temperature": 4,
+				"location": "fridge",
+				"canSetTimer": true,
+				"instructionsDa": "Kom dejen i en olieret beholder og hæv 18-24 timer på køl."
+			},
+			{
+				"id": "stage-5",
+				"name": "Pan proof",
+				"nameDa": "Hæv i form",
+				"duration": 90,
+				"temperature": 24,
+				"location": "warm",
+				"canSetTimer": true,
+				"instructionsDa": "Temperer dejen 30 minutter, spænd den op og stræk forsigtigt i en olieret 30x40 cm pande. Lad hæve 60-90 minutter til luftig og klar til topping."
+			}
+		],
+		"totalTime": 2545
+	},
+	"tipsDa": [
+		"Hold bigaen kølig (16-20 grader) for at undgå overmodning og syrlig smag.",
+		"Bigaen bør dufte sødt og have synlige gaslommer, men må ikke kollapse før hoveddejen blandes.",
+		"Tryk dejen ud med flade hænder i flere omgange for at bevare luft og få et jævnt krummebillede."
+	],
+	"source": "Piergiorgio Giorilli"
+}
