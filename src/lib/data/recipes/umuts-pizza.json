@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "umuts-pizza",
+		"slug": "umuts-pizza",
+		"source": "src/lib/data/recipes/umuts-pizza.json"
+	},
 	"id": "umuts-pizza",
 	"name": "Umuts Pizzadej",
 	"nameDa": "Umuts Pizzadej",

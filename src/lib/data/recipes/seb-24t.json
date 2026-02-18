@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "seb-24t",
+		"slug": "seb-24t",
+		"source": "src/lib/data/recipes/seb-24t.json"
+	},
 	"id": "seb-24t",
 	"name": "Seb 24 timer",
 	"nameDa": "Seb 24 timer",

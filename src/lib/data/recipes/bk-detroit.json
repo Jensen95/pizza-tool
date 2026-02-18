@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "bk-detroit",
+		"slug": "bk-detroit",
+		"source": "src/lib/data/recipes/bk-detroit.json"
+	},
 	"id": "bk-detroit",
 	"name": "BK Detroit",
 	"nameDa": "BK Detroit",

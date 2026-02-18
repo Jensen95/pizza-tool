@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "vito-poolish-autolysis",
+		"slug": "vito-poolish-autolysis",
+		"source": "src/lib/data/recipes/vito-poolish-autolysis.json"
+	},
 	"id": "vito-poolish-autolysis",
 	"name": "Vito's Poolish Pizza + Autolysis",
 	"nameDa": "Vito's Poolish Pizza + Autolyse",

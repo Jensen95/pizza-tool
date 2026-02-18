@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "bk-handaelt",
+		"slug": "bk-handaelt",
+		"source": "src/lib/data/recipes/bk-handaelt.json"
+	},
 	"id": "bk-handaelt",
 	"name": "BK Handæltet",
 	"nameDa": "BK Handæltet",

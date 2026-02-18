@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "tony-tiga-poolish",
+		"slug": "tony-tiga-poolish",
+		"source": "src/lib/data/recipes/tony-tiga-poolish.json"
+	},
 	"id": "tony-tiga-poolish",
 	"name": "Tony Tiga + Poolish",
 	"nameDa": "Tony Tiga + Poolish",

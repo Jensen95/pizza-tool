@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "roma-teglia-biga-giorilli",
+		"slug": "roma-teglia-biga-giorilli",
+		"source": "src/lib/data/recipes/roma-teglia-biga-giorilli.json"
+	},
 	"id": "roma-teglia-biga-giorilli",
 	"name": "Roma Teglia Biga (Piergiorgio Giorilli)",
 	"nameDa": "Roma teglia biga (Piergiorgio Giorilli)",

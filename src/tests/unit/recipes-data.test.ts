@@ -23,4 +23,14 @@ describe('roman style recipes', () => {
 		const romanRecipes = recipes.filter((recipe) => recipe.category === 'roman');
 		expect(romanRecipes.length).toBeGreaterThanOrEqual(2);
 	});
+
+	it('adds structured metadata for each recipe', () => {
+		for (const recipe of recipes) {
+			expect(recipe._meta).toBeDefined();
+			expect(recipe._meta?.collection).toBe('recipes');
+			expect(recipe._meta?.id).toBe(recipe.id);
+			expect(recipe._meta?.slug).toBe(recipe.id);
+			expect(recipe._meta?.source).toContain(recipe.id);
+		}
+	});
 });

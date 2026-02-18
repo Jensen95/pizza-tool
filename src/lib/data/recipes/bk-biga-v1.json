@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "bk-biga-v1",
+		"slug": "bk-biga-v1",
+		"source": "src/lib/data/recipes/bk-biga-v1.json"
+	},
 	"id": "bk-biga-v1",
 	"name": "BK Biga v1",
 	"nameDa": "BK Biga v1",

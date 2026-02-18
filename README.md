@@ -182,6 +182,25 @@ See [DEPENDABOT_GUIDE.md](./DEPENDABOT_GUIDE.md) for detailed configuration and 
     └── workflows/         # CI/CD workflows
 ```
 
+## Structured JSON Data
+
+- Recipe JSON files now include a `_meta` block inspired by the [content-collections SvelteKit quickstart](https://www.content-collections.dev/docs/quickstart/svelte-kit) so each document carries its own collection-aware metadata.
+- Required fields: `collection`, `id`, `slug`, `source`; optional field: `locale`.
+- Example recipe file header:
+
+```json
+{
+	"_meta": {
+		"collection": "recipes",
+		"id": "ny-style",
+		"slug": "ny-style",
+		"source": "src/lib/data/recipes/ny-style.json"
+	},
+	"id": "ny-style",
+	"...": "other recipe fields"
+}
+```
+
 ## Technologies
 
 - [SvelteKit](https://kit.svelte.dev/) - Application framework (static adapter, CSR only)

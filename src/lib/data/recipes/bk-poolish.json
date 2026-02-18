@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "bk-poolish",
+		"slug": "bk-poolish",
+		"source": "src/lib/data/recipes/bk-poolish.json"
+	},
 	"id": "bk-poolish",
 	"name": "BK Poolish",
 	"nameDa": "BK Poolish",

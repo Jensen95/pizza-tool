@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "ny-style",
+		"slug": "ny-style",
+		"source": "src/lib/data/recipes/ny-style.json"
+	},
 	"id": "ny-style",
 	"name": "New York Style",
 	"nameDa": "New York Style",

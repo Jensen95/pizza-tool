@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "vito-poolish-double",
+		"slug": "vito-poolish-double",
+		"source": "src/lib/data/recipes/vito-poolish-double.json"
+	},
 	"id": "vito-poolish-double",
 	"name": "Vito's Poolish Pizza - Double Fermented",
 	"nameDa": "Vito's Poolish Pizza - Dobbelt Fermentering",

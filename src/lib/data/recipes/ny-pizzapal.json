@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "ny-pizzapal",
+		"slug": "ny-pizzapal",
+		"source": "src/lib/data/recipes/ny-pizzapal.json"
+	},
 	"id": "ny-pizzapal",
 	"name": "NY PizzaPal",
 	"nameDa": "NY PizzaPal",

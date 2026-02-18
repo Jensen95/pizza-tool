@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "bk-napoli",
+		"slug": "bk-napoli",
+		"source": "src/lib/data/recipes/bk-napoli.json"
+	},
 	"id": "bk-napoli",
 	"name": "BK Napoli",
 	"nameDa": "BK Napoli",

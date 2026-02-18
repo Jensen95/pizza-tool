@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "ppah-ny",
+		"slug": "ppah-ny",
+		"source": "src/lib/data/recipes/ppah-ny.json"
+	},
 	"id": "ppah-ny",
 	"name": "PPAH NY Style",
 	"nameDa": "PPAH NY Style",

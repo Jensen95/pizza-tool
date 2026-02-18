@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "roma-teglia-bonci",
+		"slug": "roma-teglia-bonci",
+		"source": "src/lib/data/recipes/roma-teglia-bonci.json"
+	},
 	"id": "roma-teglia-bonci",
 	"name": "Roma Teglia (Gabriele Bonci)",
 	"nameDa": "Roma teglia (Gabriele Bonci)",

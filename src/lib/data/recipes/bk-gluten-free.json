@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "bk-gluten-free",
+		"slug": "bk-gluten-free",
+		"source": "src/lib/data/recipes/bk-gluten-free.json"
+	},
 	"id": "bk-gluten-free",
 	"name": "BK Glutenfri",
 	"nameDa": "BK Glutenfri",

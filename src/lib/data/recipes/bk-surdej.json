@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "bk-surdej",
+		"slug": "bk-surdej",
+		"source": "src/lib/data/recipes/bk-surdej.json"
+	},
 	"id": "bk-surdej",
 	"name": "BK Surdej",
 	"nameDa": "BK Surdej",

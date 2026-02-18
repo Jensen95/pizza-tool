@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "gorms-pizza",
+		"slug": "gorms-pizza",
+		"source": "src/lib/data/recipes/gorms-pizza.json"
+	},
 	"id": "gorms-pizza",
 	"name": "Gorms Pizzadej",
 	"nameDa": "Gorms Pizzadej",

@@ -1,4 +1,10 @@
 {
+	"_meta": {
+		"collection": "recipes",
+		"id": "seb-biga",
+		"slug": "seb-biga",
+		"source": "src/lib/data/recipes/seb-biga.json"
+	},
 	"id": "seb-biga",
 	"name": "Seb Biga",
 	"nameDa": "Seb Biga",

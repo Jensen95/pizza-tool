@@ -1,5 +1,13 @@
 import type { YeastInfo } from './reference';
 
+export interface ContentMeta {
+	collection: string;
+	id: string;
+	slug: string;
+	source: string;
+	locale?: string;
+}
+
 export type RecipeCategory =
 	| 'neapolitan'
 	| 'ny-style'
@@ -73,6 +81,7 @@ export interface Recipe {
 	source?: string;
 	createdAt?: string;
 	updatedAt?: string;
+	_meta?: ContentMeta;
 }
 
 export interface RecipeGroup {
