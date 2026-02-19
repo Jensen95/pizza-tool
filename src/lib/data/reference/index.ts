@@ -1,4 +1,12 @@
-import type { FlourType, SauceRecipe, YeastInfo, Tip, YeastLookup } from '$lib/models';
+import type {
+	FlourType,
+	SauceRecipe,
+	YeastInfo,
+	Tip,
+	YeastLookup,
+	SpreadRecipe,
+	ReheatingMethod
+} from '$lib/models';
 
 import flourTypesData from './flour-types.json';
 import sauceRecipesData from './sauce-recipes.json';
@@ -6,6 +14,8 @@ import yeastInfoData from './yeast-info.json';
 import tipsData from './tips.json';
 import pizzaSuggestionsData from './pizza-suggestions.json';
 import yeastLookupData from './yeast-lookup.json';
+import spreadRecipesData from './spread-recipes.json';
+import reheatingData from './reheating.json';
 
 export interface PizzaSuggestion {
 	name: string;
@@ -19,6 +29,8 @@ export const yeastInfo: YeastInfo[] = yeastInfoData as YeastInfo[];
 export const tips: Tip[] = tipsData as Tip[];
 export const pizzaSuggestions: PizzaSuggestion[] = pizzaSuggestionsData as PizzaSuggestion[];
 export const yeastLookup: YeastLookup = yeastLookupData as YeastLookup;
+export const spreadRecipes: SpreadRecipe[] = spreadRecipesData as SpreadRecipe[];
+export const reheatingMethods: ReheatingMethod[] = reheatingData as ReheatingMethod[];
 
 export function getFlourById(id: string): FlourType | undefined {
 	return flourTypes.find((f) => f.id === id);

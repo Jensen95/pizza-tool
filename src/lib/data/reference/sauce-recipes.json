@@ -104,5 +104,128 @@
 			"Kog op og lad simre i 5-10 minutter."
 		],
 		"yieldDa": "3-4 pizzaer"
+	},
+	{
+		"id": "ppah-ny-sauce",
+		"name": "PPAH NY Pizza Sauce",
+		"nameDa": "PPAH NY Pizzasauce",
+		"descriptionDa": "Ukogt NY-style pizzasauce",
+		"ingredients": [
+			{
+				"name": "Crushed tomatoes",
+				"nameDa": "Knuste tomater",
+				"amount": "400g",
+				"amountDa": "1 dåse (400g)"
+			},
+			{
+				"name": "Salt",
+				"nameDa": "Salt",
+				"amount": "1/2 tsp",
+				"amountDa": "1/2 tsk"
+			},
+			{
+				"name": "Dried oregano",
+				"nameDa": "Tørret oregano",
+				"amount": "1 tsp",
+				"amountDa": "1 tsk"
+			},
+			{
+				"name": "Dried basil",
+				"nameDa": "Tørret basilikum",
+				"amount": "1 tsp",
+				"amountDa": "1 tsk"
+			},
+			{
+				"name": "Garlic",
+				"nameDa": "Hvidløg",
+				"amount": "1-2 cloves, minced",
+				"amountDa": "1-2 fed, finthakket"
+			},
+			{
+				"name": "Chili flakes",
+				"nameDa": "Chiliflager",
+				"amount": "pinch",
+				"amountDa": "et drys"
+			},
+			{
+				"name": "Sugar",
+				"nameDa": "Sukker",
+				"amount": "1/2 tsp",
+				"amountDa": "1/2 tsk"
+			}
+		],
+		"instructionsDa": [
+			"Bland alle ingredienserne i en skål.",
+			"Rør godt sammen.",
+			"Saucen er klar til brug med det samme."
+		],
+		"yieldDa": "3-4 pizzaer",
+		"tipsDa": ["Ukogt sauce bevarer den friske tomatsmag."]
+	},
+	{
+		"id": "pizzapal-ny-sauce",
+		"name": "PizzaPal NY Sauce",
+		"nameDa": "PizzaPal NY Sauce",
+		"descriptionDa": "NY-style sauce med San Marzano D.O.P. – hvil 1 dag",
+		"ingredients": [
+			{
+				"name": "San Marzano D.O.P. tomatoes",
+				"nameDa": "San Marzano D.O.P. tomater",
+				"amount": "400g",
+				"amountDa": "1 dåse (400g)"
+			},
+			{
+				"name": "Garlic",
+				"nameDa": "Hvidløg",
+				"amount": "1-2 cloves",
+				"amountDa": "1-2 fed"
+			},
+			{
+				"name": "Onion powder",
+				"nameDa": "Løgpulver",
+				"amount": "1/2 tsp",
+				"amountDa": "1/2 tsk"
+			},
+			{
+				"name": "Dried oregano",
+				"nameDa": "Tørret oregano",
+				"amount": "1 tsp",
+				"amountDa": "1 tsk"
+			},
+			{
+				"name": "Dried basil",
+				"nameDa": "Tørret basilikum",
+				"amount": "1 tsp",
+				"amountDa": "1 tsk"
+			},
+			{
+				"name": "Sugar",
+				"nameDa": "Sukker",
+				"amount": "1/2 tsp",
+				"amountDa": "1/2 tsk"
+			},
+			{
+				"name": "Olive oil",
+				"nameDa": "Olivenolie",
+				"amount": "1 tbsp",
+				"amountDa": "1 spsk"
+			},
+			{
+				"name": "Salt",
+				"nameDa": "Salt",
+				"amount": "to taste",
+				"amountDa": "efter smag"
+			}
+		],
+		"instructionsDa": [
+			"Blend alle ingredienserne i ca. 30 sekunder.",
+			"Hæld i en lufttæt beholder og sæt i køleskabet.",
+			"Lad saucen hvile i minimum 1 dag inden brug."
+		],
+		"yieldDa": "3-4 pizzaer",
+		"tipsDa": [
+			"San Marzano D.O.P. giver den bedste smag.",
+			"1 dags hvile lader smagen udvikle sig."
+		]
 	}
 ]

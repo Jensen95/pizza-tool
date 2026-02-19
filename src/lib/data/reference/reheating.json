@@ -1,0 +1,35 @@
+[
+	{
+		"id": "skillet-method",
+		"name": "Skillet Method",
+		"nameDa": "Stegepandemetode",
+		"rating": "9/10",
+		"instructionsDa": [
+			"Varm en stegepande op på medium varme.",
+			"Læg pizzastykket i panden.",
+			"Tilføj et lille stænk vand i kanten af panden.",
+			"Dæk straks til med et låg.",
+			"Varm i 2-3 minutter indtil osten er smeltet og bunden er sprød."
+		],
+		"tipsDa": [
+			"Vandet skaber damp der smelter osten fra toppen.",
+			"Hold øje med bunden så den ikke brænder."
+		]
+	},
+	{
+		"id": "oven-method",
+		"name": "Oven Method",
+		"nameDa": "Ovnmetode",
+		"rating": "8/10",
+		"instructionsDa": [
+			"Placer pizzastykker på en bageplade med kant.",
+			"Dæk til med sølvpapir.",
+			"Sæt i en KOLD ovn og tænd den til 160°C undervarme.",
+			"Varm i ca. 10-15 min."
+		],
+		"tipsDa": [
+			"Ved at starte i kold ovn varmes pizzaen langsomt og jævnt igennem.",
+			"Undervarme hjælper med at holde bunden sprød."
+		]
+	}
+]

@@ -129,6 +129,25 @@ export interface FlourTypeOption {
 	nameDa: string;
 }
 
+export interface SpreadRecipe {
+	id: string;
+	name: string;
+	nameDa: string;
+	descriptionDa?: string;
+	ingredients: SauceIngredient[];
+	instructionsDa: string[];
+	tipsDa?: string[];
+}
+
+export interface ReheatingMethod {
+	id: string;
+	name: string;
+	nameDa: string;
+	rating: string;
+	instructionsDa: string[];
+	tipsDa?: string[];
+}
+
 export interface YeastLookupEntry {
 	location: 'room' | 'fridge';
 	hours: number;
