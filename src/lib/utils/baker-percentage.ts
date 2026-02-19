@@ -12,8 +12,8 @@ import type { FlourTypeOption } from '$lib/types/reference';
 // Non-controllable ingredient types (flour and water are controlled via hydration/blend)
 const NON_EXTRA_TYPES = ['flour', 'water'] as const;
 
-// Internal type: a recipe ingredient tagged with its mixing step
-interface FlatIngredient extends RecipeIngredient {
+// A recipe ingredient tagged with its mixing step
+export interface FlatIngredient extends RecipeIngredient {
 	mixingStepId: string;
 }
 
@@ -346,7 +346,10 @@ export function calculateTotalFlour(
  * Build a temporary recipe with flat ingredients mapped back into mixing steps.
  * Used internally so functions like getOriginalPredoughRatio() work with modified ingredients.
  */
-function recipeWithFlatIngredients(recipe: Recipe, flatIngredients: FlatIngredient[]): Recipe {
+export function recipeWithFlatIngredients(
+	recipe: Recipe,
+	flatIngredients: FlatIngredient[]
+): Recipe {
 	const mixingSteps = recipe.mixingSteps.map((step) => ({
 		...step,
 		ingredients: flatIngredients

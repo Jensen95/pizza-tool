@@ -1,6 +1,7 @@
 import { writable, derived, get } from 'svelte/store';
 import * as storage from '$lib/utils/storage';
 import type { Recipe, RecipeIngredient } from '$lib/types/recipe';
+import { getAllIngredients } from '$lib/utils/baker-percentage';
 
 const CUSTOMIZATIONS_KEY = 'recipe-customizations';
 const HISTORY_KEY = 'recipe-history';
@@ -130,9 +131,10 @@ function createCustomizationsStore() {
 		 */
 		applyToIngredients(recipe: Recipe): RecipeIngredient[] {
 			const customization = get({ subscribe })[recipe.id];
-			if (!customization) return recipe.ingredients;
+			const allIngredients = getAllIngredients(recipe);
+			if (!customization) return allIngredients;
 
-			return recipe.ingredients.map((ing) => {
+			return allIngredients.map((ing) => {
 				const customPercentage = customization.ingredients[ing.id];
 				if (customPercentage !== undefined) {
 					return { ...ing, percentage: customPercentage };
