@@ -10,9 +10,6 @@ A SvelteKit application for pizza recipe management with baker's percentage calc
 - 📖 Reference materials (flour types, sauces, tips)
 - 📱 Progressive Web App (PWA) support
 
-TODO:
-Extract more context from recipes by using the excel plugin in cluade.
-
 ### PWA install support
 
 - The in-app install banner relies on the `beforeinstallprompt` event, which is available in Chromium-based browsers (Chrome, Edge, Brave) and will surface when the app meets install criteria.
@@ -209,3 +206,11 @@ The app includes comprehensive unit tests for baker's percentage calculations:
 - Recipe validation
 
 All calculations are thoroughly tested with 33 unit tests covering various scenarios including complex multi-stage recipes.
+
+TODO:
+
+- Add a planner funtion, where you can put in a dissired time for the doughs to be ready.
+  Then the timer will prompt when to start
+- Some steps in the timeline references the dough ball weight, we should make that dynamic
+- Kneading times right now use lower bound, maybe we need a way to support ranges for duration?
+  Would also be neat to add machine type or specific machines kneading time in the future
