@@ -85,19 +85,37 @@
 			"canSetTimer": true
 		},
 		{
-			"instructionsDa": "Tilsæt salt og ælt i 4 min. Lad dejen hvile i 5 min.",
+			"instructionsDa": "Tilsæt salt og ælt i 4 min.",
 			"ingredients": ["salt"],
-			"duration": 9,
+			"duration": 4,
 			"canSetTimer": true
 		},
 		{
-			"instructionsDa": "Ælt dejen i 5 min. og lad den hvile 5 min.",
-			"duration": 10,
+			"instructionsDa": "Lad dejen hvile i 5 min.",
+			"duration": 5,
+			"location": "room",
 			"canSetTimer": true
 		},
 		{
-			"instructionsDa": "Ælt dejen i 5 min. og lad den hvile 2 min.",
-			"duration": 7,
+			"instructionsDa": "Ælt dejen i 5 min.",
+			"duration": 5,
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Lad den hvile 5 min.",
+			"duration": 5,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Ælt dejen i 5 min.",
+			"duration": 5,
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Lad den hvile 2 min.",
+			"duration": 2,
+			"location": "room",
 			"canSetTimer": true
 		},
 		{
