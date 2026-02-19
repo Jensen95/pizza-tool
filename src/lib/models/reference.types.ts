@@ -123,6 +123,35 @@ export const tipCategoryLabels: Record<Tip['category'], string> = {
 	general: 'Generelt'
 };
 
+export interface HydrationByStyle {
+	style: string;
+	styleDa: string;
+	hydrationMin: number;
+	hydrationMax: number;
+}
+
+export interface WStrengthTier {
+	tierDa: string;
+	wMin: number;
+	wMax: number;
+	proteinMin: number;
+	proteinMax: number;
+	useDa: string;
+}
+
+export interface ProteinToW {
+	proteinMin: number;
+	proteinMax: number;
+	wMin: number;
+	wMax: number;
+}
+
+export interface FlourReference {
+	hydrationByStyle: HydrationByStyle[];
+	wStrengthTiers: WStrengthTier[];
+	proteinToW: ProteinToW[];
+}
+
 export interface FlourTypeOption {
 	id: string;
 	name: string;
@@ -146,6 +175,54 @@ export interface ReheatingMethod {
 	rating: string;
 	instructionsDa: string[];
 	tipsDa?: string[];
+}
+
+export interface WaterTempFormula {
+	formulaDa: string;
+	frictionHeat: {
+		lowSpeedPerMin: number;
+		mediumSpeedPerMin: number;
+	};
+	targetDoughTemp: {
+		min: number;
+		max: number;
+		notesDa: string;
+	};
+	exampleDa: string;
+}
+
+export interface PizzaSize {
+	label: string;
+	labelDa: string;
+	neapolitanGrams: number;
+	nyStyleGrams: number;
+	diameter: string;
+	slices: number;
+	persons: string;
+}
+
+export interface PizzaSizeGuide {
+	sizes: PizzaSize[];
+	deepPanFormulas: {
+		rectangleDa: string;
+		roundDa: string;
+	};
+}
+
+export interface ToppingAmounts {
+	perCmDiameter: {
+		nonNeapolitan: ToppingCategory;
+		neapolitan: ToppingCategory;
+	};
+	notesDa: string;
+}
+
+export interface ToppingCategory {
+	sauceGramsPerCm: number;
+	cheeseGramsPerCm: number;
+	meatGramsPerCm: number;
+	vegetablesGramsPerCm: number;
+	otherGramsPerCm: number;
 }
 
 export interface YeastLookupEntry {

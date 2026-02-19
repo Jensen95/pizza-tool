@@ -1,0 +1,44 @@
+{
+	"sizes": [
+		{
+			"label": "Small",
+			"labelDa": "Lille",
+			"neapolitanGrams": 190,
+			"nyStyleGrams": 150,
+			"diameter": "~25cm / 10\"",
+			"slices": 4,
+			"persons": "1"
+		},
+		{
+			"label": "Medium",
+			"labelDa": "Medium",
+			"neapolitanGrams": 275,
+			"nyStyleGrams": 220,
+			"diameter": "~30cm / 12\"",
+			"slices": 6,
+			"persons": "1"
+		},
+		{
+			"label": "Large",
+			"labelDa": "Stor",
+			"neapolitanGrams": 375,
+			"nyStyleGrams": 300,
+			"diameter": "~35cm / 14\"",
+			"slices": 8,
+			"persons": "2"
+		},
+		{
+			"label": "XL",
+			"labelDa": "XL",
+			"neapolitanGrams": 490,
+			"nyStyleGrams": 390,
+			"diameter": "~40cm / 16\"",
+			"slices": 10,
+			"persons": "2-3"
+		}
+	],
+	"deepPanFormulas": {
+		"rectangleDa": "Dejvægt (g) = L × B × 0,579 (cm)",
+		"roundDa": "Dejvægt (g) = (d/2)² × π × 0,6 (cm)"
+	}
+}

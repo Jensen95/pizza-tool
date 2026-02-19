@@ -1,0 +1,19 @@
+{
+	"perCmDiameter": {
+		"nonNeapolitan": {
+			"sauceGramsPerCm": 2.83,
+			"cheeseGramsPerCm": 4.0,
+			"meatGramsPerCm": 2.5,
+			"vegetablesGramsPerCm": 2.33,
+			"otherGramsPerCm": 0.83
+		},
+		"neapolitan": {
+			"sauceGramsPerCm": 2.66,
+			"cheeseGramsPerCm": 2.33,
+			"meatGramsPerCm": 1.33,
+			"vegetablesGramsPerCm": 1.33,
+			"otherGramsPerCm": 0.67
+		}
+	},
+	"notesDa": "Mængderne er vejledende og per cm diameter. F.eks. en 30 cm Margherita: sauce = 30 × 2,66 = ~80g, ost = 30 × 2,33 = ~70g."
+}
