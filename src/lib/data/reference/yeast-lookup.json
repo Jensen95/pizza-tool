@@ -1,0 +1,25 @@
+{
+	"lookupTable": [
+		{ "location": "room", "hours": 2, "idyPercentage": 0.5 },
+		{ "location": "room", "hours": 5, "idyPercentage": 0.2 },
+		{ "location": "room", "hours": 8, "idyPercentage": 0.1 },
+		{ "location": "room", "hours": 18, "idyPercentage": 0.03 },
+		{ "location": "fridge", "hours": 24, "idyPercentage": 0.3 },
+		{ "location": "fridge", "hours": 48, "idyPercentage": 0.1 },
+		{ "location": "fridge", "hours": 72, "idyPercentage": 0.05 }
+	],
+	"brandConversions": [
+		{ "brand": "Bioreal Øko", "type": "active-dry", "ratio": "1:3" },
+		{
+			"brand": "Caputo Lievito",
+			"type": "instant",
+			"ratio": "1:3",
+			"note": "glutenfri"
+		},
+		{ "brand": "Doves Glutenfri", "type": "instant", "ratio": "1:4" },
+		{ "brand": "Instaferm Red", "type": "instant", "ratio": "1:4" },
+		{ "brand": "Malteserkors", "type": "instant", "ratio": "1:4" },
+		{ "brand": "SAF-Instant", "type": "instant", "ratio": "1:3" },
+		{ "brand": "Valsemøllen", "type": "instant", "ratio": "1:3" }
+	]
+}

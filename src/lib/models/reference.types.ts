@@ -128,3 +128,21 @@ export interface FlourTypeOption {
 	name: string;
 	nameDa: string;
 }
+
+export interface YeastLookupEntry {
+	location: 'room' | 'fridge';
+	hours: number;
+	idyPercentage: number;
+}
+
+export interface YeastBrandConversion {
+	brand: string;
+	type: 'fresh' | 'active-dry' | 'instant';
+	ratio: string;
+	note?: string;
+}
+
+export interface YeastLookup {
+	lookupTable: YeastLookupEntry[];
+	brandConversions: YeastBrandConversion[];
+}
