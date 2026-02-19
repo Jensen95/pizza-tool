@@ -21,7 +21,11 @@
 				<span class="stat-label">Hydrering</span>
 			</div>
 			<div class="stat">
-				<span class="stat-value">{formatDuration(recipe.schedule.totalTime)}</span>
+				<span class="stat-value"
+					>{formatDuration(
+						recipe.timeline.filter((s) => s.duration).reduce((sum, s) => sum + (s.duration || 0), 0)
+					)}</span
+				>
 				<span class="stat-label">Total tid</span>
 			</div>
 			<div class="stat">

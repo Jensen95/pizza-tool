@@ -2,7 +2,7 @@
 	import type { Recipe } from '$lib/types';
 	import type { ScaledIngredient } from '$lib/types/ingredient';
 	import { calculator } from '$lib/stores';
-	import { formatWeight, isPredoughStage } from '$lib/utils/baker-percentage';
+	import { formatWeight, isPredoughStep } from '$lib/utils/baker-percentage';
 	import DoughControls from './DoughControls.svelte';
 
 	let { recipe }: { recipe: Recipe } = $props();
@@ -31,20 +31,22 @@
 	};
 
 	function createPredoughSummary(ingredients: ScaledIngredient[]): ScaledIngredient | null {
-		const predoughIngredients = ingredients.filter((ing) => isPredoughStage(ing.stage));
+		const predoughIngredients = ingredients.filter((ing) =>
+			isPredoughStep(recipe, ing.mixingStepId)
+		);
 		if (predoughIngredients.length === 0) return null;
 
 		const totalPredoughWeight = predoughIngredients.reduce((sum, ing) => sum + ing.weight, 0);
 		if (totalPredoughWeight <= 0) return null;
 
 		const mainFlourWeight = ingredients
-			.filter((ing) => ing.type === 'flour' && !isPredoughStage(ing.stage))
+			.filter((ing) => ing.type === 'flour' && !isPredoughStep(recipe, ing.mixingStepId))
 			.reduce((sum, ing) => sum + ing.weight, 0);
 
 		const stagePercentage =
 			mainFlourWeight > 0 ? Math.round((totalPredoughWeight / mainFlourWeight) * 10000) / 100 : 0;
 
-		const stageLabel = stageLabels[predoughIngredients[0].stage || 'preferment'] || 'Fordej';
+		const stageLabel = stageLabels[predoughIngredients[0].mixingStepId] || 'Fordej';
 		const totalPercentage = predoughIngredients.reduce((sum, ing) => sum + ing.percentage, 0);
 
 		return {
@@ -55,7 +57,7 @@
 			stagePercentage,
 			weight: totalPredoughWeight,
 			type: 'other',
-			stage: 'main'
+			mixingStepId: 'main'
 		};
 	}
 
@@ -63,10 +65,9 @@
 		const groups = new Map<string, ScaledIngredient[]>();
 
 		for (const ing of ingredients) {
-			const stage = ing.stage || 'main';
-			const existing = groups.get(stage) || [];
+			const existing = groups.get(ing.mixingStepId) || [];
 			existing.push(ing);
-			groups.set(stage, existing);
+			groups.set(ing.mixingStepId, existing);
 		}
 
 		const predoughSummary = createPredoughSummary(ingredients);
@@ -85,7 +86,9 @@
 	}
 
 	let ingredientGroups = $derived(groupIngredientsByStage($calculator.scaledIngredients));
-	let hasPredough = $derived($calculator.scaledIngredients.some((i) => isPredoughStage(i.stage)));
+	let hasPredough = $derived(
+		$calculator.scaledIngredients.some((i) => isPredoughStep(recipe, i.mixingStepId))
+	);
 </script>
 
 <div class="calculator">
@@ -115,7 +118,7 @@
 								<tr class="flour-row">
 									<td class="flour-bar">
 										{ingredient.nameDa}
-										{#if hasPredough && ingredient.type === 'flour' && isPredoughStage(ingredient.stage)}
+										{#if hasPredough && ingredient.type === 'flour' && isPredoughStep(recipe, ingredient.mixingStepId)}
 											<span class="flour-ratio-badge">
 												{ingredient.percentage.toFixed(0)}% af total
 											</span>
