@@ -38,11 +38,11 @@
 		{#each recipe.timeline as step, index}
 			{@const stepIngredients = getStepIngredients(step.ingredients, $calculator.scaledIngredients)}
 
-			{#if step.section}
+			<!-- {#if step.section}
 				<div class="section-header">
 					<h3 class="section-title">{step.section}</h3>
 				</div>
-			{/if}
+			{/if} -->
 
 			<div
 				class="stage"
