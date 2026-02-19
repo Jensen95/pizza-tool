@@ -1,5 +1,5 @@
 import { writable, derived, get } from 'svelte/store';
-import type { Recipe, RecipeIngredient } from '$lib/types/recipe';
+import type { Recipe } from '$lib/types/recipe';
 import type {
 	CalculatorState,
 	ScaledIngredient,

@@ -115,9 +115,7 @@
 		return calculator.hasCustomizations();
 	});
 
-	let hasRecipeChanges = $derived(
-		hasCustomizations || doughBallWeight !== recipe.baseWeight
-	);
+	let hasRecipeChanges = $derived(hasCustomizations || doughBallWeight !== recipe.baseWeight);
 
 	let fullGrainPercentage = $derived.by(() => {
 		let total = 0;

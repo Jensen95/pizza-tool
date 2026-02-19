@@ -331,9 +331,7 @@ describe("Baker's Percentage - Recipe Validation", () => {
 					id: 'main',
 					name: 'Main dough',
 					nameDa: 'Hoveddej',
-					ingredients: [
-						{ id: '1', name: 'Water', nameDa: 'Vand', percentage: 100, type: 'water' }
-					]
+					ingredients: [{ id: '1', name: 'Water', nameDa: 'Vand', percentage: 100, type: 'water' }]
 				}
 			],
 			timeline: []
@@ -357,9 +355,7 @@ describe("Baker's Percentage - Recipe Validation", () => {
 					id: 'main',
 					name: 'Main dough',
 					nameDa: 'Hoveddej',
-					ingredients: [
-						{ id: '1', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' }
-					]
+					ingredients: [{ id: '1', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' }]
 				}
 			],
 			timeline: []

@@ -164,9 +164,7 @@ describe('End-to-end calculation tests', () => {
 			...simpleRecipe,
 			mixingSteps: simpleRecipe.mixingSteps.map((step) => ({
 				...step,
-				ingredients: step.ingredients.map((i) =>
-					i.id === 'salt' ? { ...i, percentage: 3 } : i
-				)
+				ingredients: step.ingredients.map((i) => (i.id === 'salt' ? { ...i, percentage: 3 } : i))
 			}))
 		};
 
