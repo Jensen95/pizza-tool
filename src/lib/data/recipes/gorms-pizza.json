@@ -78,7 +78,9 @@
 			"ingredients": ["salt"]
 		},
 		{
-			"instructionsDa": "Ælt dejen indtil den begynder at blive glat og smidig at røre ved. I hånden ca. 10-15 min, i spiral-mixer ca. 8-10 min."
+			"instructionsDa": "Ælt dejen indtil den begynder at blive glat og smidig at røre ved. I hånden ca. 10-15 min, i spiral-mixer ca. 8-10 min.",
+			"duration": 10,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Lad dejen hæve i køleskab til dobbeltstørrelse (det tager ca. 1 time).",

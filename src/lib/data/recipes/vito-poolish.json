@@ -114,10 +114,14 @@
 			"ingredients": ["main-salt"]
 		},
 		{
-			"instructionsDa": "Ælt ved lav hastighed i 5 min."
+			"instructionsDa": "Ælt ved lav hastighed i 5 min.",
+			"duration": 5,
+			"canSetTimer": true
 		},
 		{
-			"instructionsDa": "Ælt ved mellem hastighed i 5 min."
+			"instructionsDa": "Ælt ved mellem hastighed i 5 min.",
+			"duration": 5,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Vend dejen ud på bordet. Tag evt. lidt olie på hænderne for bedre at kunne håndtere den. Lad den hvile tildækket i 15 min.",

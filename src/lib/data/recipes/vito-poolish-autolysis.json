@@ -122,7 +122,9 @@
 			"instructionsDa": "Bland dejen og poolish ved lav hastighed indtil dejene samler sig."
 		},
 		{
-			"instructionsDa": "Ælt ved mellem hastighed i ca. 5 min."
+			"instructionsDa": "Ælt ved mellem hastighed i ca. 5 min.",
+			"duration": 5,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Tilsæt salt og ælt den godt ind i dejen.",

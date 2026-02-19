@@ -64,7 +64,9 @@
 			"ingredients": ["yeast"]
 		},
 		{
-			"instructionsDa": "Ælt videre ved lav hastighed i 5 min."
+			"instructionsDa": "Ælt videre ved lav hastighed i 5 min.",
+			"duration": 5,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Lad dejen hvile i 10 min.",
@@ -73,7 +75,9 @@
 			"canSetTimer": true
 		},
 		{
-			"instructionsDa": "Ælt ca. 5 min. ved mellem hastighed. Når dejen er skær, er den klar."
+			"instructionsDa": "Ælt ca. 5 min. ved mellem hastighed. Når dejen er skær, er den klar.",
+			"duration": 5,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Dejen virkes op til en bolle indtil overfladen virker jævn."

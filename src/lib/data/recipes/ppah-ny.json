@@ -64,7 +64,9 @@
 		},
 		{
 			"instructionsDa": "Tilføj vand og olie. Ælt ved lav hastighed i 2 min.",
-			"ingredients": ["water", "oil"]
+			"ingredients": ["water", "oil"],
+			"duration": 2,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Lad dejen hvile overdækket 15-30 min. (autolyse).",
@@ -73,7 +75,9 @@
 			"canSetTimer": true
 		},
 		{
-			"instructionsDa": "Ælt dejen ved lav hastighed i ca. 15 min. eller indtil dejen begynder at se glat og fin ud."
+			"instructionsDa": "Ælt dejen ved lav hastighed i ca. 15 min. eller indtil dejen begynder at se glat og fin ud.",
+			"duration": 15,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Lad dejen hvile i lufttæt beholder i 2-6 timer ved stuetemperatur.",

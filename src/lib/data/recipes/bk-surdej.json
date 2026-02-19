@@ -65,7 +65,9 @@
 		},
 		{
 			"instructionsDa": "Kom salten i og ælt dejen i 5 min. ved lav hastighed.",
-			"ingredients": ["salt"]
+			"ingredients": ["salt"],
+			"duration": 5,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Lad dejen hvile i 10 min.",
@@ -74,7 +76,9 @@
 			"canSetTimer": true
 		},
 		{
-			"instructionsDa": "Ælt ca. 5 min. ved mellem hastighed. Når dejen er skær, er den klar."
+			"instructionsDa": "Ælt ca. 5 min. ved mellem hastighed. Når dejen er skær, er den klar.",
+			"duration": 5,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Lad dejen bulkhæve i skål/kasse som er tildækket i 4-6 timer (eller til dejen har hævet 30-40%).",

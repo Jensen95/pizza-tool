@@ -98,7 +98,9 @@
 			"ingredients": ["main-water", "main-flour"]
 		},
 		{
-			"instructionsDa": "Ælt dejen i 5 min. ved lav hastighed."
+			"instructionsDa": "Ælt dejen i 5 min. ved lav hastighed.",
+			"duration": 5,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Lad dejen hvile i skålen i 10 min.",
@@ -108,7 +110,9 @@
 		},
 		{
 			"instructionsDa": "Tilsæt salt og ælt yderligere 5 min. ved mellem hastighed.",
-			"ingredients": ["main-salt"]
+			"ingredients": ["main-salt"],
+			"duration": 5,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Dejen er færdig, når den er \"skær\" (helt blank og glat). Lad dejen bulk-hæve i 1 time ved stuetemperatur i en skål let smurt med olivenolie.",

@@ -80,17 +80,25 @@
 		},
 		{
 			"instructionsDa": "Smuldr gæren i dejen og ælt i cirka 1 min.",
-			"ingredients": ["yeast"]
+			"ingredients": ["yeast"],
+			"duration": 1,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Tilsæt salt og ælt i 4 min. Lad dejen hvile i 5 min.",
-			"ingredients": ["salt"]
+			"ingredients": ["salt"],
+			"duration": 9,
+			"canSetTimer": true
 		},
 		{
-			"instructionsDa": "Ælt dejen i 5 min. og lad den hvile 5 min."
+			"instructionsDa": "Ælt dejen i 5 min. og lad den hvile 5 min.",
+			"duration": 10,
+			"canSetTimer": true
 		},
 		{
-			"instructionsDa": "Ælt dejen i 5 min. og lad den hvile 2 min."
+			"instructionsDa": "Ælt dejen i 5 min. og lad den hvile 2 min.",
+			"duration": 7,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Fold dejen et par gange til den føles glat."

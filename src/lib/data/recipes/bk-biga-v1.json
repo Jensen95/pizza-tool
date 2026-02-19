@@ -76,7 +76,9 @@
 			"ingredients": ["main-water"]
 		},
 		{
-			"instructionsDa": "Ælt dejen i 5-7 min. ved lav hastighed."
+			"instructionsDa": "Ælt dejen i 5-7 min. ved lav hastighed.",
+			"duration": 5,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Lad dejen hvile i ca. 15 min.",
@@ -86,7 +88,9 @@
 		},
 		{
 			"instructionsDa": "Tilsæt salt og ælt dejen i yderligere 6-8 min. ved mellem hastighed.",
-			"ingredients": ["main-salt"]
+			"ingredients": ["main-salt"],
+			"duration": 6,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Dejen er færdigæltet, når den er blank og glat og kan strækkes langt. Gerne maks. 20°C. Lad den hvile i 5 min. hvorefter den foldes/strammes op.",

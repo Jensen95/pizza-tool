@@ -65,7 +65,9 @@
 			"ingredients": ["salt", "yeast"]
 		},
 		{
-			"instructionsDa": "Ælt 5 min. ved lav hastighed."
+			"instructionsDa": "Ælt 5 min. ved lav hastighed.",
+			"duration": 5,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Lad dejen hvile 5 min.",
@@ -74,7 +76,9 @@
 			"canSetTimer": true
 		},
 		{
-			"instructionsDa": "Ælt ca. 5 min. ved mellem hastighed. Når dejen er \"skær\" (helt blank og glat), er den klar."
+			"instructionsDa": "Ælt ca. 5 min. ved mellem hastighed. Når dejen er \"skær\" (helt blank og glat), er den klar.",
+			"duration": 5,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Lad dejen hæve i en lukket beholder i 2 timer ved stuetemperatur.",

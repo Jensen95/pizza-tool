@@ -53,7 +53,9 @@
 			"ingredients": ["flour", "salt"]
 		},
 		{
-			"instructionsDa": "Når dejen har samlet sig, lægges den ud på bordet, hvor den æltes godt med hænderne i ca. 4-7 min."
+			"instructionsDa": "Når dejen har samlet sig, lægges den ud på bordet, hvor den æltes godt med hænderne i ca. 4-7 min.",
+			"duration": 4,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Lad dejen ligge i 10 min., hvorefter den virkes op til en kugle.",

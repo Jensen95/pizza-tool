@@ -92,7 +92,9 @@
 		},
 		{
 			"instructionsDa": "Tilsæt resten af melet og ælt i 6-8 min. til dejen samler sig.",
-			"ingredients": ["main-flour"]
+			"ingredients": ["main-flour"],
+			"duration": 6,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Tilsæt salt og ælt videre.",

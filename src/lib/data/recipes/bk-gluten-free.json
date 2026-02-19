@@ -58,7 +58,9 @@
 		},
 		{
 			"instructionsDa": "Tilføj vand (ca. 15-20°C), olie og salt. Dejen er ret lind, så sørg for at blande det godt sammen i 2-3 min.",
-			"ingredients": ["water", "oil", "salt"]
+			"ingredients": ["water", "oil", "salt"],
+			"duration": 2,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Lad dejen stå i 1½-2 timer ved stuetemperatur i en lufttæt beholder. Dejen sætter sig og bliver nemmere at arbejde med.",

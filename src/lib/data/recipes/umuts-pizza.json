@@ -62,7 +62,9 @@
 			"instructionsDa": "Kom resten af melet i dejen lidt af gangen."
 		},
 		{
-			"instructionsDa": "Dejen æltes i ca. 10 min. i en røremaskine eller ca. 15 min. i hånden, til dejen er elastisk og blank."
+			"instructionsDa": "Dejen æltes i ca. 10 min. i en røremaskine eller ca. 15 min. i hånden, til dejen er elastisk og blank.",
+			"duration": 10,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Dejen skal nu hæve 1-2 timer ved stuetemperatur.",

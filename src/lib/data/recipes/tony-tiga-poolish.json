@@ -126,15 +126,21 @@
 		},
 		{
 			"instructionsDa": "Bland i ca. 1 min. ved lav hastighed indtil det meste af dejen samler sig omkring krogen.",
+			"duration": 1,
+			"canSetTimer": true,
 			"tipDa": "Hvis dejen ikke er sammenhængende, så tilføj ca. 2-3 g. vand og bland indtil dejen er sammenhængende."
 		},
 		{
 			"instructionsDa": "Tilføj salt og ælt på laveste hastighed i 1 minut.",
-			"ingredients": ["main-salt"]
+			"ingredients": ["main-salt"],
+			"duration": 1,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Tilføj olie og ælt på laveste hastighed i 1-2 minutter, indtil olien er absorberet.",
-			"ingredients": ["main-oil"]
+			"ingredients": ["main-oil"],
+			"duration": 1,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Før dejen over på et bord (uden mel) og ælt indtil den virker glat."

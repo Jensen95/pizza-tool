@@ -82,7 +82,9 @@
 		},
 		{
 			"instructionsDa": "Ælt dejen i 6-9 min. ved laveste hastighed.",
-			"ingredients": ["main-flour"]
+			"ingredients": ["main-flour"],
+			"duration": 6,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Lad dejen hvile i ca. 20-25 min.",
@@ -92,7 +94,9 @@
 		},
 		{
 			"instructionsDa": "Tilsæt salt og ælt yderligere 7-10 min. ved lav hastighed. Dejtemperatur maks. 20°C. Dejen er færdigæltet, når den er \"skær\" (helt blank og glat) og kan strækkes langt.",
-			"ingredients": ["main-salt"]
+			"ingredients": ["main-salt"],
+			"duration": 7,
+			"canSetTimer": true
 		},
 		{
 			"instructionsDa": "Stram dejen godt op og lad den hvile 20-30 min.",
