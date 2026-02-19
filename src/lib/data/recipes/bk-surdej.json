@@ -5,7 +5,6 @@
 	"category": "sourdough",
 	"baseWeight": 270,
 	"hydration": 60,
-	"yieldPizzas": 4,
 	"mixingSteps": [
 		{
 			"id": "main",

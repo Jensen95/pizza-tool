@@ -3,10 +3,8 @@
 	"name": "BK Biga v2",
 	"nameDa": "BK Biga v2",
 	"category": "biga",
-	"yeastType": "fresh",
 	"baseWeight": 270,
 	"hydration": 63,
-	"yieldPizzas": 4,
 	"mixingSteps": [
 		{
 			"id": "biga",

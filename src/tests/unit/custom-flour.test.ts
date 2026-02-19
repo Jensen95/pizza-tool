@@ -5,7 +5,8 @@ import {
 	removeFlourFromStage,
 	getControllableIngredients
 } from '$lib/utils/baker-percentage';
-import type { Recipe, RecipeIngredient } from '$lib/types/recipe';
+import type { FlatIngredient } from '$lib/utils/baker-percentage';
+import type { Recipe } from '$lib/types/recipe';
 import type { CustomFlourState } from '$lib/types/ingredient';
 import * as storage from '$lib/utils/storage';
 
@@ -44,85 +45,111 @@ const baseRecipe: Recipe = {
 	category: 'direct',
 	baseWeight: 250,
 	hydration: 65,
-	yieldPizzas: 4,
-	ingredients: [
-		{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
-		{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
+	mixingSteps: [
+		{
+			id: 'main',
+			name: 'Main dough',
+			nameDa: 'Hoveddej',
+			ingredients: [
+				{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+				{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
+			]
+		}
 	],
-	schedule: { stages: [], totalTime: 0 }
+	timeline: []
 };
 
 const twoFlourRecipe: Recipe = {
 	...baseRecipe,
 	id: 'two-flour',
-	ingredients: [
+	mixingSteps: [
 		{
-			id: 'main-a',
-			name: 'Main A',
-			nameDa: 'A',
-			percentage: 60,
-			type: 'flour',
-			stage: 'main'
-		},
-		{
-			id: 'main-b',
-			name: 'Main B',
-			nameDa: 'B',
-			percentage: 40,
-			type: 'flour',
-			stage: 'main'
-		},
-		{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water', stage: 'main' }
-	]
+			id: 'main',
+			name: 'Main dough',
+			nameDa: 'Hoveddej',
+			ingredients: [
+				{ id: 'main-a', name: 'Main A', nameDa: 'A', percentage: 60, type: 'flour' },
+				{ id: 'main-b', name: 'Main B', nameDa: 'B', percentage: 40, type: 'flour' },
+				{
+					id: 'water',
+					name: 'Water',
+					nameDa: 'Vand',
+					percentage: 65,
+					type: 'water'
+				}
+			]
+		}
+	],
+	timeline: []
 };
 
 const predoughRecipe: Recipe = {
 	...baseRecipe,
 	id: 'predough',
 	category: 'poolish',
-	ingredients: [
+	mixingSteps: [
 		{
-			id: 'poolish-flour',
-			name: 'Poolish flour',
-			nameDa: 'Poolish mel',
-			percentage: 20,
-			type: 'flour',
-			stage: 'poolish'
+			id: 'poolish',
+			name: 'Poolish',
+			nameDa: 'Poolish',
+			predough: true,
+			ingredients: [
+				{
+					id: 'poolish-flour',
+					name: 'Poolish flour',
+					nameDa: 'Poolish mel',
+					percentage: 20,
+					type: 'flour'
+				},
+				{
+					id: 'poolish-water',
+					name: 'Water',
+					nameDa: 'Vand',
+					percentage: 20,
+					type: 'water'
+				}
+			]
 		},
 		{
-			id: 'main-flour',
-			name: 'Main flour',
-			nameDa: 'Main mel',
-			percentage: 80,
-			type: 'flour',
-			stage: 'main'
-		},
-		{
-			id: 'poolish-water',
-			name: 'Water',
-			nameDa: 'Vand',
-			percentage: 20,
-			type: 'water',
-			stage: 'poolish'
-		},
-		{
-			id: 'main-water',
-			name: 'Water',
-			nameDa: 'Vand',
-			percentage: 45,
-			type: 'water',
-			stage: 'main'
+			id: 'main',
+			name: 'Main dough',
+			nameDa: 'Hoveddej',
+			ingredients: [
+				{
+					id: 'main-flour',
+					name: 'Main flour',
+					nameDa: 'Main mel',
+					percentage: 80,
+					type: 'flour'
+				},
+				{
+					id: 'main-water',
+					name: 'Water',
+					nameDa: 'Vand',
+					percentage: 45,
+					type: 'water'
+				}
+			]
 		}
-	]
+	],
+	timeline: []
 };
 
 const typedFlourRecipe: Recipe = {
 	...baseRecipe,
 	id: 'typed-flour',
-	ingredients: [
-		{ id: 'semola', name: 'Semola', nameDa: 'Semola', percentage: 100, type: 'flour' },
-		{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
-	]
+	mixingSteps: [
+		{
+			id: 'main',
+			name: 'Main dough',
+			nameDa: 'Hoveddej',
+			ingredients: [
+				{ id: 'semola', name: 'Semola', nameDa: 'Semola', percentage: 100, type: 'flour' },
+				{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
+			]
+		}
+	],
+	timeline: []
 };
 
 async function loadCalculator() {
@@ -142,8 +169,15 @@ beforeEach(() => {
 
 describe('flour helpers', () => {
 	it('adds flour to a single-flour stage and keeps total constant', () => {
-		const ingredients: RecipeIngredient[] = [
-			{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour', stage: 'main' }
+		const ingredients: FlatIngredient[] = [
+			{
+				id: 'flour',
+				name: 'Flour',
+				nameDa: 'Mel',
+				percentage: 100,
+				type: 'flour',
+				mixingStepId: 'main'
+			}
 		];
 
 		const result = addFlourToStage(
@@ -162,9 +196,23 @@ describe('flour helpers', () => {
 	});
 
 	it('adds flour to two-flour stage and reduces largest flour', () => {
-		const ingredients: RecipeIngredient[] = [
-			{ id: 'a', name: 'A', nameDa: 'A', percentage: 70, type: 'flour', stage: 'main' },
-			{ id: 'b', name: 'B', nameDa: 'B', percentage: 30, type: 'flour', stage: 'main' }
+		const ingredients: FlatIngredient[] = [
+			{
+				id: 'a',
+				name: 'A',
+				nameDa: 'A',
+				percentage: 70,
+				type: 'flour',
+				mixingStepId: 'main'
+			},
+			{
+				id: 'b',
+				name: 'B',
+				nameDa: 'B',
+				percentage: 30,
+				type: 'flour',
+				mixingStepId: 'main'
+			}
 		];
 
 		const result = addFlourToStage(
@@ -184,8 +232,15 @@ describe('flour helpers', () => {
 	});
 
 	it('prevents removing the last flour in a stage', () => {
-		const ingredients: RecipeIngredient[] = [
-			{ id: 'only', name: 'Only', nameDa: 'Only', percentage: 100, type: 'flour', stage: 'main' }
+		const ingredients: FlatIngredient[] = [
+			{
+				id: 'only',
+				name: 'Only',
+				nameDa: 'Only',
+				percentage: 100,
+				type: 'flour',
+				mixingStepId: 'main'
+			}
 		];
 
 		const result = removeFlourFromStage(ingredients, 'main', 'only');
@@ -193,10 +248,31 @@ describe('flour helpers', () => {
 	});
 
 	it('removes flour and redistributes proportionally', () => {
-		const ingredients: RecipeIngredient[] = [
-			{ id: 'a', name: 'A', nameDa: 'A', percentage: 50, type: 'flour', stage: 'main' },
-			{ id: 'b', name: 'B', nameDa: 'B', percentage: 30, type: 'flour', stage: 'main' },
-			{ id: 'c', name: 'C', nameDa: 'C', percentage: 20, type: 'flour', stage: 'main' }
+		const ingredients: FlatIngredient[] = [
+			{
+				id: 'a',
+				name: 'A',
+				nameDa: 'A',
+				percentage: 50,
+				type: 'flour',
+				mixingStepId: 'main'
+			},
+			{
+				id: 'b',
+				name: 'B',
+				nameDa: 'B',
+				percentage: 30,
+				type: 'flour',
+				mixingStepId: 'main'
+			},
+			{
+				id: 'c',
+				name: 'C',
+				nameDa: 'C',
+				percentage: 20,
+				type: 'flour',
+				mixingStepId: 'main'
+			}
 		];
 
 		const result = removeFlourFromStage(ingredients, 'main', 'c');
@@ -321,7 +397,7 @@ describe('calculator custom flours', () => {
 			.scaledIngredients.filter((i) => i.type === 'flour' || i.type === 'water')
 			.map((i) => ({
 				id: i.id,
-				stage: i.stage ?? 'main',
+				mixingStepId: i.mixingStepId ?? 'main',
 				type: i.type,
 				stagePercentage: i.stagePercentage
 			}));
@@ -329,8 +405,8 @@ describe('calculator custom flours', () => {
 		const flourStageTotals = new Map<string, number>();
 		for (const ingredient of stagePercentages.filter((i) => i.type === 'flour')) {
 			flourStageTotals.set(
-				ingredient.stage,
-				(flourStageTotals.get(ingredient.stage) ?? 0) + ingredient.stagePercentage
+				ingredient.mixingStepId,
+				(flourStageTotals.get(ingredient.mixingStepId) ?? 0) + ingredient.stagePercentage
 			);
 			expect(ingredient.stagePercentage).toBeLessThanOrEqual(100);
 		}

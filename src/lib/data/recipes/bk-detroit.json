@@ -3,10 +3,8 @@
 	"name": "BK Detroit",
 	"nameDa": "BK Detroit",
 	"category": "detroit",
-	"yeastType": "instant",
 	"baseWeight": 290,
 	"hydration": 72,
-	"yieldPizzas": 4,
 	"mixingSteps": [
 		{
 			"id": "main",

@@ -3,10 +3,8 @@
 	"name": "BK Poolish",
 	"nameDa": "BK Poolish",
 	"category": "poolish",
-	"yeastType": "instant",
 	"baseWeight": 270,
 	"hydration": 65,
-	"yieldPizzas": 4,
 	"mixingSteps": [
 		{
 			"id": "poolish",

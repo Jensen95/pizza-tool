@@ -3,10 +3,8 @@
 	"name": "BK Napoli",
 	"nameDa": "BK Napoli",
 	"category": "neapolitan",
-	"yeastType": "fresh",
 	"baseWeight": 270,
 	"hydration": 63,
-	"yieldPizzas": 4,
 	"mixingSteps": [
 		{
 			"id": "main",

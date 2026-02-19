@@ -3,10 +3,8 @@
 	"name": "BK Glutenfri",
 	"nameDa": "BK Glutenfri",
 	"category": "direct",
-	"yeastType": "instant",
 	"baseWeight": 270,
 	"hydration": 74,
-	"yieldPizzas": 4,
 	"mixingSteps": [
 		{
 			"id": "main",

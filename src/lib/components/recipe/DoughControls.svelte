@@ -116,9 +116,7 @@
 	});
 
 	let hasRecipeChanges = $derived(
-		hasCustomizations ||
-			numberOfPizzas !== recipe.yieldPizzas ||
-			doughBallWeight !== recipe.baseWeight
+		hasCustomizations || doughBallWeight !== recipe.baseWeight
 	);
 
 	let fullGrainPercentage = $derived.by(() => {

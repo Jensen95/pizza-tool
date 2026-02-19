@@ -28,15 +28,12 @@ export function convertYeastPercentage(
 }
 
 export function getRecipeYeastType(recipe: Recipe): YeastInfo['type'] {
-	if (recipe.yeastType) return recipe.yeastType;
-
 	const allIngredients = getAllIngredients(recipe);
 	const yeastIngredients = allIngredients.filter((ing) => ing.type === 'yeast');
+
+	// Use explicit yeastType from ingredient (discriminated union)
 	for (const ing of yeastIngredients) {
-		const name = ing.name.toLowerCase();
-		const nameDa = ing.nameDa.toLowerCase();
-		if (name.includes('instant') || nameDa.includes('instant')) return 'instant';
-		if (name.includes('dry') || nameDa.includes('tørgær')) return 'active-dry';
+		if (ing.type === 'yeast') return ing.yeastType;
 	}
 
 	return 'fresh';

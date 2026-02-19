@@ -3,10 +3,8 @@
 	"name": "New York Style",
 	"nameDa": "New York Style",
 	"category": "ny-style",
-	"yeastType": "fresh",
 	"baseWeight": 270,
 	"hydration": 66,
-	"yieldPizzas": 4,
 	"mixingSteps": [
 		{
 			"id": "main",

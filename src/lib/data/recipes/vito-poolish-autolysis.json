@@ -3,10 +3,8 @@
 	"name": "Vito's Poolish Pizza + Autolysis",
 	"nameDa": "Vito's Poolish Pizza + Autolyse",
 	"category": "poolish",
-	"yeastType": "instant",
 	"baseWeight": 270,
 	"hydration": 65,
-	"yieldPizzas": 6,
 	"mixingSteps": [
 		{
 			"id": "poolish",

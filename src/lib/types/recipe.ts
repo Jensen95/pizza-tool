@@ -14,15 +14,24 @@ export type RecipeCategory =
 
 export type IngredientType = 'flour' | 'water' | 'yeast' | 'salt' | 'oil' | 'sugar' | 'other';
 
-export interface RecipeIngredient {
+interface BaseIngredient {
 	id: string;
 	name: string;
 	nameDa: string;
 	percentage: number;
-	type: IngredientType;
-	yeastType?: YeastInfo['type'];
 	notes?: string;
 }
+
+export interface YeastIngredient extends BaseIngredient {
+	type: 'yeast';
+	yeastType: YeastInfo['type'];
+}
+
+interface SimpleIngredient extends BaseIngredient {
+	type: Exclude<IngredientType, 'yeast'>;
+}
+
+export type RecipeIngredient = YeastIngredient | SimpleIngredient;
 
 export interface MixingStep {
 	id: string;
@@ -50,10 +59,8 @@ export interface Recipe {
 	description?: string;
 	descriptionDa?: string;
 	category: RecipeCategory;
-	yeastType?: YeastInfo['type'];
 	baseWeight: number;
 	hydration: number;
-	yieldPizzas: number;
 	mixingSteps: MixingStep[];
 	timeline: TimelineStep[];
 	tips?: string[];

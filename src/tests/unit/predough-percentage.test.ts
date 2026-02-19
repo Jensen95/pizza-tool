@@ -3,13 +3,14 @@ import {
 	scaleRecipe,
 	getTotalPercentage,
 	calculateHydration,
-	formatWeight
+	formatWeight,
+	getAllIngredients
 } from '$lib/utils/baker-percentage';
 import type { Recipe } from '$lib/types/recipe';
 
 describe('Predough Percentage Calculations', () => {
 	describe('100% Biga Recipe', () => {
-		// This recipe has 100% of flour in the biga (predough stage)
+		// This recipe has 100% of flour in the biga (predough step)
 		const bigaRecipe: Recipe = {
 			id: 'test-biga-100',
 			name: 'Test Biga 100%',
@@ -17,57 +18,64 @@ describe('Predough Percentage Calculations', () => {
 			category: 'biga',
 			baseWeight: 270,
 			hydration: 65,
-			yieldPizzas: 4,
-			ingredients: [
-				// Biga stage (100% of total flour)
+			mixingSteps: [
 				{
-					id: 'biga-flour',
-					name: 'Biga flour',
-					nameDa: 'Mel (biga)',
-					percentage: 100,
-					type: 'flour',
-					stage: 'biga'
+					id: 'biga',
+					name: 'Biga',
+					nameDa: 'Biga',
+					predough: true,
+					ingredients: [
+						{
+							id: 'biga-flour',
+							name: 'Biga flour',
+							nameDa: 'Mel (biga)',
+							percentage: 100,
+							type: 'flour'
+						},
+						{
+							id: 'biga-water',
+							name: 'Biga water',
+							nameDa: 'Vand (biga)',
+							percentage: 44,
+							type: 'water'
+						},
+						{
+							id: 'biga-yeast',
+							name: 'Biga yeast',
+							nameDa: 'Gær (biga)',
+							percentage: 0.1,
+							type: 'yeast',
+							yeastType: 'fresh'
+						}
+					]
 				},
 				{
-					id: 'biga-water',
-					name: 'Biga water',
-					nameDa: 'Vand (biga)',
-					percentage: 44,
-					type: 'water',
-					stage: 'biga'
-				},
-				{
-					id: 'biga-yeast',
-					name: 'Biga yeast',
-					nameDa: 'Gær (biga)',
-					percentage: 0.1,
-					type: 'yeast',
-					stage: 'biga'
-				},
-				// Main dough stage
-				{
-					id: 'main-water',
-					name: 'Main dough water',
-					nameDa: 'Vand (hoveddej)',
-					percentage: 21,
-					type: 'water'
-				},
-				{
-					id: 'main-salt',
-					name: 'Salt',
-					nameDa: 'Salt',
-					percentage: 2.7,
-					type: 'salt'
+					id: 'main',
+					name: 'Main dough',
+					nameDa: 'Hoveddej',
+					ingredients: [
+						{
+							id: 'main-water',
+							name: 'Main dough water',
+							nameDa: 'Vand (hoveddej)',
+							percentage: 21,
+							type: 'water'
+						},
+						{
+							id: 'main-salt',
+							name: 'Salt',
+							nameDa: 'Salt',
+							percentage: 2.7,
+							type: 'salt'
+						}
+					]
 				}
 			],
-			schedule: {
-				stages: [],
-				totalTime: 0
-			}
+			timeline: []
 		};
 
 		it('should calculate total percentage correctly', () => {
-			const total = getTotalPercentage(bigaRecipe.ingredients);
+			const total = getTotalPercentage(getAllIngredients(bigaRecipe));
 			// 100 (flour) + 44 (biga water) + 0.1 (yeast) + 21 (main water) + 2.7 (salt) = 167.8
 			expect(total).toBeCloseTo(167.8, 1);
 		});
@@ -100,7 +108,7 @@ describe('Predough Percentage Calculations', () => {
 		});
 
 		it('should calculate hydration correctly', () => {
-			const hydration = calculateHydration(bigaRecipe.ingredients);
+			const hydration = calculateHydration(getAllIngredients(bigaRecipe));
 			// Total water: 44% + 21% = 65%
 			expect(hydration).toBe(65);
 		});
@@ -115,64 +123,71 @@ describe('Predough Percentage Calculations', () => {
 			category: 'poolish',
 			baseWeight: 270,
 			hydration: 70,
-			yieldPizzas: 4,
-			ingredients: [
-				// Poolish stage (50% of total flour)
+			mixingSteps: [
 				{
-					id: 'poolish-flour',
-					name: 'Poolish flour',
-					nameDa: 'Mel (poolish)',
-					percentage: 50,
-					type: 'flour',
-					stage: 'poolish'
+					id: 'poolish',
+					name: 'Poolish',
+					nameDa: 'Poolish',
+					predough: true,
+					ingredients: [
+						{
+							id: 'poolish-flour',
+							name: 'Poolish flour',
+							nameDa: 'Mel (poolish)',
+							percentage: 50,
+							type: 'flour'
+						},
+						{
+							id: 'poolish-water',
+							name: 'Poolish water',
+							nameDa: 'Vand (poolish)',
+							percentage: 50,
+							type: 'water'
+						},
+						{
+							id: 'poolish-yeast',
+							name: 'Poolish yeast',
+							nameDa: 'Gær (poolish)',
+							percentage: 0.1,
+							type: 'yeast',
+							yeastType: 'fresh'
+						}
+					]
 				},
 				{
-					id: 'poolish-water',
-					name: 'Poolish water',
-					nameDa: 'Vand (poolish)',
-					percentage: 50,
-					type: 'water',
-					stage: 'poolish'
-				},
-				{
-					id: 'poolish-yeast',
-					name: 'Poolish yeast',
-					nameDa: 'Gær (poolish)',
-					percentage: 0.1,
-					type: 'yeast',
-					stage: 'poolish'
-				},
-				// Main dough stage (remaining 50% flour)
-				{
-					id: 'main-flour',
-					name: 'Main dough flour',
-					nameDa: 'Mel (hoveddej)',
-					percentage: 50,
-					type: 'flour'
-				},
-				{
-					id: 'main-water',
-					name: 'Main dough water',
-					nameDa: 'Vand (hoveddej)',
-					percentage: 20,
-					type: 'water'
-				},
-				{
-					id: 'main-salt',
-					name: 'Salt',
-					nameDa: 'Salt',
-					percentage: 2.5,
-					type: 'salt'
+					id: 'main',
+					name: 'Main dough',
+					nameDa: 'Hoveddej',
+					ingredients: [
+						{
+							id: 'main-flour',
+							name: 'Main dough flour',
+							nameDa: 'Mel (hoveddej)',
+							percentage: 50,
+							type: 'flour'
+						},
+						{
+							id: 'main-water',
+							name: 'Main dough water',
+							nameDa: 'Vand (hoveddej)',
+							percentage: 20,
+							type: 'water'
+						},
+						{
+							id: 'main-salt',
+							name: 'Salt',
+							nameDa: 'Salt',
+							percentage: 2.5,
+							type: 'salt'
+						}
+					]
 				}
 			],
-			schedule: {
-				stages: [],
-				totalTime: 0
-			}
+			timeline: []
 		};
 
 		it('should calculate total percentage correctly', () => {
-			const total = getTotalPercentage(poolishRecipe.ingredients);
+			const total = getTotalPercentage(getAllIngredients(poolishRecipe));
 			// 50 (poolish flour) + 50 (poolish water) + 0.1 (yeast) + 50 (main flour) + 20 (main water) + 2.5 (salt) = 172.6
 			expect(total).toBe(172.6);
 		});
@@ -195,7 +210,7 @@ describe('Predough Percentage Calculations', () => {
 		});
 
 		it('should calculate hydration correctly for poolish recipe', () => {
-			const hydration = calculateHydration(poolishRecipe.ingredients);
+			const hydration = calculateHydration(getAllIngredients(poolishRecipe));
 			// Total water: 50% (poolish) + 20% (main) = 70%
 			expect(hydration).toBe(70);
 		});
@@ -224,80 +239,107 @@ describe('Predough Percentage Calculations', () => {
 				category: 'biga',
 				baseWeight: 270,
 				hydration: 65,
-				yieldPizzas: 4,
-				ingredients: [
+				mixingSteps: [
 					{
-						id: 'biga-flour',
-						name: 'Biga flour',
-						nameDa: 'Mel (biga)',
-						percentage: 100,
-						type: 'flour',
-						stage: 'biga'
+						id: 'biga',
+						name: 'Biga',
+						nameDa: 'Biga',
+						predough: true,
+						ingredients: [
+							{
+								id: 'biga-flour',
+								name: 'Biga flour',
+								nameDa: 'Mel (biga)',
+								percentage: 100,
+								type: 'flour'
+							},
+							{
+								id: 'biga-water',
+								name: 'Biga water',
+								nameDa: 'Vand (biga)',
+								percentage: 44,
+								type: 'water'
+							},
+							{
+								id: 'biga-yeast',
+								name: 'Biga yeast',
+								nameDa: 'Gær (biga)',
+								percentage: 0.1,
+								type: 'yeast',
+								yeastType: 'fresh'
+							}
+						]
 					},
 					{
-						id: 'biga-water',
-						name: 'Biga water',
-						nameDa: 'Vand (biga)',
-						percentage: 44,
-						type: 'water',
-						stage: 'biga'
-					},
-					{
-						id: 'biga-yeast',
-						name: 'Biga yeast',
-						nameDa: 'Gær (biga)',
-						percentage: 0.1,
-						type: 'yeast',
-						stage: 'biga'
-					},
-					{
-						id: 'main-water',
-						name: 'Main water',
-						nameDa: 'Vand (hoveddej)',
-						percentage: 21,
-						type: 'water'
-					},
-					{
-						id: 'main-salt',
-						name: 'Salt',
-						nameDa: 'Salt',
-						percentage: 2.7,
-						type: 'salt'
+						id: 'main',
+						name: 'Main dough',
+						nameDa: 'Hoveddej',
+						ingredients: [
+							{
+								id: 'main-water',
+								name: 'Main water',
+								nameDa: 'Vand (hoveddej)',
+								percentage: 21,
+								type: 'water'
+							},
+							{
+								id: 'main-salt',
+								name: 'Salt',
+								nameDa: 'Salt',
+								percentage: 2.7,
+								type: 'salt'
+							}
+						]
 					}
 				],
-				schedule: { stages: [], totalTime: 0 }
+				timeline: []
 			};
 
 			// Adjust to 50% biga (add 50% flour to main dough)
 			const adjusted: Recipe = {
 				...original,
-				ingredients: [
-					// Reduce biga flour from 100% to 50%
+				mixingSteps: [
 					{
-						...original.ingredients[0],
-						percentage: 50
+						id: 'biga',
+						name: 'Biga',
+						nameDa: 'Biga',
+						predough: true,
+						ingredients: [
+							// Reduce biga flour from 100% to 50%
+							{
+								...original.mixingSteps[0].ingredients[0],
+								percentage: 50
+							},
+							// Keep biga water same relative to biga flour (44% of biga flour becomes 22% total)
+							{
+								...original.mixingSteps[0].ingredients[1],
+								percentage: 22
+							},
+							original.mixingSteps[0].ingredients[2] // Keep yeast
+						]
 					},
-					// Keep biga water same relative to biga flour (44% of biga flour becomes 22% total)
 					{
-						...original.ingredients[1],
-						percentage: 22
-					},
-					original.ingredients[2], // Keep yeast
-					// Add main dough flour (50% of total)
-					{
-						id: 'main-flour',
-						name: 'Main flour',
-						nameDa: 'Mel (hoveddej)',
-						percentage: 50,
-						type: 'flour'
-					},
-					// Adjust main water to maintain overall hydration
-					// Original total water: 65%, biga now has 22%, so main needs 43%
-					{
-						...original.ingredients[3],
-						percentage: 43
-					},
-					original.ingredients[4] // Keep salt
+						id: 'main',
+						name: 'Main dough',
+						nameDa: 'Hoveddej',
+						ingredients: [
+							// Add main dough flour (50% of total)
+							{
+								id: 'main-flour',
+								name: 'Main flour',
+								nameDa: 'Mel (hoveddej)',
+								percentage: 50,
+								type: 'flour'
+							},
+							// Adjust main water to maintain overall hydration
+							// Original total water: 65%, biga now has 22%, so main needs 43%
+							{
+								...original.mixingSteps[1].ingredients[0],
+								percentage: 43
+							},
+							original.mixingSteps[1].ingredients[1] // Keep salt
+						]
+					}
 				]
 			};
 
@@ -327,8 +369,8 @@ describe('Predough Percentage Calculations', () => {
 			expect(adjustedBigaFlour?.weight).toBe(adjustedMainFlour?.weight);
 
 			// Total hydration should be maintained
-			const originalHydration = calculateHydration(original.ingredients);
-			const adjustedHydration = calculateHydration(adjusted.ingredients);
+			const originalHydration = calculateHydration(getAllIngredients(original));
+			const adjustedHydration = calculateHydration(getAllIngredients(adjusted));
 			expect(adjustedHydration).toBe(originalHydration);
 		});
 
@@ -340,67 +382,92 @@ describe('Predough Percentage Calculations', () => {
 				category: 'poolish',
 				baseWeight: 270,
 				hydration: 65,
-				yieldPizzas: 4,
-				ingredients: [
+				mixingSteps: [
 					{
-						id: 'poolish-flour',
-						name: 'Flour',
-						nameDa: 'Mel',
-						percentage: 100,
-						type: 'flour',
-						stage: 'poolish'
+						id: 'poolish',
+						name: 'Poolish',
+						nameDa: 'Poolish',
+						predough: true,
+						ingredients: [
+							{
+								id: 'poolish-flour',
+								name: 'Flour',
+								nameDa: 'Mel',
+								percentage: 100,
+								type: 'flour'
+							},
+							{
+								id: 'poolish-water',
+								name: 'Water',
+								nameDa: 'Vand',
+								percentage: 50,
+								type: 'water'
+							}
+						]
 					},
 					{
-						id: 'poolish-water',
-						name: 'Water',
-						nameDa: 'Vand',
-						percentage: 50,
-						type: 'water',
-						stage: 'poolish'
-					},
-					{
-						id: 'main-water',
-						name: 'Water',
-						nameDa: 'Vand',
-						percentage: 15,
-						type: 'water'
+						id: 'main',
+						name: 'Main dough',
+						nameDa: 'Hoveddej',
+						ingredients: [
+							{
+								id: 'main-water',
+								name: 'Water',
+								nameDa: 'Vand',
+								percentage: 15,
+								type: 'water'
+							}
+						]
 					}
 				],
-				schedule: { stages: [], totalTime: 0 }
+				timeline: []
 			};
 
 			const recipe30: Recipe = {
 				...recipe100,
-				ingredients: [
+				mixingSteps: [
 					{
-						id: 'poolish-flour',
-						name: 'Flour',
-						nameDa: 'Mel',
-						percentage: 30,
-						type: 'flour',
-						stage: 'poolish'
+						id: 'poolish',
+						name: 'Poolish',
+						nameDa: 'Poolish',
+						predough: true,
+						ingredients: [
+							{
+								id: 'poolish-flour',
+								name: 'Flour',
+								nameDa: 'Mel',
+								percentage: 30,
+								type: 'flour'
+							},
+							{
+								id: 'poolish-water',
+								name: 'Water',
+								nameDa: 'Vand',
+								percentage: 15,
+								type: 'water'
+							}
+						]
 					},
 					{
-						id: 'poolish-water',
-						name: 'Water',
-						nameDa: 'Vand',
-						percentage: 15,
-						type: 'water',
-						stage: 'poolish'
-					},
-					{
-						id: 'main-flour',
-						name: 'Flour',
-						nameDa: 'Mel',
-						percentage: 70,
-						type: 'flour'
-					},
-					{
-						id: 'main-water',
-						name: 'Water',
-						nameDa: 'Vand',
-						percentage: 50,
-						type: 'water'
+						id: 'main',
+						name: 'Main dough',
+						nameDa: 'Hoveddej',
+						ingredients: [
+							{
+								id: 'main-flour',
+								name: 'Flour',
+								nameDa: 'Mel',
+								percentage: 70,
+								type: 'flour'
+							},
+							{
+								id: 'main-water',
+								name: 'Water',
+								nameDa: 'Vand',
+								percentage: 50,
+								type: 'water'
+							}
+						]
 					}
 				]
 			};
@@ -433,48 +500,60 @@ describe('Predough Percentage Calculations', () => {
 			category: 'biga',
 			baseWeight: 270,
 			hydration: 65,
-			yieldPizzas: 4,
-			ingredients: [
+			mixingSteps: [
 				{
-					id: 'biga-flour',
-					name: 'Biga flour',
-					nameDa: 'Mel (biga)',
-					percentage: 100,
-					type: 'flour',
-					stage: 'biga'
+					id: 'biga',
+					name: 'Biga',
+					nameDa: 'Biga',
+					predough: true,
+					ingredients: [
+						{
+							id: 'biga-flour',
+							name: 'Biga flour',
+							nameDa: 'Mel (biga)',
+							percentage: 100,
+							type: 'flour'
+						},
+						{
+							id: 'biga-water',
+							name: 'Biga water',
+							nameDa: 'Vand (biga)',
+							percentage: 44,
+							type: 'water'
+						},
+						{
+							id: 'biga-yeast',
+							name: 'Biga yeast',
+							nameDa: 'Gær (biga)',
+							percentage: 0.1,
+							type: 'yeast',
+							yeastType: 'fresh'
+						}
+					]
 				},
 				{
-					id: 'biga-water',
-					name: 'Biga water',
-					nameDa: 'Vand (biga)',
-					percentage: 44,
-					type: 'water',
-					stage: 'biga'
-				},
-				{
-					id: 'biga-yeast',
-					name: 'Biga yeast',
-					nameDa: 'Gær (biga)',
-					percentage: 0.1,
-					type: 'yeast',
-					stage: 'biga'
-				},
-				{
-					id: 'main-water',
-					name: 'Main water',
-					nameDa: 'Vand (hoveddej)',
-					percentage: 21,
-					type: 'water'
-				},
-				{
-					id: 'main-salt',
-					name: 'Salt',
-					nameDa: 'Salt',
-					percentage: 2.7,
-					type: 'salt'
+					id: 'main',
+					name: 'Main dough',
+					nameDa: 'Hoveddej',
+					ingredients: [
+						{
+							id: 'main-water',
+							name: 'Main water',
+							nameDa: 'Vand (hoveddej)',
+							percentage: 21,
+							type: 'water'
+						},
+						{
+							id: 'main-salt',
+							name: 'Salt',
+							nameDa: 'Salt',
+							percentage: 2.7,
+							type: 'salt'
+						}
+					]
 				}
 			],
-			schedule: { stages: [], totalTime: 0 }
+			timeline: []
 		};
 
 		it('should add main flour when adjusting 100% biga to 50%', () => {
@@ -555,49 +634,60 @@ describe('Predough Percentage Calculations', () => {
 				category: 'direct',
 				baseWeight: 270,
 				hydration: 70,
-				yieldPizzas: 4,
-				ingredients: [
-					// Autolyse stage
+				mixingSteps: [
 					{
-						id: 'autolyse-flour',
-						name: 'Flour',
-						nameDa: 'Mel',
-						percentage: 100,
-						type: 'flour',
-						stage: 'autolyse'
+						id: 'autolyse',
+						name: 'Autolyse',
+						nameDa: 'Autolyse',
+						predough: true,
+						ingredients: [
+							{
+								id: 'autolyse-flour',
+								name: 'Flour',
+								nameDa: 'Mel',
+								percentage: 100,
+								type: 'flour'
+							},
+							{
+								id: 'autolyse-water',
+								name: 'Water',
+								nameDa: 'Vand',
+								percentage: 60,
+								type: 'water'
+							}
+						]
 					},
 					{
-						id: 'autolyse-water',
-						name: 'Water',
-						nameDa: 'Vand',
-						percentage: 60,
-						type: 'water',
-						stage: 'autolyse'
-					},
-					// Main stage
-					{
-						id: 'main-water',
-						name: 'Water',
-						nameDa: 'Vand',
-						percentage: 10,
-						type: 'water'
-					},
-					{
-						id: 'main-salt',
-						name: 'Salt',
-						nameDa: 'Salt',
-						percentage: 2.5,
-						type: 'salt'
-					},
-					{
-						id: 'main-yeast',
-						name: 'Yeast',
-						nameDa: 'Gær',
-						percentage: 0.2,
-						type: 'yeast'
+						id: 'main',
+						name: 'Main dough',
+						nameDa: 'Hoveddej',
+						ingredients: [
+							{
+								id: 'main-water',
+								name: 'Water',
+								nameDa: 'Vand',
+								percentage: 10,
+								type: 'water'
+							},
+							{
+								id: 'main-salt',
+								name: 'Salt',
+								nameDa: 'Salt',
+								percentage: 2.5,
+								type: 'salt'
+							},
+							{
+								id: 'main-yeast',
+								name: 'Yeast',
+								nameDa: 'Gær',
+								percentage: 0.2,
+								type: 'yeast',
+								yeastType: 'fresh'
+							}
+						]
 					}
 				],
-				schedule: { stages: [], totalTime: 0 }
+				timeline: []
 			};
 
 			const result = scaleRecipe(autolysRecipe, { numberOfPizzas: 4, doughBallWeight: 270 });
@@ -625,50 +715,59 @@ describe('Predough Percentage Calculations', () => {
 				category: 'poolish',
 				baseWeight: 270,
 				hydration: 65,
-				yieldPizzas: 4,
-				ingredients: [
+				mixingSteps: [
 					{
-						id: 'poolish-flour',
-						name: 'Poolish flour',
-						nameDa: 'Mel (poolish)',
-						percentage: 30,
-						type: 'flour',
-						stage: 'poolish'
+						id: 'poolish',
+						name: 'Poolish',
+						nameDa: 'Poolish',
+						predough: true,
+						ingredients: [
+							{
+								id: 'poolish-flour',
+								name: 'Poolish flour',
+								nameDa: 'Mel (poolish)',
+								percentage: 30,
+								type: 'flour'
+							},
+							{
+								id: 'poolish-water',
+								name: 'Poolish water',
+								nameDa: 'Vand (poolish)',
+								percentage: 20,
+								type: 'water'
+							}
+						]
 					},
 					{
-						id: 'poolish-water',
-						name: 'Poolish water',
-						nameDa: 'Vand (poolish)',
-						percentage: 20,
-						type: 'water',
-						stage: 'poolish'
-					},
-					{
-						id: 'main-flour',
-						name: 'Main flour',
-						nameDa: 'Mel (hoveddej)',
-						percentage: 90,
-						type: 'flour',
-						stage: 'main'
-					},
-					{
-						id: 'main-water',
-						name: 'Main water',
-						nameDa: 'Vand (hoveddej)',
-						percentage: 45,
-						type: 'water',
-						stage: 'main'
-					},
-					{
-						id: 'main-salt',
-						name: 'Salt',
-						nameDa: 'Salt',
-						percentage: 2.7,
-						type: 'salt',
-						stage: 'main'
+						id: 'main',
+						name: 'Main dough',
+						nameDa: 'Hoveddej',
+						ingredients: [
+							{
+								id: 'main-flour',
+								name: 'Main flour',
+								nameDa: 'Mel (hoveddej)',
+								percentage: 90,
+								type: 'flour'
+							},
+							{
+								id: 'main-water',
+								name: 'Main water',
+								nameDa: 'Vand (hoveddej)',
+								percentage: 45,
+								type: 'water'
+							},
+							{
+								id: 'main-salt',
+								name: 'Salt',
+								nameDa: 'Salt',
+								percentage: 2.7,
+								type: 'salt'
+							}
+						]
 					}
 				],
-				schedule: { stages: [], totalTime: 0 }
+				timeline: []
 			};
 
 			const result = scaleRecipe(recipe, { numberOfPizzas: 4, doughBallWeight: 270 });
@@ -696,50 +795,60 @@ describe('Recipe Page Gram Display', () => {
 		category: 'biga',
 		baseWeight: 270,
 		hydration: 65,
-		yieldPizzas: 4,
-		ingredients: [
+		mixingSteps: [
 			{
-				id: 'biga-flour',
-				name: 'Biga flour',
-				nameDa: 'Mel (biga)',
-				percentage: 100,
-				type: 'flour',
-				stage: 'biga'
+				id: 'biga',
+				name: 'Biga',
+				nameDa: 'Biga',
+				predough: true,
+				ingredients: [
+					{
+						id: 'biga-flour',
+						name: 'Biga flour',
+						nameDa: 'Mel (biga)',
+						percentage: 100,
+						type: 'flour'
+					},
+					{
+						id: 'biga-water',
+						name: 'Biga water',
+						nameDa: 'Vand (biga)',
+						percentage: 44,
+						type: 'water'
+					},
+					{
+						id: 'biga-yeast',
+						name: 'Biga yeast',
+						nameDa: 'Toergaer (biga)',
+						percentage: 0.1,
+						type: 'yeast',
+						yeastType: 'fresh'
+					}
+				]
 			},
 			{
-				id: 'biga-water',
-				name: 'Biga water',
-				nameDa: 'Vand (biga)',
-				percentage: 44,
-				type: 'water',
-				stage: 'biga'
-			},
-			{
-				id: 'biga-yeast',
-				name: 'Biga yeast',
-				nameDa: 'Toergaer (biga)',
-				percentage: 0.1,
-				type: 'yeast',
-				stage: 'biga'
-			},
-			{
-				id: 'main-water',
-				name: 'Main dough water',
-				nameDa: 'Vand (hoveddej)',
-				percentage: 21,
-				type: 'water',
-				stage: 'main'
-			},
-			{
-				id: 'main-salt',
-				name: 'Salt',
-				nameDa: 'Salt',
-				percentage: 2.7,
-				type: 'salt',
-				stage: 'main'
+				id: 'main',
+				name: 'Main dough',
+				nameDa: 'Hoveddej',
+				ingredients: [
+					{
+						id: 'main-water',
+						name: 'Main dough water',
+						nameDa: 'Vand (hoveddej)',
+						percentage: 21,
+						type: 'water'
+					},
+					{
+						id: 'main-salt',
+						name: 'Salt',
+						nameDa: 'Salt',
+						percentage: 2.7,
+						type: 'salt'
+					}
+				]
 			}
 		],
-		schedule: { stages: [], totalTime: 0 }
+		timeline: []
 	};
 
 	describe('Default values (4 pizzas, 270g each)', () => {

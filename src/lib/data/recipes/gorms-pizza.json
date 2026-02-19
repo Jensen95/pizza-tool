@@ -3,10 +3,8 @@
 	"name": "Gorms Pizzadej",
 	"nameDa": "Gorms Pizzadej",
 	"category": "direct",
-	"yeastType": "fresh",
 	"baseWeight": 270,
 	"hydration": 65,
-	"yieldPizzas": 4,
 	"mixingSteps": [
 		{
 			"id": "main",

@@ -6,7 +6,6 @@
 	"yeastType": "instant",
 	"baseWeight": 270,
 	"hydration": 58,
-	"yieldPizzas": 4,
 	"mixingSteps": [
 		{
 			"id": "main",

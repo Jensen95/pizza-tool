@@ -13,9 +13,7 @@ import type { FlourTypeOption } from '$lib/types/reference';
 const NON_EXTRA_TYPES = ['flour', 'water'] as const;
 
 // A recipe ingredient tagged with its mixing step
-export interface FlatIngredient extends RecipeIngredient {
-	mixingStepId: string;
-}
+export type FlatIngredient = RecipeIngredient & { mixingStepId: string };
 
 /**
  * Flatten all ingredients from a recipe's mixing steps into a single array.

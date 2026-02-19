@@ -3,10 +3,8 @@
 	"name": "NY PizzaPal",
 	"nameDa": "NY PizzaPal",
 	"category": "ny-style",
-	"yeastType": "instant",
 	"baseWeight": 270,
 	"hydration": 57,
-	"yieldPizzas": 4,
 	"mixingSteps": [
 		{
 			"id": "main",

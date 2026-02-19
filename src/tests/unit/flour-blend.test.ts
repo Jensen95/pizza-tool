@@ -1,17 +1,18 @@
 import { describe, it, expect } from 'vitest';
 import { rebalanceFlourBlend, getControllableIngredients } from '$lib/utils/baker-percentage';
-import type { Recipe, RecipeIngredient } from '$lib/types/recipe';
+import type { FlatIngredient } from '$lib/utils/baker-percentage';
+import type { Recipe } from '$lib/types/recipe';
 
 describe('rebalanceFlourBlend', () => {
 	it('should adjust other flour when one is changed (2 flours)', () => {
-		const ingredients: RecipeIngredient[] = [
+		const ingredients: FlatIngredient[] = [
 			{
 				id: 'nuvola',
 				name: 'Nuvola',
 				nameDa: 'Mel - Caputo Nuvola',
 				percentage: 70,
 				type: 'flour',
-				stage: 'main'
+				mixingStepId: 'main'
 			},
 			{
 				id: 'semola',
@@ -19,9 +20,16 @@ describe('rebalanceFlourBlend', () => {
 				nameDa: 'Mel - Semola',
 				percentage: 30,
 				type: 'flour',
-				stage: 'main'
+				mixingStepId: 'main'
 			},
-			{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water', stage: 'main' }
+			{
+				id: 'water',
+				name: 'Water',
+				nameDa: 'Vand',
+				percentage: 65,
+				type: 'water',
+				mixingStepId: 'main'
+			}
 		];
 
 		// Change nuvola from 70% to 60%
@@ -35,14 +43,14 @@ describe('rebalanceFlourBlend', () => {
 	});
 
 	it('should handle setting one flour to 0%', () => {
-		const ingredients: RecipeIngredient[] = [
+		const ingredients: FlatIngredient[] = [
 			{
 				id: 'nuvola',
 				name: 'Nuvola',
 				nameDa: 'Mel - Caputo Nuvola',
 				percentage: 70,
 				type: 'flour',
-				stage: 'main'
+				mixingStepId: 'main'
 			},
 			{
 				id: 'semola',
@@ -50,7 +58,7 @@ describe('rebalanceFlourBlend', () => {
 				nameDa: 'Mel - Semola',
 				percentage: 30,
 				type: 'flour',
-				stage: 'main'
+				mixingStepId: 'main'
 			}
 		];
 
@@ -64,14 +72,14 @@ describe('rebalanceFlourBlend', () => {
 	});
 
 	it('should handle setting one flour to 100%', () => {
-		const ingredients: RecipeIngredient[] = [
+		const ingredients: FlatIngredient[] = [
 			{
 				id: 'nuvola',
 				name: 'Nuvola',
 				nameDa: 'Mel - Caputo Nuvola',
 				percentage: 70,
 				type: 'flour',
-				stage: 'main'
+				mixingStepId: 'main'
 			},
 			{
 				id: 'semola',
@@ -79,7 +87,7 @@ describe('rebalanceFlourBlend', () => {
 				nameDa: 'Mel - Semola',
 				percentage: 30,
 				type: 'flour',
-				stage: 'main'
+				mixingStepId: 'main'
 			}
 		];
 
@@ -93,14 +101,14 @@ describe('rebalanceFlourBlend', () => {
 	});
 
 	it('should keep total flour constant', () => {
-		const ingredients: RecipeIngredient[] = [
+		const ingredients: FlatIngredient[] = [
 			{
 				id: 'nuvola',
 				name: 'Nuvola',
 				nameDa: 'Mel - Caputo Nuvola',
 				percentage: 70,
 				type: 'flour',
-				stage: 'main'
+				mixingStepId: 'main'
 			},
 			{
 				id: 'semola',
@@ -108,7 +116,7 @@ describe('rebalanceFlourBlend', () => {
 				nameDa: 'Mel - Semola',
 				percentage: 30,
 				type: 'flour',
-				stage: 'main'
+				mixingStepId: 'main'
 			}
 		];
 
@@ -123,7 +131,7 @@ describe('rebalanceFlourBlend', () => {
 	});
 
 	it('should not affect flour in different stages', () => {
-		const ingredients: RecipeIngredient[] = [
+		const ingredients: FlatIngredient[] = [
 			// Main stage flours
 			{
 				id: 'main-nuvola',
@@ -131,7 +139,7 @@ describe('rebalanceFlourBlend', () => {
 				nameDa: 'Mel - Caputo Nuvola',
 				percentage: 20,
 				type: 'flour',
-				stage: 'main'
+				mixingStepId: 'main'
 			},
 			{
 				id: 'main-pizzeria',
@@ -139,7 +147,7 @@ describe('rebalanceFlourBlend', () => {
 				nameDa: 'Mel - Caputo Pizzeria',
 				percentage: 30,
 				type: 'flour',
-				stage: 'main'
+				mixingStepId: 'main'
 			},
 			// Biga stage flour (single, should not be affected)
 			{
@@ -148,7 +156,7 @@ describe('rebalanceFlourBlend', () => {
 				nameDa: 'Mel',
 				percentage: 50,
 				type: 'flour',
-				stage: 'biga'
+				mixingStepId: 'biga'
 			}
 		];
 
@@ -167,14 +175,14 @@ describe('rebalanceFlourBlend', () => {
 	});
 
 	it('should handle 3+ flours with proportional distribution', () => {
-		const ingredients: RecipeIngredient[] = [
+		const ingredients: FlatIngredient[] = [
 			{
 				id: 'flour-a',
 				name: 'Flour A',
 				nameDa: 'Mel A',
 				percentage: 50,
 				type: 'flour',
-				stage: 'main'
+				mixingStepId: 'main'
 			},
 			{
 				id: 'flour-b',
@@ -182,7 +190,7 @@ describe('rebalanceFlourBlend', () => {
 				nameDa: 'Mel B',
 				percentage: 30,
 				type: 'flour',
-				stage: 'main'
+				mixingStepId: 'main'
 			},
 			{
 				id: 'flour-c',
@@ -190,7 +198,7 @@ describe('rebalanceFlourBlend', () => {
 				nameDa: 'Mel C',
 				percentage: 20,
 				type: 'flour',
-				stage: 'main'
+				mixingStepId: 'main'
 			}
 		];
 
@@ -214,16 +222,23 @@ describe('rebalanceFlourBlend', () => {
 	});
 
 	it('should return ingredients unchanged if only one flour in stage', () => {
-		const ingredients: RecipeIngredient[] = [
+		const ingredients: FlatIngredient[] = [
 			{
 				id: 'flour',
 				name: 'Flour',
 				nameDa: 'Mel',
 				percentage: 100,
 				type: 'flour',
-				stage: 'main'
+				mixingStepId: 'main'
 			},
-			{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water', stage: 'main' }
+			{
+				id: 'water',
+				name: 'Water',
+				nameDa: 'Vand',
+				percentage: 65,
+				type: 'water',
+				mixingStepId: 'main'
+			}
 		];
 
 		const result = rebalanceFlourBlend(ingredients, 'flour', 80, 'main');
@@ -242,14 +257,27 @@ describe('getControllableIngredients', () => {
 		category: 'direct',
 		baseWeight: 270,
 		hydration: 65,
-		yieldPizzas: 4,
-		ingredients: [
-			{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
-			{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
-			{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.7, type: 'salt' },
-			{ id: 'yeast', name: 'Yeast', nameDa: 'Gaer', percentage: 0.3, type: 'yeast' }
+		mixingSteps: [
+			{
+				id: 'main',
+				name: 'Main dough',
+				nameDa: 'Hoveddej',
+				ingredients: [
+					{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+					{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
+					{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.7, type: 'salt' },
+					{
+						id: 'yeast',
+						name: 'Yeast',
+						nameDa: 'Gaer',
+						percentage: 0.3,
+						type: 'yeast',
+						yeastType: 'fresh'
+					}
+				]
+			}
 		],
-		schedule: { stages: [], totalTime: 0 }
+		timeline: []
 	};
 
 	const poolishRecipe: Recipe = {
@@ -259,58 +287,67 @@ describe('getControllableIngredients', () => {
 		category: 'poolish',
 		baseWeight: 270,
 		hydration: 65,
-		yieldPizzas: 4,
-		ingredients: [
+		mixingSteps: [
 			{
-				id: 'poolish-flour',
-				name: 'Poolish flour',
-				nameDa: 'Mel',
-				percentage: 20,
-				type: 'flour',
-				stage: 'poolish'
+				id: 'poolish',
+				name: 'Poolish',
+				nameDa: 'Poolish',
+				predough: true,
+				ingredients: [
+					{
+						id: 'poolish-flour',
+						name: 'Poolish flour',
+						nameDa: 'Mel',
+						percentage: 20,
+						type: 'flour'
+					},
+					{
+						id: 'poolish-water',
+						name: 'Poolish water',
+						nameDa: 'Vand',
+						percentage: 20,
+						type: 'water'
+					},
+					{
+						id: 'poolish-yeast',
+						name: 'Poolish yeast',
+						nameDa: 'Gaer',
+						percentage: 0.1,
+						type: 'yeast',
+						yeastType: 'fresh'
+					}
+				]
 			},
 			{
-				id: 'poolish-water',
-				name: 'Poolish water',
-				nameDa: 'Vand',
-				percentage: 20,
-				type: 'water',
-				stage: 'poolish'
-			},
-			{
-				id: 'poolish-yeast',
-				name: 'Poolish yeast',
-				nameDa: 'Gaer',
-				percentage: 0.1,
-				type: 'yeast',
-				stage: 'poolish'
-			},
-			{
-				id: 'main-flour',
-				name: 'Main flour',
-				nameDa: 'Mel',
-				percentage: 80,
-				type: 'flour',
-				stage: 'main'
-			},
-			{
-				id: 'main-water',
-				name: 'Main water',
-				nameDa: 'Vand',
-				percentage: 45,
-				type: 'water',
-				stage: 'main'
-			},
-			{
-				id: 'main-salt',
-				name: 'Salt',
-				nameDa: 'Salt',
-				percentage: 2.5,
-				type: 'salt',
-				stage: 'main'
+				id: 'main',
+				name: 'Main dough',
+				nameDa: 'Hoveddej',
+				ingredients: [
+					{
+						id: 'main-flour',
+						name: 'Main flour',
+						nameDa: 'Mel',
+						percentage: 80,
+						type: 'flour'
+					},
+					{
+						id: 'main-water',
+						name: 'Main water',
+						nameDa: 'Vand',
+						percentage: 45,
+						type: 'water'
+					},
+					{
+						id: 'main-salt',
+						name: 'Salt',
+						nameDa: 'Salt',
+						percentage: 2.5,
+						type: 'salt'
+					}
+				]
 			}
 		],
-		schedule: { stages: [], totalTime: 0 }
+		timeline: []
 	};
 
 	const multiFlourRecipe: Recipe = {
@@ -320,50 +357,59 @@ describe('getControllableIngredients', () => {
 		category: 'biga',
 		baseWeight: 270,
 		hydration: 72,
-		yieldPizzas: 4,
-		ingredients: [
+		mixingSteps: [
 			{
-				id: 'biga-flour',
-				name: 'Biga flour',
-				nameDa: 'Mel - Nuvola',
-				percentage: 50,
-				type: 'flour',
-				stage: 'biga'
+				id: 'biga',
+				name: 'Biga',
+				nameDa: 'Biga',
+				predough: true,
+				ingredients: [
+					{
+						id: 'biga-flour',
+						name: 'Biga flour',
+						nameDa: 'Mel - Nuvola',
+						percentage: 50,
+						type: 'flour'
+					}
+				]
 			},
 			{
-				id: 'main-nuvola',
-				name: 'Nuvola',
-				nameDa: 'Mel - Nuvola',
-				percentage: 20,
-				type: 'flour',
-				stage: 'main'
-			},
-			{
-				id: 'main-pizzeria',
-				name: 'Pizzeria',
-				nameDa: 'Mel - Pizzeria',
-				percentage: 30,
-				type: 'flour',
-				stage: 'main'
-			},
-			{
-				id: 'water',
-				name: 'Water',
-				nameDa: 'Vand',
-				percentage: 72,
-				type: 'water',
-				stage: 'main'
-			},
-			{
-				id: 'salt',
-				name: 'Salt',
-				nameDa: 'Salt',
-				percentage: 2.5,
-				type: 'salt',
-				stage: 'main'
+				id: 'main',
+				name: 'Main dough',
+				nameDa: 'Hoveddej',
+				ingredients: [
+					{
+						id: 'main-nuvola',
+						name: 'Nuvola',
+						nameDa: 'Mel - Nuvola',
+						percentage: 20,
+						type: 'flour'
+					},
+					{
+						id: 'main-pizzeria',
+						name: 'Pizzeria',
+						nameDa: 'Mel - Pizzeria',
+						percentage: 30,
+						type: 'flour'
+					},
+					{
+						id: 'water',
+						name: 'Water',
+						nameDa: 'Vand',
+						percentage: 72,
+						type: 'water'
+					},
+					{
+						id: 'salt',
+						name: 'Salt',
+						nameDa: 'Salt',
+						percentage: 2.5,
+						type: 'salt'
+					}
+				]
 			}
 		],
-		schedule: { stages: [], totalTime: 0 }
+		timeline: []
 	};
 
 	const oilRecipe: Recipe = {
@@ -373,15 +419,28 @@ describe('getControllableIngredients', () => {
 		category: 'direct',
 		baseWeight: 270,
 		hydration: 65,
-		yieldPizzas: 4,
-		ingredients: [
-			{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
-			{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
-			{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.5, type: 'salt' },
-			{ id: 'yeast', name: 'Yeast', nameDa: 'Gaer', percentage: 0.3, type: 'yeast' },
-			{ id: 'oil', name: 'Oil', nameDa: 'Olivenolie', percentage: 1, type: 'oil' }
+		mixingSteps: [
+			{
+				id: 'main',
+				name: 'Main dough',
+				nameDa: 'Hoveddej',
+				ingredients: [
+					{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+					{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
+					{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.5, type: 'salt' },
+					{
+						id: 'yeast',
+						name: 'Yeast',
+						nameDa: 'Gaer',
+						percentage: 0.3,
+						type: 'yeast',
+						yeastType: 'fresh'
+					},
+					{ id: 'oil', name: 'Oil', nameDa: 'Olivenolie', percentage: 1, type: 'oil' }
+				]
+			}
 		],
-		schedule: { stages: [], totalTime: 0 }
+		timeline: []
 	};
 
 	it('should return hydration, salt, yeast, no flour blend, no predough for simple recipe', () => {
@@ -416,8 +475,8 @@ describe('getControllableIngredients', () => {
 		const controls = getControllableIngredients(multiFlourRecipe);
 
 		expect(controls.flours).toHaveLength(2);
-		const biga = controls.flours.find((f) => f.stage === 'biga');
-		const main = controls.flours.find((f) => f.stage === 'main');
+		const biga = controls.flours.find((f) => f.mixingStepId === 'biga');
+		const main = controls.flours.find((f) => f.mixingStepId === 'main');
 		expect(biga?.flours).toHaveLength(1);
 		expect(main?.flours).toHaveLength(2);
 
@@ -458,27 +517,51 @@ describe('getControllableIngredients', () => {
 			category: 'direct',
 			baseWeight: 270,
 			hydration: 65,
-			yieldPizzas: 4,
-			ingredients: [
-				{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
-				{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
-				{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.5, type: 'salt' },
+			mixingSteps: [
 				{
-					id: 'sourdough',
-					name: 'Sourdough',
-					nameDa: 'Speltsur',
-					percentage: 5,
-					type: 'other'
-				},
-				{
-					id: 'enzyme',
-					name: 'Baking enzyme',
-					nameDa: 'Bageenzym',
-					percentage: 1,
-					type: 'other'
+					id: 'main',
+					name: 'Main dough',
+					nameDa: 'Hoveddej',
+					ingredients: [
+						{
+							id: 'flour',
+							name: 'Flour',
+							nameDa: 'Mel',
+							percentage: 100,
+							type: 'flour'
+						},
+						{
+							id: 'water',
+							name: 'Water',
+							nameDa: 'Vand',
+							percentage: 65,
+							type: 'water'
+						},
+						{
+							id: 'salt',
+							name: 'Salt',
+							nameDa: 'Salt',
+							percentage: 2.5,
+							type: 'salt'
+						},
+						{
+							id: 'sourdough',
+							name: 'Sourdough',
+							nameDa: 'Speltsur',
+							percentage: 5,
+							type: 'other'
+						},
+						{
+							id: 'enzyme',
+							name: 'Baking enzyme',
+							nameDa: 'Bageenzym',
+							percentage: 1,
+							type: 'other'
+						}
+					]
 				}
 			],
-			schedule: { stages: [], totalTime: 0 }
+			timeline: []
 		};
 
 		const controls = getControllableIngredients(enzymeRecipe);
@@ -500,66 +583,75 @@ describe('getControllableIngredients', () => {
 			category: 'poolish',
 			baseWeight: 270,
 			hydration: 65,
-			yieldPizzas: 4,
-			ingredients: [
+			mixingSteps: [
 				{
-					id: 'poolish-flour',
-					name: 'Poolish flour',
-					nameDa: 'Mel',
-					percentage: 10,
-					type: 'flour',
-					stage: 'poolish'
+					id: 'poolish',
+					name: 'Poolish',
+					nameDa: 'Poolish',
+					predough: true,
+					ingredients: [
+						{
+							id: 'poolish-flour',
+							name: 'Poolish flour',
+							nameDa: 'Mel',
+							percentage: 10,
+							type: 'flour'
+						},
+						{
+							id: 'poolish-water',
+							name: 'Poolish water',
+							nameDa: 'Vand',
+							percentage: 10,
+							type: 'water'
+						},
+						{
+							id: 'poolish-yeast',
+							name: 'Poolish yeast',
+							nameDa: 'Gaer',
+							percentage: 0.1,
+							type: 'yeast',
+							yeastType: 'fresh'
+						}
+					]
 				},
 				{
-					id: 'poolish-water',
-					name: 'Poolish water',
-					nameDa: 'Vand',
-					percentage: 10,
-					type: 'water',
-					stage: 'poolish'
-				},
-				{
-					id: 'poolish-yeast',
-					name: 'Poolish yeast',
-					nameDa: 'Gaer',
-					percentage: 0.1,
-					type: 'yeast',
-					stage: 'poolish'
-				},
-				{
-					id: 'main-flour',
-					name: 'Main flour',
-					nameDa: 'Mel',
-					percentage: 90,
-					type: 'flour',
-					stage: 'main'
-				},
-				{
-					id: 'main-water',
-					name: 'Main water',
-					nameDa: 'Vand',
-					percentage: 55,
-					type: 'water',
-					stage: 'main'
-				},
-				{
-					id: 'main-yeast',
-					name: 'Main yeast',
-					nameDa: 'Gaer',
-					percentage: 0.4,
-					type: 'yeast',
-					stage: 'main'
-				},
-				{
-					id: 'main-salt',
-					name: 'Salt',
-					nameDa: 'Salt',
-					percentage: 1.8,
-					type: 'salt',
-					stage: 'main'
+					id: 'main',
+					name: 'Main dough',
+					nameDa: 'Hoveddej',
+					ingredients: [
+						{
+							id: 'main-flour',
+							name: 'Main flour',
+							nameDa: 'Mel',
+							percentage: 90,
+							type: 'flour'
+						},
+						{
+							id: 'main-water',
+							name: 'Main water',
+							nameDa: 'Vand',
+							percentage: 55,
+							type: 'water'
+						},
+						{
+							id: 'main-yeast',
+							name: 'Main yeast',
+							nameDa: 'Gaer',
+							percentage: 0.4,
+							type: 'yeast',
+							yeastType: 'fresh'
+						},
+						{
+							id: 'main-salt',
+							name: 'Salt',
+							nameDa: 'Salt',
+							percentage: 1.8,
+							type: 'salt'
+						}
+					]
 				}
 			],
-			schedule: { stages: [], totalTime: 0 }
+			timeline: []
 		};
 
 		const controls = getControllableIngredients(multiYeastRecipe);

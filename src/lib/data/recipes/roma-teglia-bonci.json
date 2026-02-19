@@ -6,7 +6,6 @@
 	"yeastType": "fresh",
 	"baseWeight": 900,
 	"hydration": 75,
-	"yieldPizzas": 1,
 	"mixingSteps": [
 		{
 			"id": "main",

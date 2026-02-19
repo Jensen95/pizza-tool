@@ -3,10 +3,8 @@
 	"name": "Umuts Pizzadej",
 	"nameDa": "Umuts Pizzadej",
 	"category": "direct",
-	"yeastType": "fresh",
 	"baseWeight": 270,
 	"hydration": 70,
-	"yieldPizzas": 4,
 	"mixingSteps": [
 		{
 			"id": "main",

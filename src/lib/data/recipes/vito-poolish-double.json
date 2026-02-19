@@ -3,10 +3,8 @@
 	"name": "Vito's Poolish Pizza - Double Fermented",
 	"nameDa": "Vito's Poolish Pizza - Dobbelt Fermentering",
 	"category": "poolish",
-	"yeastType": "instant",
 	"baseWeight": 270,
 	"hydration": 65,
-	"yieldPizzas": 6,
 	"mixingSteps": [
 		{
 			"id": "poolish",

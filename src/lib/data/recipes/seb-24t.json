@@ -6,7 +6,6 @@
 	"yeastType": "fresh",
 	"baseWeight": 270,
 	"hydration": 70,
-	"yieldPizzas": 4,
 	"mixingSteps": [
 		{
 			"id": "main",
@@ -38,7 +37,7 @@
 					"id": "yeast",
 					"name": "Fresh yeast",
 					"nameDa": "Frisk gær",
-					"percentage": 0.4,
+					"percentage": 0.06,
 					"type": "yeast",
 					"yeastType": "fresh"
 				}

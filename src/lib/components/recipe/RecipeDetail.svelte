@@ -29,8 +29,8 @@
 				<span class="stat-label">Total tid</span>
 			</div>
 			<div class="stat">
-				<span class="stat-value">{recipe.yieldPizzas}</span>
-				<span class="stat-label">Pizzaer</span>
+				<span class="stat-value">{recipe.baseWeight} g</span>
+				<span class="stat-label">Dejklump</span>
 			</div>
 		</div>
 	</section>

@@ -48,7 +48,6 @@ interface Recipe {
 	yeastType?: YeastInfo['type'];
 	baseWeight: number;
 	hydration: number;
-	yieldPizzas: number;
 	mixingSteps: MixingStep[]; // replaces ingredients[]
 	timeline: TimelineStep[]; // replaces schedule.stages[]
 	tipsDa?: string[];
@@ -90,7 +89,7 @@ Source data now available for all recipes.
 
 **Follow-up task:** Extract custom/advanced recipe details (specific flour types, temperature curves, customization options) from Excel in a later pass.
 
-### Phase 2: Update types & utility functions
+### Phase 2: Update types & utility functions [DONE]
 
 **Files:**
 
@@ -125,7 +124,7 @@ Convert each recipe to new model. User pastes Excel data, I extract granular tim
 
 **Batch F — Roma teglia (2 recipes, from research):** 21. `roma-teglia-bonci.json` 22. `roma-teglia-biga-giorilli.json`
 
-### Phase 4: Update components
+### Phase 4: Update components 
 
 - `FermentationSchedule.svelte` — iterate `timeline`, render `section` headers, look up ingredients from `mixingSteps` by ID, show `tipDa`
 - `IngredientCalculator.svelte` — iterate `mixingSteps` for grouping

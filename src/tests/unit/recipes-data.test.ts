@@ -14,9 +14,9 @@ describe('roman style recipes', () => {
 		expect(recipe).toBeTruthy();
 		expect(recipe?.category).toBe('roman');
 		expect(recipe?.name).toContain('Giorilli');
-		const hasBigaStage =
-			recipe?.ingredients.some((ingredient) => ingredient.stage === 'biga') ?? false;
-		expect(hasBigaStage).toBe(true);
+		const hasBigaStep =
+			recipe?.mixingSteps.some((step) => step.id === 'biga' && step.predough) ?? false;
+		expect(hasBigaStep).toBe(true);
 	});
 
 	it('groups roman recipes together', () => {

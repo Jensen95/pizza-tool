@@ -3,10 +3,8 @@
 	"name": "BK Biga v1",
 	"nameDa": "BK Biga v1",
 	"category": "biga",
-	"yeastType": "instant",
 	"baseWeight": 270,
 	"hydration": 65,
-	"yieldPizzas": 4,
 	"mixingSteps": [
 		{
 			"id": "biga",

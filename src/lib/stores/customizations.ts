@@ -1,6 +1,7 @@
 import { writable, derived, get } from 'svelte/store';
 import * as storage from '$lib/utils/storage';
 import type { Recipe, RecipeIngredient } from '$lib/types/recipe';
+import { defaultCalculatorInput } from '$lib/types/ingredient';
 import { getAllIngredients } from '$lib/utils/baker-percentage';
 
 const CUSTOMIZATIONS_KEY = 'recipe-customizations';
@@ -64,7 +65,7 @@ function createCustomizationsStore() {
 					recipeId: recipe.id,
 					recipeName: recipe.nameDa,
 					ingredients: {},
-					numberOfPizzas: recipe.yieldPizzas,
+					numberOfPizzas: defaultCalculatorInput.numberOfPizzas,
 					doughBallWeight: recipe.baseWeight,
 					createdAt: new Date().toISOString()
 				};

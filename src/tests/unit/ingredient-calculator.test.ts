@@ -40,20 +40,31 @@ const mixedStageRecipe: Recipe = {
 	category: 'direct',
 	baseWeight: 250,
 	hydration: 65,
-	yieldPizzas: 2,
-	ingredients: [
-		{ id: 'base-flour', name: 'Flour', nameDa: 'Mel', percentage: 70, type: 'flour' },
+	mixingSteps: [
 		{
-			id: 'main-flour',
-			name: 'Main flour',
-			nameDa: 'Mel (hoveddej)',
-			percentage: 30,
-			type: 'flour',
-			stage: 'main'
-		},
-		{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
+			id: 'main',
+			name: 'Main dough',
+			nameDa: 'Hoveddej',
+			ingredients: [
+				{
+					id: 'base-flour',
+					name: 'Flour',
+					nameDa: 'Mel',
+					percentage: 70,
+					type: 'flour'
+				},
+				{
+					id: 'main-flour',
+					name: 'Main flour',
+					nameDa: 'Mel (hoveddej)',
+					percentage: 30,
+					type: 'flour'
+				},
+				{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
+			]
+		}
 	],
-	schedule: { stages: [], totalTime: 0 }
+	timeline: []
 };
 
 const poolishRecipe: Recipe = {
@@ -63,59 +74,68 @@ const poolishRecipe: Recipe = {
 	category: 'poolish',
 	baseWeight: 270,
 	hydration: 65,
-	yieldPizzas: 4,
-	ingredients: [
+	mixingSteps: [
 		{
-			id: 'poolish-flour-a',
-			name: 'Poolish flour A',
-			nameDa: 'Poolish mel A',
-			percentage: 10,
-			type: 'flour',
-			stage: 'poolish'
+			id: 'poolish',
+			name: 'Poolish',
+			nameDa: 'Poolish',
+			predough: true,
+			ingredients: [
+				{
+					id: 'poolish-flour-a',
+					name: 'Poolish flour A',
+					nameDa: 'Poolish mel A',
+					percentage: 10,
+					type: 'flour'
+				},
+				{
+					id: 'poolish-flour-b',
+					name: 'Poolish flour B',
+					nameDa: 'Poolish mel B',
+					percentage: 10,
+					type: 'flour'
+				},
+				{
+					id: 'poolish-water',
+					name: 'Poolish water',
+					nameDa: 'Vand (poolish)',
+					percentage: 20,
+					type: 'water'
+				},
+				{
+					id: 'poolish-yeast',
+					name: 'Poolish yeast',
+					nameDa: 'Gaer (poolish)',
+					percentage: 0.1,
+					type: 'yeast',
+					yeastType: 'fresh'
+				}
+			]
 		},
 		{
-			id: 'poolish-flour-b',
-			name: 'Poolish flour B',
-			nameDa: 'Poolish mel B',
-			percentage: 10,
-			type: 'flour',
-			stage: 'poolish'
-		},
-		{
-			id: 'poolish-water',
-			name: 'Poolish water',
-			nameDa: 'Vand (poolish)',
-			percentage: 20,
-			type: 'water',
-			stage: 'poolish'
-		},
-		{
-			id: 'poolish-yeast',
-			name: 'Poolish yeast',
-			nameDa: 'Gaer (poolish)',
-			percentage: 0.1,
-			type: 'yeast',
-			stage: 'poolish'
-		},
-		{
-			id: 'main-flour',
-			name: 'Main dough flour',
-			nameDa: 'Mel (hoveddej)',
-			percentage: 80,
-			type: 'flour',
-			stage: 'main'
-		},
-		{
-			id: 'main-water',
-			name: 'Main dough water',
-			nameDa: 'Vand (hoveddej)',
-			percentage: 45,
-			type: 'water',
-			stage: 'main'
-		},
-		{ id: 'main-salt', name: 'Salt', nameDa: 'Salt', percentage: 2.5, type: 'salt' }
+			id: 'main',
+			name: 'Main dough',
+			nameDa: 'Hoveddej',
+			ingredients: [
+				{
+					id: 'main-flour',
+					name: 'Main dough flour',
+					nameDa: 'Mel (hoveddej)',
+					percentage: 80,
+					type: 'flour'
+				},
+				{
+					id: 'main-water',
+					name: 'Main dough water',
+					nameDa: 'Vand (hoveddej)',
+					percentage: 45,
+					type: 'water'
+				},
+				{ id: 'main-salt', name: 'Salt', nameDa: 'Salt', percentage: 2.5, type: 'salt' }
+			]
+		}
 	],
-	schedule: { stages: [], totalTime: 0 }
+	timeline: []
 };
 
 beforeEach(() => {
