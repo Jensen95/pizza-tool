@@ -1,3 +1,4 @@
+// ABOUTME: Core recipe type definitions — mixing steps + timeline model
 import type { YeastInfo } from './reference';
 
 export type RecipeCategory =
@@ -13,46 +14,33 @@ export type RecipeCategory =
 
 export type IngredientType = 'flour' | 'water' | 'yeast' | 'salt' | 'oil' | 'sugar' | 'other';
 
-export type FermentationStage =
-	| 'preferment'
-	| 'poolish'
-	| 'biga'
-	| 'autolyse'
-	| 'bulk'
-	| 'ball'
-	| 'final'
-	| 'main';
-
 export interface RecipeIngredient {
 	id: string;
 	name: string;
 	nameDa: string;
 	percentage: number;
 	type: IngredientType;
-	stage?: FermentationStage;
+	yeastType?: YeastInfo['type'];
 	notes?: string;
 }
 
-export interface FermentationScheduleStage {
+export interface MixingStep {
 	id: string;
 	name: string;
 	nameDa: string;
-	duration: number; // in minutes
-	temperature: number; // in Celsius
-	temperatureMin?: number;
-	temperatureMax?: number;
-	location?: 'room' | 'fridge' | 'warm';
-	instructions?: string;
-	instructionsDa?: string;
-	ingredientsDa?: string[]; // ingredients used at this stage
-	canSetTimer: boolean;
+	predough?: boolean;
+	ingredients: RecipeIngredient[];
 }
 
-export interface FermentationSchedule {
-	stages: FermentationScheduleStage[];
-	totalTime: number; // in minutes
-	notes?: string;
-	notesDa?: string;
+export interface TimelineStep {
+	section?: string;
+	instructionsDa: string;
+	ingredients?: string[];
+	duration?: number;
+	temperature?: number;
+	location?: 'room' | 'fridge' | 'warm';
+	canSetTimer?: boolean;
+	tipDa?: string;
 }
 
 export interface Recipe {
@@ -63,11 +51,11 @@ export interface Recipe {
 	descriptionDa?: string;
 	category: RecipeCategory;
 	yeastType?: YeastInfo['type'];
-	baseWeight: number; // default dough ball weight in grams
-	hydration: number; // percentage (e.g., 65 for 65%)
-	yieldPizzas: number; // default number of pizzas
-	ingredients: RecipeIngredient[];
-	schedule: FermentationSchedule;
+	baseWeight: number;
+	hydration: number;
+	yieldPizzas: number;
+	mixingSteps: MixingStep[];
+	timeline: TimelineStep[];
 	tips?: string[];
 	tipsDa?: string[];
 	source?: string;
