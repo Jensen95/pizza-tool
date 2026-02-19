@@ -110,8 +110,14 @@
 			"ingredients": ["main-water", "main-flour"]
 		},
 		{
-			"instructionsDa": "Tilsæt salt og resten af melet og ælt dejen godt.",
+			"instructionsDa": "Tilsæt salt og resten af melet.",
 			"ingredients": ["main-salt"]
+		},
+		{
+			"instructionsDa": "Ælt ved lav hastighed i 5 min."
+		},
+		{
+			"instructionsDa": "Ælt ved mellem hastighed i 5 min."
 		},
 		{
 			"instructionsDa": "Vend dejen ud på bordet. Tag evt. lidt olie på hænderne for bedre at kunne håndtere den. Lad den hvile tildækket i 15 min.",
@@ -147,7 +153,6 @@
 			"canSetTimer": true
 		}
 	],
-	"kneadingDa": "Lav hastighed 5 min, mellem hastighed 5 min (vejledende)",
 	"tipsDa": [
 		"Vito bruger megen tørgær! Du kan sagtens reducere til 0,2%",
 		"Honning kan undværes.",

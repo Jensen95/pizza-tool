@@ -119,7 +119,10 @@
 		},
 		{
 			"section": "Dag 2 - Hoveddej",
-			"instructionsDa": "Bland dejen og poolish ved lav/mellem hastighed, indtil dejene har samlet sig."
+			"instructionsDa": "Bland dejen og poolish ved lav hastighed indtil dejene samler sig."
+		},
+		{
+			"instructionsDa": "Ælt ved mellem hastighed i ca. 5 min."
 		},
 		{
 			"instructionsDa": "Tilsæt salt og ælt den godt ind i dejen.",
@@ -149,7 +152,6 @@
 			"canSetTimer": true
 		}
 	],
-	"kneadingDa": "Lav hastighed 5 min, mellem hastighed 5 min (vejledende)",
 	"tipsDa": [
 		"Vito bruger megen tørgær! Du kan sagtens reducere til 0,2%",
 		"Honning kan undværes.",
