@@ -2,7 +2,7 @@
 import { render, screen } from '@testing-library/svelte';
 import { beforeEach, describe, it, expect } from 'vitest';
 import IngredientCalculator from '$lib/components/recipe/IngredientCalculator.svelte';
-import type { Recipe } from '$lib/types/recipe';
+import type { Recipe } from '$lib/models/recipe.types';
 import * as storage from '$lib/utils/storage';
 
 class MemoryStorage {

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { scaleRecipe, calculateHydration } from '$lib/utils/baker-percentage';
-import type { Recipe } from '$lib/types/recipe';
+import type { Recipe } from '$lib/models/recipe.types';
 
 // Test recipe: 65% hydration, 20% poolish
 const poolishRecipe: Recipe = {

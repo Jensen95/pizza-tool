@@ -2,7 +2,7 @@ import type {
 	BakerMathIngredient,
 	BakerMathIngredientWithWeight,
 	BakerMathSummary
-} from '$lib/types';
+} from './baker-math.types';
 
 const roundToTwoDecimals = (value: number): number => Math.round(value * 100) / 100;
 const nonNegative = (value: number): number => (Number.isFinite(value) ? Math.max(0, value) : 0);

@@ -1,5 +1,5 @@
 import { writable, derived } from 'svelte/store';
-import type { Timer, TimerStatus } from '$lib/types';
+import type { Timer, TimerStatus } from '$lib/models';
 import {
 	getTimers,
 	createTimer as createTimerUtil,

@@ -6,8 +6,8 @@ import {
 	getControllableIngredients
 } from '$lib/utils/baker-percentage';
 import type { FlatIngredient } from '$lib/utils/baker-percentage';
-import type { Recipe } from '$lib/types/recipe';
-import type { CustomFlourState } from '$lib/types/ingredient';
+import type { Recipe } from '$lib/models/recipe.types';
+import type { CustomFlourState } from '$lib/models/ingredient.types';
 import * as storage from '$lib/utils/storage';
 
 class MemoryStorage {

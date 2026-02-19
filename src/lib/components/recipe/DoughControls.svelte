@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Recipe, YeastInfo } from '$lib/types';
+	import type { Recipe, YeastInfo } from '$lib/models';
 	import { calculator, totalWeight, flourWeight, predoughRatio, recipeHistory } from '$lib/stores';
 	import {
 		formatWeight,
@@ -7,8 +7,8 @@
 		calculateHydration,
 		getAllIngredients
 	} from '$lib/utils/baker-percentage';
-	import type { FlourTypeOption, FlourType } from '$lib/types';
-	import { flourTypeLabels, yeastTypeLabels } from '$lib/types';
+	import type { FlourTypeOption, FlourType } from '$lib/models';
+	import { flourTypeLabels, yeastTypeLabels } from '$lib/models';
 	import { yeastInfo } from '$lib/data/reference';
 	import { getRecipeYeastType } from '$lib/utils/yeast';
 

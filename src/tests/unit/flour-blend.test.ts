@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { rebalanceFlourBlend, getControllableIngredients } from '$lib/utils/baker-percentage';
 import type { FlatIngredient } from '$lib/utils/baker-percentage';
-import type { Recipe } from '$lib/types/recipe';
+import type { Recipe } from '$lib/models/recipe.types';
 
 describe('rebalanceFlourBlend', () => {
 	it('should adjust other flour when one is changed (2 flours)', () => {

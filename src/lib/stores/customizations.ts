@@ -1,7 +1,7 @@
 import { writable, derived, get } from 'svelte/store';
 import * as storage from '$lib/utils/storage';
-import type { Recipe, RecipeIngredient } from '$lib/types/recipe';
-import { defaultCalculatorInput } from '$lib/types/ingredient';
+import type { Recipe, RecipeIngredient } from '$lib/models/recipe.types';
+import { defaultCalculatorInput } from '$lib/models/ingredient.types';
 import { getAllIngredients } from '$lib/utils/baker-percentage';
 
 const CUSTOMIZATIONS_KEY = 'recipe-customizations';

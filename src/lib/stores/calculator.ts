@@ -1,13 +1,13 @@
 import { writable, derived, get } from 'svelte/store';
-import type { Recipe } from '$lib/types/recipe';
+import type { Recipe } from '$lib/models/recipe.types';
 import type {
 	CalculatorState,
 	ScaledIngredient,
 	RecipeControls,
 	CustomFlour,
 	CustomFlourState
-} from '$lib/types/ingredient';
-import type { FlourTypeOption, YeastInfo } from '$lib/types/reference';
+} from '$lib/models/ingredient.types';
+import type { FlourTypeOption, YeastInfo } from '$lib/models/reference.types';
 import {
 	scaleRecipe,
 	getOriginalPredoughRatio,

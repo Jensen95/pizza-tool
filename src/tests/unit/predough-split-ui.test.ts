@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { scaleRecipe, isPredoughStep, getOriginalPredoughRatio } from '$lib/utils/baker-percentage';
-import type { Recipe } from '$lib/types/recipe';
+import type { Recipe } from '$lib/models/recipe.types';
 
 // Standard poolish recipe: 20% predough flour, 80% main flour
 const poolishRecipe: Recipe = {

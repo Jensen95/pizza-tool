@@ -1,4 +1,4 @@
-import type { Recipe, RecipeCategory, RecipeGroup } from '$lib/types';
+import type { Recipe, RecipeCategory, RecipeGroup } from '$lib/models';
 
 import vitoPoolish from './vito-poolish.json';
 import vitoPoolishDouble from './vito-poolish-double.json';

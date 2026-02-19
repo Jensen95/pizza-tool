@@ -1,5 +1,5 @@
 // ABOUTME: Core recipe type definitions — mixing steps + timeline model
-import type { YeastInfo } from './reference';
+import type { YeastInfo } from './reference.types';
 
 export type RecipeCategory =
 	| 'neapolitan'

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import type { BakerMathIngredient } from '$lib/types';
+import type { BakerMathIngredient } from '$lib/utils/baker-math.types';
 import {
 	attachIngredientWeights,
 	calculateDoughTotalWeight,

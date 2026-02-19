@@ -1,6 +1,6 @@
 // ABOUTME: Calculator and ingredient types for scaling recipes and UI controls
-import type { RecipeIngredient, IngredientType } from './recipe';
-import type { FlourType, YeastInfo } from './reference';
+import type { RecipeIngredient, IngredientType } from './recipe.types';
+import type { FlourType, YeastInfo } from './reference.types';
 
 export interface ScaledIngredient {
 	id: string;

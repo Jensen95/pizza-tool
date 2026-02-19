@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { Recipe } from '$lib/types';
-	import { categoryLabels } from '$lib/types';
-	import { formatDuration } from '$lib/types/timer';
+	import type { Recipe } from '$lib/models';
+	import { categoryLabels } from '$lib/models';
+	import { formatDuration } from '$lib/models/timer.types';
 
 	let { recipe }: { recipe: Recipe } = $props();
 

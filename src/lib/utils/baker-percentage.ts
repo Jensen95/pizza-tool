@@ -1,13 +1,13 @@
 // ABOUTME: Baker's percentage calculations, recipe scaling, and ingredient management
-import type { Recipe, RecipeIngredient, MixingStep } from '$lib/types/recipe';
+import type { Recipe, RecipeIngredient, MixingStep } from '$lib/models/recipe.types';
 import type {
 	ScaledIngredient,
 	CalculatorInput,
 	RecipeControls,
 	FlourBlendInfo,
 	ExtraIngredientInfo
-} from '$lib/types/ingredient';
-import type { FlourTypeOption } from '$lib/types/reference';
+} from '$lib/models/ingredient.types';
+import type { FlourTypeOption } from '$lib/models/reference.types';
 
 // Non-controllable ingredient types (flour and water are controlled via hydration/blend)
 const NON_EXTRA_TYPES = ['flour', 'water'] as const;

@@ -1,6 +1,6 @@
 // ABOUTME: Yeast type detection and conversion between fresh, active-dry, and instant
-import type { Recipe } from '$lib/types/recipe';
-import type { YeastInfo } from '$lib/types/reference';
+import type { Recipe } from '$lib/models/recipe.types';
+import type { YeastInfo } from '$lib/models/reference.types';
 import { yeastInfo } from '$lib/data/reference';
 import { getAllIngredients } from './baker-percentage';
 

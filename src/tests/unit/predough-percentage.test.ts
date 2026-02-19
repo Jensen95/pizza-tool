@@ -6,7 +6,7 @@ import {
 	formatWeight,
 	getAllIngredients
 } from '$lib/utils/baker-percentage';
-import type { Recipe } from '$lib/types/recipe';
+import type { Recipe } from '$lib/models/recipe.types';
 
 describe('Predough Percentage Calculations', () => {
 	describe('100% Biga Recipe', () => {

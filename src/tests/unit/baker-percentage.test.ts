@@ -9,7 +9,7 @@ import {
 	formatWeight,
 	getAllIngredients
 } from '$lib/utils/baker-percentage';
-import type { Recipe, RecipeIngredient } from '$lib/types/recipe';
+import type { Recipe, RecipeIngredient } from '$lib/models/recipe.types';
 
 describe("Baker's Percentage - Basic Calculations", () => {
 	describe('calculateIngredientWeight', () => {

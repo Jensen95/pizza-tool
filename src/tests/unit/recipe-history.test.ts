@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { get } from 'svelte/store';
 import { calculator, recipeHistory } from '$lib/stores';
-import type { Recipe } from '$lib/types';
+import type { Recipe } from '$lib/models';
 import * as storage from '$lib/utils/storage';
 
 const baseRecipe: Recipe = {

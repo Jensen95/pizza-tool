@@ -1,4 +1,4 @@
-import type { FlourTypeOption } from '$lib/types';
+import type { FlourTypeOption } from '$lib/models';
 
 export const flourTypes: FlourTypeOption[] = [
 	{ id: 'tipo-00', name: 'Tipo 00', nameDa: 'Tipo 00' },

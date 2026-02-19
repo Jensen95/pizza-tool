@@ -1,4 +1,4 @@
-import type { Timer, TimerStatus } from '$lib/types/timer';
+import type { Timer, TimerStatus } from '$lib/models/timer.types';
 import { sendNotification } from './notification';
 import * as storage from './storage';
 

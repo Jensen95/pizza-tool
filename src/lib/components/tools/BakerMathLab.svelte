@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { BakerMathIngredient } from '$lib/types';
+	import type { BakerMathIngredient } from '$lib/utils/baker-math.types';
 	import {
 		calculateHydrationPercentage,
 		calculateTargetWater,

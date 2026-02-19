@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { Recipe } from '$lib/types';
-	import type { ScaledIngredient } from '$lib/types/ingredient';
-	import { formatDuration } from '$lib/types/timer';
+	import type { Recipe } from '$lib/models';
+	import type { ScaledIngredient } from '$lib/models/ingredient.types';
+	import { formatDuration } from '$lib/models/timer.types';
 	import { timers, calculator } from '$lib/stores';
 	import { formatWeight } from '$lib/utils/baker-percentage';
 

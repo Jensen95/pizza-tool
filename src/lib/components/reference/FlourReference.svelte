@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { flourTypes } from '$lib/data/reference';
-	import { flourTypeLabels } from '$lib/types';
+	import { flourTypeLabels } from '$lib/models';
 
 	let sortedFlours = $derived([...flourTypes].sort((a, b) => a.proteinMin - b.proteinMin));
 </script>

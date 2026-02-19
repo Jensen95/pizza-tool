@@ -1,4 +1,4 @@
-import type { FlourType, SauceRecipe, YeastInfo, Tip } from '$lib/types';
+import type { FlourType, SauceRecipe, YeastInfo, Tip } from '$lib/models';
 
 import flourTypesData from './flour-types.json';
 import sauceRecipesData from './sauce-recipes.json';

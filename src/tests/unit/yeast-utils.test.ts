@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { convertYeastPercentage, getRecipeYeastType } from '$lib/utils/yeast';
-import type { Recipe } from '$lib/types';
-import type { YeastInfo } from '$lib/types/reference';
+import type { Recipe } from '$lib/models';
+import type { YeastInfo } from '$lib/models/reference.types';
 
 function buildRecipe(
 	yeastName: string,

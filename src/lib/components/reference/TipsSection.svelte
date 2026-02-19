@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getTipsByCategory } from '$lib/data/reference';
-	import { tipCategoryLabels } from '$lib/types';
-	import type { Tip } from '$lib/types';
+	import { tipCategoryLabels } from '$lib/models';
+	import type { Tip } from '$lib/models';
 
 	const categories: Tip['category'][] = [
 		'dough',

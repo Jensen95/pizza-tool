@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { Recipe } from '$lib/types';
-	import type { ScaledIngredient } from '$lib/types/ingredient';
+	import type { Recipe } from '$lib/models';
+	import type { ScaledIngredient } from '$lib/models/ingredient.types';
 	import { calculator } from '$lib/stores';
 	import { formatWeight, isPredoughStep } from '$lib/utils/baker-percentage';
 	import DoughControls from './DoughControls.svelte';

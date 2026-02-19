@@ -6,7 +6,7 @@ import {
 	getAllIngredients
 } from '$lib/utils/baker-percentage';
 import type { FlatIngredient } from '$lib/utils/baker-percentage';
-import type { Recipe } from '$lib/types/recipe';
+import type { Recipe } from '$lib/models/recipe.types';
 
 // Simple recipe: 65% hydration, no predough
 const simpleRecipe: Recipe = {
