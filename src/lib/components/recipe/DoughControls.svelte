@@ -332,7 +332,7 @@
 		</div>
 
 		<div class="input-group">
-			<label class="label" for="ball-weight">Kuglevaegt (g)</label>
+			<label class="label" for="ball-weight">Kuglevægt (g)</label>
 			<div class="input-with-buttons">
 				<button
 					class="btn btn-secondary"

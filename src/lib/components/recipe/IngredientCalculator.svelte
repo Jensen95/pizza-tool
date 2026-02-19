@@ -104,7 +104,7 @@
 						<tr>
 							<th>Ingrediens</th>
 							<th class="right">Procent</th>
-							<th class="right">Vaegt</th>
+							<th class="right">Vægt</th>
 						</tr>
 					</thead>
 					<tbody>
