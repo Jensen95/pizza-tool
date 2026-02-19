@@ -124,7 +124,7 @@ Convert each recipe to new model. User pastes Excel data, I extract granular tim
 
 **Batch F — Roma teglia (2 recipes, from research):** 21. `roma-teglia-bonci.json` 22. `roma-teglia-biga-giorilli.json`
 
-### Phase 4: Update components 
+### Phase 4: Update components
 
 - `FermentationSchedule.svelte` — iterate `timeline`, render `section` headers, look up ingredients from `mixingSteps` by ID, show `tipDa`
 - `IngredientCalculator.svelte` — iterate `mixingSteps` for grouping
