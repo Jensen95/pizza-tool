@@ -67,8 +67,9 @@ src/
 │   └── utils/         # Utility functions (must have unit tests)
 ├── routes/            # SvelteKit routes (CSR only)
 └── tests/
-    ├── unit/          # Unit tests with Vitest
+    ├── setup.ts       # Vitest setup
     └── e2e/           # E2E tests with Playwright
+# Unit tests are colocated: *.test.ts next to source files
 ```
 
 ## Development Guidelines
