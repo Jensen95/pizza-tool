@@ -4,7 +4,7 @@
 	"nameDa": "Vito's Poolish Pizza + Autolyse",
 	"category": "poolish",
 	"baseWeight": 270,
-	"hydration": 65,
+	"hydration": 70,
 	"mixingSteps": [
 		{
 			"id": "poolish",
@@ -14,7 +14,7 @@
 			"ingredients": [
 				{
 					"id": "poolish-flour",
-					"percentage": 19.35,
+					"percentage": 30,
 					"type": "flour",
 					"flourType": "tipo-00"
 				},
@@ -22,14 +22,14 @@
 					"id": "poolish-water",
 					"name": "Water (poolish)",
 					"nameDa": "Vand",
-					"percentage": 19.35,
+					"percentage": 30,
 					"type": "water"
 				},
 				{
 					"id": "poolish-yeast",
 					"name": "Dry yeast (poolish)",
 					"nameDa": "Tørgær",
-					"percentage": 0.32,
+					"percentage": 0.333,
 					"type": "yeast",
 					"yeastType": "instant"
 				},
@@ -37,7 +37,7 @@
 					"id": "poolish-honey",
 					"name": "Honey (poolish)",
 					"nameDa": "Honning",
-					"percentage": 0.32,
+					"percentage": 0.5,
 					"type": "sugar"
 				}
 			]
@@ -49,7 +49,7 @@
 			"ingredients": [
 				{
 					"id": "main-flour",
-					"percentage": 80.65,
+					"percentage": 70,
 					"type": "flour",
 					"flourType": "tipo-00"
 				},
@@ -57,15 +57,22 @@
 					"id": "main-water",
 					"name": "Water (main dough)",
 					"nameDa": "Vand",
-					"percentage": 45.15,
+					"percentage": 40,
 					"type": "water"
 				},
 				{
 					"id": "main-salt",
 					"name": "Salt",
 					"nameDa": "Salt",
-					"percentage": 2.6,
+					"percentage": 2.5,
 					"type": "salt"
+				},
+				{
+					"id": "main-oil",
+					"name": "Olive oil",
+					"nameDa": "Olivenolie",
+					"percentage": 0.42,
+					"type": "oil"
 				}
 			]
 		}

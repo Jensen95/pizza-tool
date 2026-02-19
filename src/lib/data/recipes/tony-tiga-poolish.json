@@ -4,7 +4,7 @@
 	"nameDa": "Tony Tiga + Poolish",
 	"category": "poolish",
 	"baseWeight": 270,
-	"hydration": 65,
+	"hydration": 62.8,
 	"mixingSteps": [
 		{
 			"id": "poolish",
@@ -50,21 +50,21 @@
 					"id": "main-water",
 					"name": "Main dough water",
 					"nameDa": "Vand",
-					"percentage": 55,
+					"percentage": 52.8,
 					"type": "water"
 				},
 				{
 					"id": "main-salt",
 					"name": "Salt",
 					"nameDa": "Salt",
-					"percentage": 1.8,
+					"percentage": 1.77,
 					"type": "salt"
 				},
 				{
 					"id": "main-yeast",
 					"name": "Main yeast",
 					"nameDa": "Tørgær",
-					"percentage": 0.4,
+					"percentage": 0.36,
 					"type": "yeast",
 					"yeastType": "instant"
 				},
@@ -72,14 +72,14 @@
 					"id": "main-oil",
 					"name": "Olive oil",
 					"nameDa": "Olivenolie",
-					"percentage": 1,
+					"percentage": 0.98,
 					"type": "oil"
 				},
 				{
 					"id": "main-malt",
 					"name": "Diastatic malt",
 					"nameDa": "Diastatisk malt",
-					"percentage": 1.8,
+					"percentage": 1.77,
 					"type": "other"
 				}
 			]

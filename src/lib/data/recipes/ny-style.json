@@ -4,7 +4,7 @@
 	"nameDa": "New York Style",
 	"category": "ny-style",
 	"baseWeight": 270,
-	"hydration": 66,
+	"hydration": 66.15,
 	"mixingSteps": [
 		{
 			"id": "main",
@@ -28,35 +28,35 @@
 					"id": "water",
 					"name": "Water",
 					"nameDa": "Vand",
-					"percentage": 66,
+					"percentage": 66.15,
 					"type": "water"
 				},
 				{
 					"id": "oil",
 					"name": "Olive oil",
 					"nameDa": "Olivenolie",
-					"percentage": 3,
+					"percentage": 3.08,
 					"type": "oil"
 				},
 				{
 					"id": "salt",
 					"name": "Salt",
 					"nameDa": "Salt",
-					"percentage": 2.6,
+					"percentage": 2.62,
 					"type": "salt"
 				},
 				{
 					"id": "sugar",
 					"name": "Cane sugar",
 					"nameDa": "Rørsukker",
-					"percentage": 3,
+					"percentage": 2.92,
 					"type": "sugar"
 				},
 				{
 					"id": "yeast",
 					"name": "Fresh yeast",
 					"nameDa": "Frisk gær",
-					"percentage": 0.5,
+					"percentage": 0.46,
 					"type": "yeast",
 					"yeastType": "fresh"
 				}

@@ -4,7 +4,7 @@
 	"nameDa": "Seb 24 timer",
 	"category": "neapolitan",
 	"baseWeight": 270,
-	"hydration": 70,
+	"hydration": 70.05,
 	"mixingSteps": [
 		{
 			"id": "main",
@@ -21,21 +21,21 @@
 					"id": "water",
 					"name": "Water",
 					"nameDa": "Vand",
-					"percentage": 70,
+					"percentage": 70.05,
 					"type": "water"
 				},
 				{
 					"id": "salt",
 					"name": "Salt",
 					"nameDa": "Salt",
-					"percentage": 3,
+					"percentage": 2.985,
 					"type": "salt"
 				},
 				{
 					"id": "yeast",
 					"name": "Fresh yeast",
 					"nameDa": "Frisk gær",
-					"percentage": 0.06,
+					"percentage": 0.0597,
 					"type": "yeast",
 					"yeastType": "fresh"
 				}

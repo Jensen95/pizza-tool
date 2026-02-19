@@ -4,7 +4,7 @@
 	"nameDa": "Gorms Pizzadej",
 	"category": "direct",
 	"baseWeight": 270,
-	"hydration": 65,
+	"hydration": 66.67,
 	"mixingSteps": [
 		{
 			"id": "main",
@@ -21,23 +21,45 @@
 					"id": "water",
 					"name": "Water",
 					"nameDa": "Vand",
-					"percentage": 65,
+					"percentage": 66.67,
 					"type": "water"
 				},
 				{
 					"id": "salt",
 					"name": "Salt",
 					"nameDa": "Salt",
-					"percentage": 2.5,
+					"percentage": 2.33,
 					"type": "salt"
 				},
 				{
 					"id": "yeast",
 					"name": "Yeast",
 					"nameDa": "Gær",
-					"percentage": 0.3,
+					"percentage": 3.33,
 					"type": "yeast",
 					"yeastType": "fresh"
+				},
+				{
+					"id": "sugar",
+					"name": "Sugar",
+					"nameDa": "Sukker",
+					"percentage": 2.33,
+					"type": "sugar"
+				},
+				{
+					"id": "oil",
+					"name": "Olive oil",
+					"nameDa": "Olivenolie",
+					"percentage": 4.33,
+					"type": "oil"
+				},
+				{
+					"id": "durum",
+					"name": "Durum flour (optional)",
+					"nameDa": "Durummel (valgfrit)",
+					"percentage": 33.33,
+					"type": "other",
+					"notes": "Optional / Valgfrit"
 				}
 			]
 		}

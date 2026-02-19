@@ -4,7 +4,7 @@
 	"nameDa": "Seb Biga",
 	"category": "biga",
 	"baseWeight": 270,
-	"hydration": 72,
+	"hydration": 72.02,
 	"mixingSteps": [
 		{
 			"id": "biga",
@@ -59,14 +59,14 @@
 					"id": "main-water",
 					"name": "Main dough water",
 					"nameDa": "Vand",
-					"percentage": 50,
+					"percentage": 50.02,
 					"type": "water"
 				},
 				{
 					"id": "main-salt",
 					"name": "Salt",
 					"nameDa": "Salt",
-					"percentage": 2.5,
+					"percentage": 2.535,
 					"type": "salt"
 				},
 				{

@@ -28,14 +28,14 @@
 					"id": "salt",
 					"name": "Salt",
 					"nameDa": "Salt",
-					"percentage": 3,
+					"percentage": 2.96,
 					"type": "salt"
 				},
 				{
 					"id": "yeast",
 					"name": "Fresh yeast",
 					"nameDa": "Frisk gær",
-					"percentage": 0.5,
+					"percentage": 0.044,
 					"type": "yeast",
 					"yeastType": "fresh"
 				}

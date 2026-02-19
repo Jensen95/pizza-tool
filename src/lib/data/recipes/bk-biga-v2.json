@@ -4,7 +4,7 @@
 	"nameDa": "BK Biga v2",
 	"category": "biga",
 	"baseWeight": 270,
-	"hydration": 63,
+	"hydration": 62.86,
 	"mixingSteps": [
 		{
 			"id": "biga",
@@ -29,7 +29,7 @@
 					"id": "biga-yeast",
 					"name": "Biga yeast",
 					"nameDa": "Frisk gær",
-					"percentage": 0.3,
+					"percentage": 0.078,
 					"type": "yeast",
 					"yeastType": "fresh"
 				}
@@ -50,14 +50,14 @@
 					"id": "main-water",
 					"name": "Main dough water",
 					"nameDa": "Vand",
-					"percentage": 41,
+					"percentage": 40.86,
 					"type": "water"
 				},
 				{
 					"id": "main-salt",
 					"name": "Salt",
 					"nameDa": "Salt",
-					"percentage": 2.7,
+					"percentage": 2.68,
 					"type": "salt"
 				}
 			]

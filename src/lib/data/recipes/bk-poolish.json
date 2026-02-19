@@ -4,7 +4,7 @@
 	"nameDa": "BK Poolish",
 	"category": "poolish",
 	"baseWeight": 270,
-	"hydration": 65,
+	"hydration": 64.57,
 	"mixingSteps": [
 		{
 			"id": "poolish",
@@ -14,7 +14,7 @@
 			"ingredients": [
 				{
 					"id": "poolish-flour",
-					"percentage": 20,
+					"percentage": 19.35,
 					"type": "flour",
 					"flourType": "tipo-00"
 				},
@@ -22,14 +22,14 @@
 					"id": "poolish-water",
 					"name": "Poolish water",
 					"nameDa": "Vand",
-					"percentage": 20,
+					"percentage": 19.35,
 					"type": "water"
 				},
 				{
 					"id": "poolish-yeast",
 					"name": "Poolish yeast",
 					"nameDa": "Tørgær",
-					"percentage": 0.1,
+					"percentage": 0.152,
 					"type": "yeast",
 					"yeastType": "instant"
 				}
@@ -42,7 +42,7 @@
 			"ingredients": [
 				{
 					"id": "main-flour",
-					"percentage": 80,
+					"percentage": 80.65,
 					"type": "flour",
 					"flourType": "tipo-00"
 				},
@@ -50,14 +50,14 @@
 					"id": "main-water",
 					"name": "Main dough water",
 					"nameDa": "Vand",
-					"percentage": 45,
+					"percentage": 45.22,
 					"type": "water"
 				},
 				{
 					"id": "main-salt",
 					"name": "Salt",
 					"nameDa": "Salt",
-					"percentage": 2.5,
+					"percentage": 2.56,
 					"type": "salt"
 				}
 			]

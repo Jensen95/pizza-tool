@@ -4,7 +4,7 @@
 	"nameDa": "BK Bageenzym",
 	"category": "direct",
 	"baseWeight": 270,
-	"hydration": 64,
+	"hydration": 63.83,
 	"mixingSteps": [
 		{
 			"id": "main",
@@ -21,35 +21,35 @@
 					"id": "water",
 					"name": "Water",
 					"nameDa": "Vand",
-					"percentage": 64,
+					"percentage": 63.83,
 					"type": "water"
 				},
 				{
 					"id": "sourdough",
 					"name": "Sourdough starter",
 					"nameDa": "Speltsur el. hvedesur",
-					"percentage": 5,
+					"percentage": 4.71,
 					"type": "other"
 				},
 				{
 					"id": "enzyme",
 					"name": "Baking enzyme",
 					"nameDa": "Bageenzym",
-					"percentage": 1,
+					"percentage": 0.91,
 					"type": "other"
 				},
 				{
 					"id": "salt",
 					"name": "Salt",
 					"nameDa": "Salt",
-					"percentage": 2.5,
+					"percentage": 2.43,
 					"type": "salt"
 				},
 				{
 					"id": "yeast",
 					"name": "Dry yeast",
 					"nameDa": "Tørgær",
-					"percentage": 0.3,
+					"percentage": 0.047,
 					"type": "yeast",
 					"yeastType": "instant"
 				}

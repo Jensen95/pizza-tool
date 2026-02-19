@@ -29,7 +29,7 @@
 					"id": "oil",
 					"name": "Oil",
 					"nameDa": "Olie",
-					"percentage": 4,
+					"percentage": 4.17,
 					"type": "oil"
 				},
 				{
@@ -43,7 +43,7 @@
 					"id": "yeast",
 					"name": "Dry yeast",
 					"nameDa": "Tørgær",
-					"percentage": 0.4,
+					"percentage": 0.42,
 					"type": "yeast",
 					"yeastType": "instant"
 				}

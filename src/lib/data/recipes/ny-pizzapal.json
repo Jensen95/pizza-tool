@@ -4,7 +4,7 @@
 	"nameDa": "NY PizzaPal",
 	"category": "ny-style",
 	"baseWeight": 270,
-	"hydration": 57,
+	"hydration": 57.5,
 	"mixingSteps": [
 		{
 			"id": "main",
@@ -21,7 +21,7 @@
 					"id": "water",
 					"name": "Water",
 					"nameDa": "Vand",
-					"percentage": 57,
+					"percentage": 57.5,
 					"type": "water"
 				},
 				{
@@ -35,7 +35,7 @@
 					"id": "yeast",
 					"name": "Dry yeast",
 					"nameDa": "Tørgær",
-					"percentage": 0.4,
+					"percentage": 0.375,
 					"type": "yeast",
 					"yeastType": "instant"
 				},
