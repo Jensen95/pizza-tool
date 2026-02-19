@@ -72,6 +72,7 @@ export interface Recipe {
 	hydration: number;
 	mixingSteps: MixingStep[];
 	timeline: TimelineStep[];
+	kneadingDa?: string;
 	tips?: string[];
 	tipsDa?: string[];
 	source?: string;
