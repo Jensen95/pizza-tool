@@ -55,6 +55,7 @@ describe('resolveFlourDisplayName', () => {
 	});
 
 	it('returns generic fallback for unknown category', () => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const result = resolveFlourDisplayName('nonexistent' as any, undefined, testProducts);
 		expect(result).toEqual({ name: 'Flour', nameDa: 'Mel' });
 	});
