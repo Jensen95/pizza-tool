@@ -3,95 +3,141 @@
 	"name": "BK Poolish",
 	"nameDa": "BK Poolish",
 	"category": "poolish",
-	"yeastType": "active-dry",
+	"yeastType": "instant",
 	"baseWeight": 270,
 	"hydration": 65,
 	"yieldPizzas": 4,
-	"ingredients": [
+	"mixingSteps": [
 		{
-			"id": "poolish-flour",
-			"name": "Poolish flour",
-			"nameDa": "Mel",
-			"percentage": 20,
-			"type": "flour",
-			"stage": "poolish"
+			"id": "poolish",
+			"name": "Poolish",
+			"nameDa": "Poolish",
+			"predough": true,
+			"ingredients": [
+				{
+					"id": "poolish-flour",
+					"name": "Poolish flour",
+					"nameDa": "Mel",
+					"percentage": 20,
+					"type": "flour"
+				},
+				{
+					"id": "poolish-water",
+					"name": "Poolish water",
+					"nameDa": "Vand",
+					"percentage": 20,
+					"type": "water"
+				},
+				{
+					"id": "poolish-yeast",
+					"name": "Poolish yeast",
+					"nameDa": "Tørgær",
+					"percentage": 0.1,
+					"type": "yeast",
+					"yeastType": "instant"
+				}
+			]
 		},
 		{
-			"id": "poolish-water",
-			"name": "Poolish water",
-			"nameDa": "Vand",
-			"percentage": 20,
-			"type": "water",
-			"stage": "poolish"
-		},
-		{
-			"id": "poolish-yeast",
-			"name": "Poolish yeast",
-			"nameDa": "Tørgær",
-			"percentage": 0.1,
-			"type": "yeast",
-			"stage": "poolish"
-		},
-		{
-			"id": "main-flour",
-			"name": "Main dough flour",
-			"nameDa": "Mel",
-			"percentage": 80,
-			"type": "flour",
-			"stage": "main"
-		},
-		{
-			"id": "main-water",
-			"name": "Main dough water",
-			"nameDa": "Vand",
-			"percentage": 45,
-			"type": "water",
-			"stage": "main"
-		},
-		{
-			"id": "main-salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 2.5,
-			"type": "salt",
-			"stage": "main"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "main-flour",
+					"name": "Main dough flour",
+					"nameDa": "Mel",
+					"percentage": 80,
+					"type": "flour"
+				},
+				{
+					"id": "main-water",
+					"name": "Main dough water",
+					"nameDa": "Vand",
+					"percentage": 45,
+					"type": "water"
+				},
+				{
+					"id": "main-salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 2.5,
+					"type": "salt"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Poolish",
-				"nameDa": "Dag 1 - Poolish",
-				"duration": 1440,
-				"temperature": 4,
-				"location": "fridge",
-				"canSetTimer": true,
-				"instructionsDa": "Gæren vendes i melet og vandet tilsættes. Bland og lad hvile i køleskab i 24 timer."
-			},
-			{
-				"id": "stage-2",
-				"name": "Main dough",
-				"nameDa": "Dag 2 - Hoveddej",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Bland poolish med mel, vand og salt. Æl godt og lad hæve."
-			},
-			{
-				"id": "stage-3",
-				"name": "Ball rest",
-				"nameDa": "Kuglehvile",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Del i kugler og lad hvile."
-			}
-		],
-		"totalTime": 1680
-	},
+	"timeline": [
+		{
+			"section": "Dag 1 - Poolish",
+			"instructionsDa": "Gæren vendes i melet, og vandet tilsættes.",
+			"ingredients": ["poolish-flour", "poolish-water", "poolish-yeast"]
+		},
+		{
+			"instructionsDa": "Rør det godt sammen."
+		},
+		{
+			"instructionsDa": "Lad det hæve i en lukket beholder/hævekasse i 1 time ved stuetemperatur.",
+			"duration": 60,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Sæt poolishen (stadig i lukket beholder) i køleskabet i 20-24 timer.",
+			"duration": 1440,
+			"location": "fridge",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 2 - Hoveddej",
+			"instructionsDa": "Tag poolishen ud af køleskabet og lad den stå ved stuetemperatur i 1 time.",
+			"duration": 60,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Poolishen røres ud i vandet, hvorefter mel tilsættes og blandes.",
+			"ingredients": ["main-water", "main-flour"]
+		},
+		{
+			"instructionsDa": "Ælt dejen i 5 min. ved lav hastighed."
+		},
+		{
+			"instructionsDa": "Lad dejen hvile i skålen i 10 min.",
+			"duration": 10,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Tilsæt salt og ælt yderligere 5 min. ved mellem hastighed.",
+			"ingredients": ["main-salt"]
+		},
+		{
+			"instructionsDa": "Dejen er færdig, når den er \"skær\" (helt blank og glat). Lad dejen bulk-hæve i 1 time ved stuetemperatur i en skål let smurt med olivenolie.",
+			"duration": 60,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Vend dejen ud på et let melet bord og del den i klumper af ca. 270 g."
+		},
+		{
+			"instructionsDa": "Dejklumperne strammes op til kugler ved at folde oversiden ind i bunden af dejen."
+		},
+		{
+			"instructionsDa": "Placer dem i en lukket beholder/hævekasse og sæt dem på køl i ca. 24 timer.",
+			"duration": 1440,
+			"location": "fridge",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 3",
+			"instructionsDa": "Tag dejen ud. Form til pizza direkte fra køl."
+		}
+	],
 	"tipsDa": [
 		"Tørgæren arbejder bedst i poolish når vandet er 25-27 grader.",
 		"Poolish kan fermenteres op til 4 timer ved stuetemperatur eller 24 timer i køleskab.",

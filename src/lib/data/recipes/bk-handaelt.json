@@ -7,71 +7,92 @@
 	"baseWeight": 270,
 	"hydration": 60,
 	"yieldPizzas": 4,
-	"ingredients": [
+	"mixingSteps": [
 		{
-			"id": "flour",
-			"name": "Flour tipo 00",
-			"nameDa": "Mel tipo 00",
-			"percentage": 100,
-			"type": "flour"
-		},
-		{
-			"id": "water",
-			"name": "Water",
-			"nameDa": "Vand",
-			"percentage": 60,
-			"type": "water"
-		},
-		{
-			"id": "salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 3,
-			"type": "salt"
-		},
-		{
-			"id": "yeast",
-			"name": "Fresh yeast",
-			"nameDa": "Frisk gær",
-			"percentage": 0.5,
-			"type": "yeast"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "flour",
+					"name": "Flour tipo 00",
+					"nameDa": "Mel tipo 00",
+					"percentage": 100,
+					"type": "flour"
+				},
+				{
+					"id": "water",
+					"name": "Water",
+					"nameDa": "Vand",
+					"percentage": 60,
+					"type": "water"
+				},
+				{
+					"id": "salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 3,
+					"type": "salt"
+				},
+				{
+					"id": "yeast",
+					"name": "Fresh yeast",
+					"nameDa": "Frisk gær",
+					"percentage": 0.5,
+					"type": "yeast",
+					"yeastType": "fresh"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Mix",
-				"nameDa": "Bland dej",
-				"duration": 30,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": false,
-				"instructionsDa": "Kom vand (ca 15 grader) i en skål og opløs gæren. Tilsæt melet og æl dejen i hånden."
-			},
-			{
-				"id": "stage-2",
-				"name": "Bulk ferment",
-				"nameDa": "Stuehævning",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Lad hæve ved stuetemperatur."
-			},
-			{
-				"id": "stage-3",
-				"name": "Ball rest",
-				"nameDa": "Kuglehvile",
-				"duration": 180,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Del i kugler og lad hvile."
-			}
-		],
-		"totalTime": 330
-	},
+	"timeline": [
+		{
+			"section": "Dag 1",
+			"instructionsDa": "Kom vand (ca. 15°C) i en skål og opløs gæren.",
+			"ingredients": ["water", "yeast"]
+		},
+		{
+			"instructionsDa": "Kom 10% af melet i mens du rører med hånden. Tilføj salt og det sidste mel, som kommes i lidt efter lidt.",
+			"ingredients": ["flour", "salt"]
+		},
+		{
+			"instructionsDa": "Når dejen har samlet sig, lægges den ud på bordet, hvor den æltes godt med hænderne i ca. 4-7 min."
+		},
+		{
+			"instructionsDa": "Lad dejen ligge i 10 min., hvorefter den virkes op til en kugle.",
+			"duration": 10,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Lad dejen hvile i 24 timer ved stuetemperatur i lufttæt beholder.",
+			"duration": 1440,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 2",
+			"instructionsDa": "Del dejen i klumper af ca. 270 g."
+		},
+		{
+			"instructionsDa": "Stram op som kugler ved at folde oversiden ind i bunden af dejen, og kom dem i en pizza hævekasse."
+		},
+		{
+			"instructionsDa": "Kom hævekassen på køl i 24-48 timer.",
+			"duration": 2880,
+			"location": "fridge",
+			"canSetTimer": true,
+			"tipDa": "Alternativt: lad dem hæve 4-6 timer ved stuetemperatur, hvorefter de er klar til brug."
+		},
+		{
+			"section": "Dag 3-4",
+			"instructionsDa": "Tag dejen ud af køl 3-4 timer før brug – så tempererer den og bliver nemmere at arbejde med.",
+			"duration": 240,
+			"location": "room",
+			"canSetTimer": true
+		}
+	],
 	"tipsDa": [
 		"Vil du bruge dejen på dag 2, så se tip under kold hævning.",
 		"Dejen er færdigæltet når du kan trykke på den og den springer tilbage."

@@ -7,92 +7,132 @@
 	"baseWeight": 270,
 	"hydration": 66,
 	"yieldPizzas": 4,
-	"ingredients": [
+	"mixingSteps": [
 		{
-			"id": "flour-00",
-			"name": "Wheat flour tipo 00",
-			"nameDa": "Hvedemel tipo 00",
-			"percentage": 90.77,
-			"type": "flour"
-		},
-		{
-			"id": "flour-wholegrain",
-			"name": "Fine wholegrain flour",
-			"nameDa": "Fintmalet fuldkornsmel",
-			"percentage": 9.23,
-			"type": "flour"
-		},
-		{
-			"id": "water",
-			"name": "Water",
-			"nameDa": "Vand",
-			"percentage": 66,
-			"type": "water"
-		},
-		{
-			"id": "oil",
-			"name": "Olive oil",
-			"nameDa": "Olivenolie",
-			"percentage": 3,
-			"type": "oil"
-		},
-		{
-			"id": "salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 2.6,
-			"type": "salt"
-		},
-		{
-			"id": "sugar",
-			"name": "Cane sugar",
-			"nameDa": "Rørsukker",
-			"percentage": 3,
-			"type": "sugar"
-		},
-		{
-			"id": "yeast",
-			"name": "Fresh yeast",
-			"nameDa": "Frisk gær",
-			"percentage": 0.5,
-			"type": "yeast"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "flour-00",
+					"name": "Wheat flour tipo 00",
+					"nameDa": "Hvedemel tipo 00",
+					"percentage": 90.77,
+					"type": "flour"
+				},
+				{
+					"id": "flour-wholegrain",
+					"name": "Fine wholegrain flour",
+					"nameDa": "Fintmalet fuldkornsmel",
+					"percentage": 9.23,
+					"type": "flour"
+				},
+				{
+					"id": "water",
+					"name": "Water",
+					"nameDa": "Vand",
+					"percentage": 66,
+					"type": "water"
+				},
+				{
+					"id": "oil",
+					"name": "Olive oil",
+					"nameDa": "Olivenolie",
+					"percentage": 3,
+					"type": "oil"
+				},
+				{
+					"id": "salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 2.6,
+					"type": "salt"
+				},
+				{
+					"id": "sugar",
+					"name": "Cane sugar",
+					"nameDa": "Rørsukker",
+					"percentage": 3,
+					"type": "sugar"
+				},
+				{
+					"id": "yeast",
+					"name": "Fresh yeast",
+					"nameDa": "Frisk gær",
+					"percentage": 0.5,
+					"type": "yeast",
+					"yeastType": "fresh"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Mix dough",
-				"nameDa": "Dag 1 - Bland dej",
-				"duration": 150,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Bland mel, vand, olie og sukker. Tilsæt salt og gær og æl godt."
-			},
-			{
-				"id": "stage-2",
-				"name": "Cold ferment",
-				"nameDa": "Dag 2-4 - Kold hævning",
-				"duration": 4320,
-				"temperature": 4,
-				"location": "fridge",
-				"canSetTimer": true,
-				"instructionsDa": "Lad hæve i køleskab i 3-4 dage."
-			},
-			{
-				"id": "stage-3",
-				"name": "Temper",
-				"nameDa": "Temperering",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Tag ud af køleskab 2 timer før bagning."
-			}
-		],
-		"totalTime": 4590
-	},
+	"timeline": [
+		{
+			"section": "Dag 1",
+			"instructionsDa": "Bland mel, vand, olie og sukker.",
+			"ingredients": ["flour-00", "flour-wholegrain", "water", "oil", "sugar"]
+		},
+		{
+			"instructionsDa": "Ælt det indtil det samler sig til en dej."
+		},
+		{
+			"instructionsDa": "Lad dejen hvile ved stuetemperatur i 10 min.",
+			"duration": 10,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Smuldr gæren i dejen og ælt i cirka 1 min.",
+			"ingredients": ["yeast"]
+		},
+		{
+			"instructionsDa": "Tilsæt salt og ælt i 4 min. Lad dejen hvile i 5 min.",
+			"ingredients": ["salt"]
+		},
+		{
+			"instructionsDa": "Ælt dejen i 5 min. og lad den hvile 5 min."
+		},
+		{
+			"instructionsDa": "Ælt dejen i 5 min. og lad den hvile 2 min."
+		},
+		{
+			"instructionsDa": "Fold dejen et par gange til den føles glat."
+		},
+		{
+			"instructionsDa": "Lad dejen bulk-hæve i 1 time ved stuetemperatur i en beholder let smurt med olivenolie. I løbet af denne time foldes dejen 3 gange (hvert 20. min.).",
+			"duration": 60,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Lad dejen hæve yderligere 30 min. ved stuetemperatur.",
+			"duration": 30,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Placer dejen i køleskabet indtil næste dag.",
+			"duration": 720,
+			"location": "fridge",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 2",
+			"instructionsDa": "Tag dejen ud af køleskabet. Del den i klumper af ca. 270 g., stram op som kugler og lad dem hvile i ca. 15 min.",
+			"duration": 15,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Stram bollerne op igen. Placer dem i en lukket beholder og lad dem hæve ved stuetemperatur til ca. dobbelt størrelse i 3-4 timer.",
+			"duration": 240,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true,
+			"tipDa": "For bedre smag: sæt bollerne i køleskabet i en lukket beholder indtil dagen efter (dag 3). Tag bollerne ud 2-3 timer før brug."
+		}
+	],
 	"tipsDa": [
 		"Anbefaling: Hvedemel med 13-14,5% protein.",
 		"Fintmalet fuldkornsmel (f.eks. Emmermel) tilføjer mere smag.",

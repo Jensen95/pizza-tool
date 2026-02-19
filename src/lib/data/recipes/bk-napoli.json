@@ -7,71 +7,111 @@
 	"baseWeight": 270,
 	"hydration": 63,
 	"yieldPizzas": 4,
-	"ingredients": [
+	"mixingSteps": [
 		{
-			"id": "flour",
-			"name": "Flour tipo 00",
-			"nameDa": "Mel tipo 00",
-			"percentage": 100,
-			"type": "flour"
-		},
-		{
-			"id": "water",
-			"name": "Water",
-			"nameDa": "Vand",
-			"percentage": 63,
-			"type": "water"
-		},
-		{
-			"id": "salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 2.5,
-			"type": "salt"
-		},
-		{
-			"id": "yeast",
-			"name": "Fresh yeast",
-			"nameDa": "Frisk gær",
-			"percentage": 0.5,
-			"type": "yeast"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "flour",
+					"name": "Flour tipo 00",
+					"nameDa": "Mel tipo 00",
+					"percentage": 100,
+					"type": "flour"
+				},
+				{
+					"id": "water",
+					"name": "Water",
+					"nameDa": "Vand",
+					"percentage": 63,
+					"type": "water"
+				},
+				{
+					"id": "salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 2.5,
+					"type": "salt"
+				},
+				{
+					"id": "yeast",
+					"name": "Fresh yeast",
+					"nameDa": "Frisk gær",
+					"percentage": 0.5,
+					"type": "yeast",
+					"yeastType": "fresh"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Mix",
-				"nameDa": "Bland dej",
-				"duration": 30,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": false,
-				"instructionsDa": "Mel og vand røres let sammen til dejen samler sig. Tilsæt salt og gær og æl godt."
-			},
-			{
-				"id": "stage-2",
-				"name": "Bulk ferment",
-				"nameDa": "Stuehævning",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Lad hæve ved stuetemperatur."
-			},
-			{
-				"id": "stage-3",
-				"name": "Ball rest",
-				"nameDa": "Kuglehvile",
-				"duration": 180,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Del i kugler og lad hvile."
-			}
-		],
-		"totalTime": 330
-	},
+	"timeline": [
+		{
+			"section": "Dag 1",
+			"instructionsDa": "Mel og vand røres let sammen til dejen samler sig.",
+			"ingredients": ["flour", "water"]
+		},
+		{
+			"instructionsDa": "Lad dejen hvile ved stuetemperatur i 20-25 min. (autolyse).",
+			"duration": 25,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Tilføj salt og rør det godt ud.",
+			"ingredients": ["salt"]
+		},
+		{
+			"instructionsDa": "Tilføj gær.",
+			"ingredients": ["yeast"]
+		},
+		{
+			"instructionsDa": "Ælt videre ved lav hastighed i 5 min."
+		},
+		{
+			"instructionsDa": "Lad dejen hvile i 10 min.",
+			"duration": 10,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Ælt ca. 5 min. ved mellem hastighed. Når dejen er skær, er den klar."
+		},
+		{
+			"instructionsDa": "Dejen virkes op til en bolle indtil overfladen virker jævn."
+		},
+		{
+			"instructionsDa": "Lad dejen hvile i 24 timer ved stuetemperatur i lufttæt beholder.",
+			"duration": 1440,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 2",
+			"instructionsDa": "Del dejen i klumper af ca. 270 g."
+		},
+		{
+			"instructionsDa": "Dejklumperne strammes op til kugler ved at folde oversiden ind i bunden af dejen. Gentag indtil overfladen virker jævn. Husk at få \"lukket\" i bunden af dejen."
+		},
+		{
+			"instructionsDa": "Placer dejkuglerne i en hævekasse/lukket beholder."
+		},
+		{
+			"instructionsDa": "Kom hævekassen på køl i ca. 48 timer.",
+			"duration": 2880,
+			"location": "fridge",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 4",
+			"instructionsDa": "Tag dejen ud af køl 3-4 timer før brug - så tempererer dejen og bliver nemmere at arbejde med.",
+			"duration": 240,
+			"location": "room",
+			"canSetTimer": true
+		}
+	],
 	"tipsDa": [
 		"Frisk gær arbejder bedst når dejen er 25-27 grader.",
 		"Den færdige dej temperatur bør ikke overstige 27 grader.",

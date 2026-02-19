@@ -3,119 +3,169 @@
 	"name": "Tony Tiga + Poolish",
 	"nameDa": "Tony Tiga + Poolish",
 	"category": "poolish",
-	"yeastType": "active-dry",
+	"yeastType": "instant",
 	"baseWeight": 270,
 	"hydration": 65,
 	"yieldPizzas": 4,
-	"ingredients": [
+	"mixingSteps": [
 		{
-			"id": "poolish-flour",
-			"name": "Poolish flour",
-			"nameDa": "Mel",
-			"percentage": 10,
-			"type": "flour",
-			"stage": "poolish"
+			"id": "poolish",
+			"name": "Tiga (starter)",
+			"nameDa": "Tiga (starter)",
+			"predough": true,
+			"ingredients": [
+				{
+					"id": "poolish-flour",
+					"name": "Poolish flour",
+					"nameDa": "Mel",
+					"percentage": 10,
+					"type": "flour"
+				},
+				{
+					"id": "poolish-water",
+					"name": "Poolish water",
+					"nameDa": "Vand",
+					"percentage": 10,
+					"type": "water"
+				},
+				{
+					"id": "poolish-yeast",
+					"name": "Poolish yeast",
+					"nameDa": "Tørgær",
+					"percentage": 0.1,
+					"type": "yeast",
+					"yeastType": "instant"
+				}
+			]
 		},
 		{
-			"id": "poolish-water",
-			"name": "Poolish water",
-			"nameDa": "Vand",
-			"percentage": 10,
-			"type": "water",
-			"stage": "poolish"
-		},
-		{
-			"id": "poolish-yeast",
-			"name": "Poolish yeast",
-			"nameDa": "Tørgær",
-			"percentage": 0.1,
-			"type": "yeast",
-			"stage": "poolish"
-		},
-		{
-			"id": "main-flour",
-			"name": "Main dough flour",
-			"nameDa": "Mel",
-			"percentage": 90,
-			"type": "flour",
-			"stage": "main"
-		},
-		{
-			"id": "main-water",
-			"name": "Main dough water",
-			"nameDa": "Vand",
-			"percentage": 55,
-			"type": "water",
-			"stage": "main"
-		},
-		{
-			"id": "main-salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 1.8,
-			"type": "salt",
-			"stage": "main"
-		},
-		{
-			"id": "main-yeast",
-			"name": "Main yeast",
-			"nameDa": "Tørgær",
-			"percentage": 0.4,
-			"type": "yeast",
-			"stage": "main"
-		},
-		{
-			"id": "main-oil",
-			"name": "Olive oil",
-			"nameDa": "Olivenolie",
-			"percentage": 1,
-			"type": "oil",
-			"stage": "main"
-		},
-		{
-			"id": "main-malt",
-			"name": "Diastatic malt",
-			"nameDa": "Diastatisk malt",
-			"percentage": 1.8,
-			"type": "other",
-			"stage": "main"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "main-flour",
+					"name": "Main dough flour",
+					"nameDa": "Mel",
+					"percentage": 90,
+					"type": "flour"
+				},
+				{
+					"id": "main-water",
+					"name": "Main dough water",
+					"nameDa": "Vand",
+					"percentage": 55,
+					"type": "water"
+				},
+				{
+					"id": "main-salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 1.8,
+					"type": "salt"
+				},
+				{
+					"id": "main-yeast",
+					"name": "Main yeast",
+					"nameDa": "Tørgær",
+					"percentage": 0.4,
+					"type": "yeast",
+					"yeastType": "instant"
+				},
+				{
+					"id": "main-oil",
+					"name": "Olive oil",
+					"nameDa": "Olivenolie",
+					"percentage": 1,
+					"type": "oil"
+				},
+				{
+					"id": "main-malt",
+					"name": "Diastatic malt",
+					"nameDa": "Diastatisk malt",
+					"percentage": 1.8,
+					"type": "other"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Poolish",
-				"nameDa": "Dag 1 - Poolish",
-				"duration": 1440,
-				"temperature": 4,
-				"location": "fridge",
-				"canSetTimer": true,
-				"instructionsDa": "Rør gæren ud i koldt vand i 30 sek. indtil det skummer lidt. Bland med mel og lad hvile i køleskab."
-			},
-			{
-				"id": "stage-2",
-				"name": "Main dough",
-				"nameDa": "Dag 2 - Hoveddej",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Bland poolish med mel, vand, salt, gær, olie og malt. Æl godt og lad hæve."
-			},
-			{
-				"id": "stage-3",
-				"name": "Ball rest",
-				"nameDa": "Kuglehvile",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Del i kugler og lad hvile."
-			}
-		],
-		"totalTime": 1680
-	},
+	"timeline": [
+		{
+			"section": "Dag 1 - Tiga (starter)",
+			"instructionsDa": "Rør gæren ud i koldt vand i 30 sek. indtil det skummer lidt (ingen skum = død gær).",
+			"ingredients": ["poolish-water", "poolish-yeast"]
+		},
+		{
+			"instructionsDa": "Tilsæt mel og bland med spredte fingre til der ikke er mere tørt mel. Der må ikke æltes!",
+			"ingredients": ["poolish-flour"]
+		},
+		{
+			"instructionsDa": "Lad det arbejde i en lukket beholder (låg eller film) i 18 timer ved stuetemperatur.",
+			"duration": 1080,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 2 - Hoveddej",
+			"instructionsDa": "Tag tigaen ud og lad den temperere i 1 time ved stuetemperatur.",
+			"duration": 60,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Rør gæren ud i en separat skål med varmt vand i 30 sek. indtil der viser sig lidt skum.",
+			"ingredients": ["main-yeast", "main-water"]
+		},
+		{
+			"instructionsDa": "Bland mel og malt (eller bageenzym) i en røremaskine med dejkrog.",
+			"ingredients": ["main-flour", "main-malt"]
+		},
+		{
+			"instructionsDa": "Mens røremaskinen kører på laveste hastighed, tilsættes is-vand efterfulgt af gær/vand-blandingen."
+		},
+		{
+			"instructionsDa": "Bland i 15 sek. og tilføj tigaen."
+		},
+		{
+			"instructionsDa": "Bland i ca. 1 min. ved lav hastighed indtil det meste af dejen samler sig omkring krogen.",
+			"tipDa": "Hvis dejen ikke er sammenhængende, så tilføj ca. 2-3 g. vand og bland indtil dejen er sammenhængende."
+		},
+		{
+			"instructionsDa": "Tilføj salt og ælt på laveste hastighed i 1 minut.",
+			"ingredients": ["main-salt"]
+		},
+		{
+			"instructionsDa": "Tilføj olie og ælt på laveste hastighed i 1-2 minutter, indtil olien er absorberet.",
+			"ingredients": ["main-oil"]
+		},
+		{
+			"instructionsDa": "Før dejen over på et bord (uden mel) og ælt indtil den virker glat."
+		},
+		{
+			"instructionsDa": "Lad dejen hvile tildækket ved stuetemperatur i 20 min.",
+			"duration": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Del dejen i klumper og stram dem op ved at folde oversiden ind i bunden af dejen."
+		},
+		{
+			"instructionsDa": "Placer bollerne i en lukket beholder/hævekasse og sæt dem på køl i ca. 24 timer.",
+			"duration": 1440,
+			"location": "fridge",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 3",
+			"instructionsDa": "Tag bollerne ud og lad dem hvile 2-3 timer ved stuetemperatur inden brug.",
+			"duration": 180,
+			"location": "room",
+			"canSetTimer": true
+		}
+	],
 	"tipsDa": [
 		"Anbefaling: Hvedemel med 13-14,5% protein.",
 		"En NY style pizza har typisk en hydrering på 60-65%.",

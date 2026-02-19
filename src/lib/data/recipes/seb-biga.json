@@ -7,97 +7,129 @@
 	"baseWeight": 270,
 	"hydration": 72,
 	"yieldPizzas": 4,
-	"ingredients": [
+	"mixingSteps": [
 		{
-			"id": "biga-flour",
-			"name": "Biga flour (Caputo Nuvola Super)",
-			"nameDa": "Mel - Caputo Nuvola Super",
-			"percentage": 50,
-			"type": "flour",
-			"stage": "biga"
+			"id": "biga",
+			"name": "Biga",
+			"nameDa": "Biga",
+			"predough": true,
+			"ingredients": [
+				{
+					"id": "biga-flour",
+					"name": "Biga flour (Caputo Nuvola Super)",
+					"nameDa": "Mel - Caputo Nuvola Super",
+					"percentage": 50,
+					"type": "flour"
+				},
+				{
+					"id": "biga-water",
+					"name": "Biga water",
+					"nameDa": "Vand",
+					"percentage": 22,
+					"type": "water"
+				},
+				{
+					"id": "biga-yeast",
+					"name": "Biga yeast",
+					"nameDa": "Frisk gær",
+					"percentage": 0.3,
+					"type": "yeast",
+					"yeastType": "fresh"
+				}
+			]
 		},
 		{
-			"id": "biga-water",
-			"name": "Biga water",
-			"nameDa": "Vand",
-			"percentage": 22,
-			"type": "water",
-			"stage": "biga"
-		},
-		{
-			"id": "biga-yeast",
-			"name": "Biga yeast",
-			"nameDa": "Frisk gær",
-			"percentage": 0.3,
-			"type": "yeast",
-			"stage": "biga"
-		},
-		{
-			"id": "main-flour-nuvola",
-			"name": "Main flour (Caputo Nuvola Super)",
-			"nameDa": "Mel - Caputo Nuvola Super",
-			"percentage": 20,
-			"type": "flour",
-			"stage": "main"
-		},
-		{
-			"id": "main-flour-pizzeria",
-			"name": "Main flour (Caputo Pizzeria)",
-			"nameDa": "Mel - Caputo Pizzeria",
-			"percentage": 30,
-			"type": "flour",
-			"stage": "main"
-		},
-		{
-			"id": "main-water",
-			"name": "Main dough water",
-			"nameDa": "Vand",
-			"percentage": 50,
-			"type": "water",
-			"stage": "main"
-		},
-		{
-			"id": "main-salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 2.5,
-			"type": "salt",
-			"stage": "main"
-		},
-		{
-			"id": "main-yeast",
-			"name": "Main yeast",
-			"nameDa": "Frisk gær",
-			"percentage": 0.7,
-			"type": "yeast",
-			"stage": "main"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "main-flour-nuvola",
+					"name": "Main flour (Caputo Nuvola Super)",
+					"nameDa": "Mel - Caputo Nuvola Super",
+					"percentage": 20,
+					"type": "flour"
+				},
+				{
+					"id": "main-flour-pizzeria",
+					"name": "Main flour (Caputo Pizzeria)",
+					"nameDa": "Mel - Caputo Pizzeria",
+					"percentage": 30,
+					"type": "flour"
+				},
+				{
+					"id": "main-water",
+					"name": "Main dough water",
+					"nameDa": "Vand",
+					"percentage": 50,
+					"type": "water"
+				},
+				{
+					"id": "main-salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 2.5,
+					"type": "salt"
+				},
+				{
+					"id": "main-yeast",
+					"name": "Main yeast",
+					"nameDa": "Frisk gær",
+					"percentage": 0.7,
+					"type": "yeast",
+					"yeastType": "fresh"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Biga",
-				"nameDa": "Dag 1 - Biga",
-				"duration": 1440,
-				"temperature": 4,
-				"location": "fridge",
-				"canSetTimer": true,
-				"instructionsDa": "Opløs gæren i vandet og bland med melet. Lad hvile i køleskab i 24 timer."
-			},
-			{
-				"id": "stage-2",
-				"name": "Main dough",
-				"nameDa": "Dag 2 - Hoveddej",
-				"duration": 180,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Bland biga med koldt vand, mel, salt og gær. Æl godt og lad hæve."
-			}
-		],
-		"totalTime": 1620
-	},
+	"timeline": [
+		{
+			"section": "Dag 1 - Biga",
+			"instructionsDa": "Opløs gæren i vandet.",
+			"ingredients": ["biga-water", "biga-yeast"]
+		},
+		{
+			"instructionsDa": "Tilsæt mel i en beholder (gerne en hævekasse) og ryst/bland. Der må ikke æltes. Blot blandes indtil al mel er absorberet og det har en trevlet konsistens.",
+			"ingredients": ["biga-flour"]
+		},
+		{
+			"instructionsDa": "Lad bigaen stå ved stuetemperatur i 18-20 timer. Helst ved omkring 18°C.",
+			"duration": 1200,
+			"temperature": 18,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 2 - Hoveddej",
+			"instructionsDa": "Hæld bigaen i røremaskinen og tilsæt det kolde vand (evt. 50/50 isterninger) under omrøring.",
+			"ingredients": ["main-water"],
+			"tipDa": "Vi bruger isvand for at sigte efter at den færdigæltede dej har en temperatur på 18-20°C."
+		},
+		{
+			"instructionsDa": "Når dejen er sammenhængende, tilsættes salt og der æltes videre.",
+			"ingredients": ["main-salt", "main-flour-nuvola", "main-flour-pizzeria", "main-yeast"]
+		},
+		{
+			"instructionsDa": "Når dejen er glat og fin, er den klar. Den færdigæltede dej bør ikke overstige 20°C.",
+			"tipDa": "Kommer temperaturen markant over 20°C, sæt evt. dejen på køl indtil den er nede på 18-20°C."
+		},
+		{
+			"instructionsDa": "Dejen virkes op til boller af ca. 270 g., som placeres i en lukket hævekasse."
+		},
+		{
+			"instructionsDa": "Placer bollerne på køl i en hævekasse i ca. 24 timer.",
+			"duration": 1440,
+			"location": "fridge",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 3",
+			"instructionsDa": "Tag bollerne ud ca. 2 timer inden de skal formes.",
+			"duration": 120,
+			"location": "room",
+			"canSetTimer": true
+		}
+	],
 	"tipsDa": [
 		"Bruges anden mel, anbefales styrke W300/310.",
 		"Vand i hoveddej skal være det koldeste fra hanen/køl.",

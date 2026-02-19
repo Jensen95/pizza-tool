@@ -3,89 +3,114 @@
 	"name": "BK Bageenzym",
 	"nameDa": "BK Bageenzym",
 	"category": "direct",
-	"yeastType": "active-dry",
+	"yeastType": "instant",
 	"baseWeight": 270,
 	"hydration": 64,
 	"yieldPizzas": 4,
-	"ingredients": [
+	"mixingSteps": [
 		{
-			"id": "flour",
-			"name": "Flour tipo 00",
-			"nameDa": "Mel tipo 00",
-			"percentage": 100,
-			"type": "flour"
-		},
-		{
-			"id": "water",
-			"name": "Water",
-			"nameDa": "Vand",
-			"percentage": 64,
-			"type": "water"
-		},
-		{
-			"id": "sourdough",
-			"name": "Sourdough starter",
-			"nameDa": "Speltsur el. hvedesur",
-			"percentage": 5,
-			"type": "other"
-		},
-		{
-			"id": "enzyme",
-			"name": "Baking enzyme",
-			"nameDa": "Bageenzym",
-			"percentage": 1,
-			"type": "other"
-		},
-		{
-			"id": "salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 2.5,
-			"type": "salt"
-		},
-		{
-			"id": "yeast",
-			"name": "Dry yeast",
-			"nameDa": "Tørgær",
-			"percentage": 0.3,
-			"type": "yeast"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "flour",
+					"name": "Flour tipo 00",
+					"nameDa": "Mel tipo 00",
+					"percentage": 100,
+					"type": "flour"
+				},
+				{
+					"id": "water",
+					"name": "Water",
+					"nameDa": "Vand",
+					"percentage": 64,
+					"type": "water"
+				},
+				{
+					"id": "sourdough",
+					"name": "Sourdough starter",
+					"nameDa": "Speltsur el. hvedesur",
+					"percentage": 5,
+					"type": "other"
+				},
+				{
+					"id": "enzyme",
+					"name": "Baking enzyme",
+					"nameDa": "Bageenzym",
+					"percentage": 1,
+					"type": "other"
+				},
+				{
+					"id": "salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 2.5,
+					"type": "salt"
+				},
+				{
+					"id": "yeast",
+					"name": "Dry yeast",
+					"nameDa": "Tørgær",
+					"percentage": 0.3,
+					"type": "yeast",
+					"yeastType": "instant"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Mix",
-				"nameDa": "Bland dej",
-				"duration": 30,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": false,
-				"instructionsDa": "Mel, surdej, bageenzym og vand røres let sammen. Tilsæt salt og gær."
-			},
-			{
-				"id": "stage-2",
-				"name": "Bulk ferment",
-				"nameDa": "Stuehævning",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Lad hæve ved stuetemperatur."
-			},
-			{
-				"id": "stage-3",
-				"name": "Ball rest",
-				"nameDa": "Kuglehvile",
-				"duration": 180,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Del i kugler og lad hvile."
-			}
-		],
-		"totalTime": 330
-	},
+	"timeline": [
+		{
+			"section": "Dag 1",
+			"instructionsDa": "Mel, speltsurdej/hvedesur, bageenzym og vand røres let sammen.",
+			"ingredients": ["flour", "sourdough", "enzyme", "water"]
+		},
+		{
+			"instructionsDa": "Hviletid i 30 min. (fermontolyse).",
+			"duration": 30,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Salt og gær tilsættes.",
+			"ingredients": ["salt", "yeast"]
+		},
+		{
+			"instructionsDa": "Ælt 5 min. ved lav hastighed."
+		},
+		{
+			"instructionsDa": "Lad dejen hvile 10 min.",
+			"duration": 10,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Ælt ca. 5 min. ved mellem hastighed. Når dejen er skær, er den klar."
+		},
+		{
+			"instructionsDa": "Lad dejen hæve i en lukket beholder i 4-6 timer ved stuetemperatur.",
+			"duration": 360,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Del dejen i klumper af ca. 290 g."
+		},
+		{
+			"instructionsDa": "Stram op som kugler og kom dem i en pizza hævekasse. Kom dem på køl i 20-48 timer.",
+			"duration": 2880,
+			"location": "fridge",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 3",
+			"instructionsDa": "Tag dejen ud 4-6 timer før pizzaerne skal tilberedes - således tempererer de og bliver nemmere at arbejde med.",
+			"duration": 360,
+			"location": "room",
+			"canSetTimer": true
+		}
+	],
 	"tipsDa": [
 		"Tørgæren arbejder bedst når vandet er 25-27 grader.",
 		"Den færdige dej temperatur må ikke overstige 27 grader.",

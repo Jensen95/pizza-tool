@@ -3,89 +3,105 @@
 	"name": "PPAH NY Style",
 	"nameDa": "PPAH NY Style",
 	"category": "ny-style",
-	"yeastType": "active-dry",
+	"yeastType": "instant",
 	"baseWeight": 270,
 	"hydration": 58,
 	"yieldPizzas": 4,
-	"ingredients": [
+	"mixingSteps": [
 		{
-			"id": "flour",
-			"name": "Flour",
-			"nameDa": "Mel",
-			"percentage": 100,
-			"type": "flour"
-		},
-		{
-			"id": "water",
-			"name": "Water",
-			"nameDa": "Vand",
-			"percentage": 58,
-			"type": "water"
-		},
-		{
-			"id": "salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 2,
-			"type": "salt"
-		},
-		{
-			"id": "yeast",
-			"name": "Dry yeast",
-			"nameDa": "Tørgær",
-			"percentage": 0.07,
-			"type": "yeast"
-		},
-		{
-			"id": "sugar",
-			"name": "Sugar",
-			"nameDa": "Sukker",
-			"percentage": 2.8,
-			"type": "sugar"
-		},
-		{
-			"id": "oil",
-			"name": "Olive oil",
-			"nameDa": "Olivenolie",
-			"percentage": 3,
-			"type": "oil"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "flour",
+					"name": "Flour",
+					"nameDa": "Mel",
+					"percentage": 100,
+					"type": "flour"
+				},
+				{
+					"id": "water",
+					"name": "Water",
+					"nameDa": "Vand",
+					"percentage": 58,
+					"type": "water"
+				},
+				{
+					"id": "salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 2,
+					"type": "salt"
+				},
+				{
+					"id": "yeast",
+					"name": "Dry yeast",
+					"nameDa": "Tørgær",
+					"percentage": 0.07,
+					"type": "yeast",
+					"yeastType": "instant"
+				},
+				{
+					"id": "sugar",
+					"name": "Sugar",
+					"nameDa": "Sukker",
+					"percentage": 2.8,
+					"type": "sugar"
+				},
+				{
+					"id": "oil",
+					"name": "Olive oil",
+					"nameDa": "Olivenolie",
+					"percentage": 3,
+					"type": "oil"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Mix dough",
-				"nameDa": "Dag 1 - Bland dej",
-				"duration": 150,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Bland de tørre ingredienser. Tilsæt vand og æl godt. Tilsæt olie til sidst."
-			},
-			{
-				"id": "stage-2",
-				"name": "Cold ferment",
-				"nameDa": "Dag 2-4 - Kold hævning",
-				"duration": 4320,
-				"temperature": 4,
-				"location": "fridge",
-				"canSetTimer": true,
-				"instructionsDa": "Lad hæve i køleskab i 3-4 dage."
-			},
-			{
-				"id": "stage-3",
-				"name": "Temper",
-				"nameDa": "Temperering",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Tag ud af køleskab 2 timer før bagning."
-			}
-		],
-		"totalTime": 4590
-	},
+	"timeline": [
+		{
+			"section": "Dag 1",
+			"instructionsDa": "Bland de tørre ingredienser og rør dem sammen.",
+			"ingredients": ["flour", "yeast", "salt", "sugar"]
+		},
+		{
+			"instructionsDa": "Tilføj vand og olie. Ælt ved lav hastighed i 2 min.",
+			"ingredients": ["water", "oil"]
+		},
+		{
+			"instructionsDa": "Lad dejen hvile overdækket 15-30 min. (autolyse).",
+			"duration": 30,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Ælt dejen ved lav hastighed i ca. 15 min. eller indtil dejen begynder at se glat og fin ud."
+		},
+		{
+			"instructionsDa": "Lad dejen hvile i lufttæt beholder i 2-6 timer ved stuetemperatur.",
+			"duration": 360,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Del dejen i klumper og form dem til boller."
+		},
+		{
+			"instructionsDa": "Giv bollerne et tyndt lag olie og placer dem i en lufttæt beholder. Sæt dem på køl i ca. 72 timer.",
+			"duration": 4320,
+			"location": "fridge",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 4",
+			"instructionsDa": "Tag bollerne af køl og lad dem hvile ved stuetemperatur 2-6 timer før brug.",
+			"duration": 360,
+			"location": "room",
+			"canSetTimer": true
+		}
+	],
 	"tipsDa": [
 		"Normalt anbefales mel med 13-14,5% protein til NY style.",
 		"En ægte New York style pizza er kendt for sin enkelte topping-stil.",

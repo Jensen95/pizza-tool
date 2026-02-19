@@ -6,81 +6,102 @@
 	"baseWeight": 270,
 	"hydration": 60,
 	"yieldPizzas": 4,
-	"ingredients": [
+	"mixingSteps": [
 		{
-			"id": "flour",
-			"name": "Flour tipo 00",
-			"nameDa": "Mel tipo 00",
-			"percentage": 100,
-			"type": "flour"
-		},
-		{
-			"id": "water",
-			"name": "Water",
-			"nameDa": "Vand",
-			"percentage": 60,
-			"type": "water"
-		},
-		{
-			"id": "sourdough",
-			"name": "Active sourdough",
-			"nameDa": "Aktiv surdej",
-			"percentage": 15,
-			"type": "other"
-		},
-		{
-			"id": "salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 2.5,
-			"type": "salt"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "flour",
+					"name": "Flour tipo 00",
+					"nameDa": "Mel tipo 00",
+					"percentage": 100,
+					"type": "flour"
+				},
+				{
+					"id": "water",
+					"name": "Water",
+					"nameDa": "Vand",
+					"percentage": 60,
+					"type": "water"
+				},
+				{
+					"id": "sourdough",
+					"name": "Active sourdough",
+					"nameDa": "Aktiv surdej",
+					"percentage": 15,
+					"type": "other"
+				},
+				{
+					"id": "salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 2.5,
+					"type": "salt"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Levain",
-				"nameDa": "Opfrisk surdej",
-				"duration": 720,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Opfrisk surdejen 8-12 timer før brug."
-			},
-			{
-				"id": "stage-2",
-				"name": "Mix",
-				"nameDa": "Bland hoveddej",
-				"duration": 30,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": false,
-				"instructionsDa": "Bland mel, vand og surdej i røremaskinen. Tilsæt salt og æl godt."
-			},
-			{
-				"id": "stage-3",
-				"name": "Bulk",
-				"nameDa": "Hævning",
-				"duration": 240,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Lad hæve ved stuetemperatur med stræ og fold hver time."
-			},
-			{
-				"id": "stage-4",
-				"name": "Cold retard",
-				"nameDa": "Kold hævning",
-				"duration": 1440,
-				"temperature": 4,
-				"location": "fridge",
-				"canSetTimer": true,
-				"instructionsDa": "Del i kugler og lad hæve i køleskab natten over."
-			}
-		],
-		"totalTime": 2430
-	},
+	"timeline": [
+		{
+			"instructionsDa": "Opfrisk surdejen 8-12 timer før brug.",
+			"duration": 720,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 1",
+			"instructionsDa": "Mel, vand og surdej kommes i røremaskinen.",
+			"ingredients": ["flour", "water", "sourdough"]
+		},
+		{
+			"instructionsDa": "Rør sammen til dejen har en grødkonsistens."
+		},
+		{
+			"instructionsDa": "Lad dejen hvile i 30 min. (fermentolyse).",
+			"duration": 30,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Kom salten i og ælt dejen i 5 min. ved lav hastighed.",
+			"ingredients": ["salt"]
+		},
+		{
+			"instructionsDa": "Lad dejen hvile i 10 min.",
+			"duration": 10,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Ælt ca. 5 min. ved mellem hastighed. Når dejen er skær, er den klar."
+		},
+		{
+			"instructionsDa": "Lad dejen bulkhæve i skål/kasse som er tildækket i 4-6 timer (eller til dejen har hævet 30-40%).",
+			"duration": 360,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Del dejen i klumper af ca. 270 g."
+		},
+		{
+			"instructionsDa": "Stram op som kugler og kom dem i en lukket beholder/hævekasse. Herefter på køl 24-48 timer.",
+			"duration": 2880,
+			"location": "fridge",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 3",
+			"instructionsDa": "Tag dejen ud 4-6 timer før tilberedning - således tempererer de og bliver nemmere at arbejde med.",
+			"duration": 360,
+			"location": "room",
+			"canSetTimer": true
+		}
+	],
 	"tipsDa": [
 		"Den færdige dej temperatur skal ikke overstige 27 grader.",
 		"Husk: æltetider er vejledende.",

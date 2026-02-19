@@ -3,120 +3,154 @@
 	"name": "Vito's Poolish Pizza",
 	"nameDa": "Vito's Poolish Pizza",
 	"category": "poolish",
-	"yeastType": "active-dry",
+	"yeastType": "instant",
 	"baseWeight": 270,
 	"hydration": 65,
 	"yieldPizzas": 6,
-	"ingredients": [
+	"mixingSteps": [
 		{
-			"id": "poolish-flour",
-			"name": "Flour (poolish)",
-			"nameDa": "Mel",
-			"percentage": 19.35,
-			"type": "flour",
-			"stage": "poolish"
+			"id": "poolish",
+			"name": "Poolish",
+			"nameDa": "Poolish",
+			"predough": true,
+			"ingredients": [
+				{
+					"id": "poolish-flour",
+					"name": "Flour (poolish)",
+					"nameDa": "Mel",
+					"percentage": 19.35,
+					"type": "flour"
+				},
+				{
+					"id": "poolish-water",
+					"name": "Water (poolish)",
+					"nameDa": "Vand",
+					"percentage": 19.35,
+					"type": "water"
+				},
+				{
+					"id": "poolish-yeast",
+					"name": "Dry yeast (poolish)",
+					"nameDa": "Tørgær",
+					"percentage": 0.32,
+					"type": "yeast",
+					"yeastType": "instant"
+				},
+				{
+					"id": "poolish-honey",
+					"name": "Honey (poolish)",
+					"nameDa": "Honning",
+					"percentage": 0.32,
+					"type": "sugar"
+				}
+			]
 		},
 		{
-			"id": "poolish-water",
-			"name": "Water (poolish)",
-			"nameDa": "Vand",
-			"percentage": 19.35,
-			"type": "water",
-			"stage": "poolish"
-		},
-		{
-			"id": "poolish-yeast",
-			"name": "Dry yeast (poolish)",
-			"nameDa": "Tørgær",
-			"percentage": 0.32,
-			"type": "yeast",
-			"stage": "poolish"
-		},
-		{
-			"id": "poolish-honey",
-			"name": "Honey (poolish)",
-			"nameDa": "Honning",
-			"percentage": 0.32,
-			"type": "sugar",
-			"stage": "poolish"
-		},
-		{
-			"id": "main-flour",
-			"name": "Flour (main dough)",
-			"nameDa": "Mel",
-			"percentage": 80.65,
-			"type": "flour",
-			"stage": "main"
-		},
-		{
-			"id": "main-water",
-			"name": "Water (main dough)",
-			"nameDa": "Vand",
-			"percentage": 45.15,
-			"type": "water",
-			"stage": "main"
-		},
-		{
-			"id": "main-salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 2.6,
-			"type": "salt",
-			"stage": "main"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "main-flour",
+					"name": "Flour (main dough)",
+					"nameDa": "Mel",
+					"percentage": 80.65,
+					"type": "flour"
+				},
+				{
+					"id": "main-water",
+					"name": "Water (main dough)",
+					"nameDa": "Vand",
+					"percentage": 45.15,
+					"type": "water"
+				},
+				{
+					"id": "main-salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 2.6,
+					"type": "salt"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Poolish",
-				"nameDa": "Dag 1 - Poolish",
-				"duration": 1440,
-				"temperature": 4,
-				"location": "fridge",
-				"canSetTimer": true,
-				"instructionsDa": "Rør gær og honning ud i vandet. Tilsæt melet og rør godt. Lad hvile 1 time ved stuetemperatur, derefter i køleskab 16-24 timer.",
-				"ingredientsDa": [
-					"187 g vand (25 grader)",
-					"3,1 g tørgær",
-					"3,1 g honning",
-					"187 g mel tipo 00"
-				]
-			},
-			{
-				"id": "stage-2",
-				"name": "Main dough",
-				"nameDa": "Dag 2 - Hoveddej",
-				"duration": 30,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Lad poolish hvile 20 min ved stuetemperatur. Rør poolish ud i vandet og tilsæt halvdelen af melet. Tilsæt salt og resten af melet. Virk dejen til den er glat.",
-				"ingredientsDa": ["436 g vand", "Poolish fra dag 1", "779 g mel tipo 00", "25 g salt"]
-			},
-			{
-				"id": "stage-3",
-				"name": "Bulk fermentation",
-				"nameDa": "Stuehævning",
-				"duration": 60,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Lad dejen hæve i en lukket skål ved stuetemperatur."
-			},
-			{
-				"id": "stage-4",
-				"name": "Ball rest",
-				"nameDa": "Kuglehvile",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Del dejen i 6 kugler af ca. 270 g. Lad kuglerne hvile 2 timer for bagning."
-			}
-		],
-		"totalTime": 1680
-	},
+	"timeline": [
+		{
+			"section": "Dag 1 - Poolish",
+			"instructionsDa": "Gær og honning røres ud i vandet.",
+			"ingredients": ["poolish-water", "poolish-yeast", "poolish-honey"]
+		},
+		{
+			"instructionsDa": "Tilsæt halvdelen af melet og rør godt sammen.",
+			"ingredients": ["poolish-flour"]
+		},
+		{
+			"instructionsDa": "Tilsæt resten af melet og rør godt sammen."
+		},
+		{
+			"instructionsDa": "Lad det hæve i en lukket beholder (låg eller film) i 1 time ved stuetemperatur.",
+			"duration": 60,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true,
+			"tipDa": "Poolish kan fermenteres op til 4 timer ved stuetemperatur og opbevares på køl op til 3 dage."
+		},
+		{
+			"instructionsDa": "Sæt poolishen (stadig i lukket beholder) i køleskabet i 16-24 timer.",
+			"duration": 1440,
+			"location": "fridge",
+			"canSetTimer": true,
+			"tipDa": "Denne poolish vil hæve til ca. dobbelt størrelse."
+		},
+		{
+			"section": "Dag 2 - Hoveddej",
+			"instructionsDa": "Tag poolishen ud af køleskabet og lad den stå ved stuetemperatur (20-25°C) i 20 min.",
+			"duration": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Poolishen røres ud i vandet, hvorefter halvdelen af melet tilsættes og æltes.",
+			"ingredients": ["main-water", "main-flour"]
+		},
+		{
+			"instructionsDa": "Tilsæt salt og resten af melet og ælt dejen godt.",
+			"ingredients": ["main-salt"]
+		},
+		{
+			"instructionsDa": "Vend dejen ud på bordet. Tag evt. lidt olie på hænderne for bedre at kunne håndtere den. Lad den hvile tildækket i 15 min.",
+			"duration": 15,
+			"location": "room",
+			"canSetTimer": true,
+			"tipDa": "Fra nu af skal du sørge for at holde oversiden af dejen op under hele processen."
+		},
+		{
+			"instructionsDa": "Dejen virkes op indtil overfladen virker jævn (fold dejen ind under sig selv)."
+		},
+		{
+			"instructionsDa": "Smør en skål med olivenolie og placer dejen heri (stadig med oversiden op). Luk tæt med låg eller film og lad dejen hæve 30-60 min. ved stuetemperatur.",
+			"duration": 60,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Vend dejen ud på bordet."
+		},
+		{
+			"instructionsDa": "Del dejen i klumper af ca. 270 g. Tag evt. lidt olie på hænderne for at lette håndteringen."
+		},
+		{
+			"instructionsDa": "Dejklumperne strammes op til kugler ved at folde oversiden ind i bunden af dejen. Gentag indtil overfladen virker jævn. Husk at få \"lukket\" i bunden af dejen."
+		},
+		{
+			"instructionsDa": "Klap dejkuglerne med olie på hænderne og placer dem i en hævekasse. Dæk dem med låg eller folie og lad dem hæve 2 timer ved stuetemperatur, hvorefter de er klar til brug.",
+			"duration": 120,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		}
+	],
 	"tipsDa": [
 		"Vito bruger megen tørgær! Du kan sagtens reducere til 0,2%",
 		"Honning kan undværes.",
