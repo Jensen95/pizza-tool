@@ -1,5 +1,5 @@
 import { readable, derived } from 'svelte/store';
-import type { Recipe, RecipeCategory, RecipeGroup } from '$lib/types';
+import type { Recipe, RecipeCategory, RecipeGroup } from '$lib/models';
 import { recipes as recipeData, getRecipeById as getById } from '$lib/data/recipes';
 
 /**

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { Recipe, FermentationStage } from '$lib/types';
-	import type { ScaledIngredient } from '$lib/types/ingredient';
-	import { formatDuration } from '$lib/types/timer';
+	import type { Recipe } from '$lib/models';
+	import type { ScaledIngredient } from '$lib/models/ingredient.types';
+	import { formatDuration } from '$lib/models/timer.types';
 	import { timers, calculator } from '$lib/stores';
-	import { formatWeight, isPredoughStage } from '$lib/utils/baker-percentage';
+	import { formatWeight } from '$lib/utils/baker-percentage';
 
 	let { recipe }: { recipe: Recipe } = $props();
 
@@ -13,54 +13,14 @@
 		warm: 'Varmt sted'
 	};
 
-	// Map schedule stage IDs to ingredient stages
-	const scheduleStageToIngredientStage: Record<string, FermentationStage | 'main'> = {
-		'stage-1': 'poolish', // First stage is usually predough
-		'stage-2': 'main', // Main dough stage
-		poolish: 'poolish',
-		biga: 'biga',
-		preferment: 'preferment',
-		main: 'main',
-		hoveddej: 'main'
-	};
-
-	// Get ingredients for a specific schedule stage
-	function getIngredientsForStage(
-		stageId: string,
-		stageName: string,
+	// Look up scaled ingredients by their IDs from a timeline step
+	function getStepIngredients(
+		ingredientIds: string[] | undefined,
 		scaledIngredients: ScaledIngredient[]
 	): ScaledIngredient[] {
-		// Try to determine the ingredient stage from the schedule stage
-		const lowerName = stageName.toLowerCase();
-
-		// Check if it's a predough stage
-		if (
-			lowerName.includes('poolish') ||
-			lowerName.includes('biga') ||
-			lowerName.includes('fordej')
-		) {
-			return scaledIngredients.filter((ing) => isPredoughStage(ing.stage));
-		}
-
-		// Check if it's a main dough stage
-		if (
-			lowerName.includes('hoveddej') ||
-			lowerName.includes('main') ||
-			lowerName.includes('dag 2')
-		) {
-			return scaledIngredients.filter((ing) => !isPredoughStage(ing.stage) || ing.stage === 'main');
-		}
-
-		// Fallback: try to match by stage ID
-		const ingredientStage = scheduleStageToIngredientStage[stageId];
-		if (ingredientStage) {
-			if (ingredientStage === 'main') {
-				return scaledIngredients.filter((ing) => !isPredoughStage(ing.stage));
-			}
-			return scaledIngredients.filter((ing) => ing.stage === ingredientStage);
-		}
-
-		return [];
+		if (!ingredientIds || ingredientIds.length === 0) return [];
+		const idSet = new Set(ingredientIds);
+		return scaledIngredients.filter((ing) => idSet.has(ing.id));
 	}
 
 	// Format ingredient for display
@@ -68,65 +28,69 @@
 		return `${formatWeight(ingredient.weight)} ${ingredient.nameDa.toLowerCase()}`;
 	}
 
-	function startTimer(stageName: string, duration: number) {
-		timers.create(stageName, duration, recipe.id);
+	function startTimer(label: string, duration: number) {
+		timers.create(label, duration, recipe.id);
 	}
 </script>
 
 <div class="schedule">
 	<div class="timeline">
-		{#each recipe.schedule.stages as stage, index}
-			{@const stageIngredients = getIngredientsForStage(
-				stage.id,
-				stage.nameDa,
-				$calculator.scaledIngredients
-			)}
+		{#each recipe.timeline as step, index}
+			{@const stepIngredients = getStepIngredients(step.ingredients, $calculator.scaledIngredients)}
+
+			<!-- {#if step.section}
+				<div class="section-header">
+					<h3 class="section-title">{step.section}</h3>
+				</div>
+			{/if} -->
+
 			<div
 				class="stage"
 				class:first={index === 0}
-				class:last={index === recipe.schedule.stages.length - 1}
+				class:last={index === recipe.timeline.length - 1}
 			>
 				<div class="stage-marker">
 					<div class="marker-dot"></div>
-					{#if index < recipe.schedule.stages.length - 1}
+					{#if index < recipe.timeline.length - 1}
 						<div class="marker-line"></div>
 					{/if}
 				</div>
 
 				<div class="stage-content">
-					<div class="stage-header">
-						<h4 class="stage-name">{stage.nameDa}</h4>
-						<span class="stage-duration">{formatDuration(stage.duration)}</span>
-					</div>
+					<p class="stage-instructions">{step.instructionsDa}</p>
 
 					<div class="stage-details">
-						{#if stage.temperature}
-							<span class="stage-temp">{stage.temperature}°C</span>
+						{#if step.duration}
+							<span class="stage-duration">{formatDuration(step.duration)}</span>
 						{/if}
-						{#if stage.location}
-							<span class="stage-location">{locationLabels[stage.location]}</span>
+						{#if step.temperature}
+							<span class="stage-temp">{step.temperature}°C</span>
+						{/if}
+						{#if step.location}
+							<span class="stage-location">{locationLabels[step.location]}</span>
 						{/if}
 					</div>
 
-					{#if stageIngredients.length > 0}
+					{#if stepIngredients.length > 0}
 						<div class="stage-ingredients">
 							<span class="ingredients-label">Ingredienser:</span>
 							<ul class="ingredients-list">
-								{#each stageIngredients as ingredient}
+								{#each stepIngredients as ingredient}
 									<li>{formatIngredient(ingredient)}</li>
 								{/each}
 							</ul>
 						</div>
 					{/if}
 
-					{#if stage.instructionsDa}
-						<p class="stage-instructions">{stage.instructionsDa}</p>
+					{#if step.tipDa}
+						<p class="stage-tip">{step.tipDa}</p>
 					{/if}
 
-					{#if stage.canSetTimer}
+					{#if step.canSetTimer && step.duration}
 						<button
 							class="btn btn-outline timer-btn"
-							onclick={() => startTimer(stage.nameDa, stage.duration)}
+							onclick={() =>
+								startTimer(step.section || step.instructionsDa.slice(0, 30), step.duration!)}
 						>
 							Start timer
 						</button>
@@ -136,8 +100,15 @@
 		{/each}
 	</div>
 
-	{#if recipe.schedule.notesDa}
-		<p class="schedule-notes">{recipe.schedule.notesDa}</p>
+	{#if recipe.tipsDa && recipe.tipsDa.length > 0}
+		<div class="schedule-tips">
+			<h4 class="tips-title">Tips</h4>
+			<ul class="tips-list">
+				{#each recipe.tipsDa as tip}
+					<li>{tip}</li>
+				{/each}
+			</ul>
+		</div>
 	{/if}
 </div>
 
@@ -151,6 +122,17 @@
 	.timeline {
 		display: flex;
 		flex-direction: column;
+	}
+
+	.section-header {
+		padding: var(--spacing-sm) 0;
+	}
+
+	.section-title {
+		margin: 0;
+		font-size: var(--font-size-md);
+		color: var(--color-primary);
+		font-weight: 600;
 	}
 
 	.stage {
@@ -192,17 +174,10 @@
 		padding-bottom: 0;
 	}
 
-	.stage-header {
+	.stage-details {
 		display: flex;
-		justify-content: space-between;
-		align-items: baseline;
 		gap: var(--spacing-sm);
-		margin-bottom: var(--spacing-xs);
-	}
-
-	.stage-name {
-		margin: 0;
-		font-size: var(--font-size-md);
+		margin-bottom: var(--spacing-sm);
 	}
 
 	.stage-duration {
@@ -210,12 +185,6 @@
 		color: var(--color-primary);
 		font-weight: 500;
 		white-space: nowrap;
-	}
-
-	.stage-details {
-		display: flex;
-		gap: var(--spacing-sm);
-		margin-bottom: var(--spacing-sm);
 	}
 
 	.stage-temp,
@@ -261,18 +230,46 @@
 		color: var(--color-text-secondary);
 	}
 
+	.stage-tip {
+		margin: 0 0 var(--spacing-sm);
+		font-size: var(--font-size-sm);
+		color: var(--color-text-secondary);
+		font-style: italic;
+		padding-left: var(--spacing-sm);
+		border-left: 2px solid var(--color-primary);
+	}
+
 	.timer-btn {
 		font-size: var(--font-size-sm);
 		padding: var(--spacing-xs) var(--spacing-sm);
 		min-height: 36px;
 	}
 
-	.schedule-notes {
-		margin: 0;
+	.schedule-tips {
 		padding: var(--spacing-md);
 		background: var(--color-background);
 		border-radius: var(--radius-md);
+	}
+
+	.tips-title {
+		margin: 0 0 var(--spacing-sm);
+		font-size: var(--font-size-sm);
+		color: var(--color-primary);
+		font-weight: 600;
+	}
+
+	.tips-list {
+		margin: 0;
+		padding-left: var(--spacing-md);
+	}
+
+	.tips-list li {
 		font-size: var(--font-size-sm);
 		color: var(--color-text-secondary);
+		margin-bottom: var(--spacing-xs);
+	}
+
+	.tips-list li:last-child {
+		margin-bottom: 0;
 	}
 </style>

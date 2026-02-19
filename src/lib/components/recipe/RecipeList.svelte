@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { get } from 'svelte/store';
-	import type { Recipe, RecipeCategory } from '$lib/types';
+	import type { Recipe, RecipeCategory } from '$lib/models';
 	import { recipes } from '$lib/stores';
 	import RecipeCard from './RecipeCard.svelte';
-	import { categoryLabels } from '$lib/types';
+	import { categoryLabels } from '$lib/models';
 
 	let searchQuery = $state('');
 	let selectedCategory = $state<RecipeCategory | 'all'>('all');

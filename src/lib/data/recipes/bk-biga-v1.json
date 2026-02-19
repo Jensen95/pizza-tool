@@ -3,77 +3,121 @@
 	"name": "BK Biga v1",
 	"nameDa": "BK Biga v1",
 	"category": "biga",
-	"yeastType": "active-dry",
 	"baseWeight": 270,
-	"hydration": 65,
-	"yieldPizzas": 4,
-	"ingredients": [
+	"hydration": 64.99,
+	"mixingSteps": [
 		{
-			"id": "biga-flour",
-			"name": "Biga flour",
-			"nameDa": "Mel",
-			"percentage": 100,
-			"type": "flour",
-			"stage": "biga"
+			"id": "biga",
+			"name": "Biga",
+			"nameDa": "Biga",
+			"predough": true,
+			"ingredients": [
+				{
+					"id": "biga-flour",
+					"percentage": 100,
+					"type": "flour",
+					"flourType": "tipo-00"
+				},
+				{
+					"id": "biga-water",
+					"name": "Biga water",
+					"nameDa": "Vand",
+					"percentage": 44,
+					"type": "water"
+				},
+				{
+					"id": "biga-yeast",
+					"name": "Biga yeast",
+					"nameDa": "Tørgær",
+					"percentage": 0.224,
+					"type": "yeast",
+					"yeastType": "instant"
+				}
+			]
 		},
 		{
-			"id": "biga-water",
-			"name": "Biga water",
-			"nameDa": "Vand",
-			"percentage": 44,
-			"type": "water",
-			"stage": "biga"
-		},
-		{
-			"id": "biga-yeast",
-			"name": "Biga yeast",
-			"nameDa": "Tørgær",
-			"percentage": 0.1,
-			"type": "yeast",
-			"stage": "biga"
-		},
-		{
-			"id": "main-water",
-			"name": "Main dough water",
-			"nameDa": "Vand",
-			"percentage": 21,
-			"type": "water",
-			"stage": "main"
-		},
-		{
-			"id": "main-salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 2.7,
-			"type": "salt",
-			"stage": "main"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "main-water",
+					"name": "Main dough water",
+					"nameDa": "Vand",
+					"percentage": 20.99,
+					"type": "water"
+				},
+				{
+					"id": "main-salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 2.68,
+					"type": "salt"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Biga",
-				"nameDa": "Dag 1 - Biga",
-				"duration": 1440,
-				"temperature": 4,
-				"location": "fridge",
-				"canSetTimer": true,
-				"instructionsDa": "Gæren vendes i melet og vandet tilsættes. Spred fingrene og bland til krummet konsistens. Lad hvile i køleskab i 24 timer."
-			},
-			{
-				"id": "stage-2",
-				"name": "Main dough",
-				"nameDa": "Dag 2 - Hoveddej",
-				"duration": 180,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Bland biga med koldt vand og salt. Æl godt og lad hæve."
-			}
-		],
-		"totalTime": 1620
-	},
+	"timeline": [
+		{
+			"section": "Dag 1 - Biga",
+			"instructionsDa": "Gæren vendes i melet og vandet tilsættes. Spred fingrene og kør dem igennem blandingen, uden at ælte. Bliv ved indtil der ikke er mere mel i bunden.",
+			"ingredients": ["biga-flour", "biga-water", "biga-yeast"],
+			"tipDa": "Alternativ: hæld ingredienserne i en hævekasse og træk den hurtigt frem og tilbage."
+		},
+		{
+			"instructionsDa": "Lad bigaen stå i lufttæt beholder/hævekasse ved stuetemperatur 30-60 min. Sæt herefter på køl i ca. 24-48 timer.",
+			"duration": 1440,
+			"location": "fridge",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 2-3 - Hoveddej",
+			"instructionsDa": "Tag bigaen direkte fra køl og kom den i rørekedlen. Tilsæt vandet.",
+			"ingredients": ["main-water"]
+		},
+		{
+			"instructionsDa": "Ælt dejen i 5-7 min. ved lav hastighed.",
+			"duration": 5,
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Lad dejen hvile i ca. 15 min.",
+			"duration": 15,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Tilsæt salt og ælt dejen i yderligere 6-8 min. ved mellem hastighed.",
+			"ingredients": ["main-salt"],
+			"duration": 6,
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Dejen er færdigæltet, når den er blank og glat og kan strækkes langt. Gerne maks. 20°C. Lad den hvile i 5 min. hvorefter den foldes/strammes op.",
+			"duration": 5,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Lad dejen hæve i ca. 15-30 min. og del den i klumper af ca. 270 g.",
+			"duration": 30,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Dejklumperne strammes op til kugler ved at folde oversiden ind i bunden af dejen."
+		},
+		{
+			"instructionsDa": "Placer dem i en lukket kasse (hævekasse) og sæt dem på køl i ca. 24-48 timer.",
+			"duration": 2880,
+			"location": "fridge",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 3-4",
+			"instructionsDa": "Tag dejen ud. Form til pizza direkte fra køl."
+		}
+	],
 	"tipsDa": [
 		"Tørgæren arbejder bedst i bigaen når vandet er 25-27 grader.",
 		"Vand i hoveddejen skal være det koldeste fra hanen.",

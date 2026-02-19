@@ -1,0 +1,235 @@
+[
+	{
+		"id": "chili-paste",
+		"name": "Chili Paste",
+		"nameDa": "Chilipasta (pizzamandens hemmelige bæger)",
+		"descriptionDa": "Stærk chilipasta til pizza",
+		"ingredients": [
+			{
+				"name": "Dried chili flakes",
+				"nameDa": "Tørrede chiliflager",
+				"amount": "to taste",
+				"amountDa": "efter smag"
+			},
+			{
+				"name": "Olive oil",
+				"nameDa": "Olivenolie",
+				"amount": "enough to cover",
+				"amountDa": "nok til at dække"
+			},
+			{
+				"name": "Garlic",
+				"nameDa": "Hvidløg",
+				"amount": "optional",
+				"amountDa": "valgfrit"
+			}
+		],
+		"instructionsDa": [
+			"Bland chiliflager med olivenolie.",
+			"Lad det trække i minimum 24 timer.",
+			"Opbevares i køleskabet."
+		]
+	},
+	{
+		"id": "chili-sauce-shawarma",
+		"name": "Chili Sauce (shawarma-style)",
+		"nameDa": "Chilisauce (shawarma-stil)",
+		"descriptionDa": "Stærk chilisauce der skal hvile 2 dage",
+		"ingredients": [
+			{
+				"name": "Fresh red chili",
+				"nameDa": "Frisk rød chili",
+				"amount": "200g",
+				"amountDa": "200g"
+			},
+			{
+				"name": "Garlic",
+				"nameDa": "Hvidløg",
+				"amount": "4 cloves",
+				"amountDa": "4 fed"
+			},
+			{
+				"name": "Vinegar",
+				"nameDa": "Eddike",
+				"amount": "2 tbsp",
+				"amountDa": "2 spsk"
+			},
+			{
+				"name": "Sugar",
+				"nameDa": "Sukker",
+				"amount": "1 tbsp",
+				"amountDa": "1 spsk"
+			},
+			{
+				"name": "Salt",
+				"nameDa": "Salt",
+				"amount": "1 tsp",
+				"amountDa": "1 tsk"
+			}
+		],
+		"instructionsDa": [
+			"Blend alle ingredienserne til en jævn konsistens.",
+			"Hæld i en lufttæt beholder.",
+			"Lad saucen hvile i køleskabet i minimum 2 dage inden brug."
+		],
+		"tipsDa": ["Smagen udvikler sig markant efter 2 dages hvile."]
+	},
+	{
+		"id": "sweet-chili-sauce",
+		"name": "Sweet Chili Sauce",
+		"nameDa": "Sød chilisauce (chili-marmelade)",
+		"descriptionDa": "Sød og stærk chilisauce",
+		"ingredients": [
+			{
+				"name": "Fresh red chili",
+				"nameDa": "Frisk rød chili",
+				"amount": "150g",
+				"amountDa": "150g"
+			},
+			{
+				"name": "Sugar",
+				"nameDa": "Sukker",
+				"amount": "200g",
+				"amountDa": "200g"
+			},
+			{
+				"name": "Vinegar",
+				"nameDa": "Eddike",
+				"amount": "1 dl",
+				"amountDa": "1 dl"
+			},
+			{
+				"name": "Garlic",
+				"nameDa": "Hvidløg",
+				"amount": "2 cloves",
+				"amountDa": "2 fed"
+			}
+		],
+		"instructionsDa": [
+			"Hak chili og hvidløg fint.",
+			"Kog sukker og eddike op.",
+			"Tilsæt chili og hvidløg og lad det simre i 15-20 min.",
+			"Blend let hvis en glattere konsistens ønskes."
+		]
+	},
+	{
+		"id": "garlic-oil",
+		"name": "Garlic Oil",
+		"nameDa": "Hvidløgsolie",
+		"descriptionDa": "Simpel hvidløgsolie til pizza",
+		"ingredients": [
+			{
+				"name": "Garlic cloves",
+				"nameDa": "Hvidløgsfed",
+				"amount": "10 cloves",
+				"amountDa": "10 fed"
+			},
+			{
+				"name": "Olive oil",
+				"nameDa": "Olivenolie",
+				"amount": "150ml",
+				"amountDa": "150ml"
+			}
+		],
+		"instructionsDa": [
+			"Skær hvidløg i tynde skiver.",
+			"Varm olien langsomt op med hvidløget ved lav varme.",
+			"Lad det simre forsigtigt i 10-15 min (hvidløget må ikke blive brunt).",
+			"Afkøl og opbevar i en ren flaske i køleskabet."
+		]
+	},
+	{
+		"id": "pistachio-pesto",
+		"name": "Sebastian's Pistachio Pesto",
+		"nameDa": "Sebastians pistaciepesto",
+		"descriptionDa": "Pistaciepesto til pizza",
+		"ingredients": [
+			{
+				"name": "Pistachios",
+				"nameDa": "Pistacienødder",
+				"amount": "60g",
+				"amountDa": "60g"
+			},
+			{
+				"name": "Pine nuts",
+				"nameDa": "Pinjekerner",
+				"amount": "35g",
+				"amountDa": "35g"
+			},
+			{
+				"name": "Fresh basil",
+				"nameDa": "Frisk basilikum",
+				"amount": "large handful",
+				"amountDa": "stor håndfuld"
+			},
+			{
+				"name": "Parmesan",
+				"nameDa": "Parmesan",
+				"amount": "70g",
+				"amountDa": "70g"
+			},
+			{
+				"name": "Garlic",
+				"nameDa": "Hvidløg",
+				"amount": "1 clove",
+				"amountDa": "1 fed"
+			},
+			{
+				"name": "Olive oil",
+				"nameDa": "Olivenolie",
+				"amount": "1 dl",
+				"amountDa": "1 dl"
+			}
+		],
+		"instructionsDa": [
+			"Rist pinjekernerne let på en tør pande.",
+			"Blend pistacier, pinjekerner, basilikum, parmesan og hvidløg.",
+			"Tilsæt olivenolie i en tynd stråle mens du blender.",
+			"Smag til med salt og peber."
+		]
+	},
+	{
+		"id": "garlic-bread",
+		"name": "Garlic Bread",
+		"nameDa": "Hvidløgsbrød",
+		"descriptionDa": "Hvidløgsbrød af pizzadej",
+		"ingredients": [
+			{
+				"name": "Pizza dough",
+				"nameDa": "Pizzadej",
+				"amount": "1 ball",
+				"amountDa": "1 dejbolle"
+			},
+			{
+				"name": "Butter",
+				"nameDa": "Smør",
+				"amount": "50g",
+				"amountDa": "50g"
+			},
+			{
+				"name": "Garlic",
+				"nameDa": "Hvidløg",
+				"amount": "3-4 cloves",
+				"amountDa": "3-4 fed, presset"
+			},
+			{
+				"name": "Rosemary or thyme",
+				"nameDa": "Rosmarin eller timian",
+				"amount": "1 tsp",
+				"amountDa": "1 tsk"
+			},
+			{
+				"name": "Sea salt",
+				"nameDa": "Havsalt",
+				"amount": "to taste",
+				"amountDa": "efter smag"
+			}
+		],
+		"instructionsDa": [
+			"Smelt smør og rør presset hvidløg og krydderurter i.",
+			"Stræk dejen ud til en oval form.",
+			"Pensl med hvidløgssmør og drys havsalt over.",
+			"Bag ved høj varme til den er gylden."
+		]
+	}
+]

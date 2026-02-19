@@ -1,4 +1,5 @@
 # CI Agent Guide
 
-- A post-room hook is now available for agents: run `./post-room.sh` to execute Prettier (`npm run format`) automatically.
+IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning
+
 - Run `npm run format` (or `npm run format:check`) before committing or pushing to avoid formatting failures in CI.

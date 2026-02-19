@@ -3,75 +3,87 @@
 	"name": "Umuts Pizzadej",
 	"nameDa": "Umuts Pizzadej",
 	"category": "direct",
-	"yeastType": "fresh",
 	"baseWeight": 270,
 	"hydration": 70,
-	"yieldPizzas": 4,
-	"ingredients": [
+	"mixingSteps": [
 		{
-			"id": "flour",
-			"name": "Flour tipo 00",
-			"nameDa": "Mel tipo 00",
-			"percentage": 100,
-			"type": "flour"
-		},
-		{
-			"id": "water",
-			"name": "Water",
-			"nameDa": "Vand",
-			"percentage": 70,
-			"type": "water"
-		},
-		{
-			"id": "salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 2.5,
-			"type": "salt"
-		},
-		{
-			"id": "yeast",
-			"name": "Yeast",
-			"nameDa": "Gær",
-			"percentage": 0.3,
-			"type": "yeast"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "flour",
+					"percentage": 100,
+					"type": "flour",
+					"flourType": "tipo-00"
+				},
+				{
+					"id": "water",
+					"name": "Water",
+					"nameDa": "Vand",
+					"percentage": 70,
+					"type": "water"
+				},
+				{
+					"id": "salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 1.0,
+					"type": "salt"
+				},
+				{
+					"id": "yeast",
+					"name": "Yeast",
+					"nameDa": "Gær",
+					"percentage": 5.0,
+					"type": "yeast",
+					"yeastType": "fresh"
+				},
+				{
+					"id": "sugar",
+					"name": "Sugar",
+					"nameDa": "Sukker",
+					"percentage": 0.84,
+					"type": "sugar"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Mix",
-				"nameDa": "Bland dej",
-				"duration": 30,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": false,
-				"instructionsDa": "Bland alle ingredienser og æl godt."
-			},
-			{
-				"id": "stage-2",
-				"name": "Bulk ferment",
-				"nameDa": "Stuehævning",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Lad hæve ved stuetemperatur."
-			},
-			{
-				"id": "stage-3",
-				"name": "Ball rest",
-				"nameDa": "Kuglehvile",
-				"duration": 180,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Del i kugler og lad hvile."
-			}
-		],
-		"totalTime": 330
-	},
+	"timeline": [
+		{
+			"instructionsDa": "Opløs gær og sukker i lidt vand og tilsæt lidt mel. Rør det sammen.",
+			"ingredients": ["yeast", "water", "flour"]
+		},
+		{
+			"instructionsDa": "Kom resten af vandet og salten i.",
+			"ingredients": ["salt"]
+		},
+		{
+			"instructionsDa": "Kom resten af melet i dejen lidt af gangen."
+		},
+		{
+			"instructionsDa": "Dejen æltes i ca. 10 min. i en røremaskine eller ca. 15 min. i hånden, til dejen er elastisk og blank.",
+			"duration": 10,
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Dejen skal nu hæve 1-2 timer ved stuetemperatur.",
+			"duration": 120,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Når dejen har hævet til det dobbelte, formes den til boller af ca. 270 g."
+		},
+		{
+			"instructionsDa": "Lad bollerne hæve i 20-30 min. til de har ca. dobbelt størrelse. Herefter er du klar til at lave dine pizzaer!",
+			"duration": 30,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		}
+	],
 	"tipsDa": [
 		"En direkte dej er en metode hvor alle ingredienserne blandes sammen på een gang.",
 		"Med den høje hydrering bør den bages Napoletansk."

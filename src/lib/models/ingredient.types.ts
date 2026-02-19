@@ -1,15 +1,16 @@
-import type { RecipeIngredient, FermentationStage, IngredientType } from './recipe';
-import type { FlourType, YeastInfo } from './reference';
+// ABOUTME: Calculator and ingredient types for scaling recipes and UI controls
+import type { RecipeIngredient, IngredientType } from './recipe.types';
+import type { FlourCategory, YeastInfo } from './reference.types';
 
 export interface ScaledIngredient {
 	id: string;
 	name: string;
 	nameDa: string;
 	percentage: number; // percentage relative to total flour
-	stagePercentage: number; // percentage relative to stage flour (for predough display)
+	stagePercentage: number; // percentage relative to mixing step flour (for predough display)
 	weight: number; // calculated weight in grams
 	type: RecipeIngredient['type'];
-	stage?: FermentationStage;
+	mixingStepId: string;
 	notes?: string;
 }
 
@@ -46,7 +47,7 @@ export interface ControllableIngredient {
 }
 
 export interface FlourBlendInfo {
-	stage: string;
+	mixingStepId: string;
 	flours: { id: string; name: string; nameDa: string; percentage: number }[];
 }
 
@@ -55,7 +56,7 @@ export interface ExtraIngredientInfo {
 	name: string;
 	nameDa: string;
 	type: IngredientType;
-	stage?: string;
+	mixingStepId?: string;
 	percentage: number;
 	originalPercentage: number;
 }
@@ -92,7 +93,7 @@ export interface CustomFlour {
 	flourTypeId: string;
 	percentage: number;
 	customName?: string;
-	flourType?: FlourType['type'];
+	flourType?: FlourCategory;
 }
 
 export type CustomFlourState = Record<string, Record<string, CustomFlour[]>>;

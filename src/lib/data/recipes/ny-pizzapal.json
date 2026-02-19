@@ -3,89 +3,109 @@
 	"name": "NY PizzaPal",
 	"nameDa": "NY PizzaPal",
 	"category": "ny-style",
-	"yeastType": "active-dry",
 	"baseWeight": 270,
-	"hydration": 57,
-	"yieldPizzas": 4,
-	"ingredients": [
+	"hydration": 57.5,
+	"mixingSteps": [
 		{
-			"id": "flour",
-			"name": "Flour",
-			"nameDa": "Mel",
-			"percentage": 100,
-			"type": "flour"
-		},
-		{
-			"id": "water",
-			"name": "Water",
-			"nameDa": "Vand",
-			"percentage": 57,
-			"type": "water"
-		},
-		{
-			"id": "salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 2.5,
-			"type": "salt"
-		},
-		{
-			"id": "yeast",
-			"name": "Dry yeast",
-			"nameDa": "Tørgær",
-			"percentage": 0.4,
-			"type": "yeast"
-		},
-		{
-			"id": "sugar",
-			"name": "Sugar",
-			"nameDa": "Sukker",
-			"percentage": 2.5,
-			"type": "sugar"
-		},
-		{
-			"id": "oil",
-			"name": "Olive oil",
-			"nameDa": "Olivenolie",
-			"percentage": 2,
-			"type": "oil"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "flour",
+					"percentage": 100,
+					"type": "flour",
+					"flourType": "bread"
+				},
+				{
+					"id": "water",
+					"name": "Water",
+					"nameDa": "Vand",
+					"percentage": 57.5,
+					"type": "water"
+				},
+				{
+					"id": "salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 2.5,
+					"type": "salt"
+				},
+				{
+					"id": "yeast",
+					"name": "Dry yeast",
+					"nameDa": "Tørgær",
+					"percentage": 0.375,
+					"type": "yeast",
+					"yeastType": "instant"
+				},
+				{
+					"id": "sugar",
+					"name": "Sugar",
+					"nameDa": "Sukker",
+					"percentage": 2.5,
+					"type": "sugar"
+				},
+				{
+					"id": "oil",
+					"name": "Olive oil",
+					"nameDa": "Olivenolie",
+					"percentage": 2,
+					"type": "oil"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Mix dough",
-				"nameDa": "Dag 1 - Bland dej",
-				"duration": 150,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Hæld vandet i en skål. Tilsæt mel, salt, gær og sukker. Æl godt og tilsæt olie til sidst."
-			},
-			{
-				"id": "stage-2",
-				"name": "Cold ferment",
-				"nameDa": "Dag 2-4 - Kold hævning",
-				"duration": 4320,
-				"temperature": 4,
-				"location": "fridge",
-				"canSetTimer": true,
-				"instructionsDa": "Lad hæve i køleskab i 3-4 dage."
-			},
-			{
-				"id": "stage-3",
-				"name": "Temper",
-				"nameDa": "Temperering",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Tag ud af køleskab 2 timer før bagning."
-			}
-		],
-		"totalTime": 4590
-	},
+	"timeline": [
+		{
+			"section": "Dag 1",
+			"instructionsDa": "Hæld vandet i en skål.",
+			"ingredients": ["water"]
+		},
+		{
+			"instructionsDa": "Tilføj gær og rør til opløst.",
+			"ingredients": ["yeast"]
+		},
+		{
+			"instructionsDa": "Tilføj sukker og rør til opløst.",
+			"ingredients": ["sugar"]
+		},
+		{
+			"instructionsDa": "Tilføj halvdelen af melet og rør.",
+			"ingredients": ["flour"]
+		},
+		{
+			"instructionsDa": "Tilføj salt og rør.",
+			"ingredients": ["salt"]
+		},
+		{
+			"instructionsDa": "Tilføj det sidste mel og ælt indtil alt melet er integreret i dejen."
+		},
+		{
+			"instructionsDa": "Tilføj olie og ælt dejen yderligere indtil olien er integreret i dejen.",
+			"ingredients": ["oil"]
+		},
+		{
+			"instructionsDa": "Hvil dejen i 1 time ved stuetemperatur i en lukket beholder.",
+			"duration": 60,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Del dejen i boller og sæt dem på køl i ca. 48 timer i en lukket beholder.",
+			"duration": 2880,
+			"location": "fridge",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 3",
+			"instructionsDa": "Tag dejen ud fra køl 2 timer før du skal bruge den.",
+			"duration": 120,
+			"location": "room",
+			"canSetTimer": true
+		}
+	],
 	"tipsDa": [
 		"Anbefaling: Hvedemel med 13-14,5% protein (Manitoba).",
 		"Frisk gær kan opløses i koldt eller lunkent vand.",

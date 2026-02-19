@@ -3,75 +3,84 @@
 	"name": "Seb 24 timer",
 	"nameDa": "Seb 24 timer",
 	"category": "neapolitan",
-	"yeastType": "fresh",
 	"baseWeight": 270,
-	"hydration": 70,
-	"yieldPizzas": 4,
-	"ingredients": [
+	"hydration": 70.05,
+	"mixingSteps": [
 		{
-			"id": "flour",
-			"name": "Flour tipo 0 or 00",
-			"nameDa": "Mel tipo 0 eller 00",
-			"percentage": 100,
-			"type": "flour"
-		},
-		{
-			"id": "water",
-			"name": "Water",
-			"nameDa": "Vand",
-			"percentage": 70,
-			"type": "water"
-		},
-		{
-			"id": "salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 3,
-			"type": "salt"
-		},
-		{
-			"id": "yeast",
-			"name": "Fresh yeast",
-			"nameDa": "Frisk gær",
-			"percentage": 0.4,
-			"type": "yeast"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "flour",
+					"percentage": 100,
+					"type": "flour",
+					"flourType": "tipo-00"
+				},
+				{
+					"id": "water",
+					"name": "Water",
+					"nameDa": "Vand",
+					"percentage": 70.05,
+					"type": "water"
+				},
+				{
+					"id": "salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 2.985,
+					"type": "salt"
+				},
+				{
+					"id": "yeast",
+					"name": "Fresh yeast",
+					"nameDa": "Frisk gær",
+					"percentage": 0.0597,
+					"type": "yeast",
+					"yeastType": "fresh"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Mix",
-				"nameDa": "Bland dej",
-				"duration": 30,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": false,
-				"instructionsDa": "Opløs gæren i vandet. Tilsæt mel og salt og æl godt."
-			},
-			{
-				"id": "stage-2",
-				"name": "Room ferment",
-				"nameDa": "Stuehævning",
-				"duration": 1320,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Lad hæve ved stuetemperatur i ca. 22 timer."
-			},
-			{
-				"id": "stage-3",
-				"name": "Ball rest",
-				"nameDa": "Kuglehvile",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Del i kugler og lad hvile."
-			}
-		],
-		"totalTime": 1470
-	},
+	"timeline": [
+		{
+			"section": "Dag 1",
+			"instructionsDa": "Opløs gæren i det kolde vand.",
+			"ingredients": ["yeast", "water"]
+		},
+		{
+			"instructionsDa": "Tilsæt mel i en mixer og ælt til dejen samler sig.",
+			"ingredients": ["flour"]
+		},
+		{
+			"instructionsDa": "Tilsæt salt og ælt indtil dejen er glat og fin, uden at temperaturen overskrider 26°C (sluttemperaturen skal ligge på 24-26°C).",
+			"ingredients": ["salt"]
+		},
+		{
+			"instructionsDa": "Lad dejen hvile 30 min. i en hævekasse og form den derefter til én stor bolle.",
+			"duration": 30,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Lad dejen hvile i 16 timer ved stuetemperatur (~21°C).",
+			"duration": 960,
+			"temperature": 21,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 2",
+			"instructionsDa": "Virk dejen op i boller af ca. 270 g."
+		},
+		{
+			"instructionsDa": "Lad bollerne hæve overdækket yderligere 8 timer ved stuetemperatur, hvorefter de er klar til bagning.",
+			"duration": 480,
+			"temperature": 21,
+			"location": "room",
+			"canSetTimer": true
+		}
+	],
 	"tipsDa": [
 		"Opskriften er god hvis du ikke har plads til koldhævning i køleskabet.",
 		"Ja, det er den rette mængde gær i denne opskrift."

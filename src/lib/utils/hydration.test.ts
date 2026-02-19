@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { redistributeWater, scaleRecipe, calculateHydration } from '$lib/utils/baker-percentage';
-import type { Recipe, RecipeIngredient } from '$lib/types/recipe';
+import {
+	redistributeWater,
+	scaleRecipe,
+	calculateHydration,
+	getAllIngredients
+} from '$lib/utils/baker-percentage';
+import type { FlatIngredient } from '$lib/utils/baker-percentage';
+import type { Recipe } from '$lib/models/recipe.types';
 
 // Simple recipe: 65% hydration, no predough
 const simpleRecipe: Recipe = {
@@ -10,14 +16,32 @@ const simpleRecipe: Recipe = {
 	category: 'direct',
 	baseWeight: 270,
 	hydration: 65,
-	yieldPizzas: 4,
-	ingredients: [
-		{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
-		{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
-		{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.7, type: 'salt' },
-		{ id: 'yeast', name: 'Yeast', nameDa: 'Gaer', percentage: 0.3, type: 'yeast' }
+	mixingSteps: [
+		{
+			id: 'main',
+			name: 'Main dough',
+			nameDa: 'Hoveddej',
+			ingredients: [
+				{
+					id: 'flour',
+					percentage: 100,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
+				{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
+				{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.7, type: 'salt' },
+				{
+					id: 'yeast',
+					name: 'Yeast',
+					nameDa: 'Gaer',
+					percentage: 0.3,
+					type: 'yeast',
+					yeastType: 'fresh'
+				}
+			]
+		}
 	],
-	schedule: { stages: [], totalTime: 0 }
+	timeline: []
 };
 
 // Poolish recipe: 65% hydration, 20% predough flour
@@ -28,65 +52,87 @@ const poolishRecipe: Recipe = {
 	category: 'poolish',
 	baseWeight: 270,
 	hydration: 65,
-	yieldPizzas: 4,
-	ingredients: [
+	mixingSteps: [
 		{
-			id: 'poolish-flour',
-			name: 'Poolish flour',
-			nameDa: 'Mel',
-			percentage: 20,
-			type: 'flour',
-			stage: 'poolish'
+			id: 'poolish',
+			name: 'Poolish',
+			nameDa: 'Poolish',
+			predough: true,
+			ingredients: [
+				{
+					id: 'poolish-flour',
+					percentage: 20,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
+				{
+					id: 'poolish-water',
+					name: 'Poolish water',
+					nameDa: 'Vand',
+					percentage: 20,
+					type: 'water'
+				},
+				{
+					id: 'poolish-yeast',
+					name: 'Poolish yeast',
+					nameDa: 'Gaer',
+					percentage: 0.1,
+					type: 'yeast',
+					yeastType: 'fresh'
+				}
+			]
 		},
 		{
-			id: 'poolish-water',
-			name: 'Poolish water',
-			nameDa: 'Vand',
-			percentage: 20,
-			type: 'water',
-			stage: 'poolish'
-		},
-		{
-			id: 'poolish-yeast',
-			name: 'Poolish yeast',
-			nameDa: 'Gaer',
-			percentage: 0.1,
-			type: 'yeast',
-			stage: 'poolish'
-		},
-		{
-			id: 'main-flour',
-			name: 'Main flour',
-			nameDa: 'Mel',
-			percentage: 80,
-			type: 'flour',
-			stage: 'main'
-		},
-		{
-			id: 'main-water',
-			name: 'Main water',
-			nameDa: 'Vand',
-			percentage: 45,
-			type: 'water',
-			stage: 'main'
-		},
-		{
-			id: 'main-salt',
-			name: 'Salt',
-			nameDa: 'Salt',
-			percentage: 2.5,
-			type: 'salt',
-			stage: 'main'
+			id: 'main',
+			name: 'Main dough',
+			nameDa: 'Hoveddej',
+			ingredients: [
+				{
+					id: 'main-flour',
+					percentage: 80,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
+				{
+					id: 'main-water',
+					name: 'Main water',
+					nameDa: 'Vand',
+					percentage: 45,
+					type: 'water'
+				},
+				{
+					id: 'main-salt',
+					name: 'Salt',
+					nameDa: 'Salt',
+					percentage: 2.5,
+					type: 'salt'
+				}
+			]
 		}
 	],
-	schedule: { stages: [], totalTime: 0 }
+	timeline: []
 };
 
 describe('redistributeWater', () => {
 	it('should increase water proportionally when hydration increases', () => {
-		const ingredients: RecipeIngredient[] = [
-			{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
-			{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
+		const ingredients: FlatIngredient[] = [
+			{
+				id: 'flour',
+				name: '',
+				nameDa: '',
+				percentage: 100,
+				type: 'flour',
+				flourType: 'tipo-00',
+				mixingStepId: 'main'
+			},
+			{
+				id: 'water',
+				name: 'Water',
+				nameDa: 'Vand',
+				percentage: 65,
+				type: 'water',
+				mixingStepId: 'main'
+			}
 		];
 
 		const result = redistributeWater(ingredients, 70, 65);
@@ -100,14 +146,14 @@ describe('redistributeWater', () => {
 	});
 
 	it('should preserve proportional split between stages for poolish recipe', () => {
-		const ingredients: RecipeIngredient[] = [
+		const ingredients: FlatIngredient[] = [
 			{
 				id: 'poolish-water',
 				name: 'Poolish water',
 				nameDa: 'Vand',
 				percentage: 20,
 				type: 'water',
-				stage: 'poolish'
+				mixingStepId: 'poolish'
 			},
 			{
 				id: 'main-water',
@@ -115,9 +161,17 @@ describe('redistributeWater', () => {
 				nameDa: 'Vand',
 				percentage: 45,
 				type: 'water',
-				stage: 'main'
+				mixingStepId: 'main'
 			},
-			{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' }
+			{
+				id: 'flour',
+				name: '',
+				nameDa: '',
+				percentage: 100,
+				type: 'flour',
+				flourType: 'tipo-00',
+				mixingStepId: 'main'
+			}
 		];
 
 		// Total water: 65%, change to 70%
@@ -136,8 +190,16 @@ describe('redistributeWater', () => {
 	});
 
 	it('should handle 0% old hydration gracefully', () => {
-		const ingredients: RecipeIngredient[] = [
-			{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' }
+		const ingredients: FlatIngredient[] = [
+			{
+				id: 'flour',
+				name: '',
+				nameDa: '',
+				percentage: 100,
+				type: 'flour',
+				flourType: 'tipo-00',
+				mixingStepId: 'main'
+			}
 		];
 
 		const result = redistributeWater(ingredients, 70, 0);
@@ -146,9 +208,24 @@ describe('redistributeWater', () => {
 	});
 
 	it('should set all water to 0 when new hydration is 0', () => {
-		const ingredients: RecipeIngredient[] = [
-			{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
-			{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
+		const ingredients: FlatIngredient[] = [
+			{
+				id: 'flour',
+				name: '',
+				nameDa: '',
+				percentage: 100,
+				type: 'flour',
+				flourType: 'tipo-00',
+				mixingStepId: 'main'
+			},
+			{
+				id: 'water',
+				name: 'Water',
+				nameDa: 'Vand',
+				percentage: 65,
+				type: 'water',
+				mixingStepId: 'main'
+			}
 		];
 
 		const result = redistributeWater(ingredients, 0, 65);
@@ -157,9 +234,24 @@ describe('redistributeWater', () => {
 	});
 
 	it('should handle recipe with no water ingredients', () => {
-		const ingredients: RecipeIngredient[] = [
-			{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
-			{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.5, type: 'salt' }
+		const ingredients: FlatIngredient[] = [
+			{
+				id: 'flour',
+				name: '',
+				nameDa: '',
+				percentage: 100,
+				type: 'flour',
+				flourType: 'tipo-00',
+				mixingStepId: 'main'
+			},
+			{
+				id: 'salt',
+				name: 'Salt',
+				nameDa: 'Salt',
+				percentage: 2.5,
+				type: 'salt',
+				mixingStepId: 'main'
+			}
 		];
 
 		const result = redistributeWater(ingredients, 70, 65);
@@ -168,9 +260,24 @@ describe('redistributeWater', () => {
 	});
 
 	it('should handle high hydration change: 65% to 90%', () => {
-		const ingredients: RecipeIngredient[] = [
-			{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
-			{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
+		const ingredients: FlatIngredient[] = [
+			{
+				id: 'flour',
+				name: '',
+				nameDa: '',
+				percentage: 100,
+				type: 'flour',
+				flourType: 'tipo-00',
+				mixingStepId: 'main'
+			},
+			{
+				id: 'water',
+				name: 'Water',
+				nameDa: 'Vand',
+				percentage: 65,
+				type: 'water',
+				mixingStepId: 'main'
+			}
 		];
 
 		const result = redistributeWater(ingredients, 90, 65);
@@ -181,22 +288,31 @@ describe('redistributeWater', () => {
 	});
 
 	it('should verify total water percentage matches new hydration value', () => {
-		const ingredients: RecipeIngredient[] = [
-			{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+		const ingredients: FlatIngredient[] = [
+			{
+				id: 'flour',
+				name: '',
+				nameDa: '',
+				percentage: 100,
+				type: 'flour',
+				flourType: 'tipo-00',
+				mixingStepId: 'main'
+			},
 			{
 				id: 'poolish-water',
 				name: 'Poolish water',
 				nameDa: 'Vand',
 				percentage: 20,
 				type: 'water',
-				stage: 'poolish'
+				mixingStepId: 'poolish'
 			},
 			{
 				id: 'main-water',
 				name: 'Main water',
 				nameDa: 'Vand',
 				percentage: 45,
-				type: 'water'
+				type: 'water',
+				mixingStepId: 'main'
 			}
 		];
 
@@ -296,10 +412,10 @@ describe('scaleRecipe with hydration override', () => {
 
 describe('Hydration clamping', () => {
 	it('should calculate hydration correctly from ingredients', () => {
-		expect(calculateHydration(simpleRecipe.ingredients)).toBe(65);
+		expect(calculateHydration(getAllIngredients(simpleRecipe))).toBe(65);
 	});
 
 	it('should calculate hydration for poolish recipe', () => {
-		expect(calculateHydration(poolishRecipe.ingredients)).toBe(65);
+		expect(calculateHydration(getAllIngredients(poolishRecipe))).toBe(65);
 	});
 });

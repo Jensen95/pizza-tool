@@ -62,5 +62,101 @@
 		"category": "technique",
 		"content": "When to add salt",
 		"contentDa": "Tilsæt salt efter gæren er aktiveret. Salt hæmmer gærens aktivitet og bør ikke tilsættes samtidig."
+	},
+	{
+		"id": "tip-9",
+		"title": "Never re-ball",
+		"titleDa": "Aldrig gen-rul",
+		"category": "technique",
+		"content": "Never re-ball risen dough",
+		"contentDa": "Rul aldrig hævet dej op igen til nye kugler. Det aktiverer glutenet og pizzaen vil trække sig sammen."
+	},
+	{
+		"id": "tip-10",
+		"title": "No rolling pin",
+		"titleDa": "Ingen kagerulle",
+		"category": "technique",
+		"content": "Never use a rolling pin",
+		"contentDa": "Brug aldrig en kagerulle – den presser luften ud af dejen. Stræk den med hænderne i stedet."
+	},
+	{
+		"id": "tip-11",
+		"title": "Shaping technique",
+		"titleDa": "Formteknik",
+		"category": "technique",
+		"content": "Press from center outward",
+		"contentDa": "Tryk fra midten og udad. Efterlad ca. 1 cm kant (cornicione) hele vejen rundt."
+	},
+	{
+		"id": "tip-12",
+		"title": "Ball from fridge",
+		"titleDa": "Kugler fra køl",
+		"category": "technique",
+		"content": "Form balls directly from fridge",
+		"contentDa": "Form kuglerne direkte fra køleskabet – kold dej er mindre klistret og lettere at arbejde med."
+	},
+	{
+		"id": "tip-13",
+		"title": "Rotating pizza",
+		"titleDa": "Rotation af pizza",
+		"category": "baking",
+		"content": "Place pizza back on same spot",
+		"contentDa": "Når du roterer pizzaen på stenen, sæt den tilbage på samme sted – det er varmere der."
+	},
+	{
+		"id": "tip-14",
+		"title": "Dusting",
+		"titleDa": "Drysning",
+		"category": "technique",
+		"content": "Dust balls in semolina",
+		"contentDa": "Drys bollerne i semolina eller fin durum for at undgå at de klistrer."
+	},
+	{
+		"id": "tip-15",
+		"title": "Autolyse",
+		"titleDa": "Autolyse",
+		"category": "technique",
+		"content": "Autolyse explanation",
+		"contentDa": "Autolyse: bland kun mel og vand (uden salt), og lad dejen hvile i 30+ min. Det letter æltningen og forbedrer struktur."
+	},
+	{
+		"id": "tip-16",
+		"title": "Dry yeast stability",
+		"titleDa": "Tørgær stabilitet",
+		"category": "ingredients",
+		"content": "Use dry yeast for most stable results",
+		"contentDa": "Brug tørgær for de mest stabile resultater – den er lettere at dosere og holder sig længere."
+	},
+	{
+		"id": "tip-17",
+		"title": "Tempering dough",
+		"titleDa": "Temperering",
+		"category": "dough",
+		"content": "Temper dough minimum 2h before use",
+		"contentDa": "Temperer dejen minimum 2 timer ved stuetemperatur inden brug, så den er nemmere at strætte."
+	},
+	{
+		"id": "tip-18",
+		"title": "Caputo Pizzeria (blue)",
+		"titleDa": "Caputo Pizzeria (blå)",
+		"category": "ingredients",
+		"content": "Caputo Pizzeria flour usage",
+		"contentDa": "Caputo Pizzeria (blå): god til op til 12-16 timers stuetemperatur-fermentering."
+	},
+	{
+		"id": "tip-19",
+		"title": "Caputo Cuoco (red)",
+		"titleDa": "Caputo Cuoco (rød)",
+		"category": "ingredients",
+		"content": "Caputo Cuoco flour usage",
+		"contentDa": "Cuoco/Saccorosso (rød): stærkere mel, lavet til varme dage og fermentering over 24 timer ved stuetemperatur."
+	},
+	{
+		"id": "tip-20",
+		"title": "Avoid thin bottom",
+		"titleDa": "Undgå tynd bund",
+		"category": "technique",
+		"content": "Avoid too-thin bottom",
+		"contentDa": "Undgå at bunden bliver for tynd – det giver risiko for huller og en skrøbelig pizza."
 	}
 ]

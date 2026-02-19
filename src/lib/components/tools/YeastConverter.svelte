@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { YeastInfo } from '$lib/types';
+	import type { YeastInfo } from '$lib/models';
 	import { yeastInfo } from '$lib/data/reference';
 	import { convertYeastPercentage } from '$lib/utils/yeast';
 

@@ -3,75 +3,106 @@
 	"name": "Gorms Pizzadej",
 	"nameDa": "Gorms Pizzadej",
 	"category": "direct",
-	"yeastType": "fresh",
 	"baseWeight": 270,
-	"hydration": 65,
-	"yieldPizzas": 4,
-	"ingredients": [
+	"hydration": 66.67,
+	"mixingSteps": [
 		{
-			"id": "flour",
-			"name": "Flour tipo 00",
-			"nameDa": "Mel tipo 00",
-			"percentage": 100,
-			"type": "flour"
-		},
-		{
-			"id": "water",
-			"name": "Water",
-			"nameDa": "Vand",
-			"percentage": 65,
-			"type": "water"
-		},
-		{
-			"id": "salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 2.5,
-			"type": "salt"
-		},
-		{
-			"id": "yeast",
-			"name": "Yeast",
-			"nameDa": "Gær",
-			"percentage": 0.3,
-			"type": "yeast"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "flour",
+					"percentage": 100,
+					"type": "flour",
+					"flourType": "tipo-00"
+				},
+				{
+					"id": "water",
+					"name": "Water",
+					"nameDa": "Vand",
+					"percentage": 66.67,
+					"type": "water"
+				},
+				{
+					"id": "salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 2.33,
+					"type": "salt"
+				},
+				{
+					"id": "yeast",
+					"name": "Yeast",
+					"nameDa": "Gær",
+					"percentage": 3.33,
+					"type": "yeast",
+					"yeastType": "fresh"
+				},
+				{
+					"id": "sugar",
+					"name": "Sugar",
+					"nameDa": "Sukker",
+					"percentage": 2.33,
+					"type": "sugar"
+				},
+				{
+					"id": "oil",
+					"name": "Olive oil",
+					"nameDa": "Olivenolie",
+					"percentage": 4.33,
+					"type": "oil"
+				},
+				{
+					"id": "durum",
+					"name": "Durum flour (optional)",
+					"nameDa": "Durummel (valgfrit)",
+					"percentage": 33.33,
+					"type": "other",
+					"notes": "Optional / Valgfrit"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Mix",
-				"nameDa": "Bland dej",
-				"duration": 30,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": false,
-				"instructionsDa": "Bland alle ingredienser og æl godt."
-			},
-			{
-				"id": "stage-2",
-				"name": "Bulk ferment",
-				"nameDa": "Stuehævning",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Lad hæve ved stuetemperatur."
-			},
-			{
-				"id": "stage-3",
-				"name": "Ball rest",
-				"nameDa": "Kuglehvile",
-				"duration": 180,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Del i kugler og lad hvile."
-			}
-		],
-		"totalTime": 330
-	},
+	"timeline": [
+		{
+			"instructionsDa": "Opløs gær og sukker i vandet.",
+			"ingredients": ["yeast", "water"]
+		},
+		{
+			"instructionsDa": "Tilsæt halvdelen af melet og rør det ud, til der ikke er flere klumper.",
+			"ingredients": ["flour"]
+		},
+		{
+			"instructionsDa": "Tilsæt salt og olie, rør lidt, tilsæt derpå resten af melet over to omgange. Føles dejen for våd, så tilsæt evt. lidt mere mel.",
+			"ingredients": ["salt"]
+		},
+		{
+			"instructionsDa": "Ælt dejen indtil den begynder at blive glat og smidig at røre ved. I hånden ca. 10-15 min, i spiral-mixer ca. 8-10 min.",
+			"duration": 10,
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Lad dejen hæve i køleskab til dobbeltstørrelse (det tager ca. 1 time).",
+			"duration": 60,
+			"location": "fridge",
+			"canSetTimer": true,
+			"tipDa": "Alternativt: lad den ligge til dagen efter."
+		},
+		{
+			"instructionsDa": "Del dejen i klumper af ca. 270 g."
+		},
+		{
+			"instructionsDa": "Dejklumperne strammes op til kugler ved at folde oversiden ind i bunden af dejen. Gentag indtil overfladen virker jævn. Husk at få \"lukket\" i bunden af dejen."
+		},
+		{
+			"instructionsDa": "Lad bollerne hvile ved stuetemperatur i 30-60 minutter i en lufttæt beholder.",
+			"duration": 60,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		}
+	],
 	"tipsDa": [
 		"Afbagning ved samme temperatur som du vil.",
 		"En direkte dej er en metode hvor alle ingredienserne blandes sammen på een gang.",

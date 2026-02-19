@@ -1,25 +1,13 @@
 import { describe, expect, test } from 'vitest';
 import { convertYeastPercentage, getRecipeYeastType } from '$lib/utils/yeast';
-import type { Recipe } from '$lib/types';
-
-const baseSchedule: Recipe['schedule'] = {
-	stages: [
-		{
-			id: 'stage-1',
-			name: 'Bulk',
-			nameDa: 'Bulk',
-			duration: 60,
-			temperature: 22,
-			canSetTimer: false
-		}
-	],
-	totalTime: 60
-};
+import type { Recipe } from '$lib/models';
+import type { YeastInfo } from '$lib/models/reference.types';
 
 function buildRecipe(
 	yeastName: string,
 	overrides?: Partial<Recipe>,
-	yeastPercentage = 0.8
+	yeastPercentage = 0.8,
+	yeastType: YeastInfo['type'] = 'fresh'
 ): Recipe {
 	return {
 		id: 'recipe',
@@ -28,31 +16,31 @@ function buildRecipe(
 		category: 'direct',
 		baseWeight: 250,
 		hydration: 65,
-		yieldPizzas: 2,
-		ingredients: [
+		mixingSteps: [
 			{
-				id: 'flour',
-				name: 'Flour',
-				nameDa: 'Mel',
-				percentage: 100,
-				type: 'flour'
-			},
-			{
-				id: 'water',
-				name: 'Water',
-				nameDa: 'Vand',
-				percentage: 65,
-				type: 'water'
-			},
-			{
-				id: 'yeast',
-				name: yeastName,
-				nameDa: yeastName,
-				percentage: yeastPercentage,
-				type: 'yeast'
+				id: 'main',
+				name: 'Main dough',
+				nameDa: 'Hoveddej',
+				ingredients: [
+					{
+						id: 'flour',
+						percentage: 100,
+						type: 'flour',
+						flourType: 'tipo-00'
+					},
+					{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
+					{
+						id: 'yeast',
+						name: yeastName,
+						nameDa: yeastName,
+						percentage: yeastPercentage,
+						type: 'yeast',
+						yeastType
+					}
+				]
 			}
 		],
-		schedule: baseSchedule,
+		timeline: [],
 		...overrides
 	};
 }
@@ -74,23 +62,23 @@ describe('convertYeastPercentage', () => {
 });
 
 describe('getRecipeYeastType', () => {
-	test('prefers explicit yeastType flag on recipe', () => {
-		const recipe = buildRecipe('Instant yeast', { yeastType: 'active-dry' });
+	test('prefers explicit yeastType on ingredient over name inference', () => {
+		const recipe = buildRecipe('Instant yeast', {}, 0.8, 'active-dry');
 		expect(getRecipeYeastType(recipe)).toBe('active-dry');
 	});
 
-	test('infers active dry yeast from ingredient naming', () => {
-		const recipe = buildRecipe('Dry yeast');
+	test('detects active-dry yeastType from ingredient', () => {
+		const recipe = buildRecipe('Dry yeast', {}, 0.8, 'active-dry');
 		expect(getRecipeYeastType(recipe)).toBe('active-dry');
 	});
 
-	test('infers instant yeast from ingredient naming', () => {
-		const recipe = buildRecipe('Instant yeast');
+	test('detects instant yeastType from ingredient', () => {
+		const recipe = buildRecipe('Instant yeast', {}, 0.8, 'instant');
 		expect(getRecipeYeastType(recipe)).toBe('instant');
 	});
 
-	test('defaults to fresh yeast when no hints are present', () => {
-		const recipe = buildRecipe('Yeast', {}, 0.2);
+	test('defaults to fresh yeast when yeastType is fresh', () => {
+		const recipe = buildRecipe('Yeast', {}, 0.2, 'fresh');
 		expect(getRecipeYeastType(recipe)).toBe('fresh');
 	});
 });

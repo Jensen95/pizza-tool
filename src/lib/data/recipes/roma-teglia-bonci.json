@@ -3,96 +3,113 @@
 	"name": "Roma Teglia (Gabriele Bonci)",
 	"nameDa": "Roma teglia (Gabriele Bonci)",
 	"category": "roman",
-	"yeastType": "fresh",
 	"baseWeight": 900,
 	"hydration": 75,
-	"yieldPizzas": 1,
-	"ingredients": [
+	"mixingSteps": [
 		{
-			"id": "flour",
-			"name": "Strong flour tipo 0/00",
-			"nameDa": "Stærk hvedemel tipo 0/00",
-			"percentage": 100,
-			"type": "flour"
-		},
-		{
-			"id": "water",
-			"name": "Water",
-			"nameDa": "Vand",
-			"percentage": 75,
-			"type": "water"
-		},
-		{
-			"id": "oil",
-			"name": "Extra virgin olive oil",
-			"nameDa": "Ekstra jomfruolivenolie",
-			"percentage": 3,
-			"type": "oil"
-		},
-		{
-			"id": "salt",
-			"name": "Fine sea salt",
-			"nameDa": "Fint havsalt",
-			"percentage": 2.8,
-			"type": "salt"
-		},
-		{
-			"id": "yeast",
-			"name": "Fresh yeast",
-			"nameDa": "Frisk gær",
-			"percentage": 0.2,
-			"type": "yeast"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "flour",
+					"percentage": 100,
+					"type": "flour",
+					"flourType": "tipo-00"
+				},
+				{
+					"id": "water",
+					"name": "Water",
+					"nameDa": "Vand",
+					"percentage": 75,
+					"type": "water"
+				},
+				{
+					"id": "oil",
+					"name": "Extra virgin olive oil",
+					"nameDa": "Ekstra jomfruolivenolie",
+					"percentage": 3,
+					"type": "oil"
+				},
+				{
+					"id": "salt",
+					"name": "Fine sea salt",
+					"nameDa": "Fint havsalt",
+					"percentage": 2.8,
+					"type": "salt"
+				},
+				{
+					"id": "yeast",
+					"name": "Fresh yeast",
+					"nameDa": "Frisk gær",
+					"percentage": 0.2,
+					"type": "yeast",
+					"yeastType": "fresh"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Autolyse",
-				"nameDa": "Autolyse",
-				"duration": 20,
-				"temperature": 22,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Bland mel og vand til en grov dej uden tørre lommer. Hvil tildækket 20 minutter."
-			},
-			{
-				"id": "stage-2",
-				"name": "Mix & folds",
-				"nameDa": "Ælt og fold",
-				"duration": 30,
-				"temperature": 22,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Opløs gær i lidt vand, ælt det ind i dejen og tilsæt derefter salt og olie. Fold dejen et par gange til den får spænding uden at blive varm."
-			},
-			{
-				"id": "stage-3",
-				"name": "Cold ferment",
-				"nameDa": "Koldhævning",
-				"duration": 1440,
-				"temperature": 4,
-				"location": "fridge",
-				"canSetTimer": true,
-				"instructionsDa": "Kom dejen i en let olieret beholder, dæk til og hæv 18-24 timer på køl."
-			},
-			{
-				"id": "stage-4",
-				"name": "Pan proof",
-				"nameDa": "Hæv i form",
-				"duration": 120,
-				"temperature": 24,
-				"location": "warm",
-				"canSetTimer": true,
-				"instructionsDa": "Temperer dejen 30 minutter, spænd den op og stræk forsigtigt ud i en olieret 30x40 cm pande. Lad hæve yderligere 60-90 minutter til luftig og let at trykke i."
-			}
-		],
-		"totalTime": 1610
-	},
+	"timeline": [
+		{
+			"section": "Dag 1",
+			"instructionsDa": "Bland mel og vand til en grov dej uden tørre lommer.",
+			"ingredients": ["flour", "water"]
+		},
+		{
+			"instructionsDa": "Hvil tildækket i 20 minutter (autolyse).",
+			"duration": 20,
+			"temperature": 22,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Opløs gæren i lidt vand og ælt det ind i dejen.",
+			"ingredients": ["yeast"]
+		},
+		{
+			"instructionsDa": "Tilsæt salt og olie og ælt til dejen er glat.",
+			"ingredients": ["salt", "oil"]
+		},
+		{
+			"instructionsDa": "Fold dejen 2-3 gange med 20 minutters mellemrum for at bygge spænding.",
+			"duration": 60,
+			"temperature": 22,
+			"location": "room",
+			"canSetTimer": true,
+			"tipDa": "Hold dejtemperaturen under 24°C for at bevare struktur."
+		},
+		{
+			"instructionsDa": "Kom dejen i en let olieret beholder, dæk til og sæt i køleskabet i 18-24 timer.",
+			"duration": 1440,
+			"temperature": 4,
+			"location": "fridge",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 2",
+			"instructionsDa": "Tag dejen ud og lad den temperere 30 minutter ved stuetemperatur.",
+			"duration": 30,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Spænd dejen op og stræk forsigtigt ud i en olieret 30x40 cm pande.",
+			"tipDa": "Stik forsigtigt små bobler med fingrene for at undgå store lommer under topping."
+		},
+		{
+			"instructionsDa": "Lad hæve yderligere 60-90 minutter til dejen er luftig og let at trykke i.",
+			"duration": 90,
+			"temperature": 24,
+			"location": "warm",
+			"canSetTimer": true
+		}
+	],
 	"tipsDa": [
 		"Hold dejtemperaturen under 24 grader for at bevare struktur i den høje hydrering.",
 		"Bages på stål eller sten ved 250-280 grader og afslut eventuelt direkte på stålet for ekstra sprød bund.",
-		"Stik forsigtigt små bobler med fingrene før bagning for at undgå store lommer under topping."
+		"Stik forsigtigt små bobler med fingrene før bagning for at undgå store lommer under topping.",
+		"Stræk dejen ud i en olieret pande (30×40 cm eller lignende).",
+		"Denne opskrift er beregnet til en almindelig ovn med bageplade."
 	],
 	"source": "Gabriele Bonci"
 }

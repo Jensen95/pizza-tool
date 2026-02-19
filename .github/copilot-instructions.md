@@ -33,8 +33,8 @@ Pizza Tool is a SvelteKit-based Progressive Web App (PWA) for pizza recipe manag
 
 - Use strict TypeScript mode - all code must be properly typed
 - Avoid using `any` type - use proper types or `unknown` when necessary
-- Define interfaces and types in `src/lib/types/` directory
-- Use type imports: `import type { Recipe } from '$lib/types/recipe'`
+- Define interfaces and types in `src/lib/models/` directory
+- Use type imports: `import type { Recipe } from '$lib/models/recipe.types'`
 
 ### Svelte Components
 
@@ -63,12 +63,13 @@ src/
 │   │   └── ui/
 │   ├── data/          # Static data files
 │   ├── stores/        # Svelte stores (writable, readable, derived)
-│   ├── types/         # TypeScript interfaces and types
+│   ├── models/        # Domain models, types, and constants
 │   └── utils/         # Utility functions (must have unit tests)
 ├── routes/            # SvelteKit routes (CSR only)
 └── tests/
-    ├── unit/          # Unit tests with Vitest
+    ├── setup.ts       # Vitest setup
     └── e2e/           # E2E tests with Playwright
+# Unit tests are colocated: *.test.ts next to source files
 ```
 
 ## Development Guidelines

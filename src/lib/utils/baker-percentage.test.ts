@@ -6,9 +6,10 @@ import {
 	scaleRecipe,
 	calculateHydration,
 	validateRecipe,
-	formatWeight
+	formatWeight,
+	getAllIngredients
 } from '$lib/utils/baker-percentage';
-import type { Recipe, RecipeIngredient } from '$lib/types/recipe';
+import type { Recipe, RecipeIngredient } from '$lib/models/recipe.types';
 
 describe("Baker's Percentage - Basic Calculations", () => {
 	describe('calculateIngredientWeight', () => {
@@ -39,10 +40,9 @@ describe("Baker's Percentage - Basic Calculations", () => {
 			const ingredients: RecipeIngredient[] = [
 				{
 					id: 'flour',
-					name: 'Flour',
-					nameDa: 'Mel',
 					percentage: 100,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'water',
@@ -116,41 +116,44 @@ describe("Baker's Percentage - Recipe Scaling", () => {
 		category: 'direct',
 		baseWeight: 270,
 		hydration: 65,
-		yieldPizzas: 4,
-		ingredients: [
+		mixingSteps: [
 			{
-				id: 'flour',
-				name: 'Flour',
-				nameDa: 'Mel',
-				percentage: 100,
-				type: 'flour'
-			},
-			{
-				id: 'water',
-				name: 'Water',
-				nameDa: 'Vand',
-				percentage: 65,
-				type: 'water'
-			},
-			{
-				id: 'salt',
-				name: 'Salt',
-				nameDa: 'Salt',
-				percentage: 2.7,
-				type: 'salt'
-			},
-			{
-				id: 'yeast',
-				name: 'Yeast',
-				nameDa: 'Gær',
-				percentage: 0.3,
-				type: 'yeast'
+				id: 'main',
+				name: 'Main dough',
+				nameDa: 'Hoveddej',
+				ingredients: [
+					{
+						id: 'flour',
+						percentage: 100,
+						type: 'flour',
+						flourType: 'tipo-00'
+					},
+					{
+						id: 'water',
+						name: 'Water',
+						nameDa: 'Vand',
+						percentage: 65,
+						type: 'water'
+					},
+					{
+						id: 'salt',
+						name: 'Salt',
+						nameDa: 'Salt',
+						percentage: 2.7,
+						type: 'salt'
+					},
+					{
+						id: 'yeast',
+						name: 'Yeast',
+						nameDa: 'Gær',
+						percentage: 0.3,
+						type: 'yeast',
+						yeastType: 'fresh'
+					}
+				]
 			}
 		],
-		schedule: {
-			stages: [],
-			totalTime: 0
-		}
+		timeline: []
 	};
 
 	describe('scaleRecipe', () => {
@@ -180,7 +183,7 @@ describe("Baker's Percentage - Recipe Scaling", () => {
 			});
 
 			result.scaledIngredients.forEach((ingredient) => {
-				const original = simpleRecipe.ingredients.find((i) => i.id === ingredient.id);
+				const original = getAllIngredients(simpleRecipe).find((i) => i.id === ingredient.id);
 				expect(ingredient.percentage).toBe(original?.percentage);
 			});
 		});
@@ -193,36 +196,36 @@ describe("Baker's Percentage - Recipe Scaling", () => {
 				category: 'direct',
 				baseWeight: 250,
 				hydration: 65,
-				yieldPizzas: 2,
-				ingredients: [
+				mixingSteps: [
 					{
-						id: 'main-flour',
-						name: 'Flour',
-						nameDa: 'Mel',
-						percentage: 100,
-						type: 'flour'
-					},
-					{
-						id: 'tipo-00',
-						name: 'Tipo 00',
-						nameDa: 'Tipo 00',
-						percentage: 60,
-						type: 'flour'
-					},
-					{
-						id: 'tipo-0',
-						name: 'Tipo 0',
-						nameDa: 'Tipo 0',
-						percentage: 40,
-						type: 'flour'
-					},
-					{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
-					{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.7, type: 'salt' }
+						id: 'main',
+						name: 'Main dough',
+						nameDa: 'Hoveddej',
+						ingredients: [
+							{
+								id: 'main-flour',
+								percentage: 100,
+								type: 'flour',
+								flourType: 'tipo-00'
+							},
+							{
+								id: 'tipo-00',
+								percentage: 60,
+								type: 'flour',
+								flourType: 'tipo-00'
+							},
+							{
+								id: 'tipo-0',
+								percentage: 40,
+								type: 'flour',
+								flourType: 'tipo-00'
+							},
+							{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
+							{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.7, type: 'salt' }
+						]
+					}
 				],
-				schedule: {
-					stages: [],
-					totalTime: 0
-				}
+				timeline: []
 			};
 
 			const result = scaleRecipe(messyRecipe, {
@@ -258,7 +261,12 @@ describe("Baker's Percentage - Recipe Scaling", () => {
 describe("Baker's Percentage - Hydration Calculation", () => {
 	it('should calculate hydration for simple recipe', () => {
 		const ingredients: RecipeIngredient[] = [
-			{ id: '1', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+			{
+				id: '1',
+				percentage: 100,
+				type: 'flour',
+				flourType: 'tipo-00'
+			},
 			{ id: '2', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
 		];
 		expect(calculateHydration(ingredients)).toBe(65);
@@ -266,7 +274,12 @@ describe("Baker's Percentage - Hydration Calculation", () => {
 
 	it('should calculate hydration with multiple water sources', () => {
 		const ingredients: RecipeIngredient[] = [
-			{ id: '1', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+			{
+				id: '1',
+				percentage: 100,
+				type: 'flour',
+				flourType: 'tipo-00'
+			},
 			{ id: '2', name: 'Water 1', nameDa: 'Vand 1', percentage: 40, type: 'water' },
 			{ id: '3', name: 'Water 2', nameDa: 'Vand 2', percentage: 25, type: 'water' }
 		];
@@ -290,13 +303,24 @@ describe("Baker's Percentage - Recipe Validation", () => {
 			category: 'direct',
 			baseWeight: 270,
 			hydration: 65,
-			yieldPizzas: 4,
-			ingredients: [
-				{ id: '1', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
-				{ id: '2', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
-				{ id: '3', name: 'Salt', nameDa: 'Salt', percentage: 2.7, type: 'salt' }
+			mixingSteps: [
+				{
+					id: 'main',
+					name: 'Main dough',
+					nameDa: 'Hoveddej',
+					ingredients: [
+						{
+							id: '1',
+							percentage: 100,
+							type: 'flour',
+							flourType: 'tipo-00'
+						},
+						{ id: '2', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
+						{ id: '3', name: 'Salt', nameDa: 'Salt', percentage: 2.7, type: 'salt' }
+					]
+				}
 			],
-			schedule: { stages: [], totalTime: 0 }
+			timeline: []
 		};
 
 		const result = validateRecipe(recipe);
@@ -312,9 +336,15 @@ describe("Baker's Percentage - Recipe Validation", () => {
 			category: 'direct',
 			baseWeight: 270,
 			hydration: 65,
-			yieldPizzas: 4,
-			ingredients: [{ id: '1', name: 'Water', nameDa: 'Vand', percentage: 100, type: 'water' }],
-			schedule: { stages: [], totalTime: 0 }
+			mixingSteps: [
+				{
+					id: 'main',
+					name: 'Main dough',
+					nameDa: 'Hoveddej',
+					ingredients: [{ id: '1', name: 'Water', nameDa: 'Vand', percentage: 100, type: 'water' }]
+				}
+			],
+			timeline: []
 		};
 
 		const result = validateRecipe(recipe);
@@ -330,9 +360,22 @@ describe("Baker's Percentage - Recipe Validation", () => {
 			category: 'direct',
 			baseWeight: 270,
 			hydration: 65,
-			yieldPizzas: 4,
-			ingredients: [{ id: '1', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' }],
-			schedule: { stages: [], totalTime: 0 }
+			mixingSteps: [
+				{
+					id: 'main',
+					name: 'Main dough',
+					nameDa: 'Hoveddej',
+					ingredients: [
+						{
+							id: '1',
+							percentage: 100,
+							type: 'flour',
+							flourType: 'tipo-00'
+						}
+					]
+				}
+			],
+			timeline: []
 		};
 
 		const result = validateRecipe(recipe);
@@ -348,12 +391,23 @@ describe("Baker's Percentage - Recipe Validation", () => {
 			category: 'direct',
 			baseWeight: 270,
 			hydration: 65,
-			yieldPizzas: 4,
-			ingredients: [
-				{ id: '1', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
-				{ id: '2', name: 'Water', nameDa: 'Vand', percentage: 10, type: 'water' }
+			mixingSteps: [
+				{
+					id: 'main',
+					name: 'Main dough',
+					nameDa: 'Hoveddej',
+					ingredients: [
+						{
+							id: '1',
+							percentage: 100,
+							type: 'flour',
+							flourType: 'tipo-00'
+						},
+						{ id: '2', name: 'Water', nameDa: 'Vand', percentage: 10, type: 'water' }
+					]
+				}
 			],
-			schedule: { stages: [], totalTime: 0 }
+			timeline: []
 		};
 
 		const result = validateRecipe(recipe);

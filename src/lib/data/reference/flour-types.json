@@ -1,30 +1,30 @@
 [
 	{
-		"id": "flour-1",
+		"id": "caputo-fioreglut",
 		"name": "Caputo Fioreglut (gluten free)",
 		"nameDa": "Caputo Fioreglut (gluten free)",
-		"type": "other",
+		"type": "gluten-free",
 		"proteinMin": 1.0,
 		"proteinMax": 1.0
 	},
 	{
-		"id": "flour-2",
+		"id": "le5stagioni-glutenfree",
 		"name": "Le 5 Stagioni Gluten free",
 		"nameDa": "Le 5 Stagioni Gluten free",
-		"type": "other",
+		"type": "gluten-free",
 		"proteinMin": 2.0,
 		"proteinMax": 2.0
 	},
 	{
-		"id": "flour-3",
+		"id": "finax-glutenfri-roed",
 		"name": "Finax Glutenfrit melmix, RØD",
 		"nameDa": "Finax Glutenfrit melmix, RØD",
-		"type": "other",
+		"type": "gluten-free",
 		"proteinMin": 3.0,
 		"proteinMax": 3.0
 	},
 	{
-		"id": "flour-4",
+		"id": "caputo-speciale",
 		"name": "Caputo Speciale",
 		"nameDa": "Caputo Speciale",
 		"type": "tipo-0",
@@ -35,7 +35,7 @@
 		"notesDa": "4-24 timer"
 	},
 	{
-		"id": "flour-5",
+		"id": "caputo-classica",
 		"name": "Caputo Classica",
 		"nameDa": "Caputo Classica",
 		"type": "tipo-00",
@@ -46,7 +46,7 @@
 		"notesDa": "4-24 timer"
 	},
 	{
-		"id": "flour-6",
+		"id": "pivetti-incanto",
 		"name": "Molini Pivetti Incanto (Biga/Poolish starter)",
 		"nameDa": "Molini Pivetti Incanto (Biga/Poolish starter)",
 		"type": "tipo-0",
@@ -56,7 +56,7 @@
 		"notesDa": "18-48 timer"
 	},
 	{
-		"id": "flour-7",
+		"id": "pivetti-maggica",
 		"name": "Molini Pivetti Maggica (Deep Pan / Teglia)",
 		"nameDa": "Molini Pivetti Maggica (Deep Pan / Teglia)",
 		"type": "tipo-0",
@@ -66,7 +66,7 @@
 		"notesDa": "24-48 timer"
 	},
 	{
-		"id": "flour-8",
+		"id": "pivetti-nafavola-270",
 		"name": "Molini Pivetti Nafavola 270 (Napoletana)",
 		"nameDa": "Molini Pivetti Nafavola 270 (Napoletana)",
 		"type": "tipo-0",
@@ -76,7 +76,7 @@
 		"notesDa": "10-26 timer"
 	},
 	{
-		"id": "flour-9",
+		"id": "pivetti-nafavola-320",
 		"name": "Molini Pivetti Nafavola 320 (Napoletana)",
 		"nameDa": "Molini Pivetti Nafavola 320 (Napoletana)",
 		"type": "tipo-0",
@@ -86,7 +86,7 @@
 		"notesDa": "26-72 timer"
 	},
 	{
-		"id": "flour-10",
+		"id": "pivetti-sorbole",
 		"name": "Molini Pivetti Sorbole",
 		"nameDa": "Molini Pivetti Sorbole",
 		"type": "tipo-00",
@@ -96,7 +96,7 @@
 		"notesDa": "3-24 timer"
 	},
 	{
-		"id": "flour-11",
+		"id": "caputo-nuvola",
 		"name": "Caputo Nuvola (lilla)",
 		"nameDa": "Caputo Nuvola (lilla)",
 		"type": "tipo-0",
@@ -107,7 +107,7 @@
 		"notesDa": "24-36 timer"
 	},
 	{
-		"id": "flour-12",
+		"id": "caputo-pizzeria",
 		"name": "Caputo Pizzaria (rød)",
 		"nameDa": "Caputo Pizzaria (rød)",
 		"type": "tipo-00",
@@ -118,7 +118,7 @@
 		"notesDa": "8-24 timer"
 	},
 	{
-		"id": "flour-13",
+		"id": "tosca-farina-pizzeria",
 		"name": "Tosca Farina (by Valsemøllen) Pizzeria Grano Tenero.",
 		"nameDa": "Tosca Farina (by Valsemøllen) Pizzeria Grano Tenero.",
 		"type": "tipo-00",
@@ -129,7 +129,7 @@
 		"notesDa": "48-72 timer"
 	},
 	{
-		"id": "flour-14",
+		"id": "caputo-cuoco",
 		"name": "Caputo Cuoco / Saccorosso (rød)",
 		"nameDa": "Caputo Cuoco / Saccorosso (rød)",
 		"type": "tipo-00",
@@ -140,7 +140,7 @@
 		"notesDa": "24-48 timer"
 	},
 	{
-		"id": "flour-15",
+		"id": "le5stagioni-napoletana",
 		"name": "Le 5 Stagioni Pizza Napoletana (Red)",
 		"nameDa": "Le 5 Stagioni Pizza Napoletana (Red)",
 		"type": "tipo-00",
@@ -151,7 +151,7 @@
 		"notesDa": "24-48 timer"
 	},
 	{
-		"id": "flour-16",
+		"id": "caputo-nuvola-super",
 		"name": "Caputo Nuvola Super (lilla)",
 		"nameDa": "Caputo Nuvola Super (lilla)",
 		"type": "tipo-0",
@@ -162,7 +162,7 @@
 		"notesDa": "48-72 timer"
 	},
 	{
-		"id": "flour-17",
+		"id": "frumenta-manitoba",
 		"name": "Frumenta Manitoba",
 		"nameDa": "Frumenta Manitoba",
 		"type": "tipo-00",
@@ -171,7 +171,7 @@
 		"wValue": 400
 	},
 	{
-		"id": "flour-18",
+		"id": "caputo-americana",
 		"name": "Caputo '00' Americana",
 		"nameDa": "Caputo '00' Americana",
 		"type": "tipo-00",
@@ -182,7 +182,7 @@
 		"notesDa": "24-75 timer"
 	},
 	{
-		"id": "flour-19",
+		"id": "caputo-manitoba",
 		"name": "Caputo Manitoba",
 		"nameDa": "Caputo Manitoba",
 		"type": "tipo-0",
@@ -193,7 +193,7 @@
 		"notesDa": "24-75 timer"
 	},
 	{
-		"id": "flour-20",
+		"id": "sanfelice-tradizionale",
 		"name": "San Felice Tradizionale",
 		"nameDa": "San Felice Tradizionale",
 		"type": "tipo-00",
@@ -204,7 +204,7 @@
 		"notesDa": "8-16 timer ved 25°"
 	},
 	{
-		"id": "flour-21",
+		"id": "sanfelice-gold",
 		"name": "San Felice Gold",
 		"nameDa": "San Felice Gold",
 		"type": "tipo-00",

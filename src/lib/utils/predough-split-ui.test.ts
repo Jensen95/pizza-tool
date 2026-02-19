@@ -1,10 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import {
-	scaleRecipe,
-	isPredoughStage,
-	getOriginalPredoughRatio
-} from '$lib/utils/baker-percentage';
-import type { Recipe } from '$lib/types/recipe';
+import { scaleRecipe, isPredoughStep, getOriginalPredoughRatio } from '$lib/utils/baker-percentage';
+import type { Recipe } from '$lib/models/recipe.types';
 
 // Standard poolish recipe: 20% predough flour, 80% main flour
 const poolishRecipe: Recipe = {
@@ -14,58 +10,65 @@ const poolishRecipe: Recipe = {
 	category: 'poolish',
 	baseWeight: 270,
 	hydration: 65,
-	yieldPizzas: 4,
-	ingredients: [
+	mixingSteps: [
 		{
-			id: 'poolish-flour',
-			name: 'Poolish flour',
-			nameDa: 'Mel (poolish)',
-			percentage: 20,
-			type: 'flour',
-			stage: 'poolish'
+			id: 'poolish',
+			name: 'Poolish',
+			nameDa: 'Poolish',
+			predough: true,
+			ingredients: [
+				{
+					id: 'poolish-flour',
+					percentage: 20,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
+				{
+					id: 'poolish-water',
+					name: 'Poolish water',
+					nameDa: 'Vand (poolish)',
+					percentage: 20,
+					type: 'water'
+				},
+				{
+					id: 'poolish-yeast',
+					name: 'Poolish yeast',
+					nameDa: 'Gaer (poolish)',
+					percentage: 0.1,
+					type: 'yeast',
+					yeastType: 'fresh'
+				}
+			]
 		},
 		{
-			id: 'poolish-water',
-			name: 'Poolish water',
-			nameDa: 'Vand (poolish)',
-			percentage: 20,
-			type: 'water',
-			stage: 'poolish'
-		},
-		{
-			id: 'poolish-yeast',
-			name: 'Poolish yeast',
-			nameDa: 'Gaer (poolish)',
-			percentage: 0.1,
-			type: 'yeast',
-			stage: 'poolish'
-		},
-		{
-			id: 'main-flour',
-			name: 'Main dough flour',
-			nameDa: 'Mel (hoveddej)',
-			percentage: 80,
-			type: 'flour',
-			stage: 'main'
-		},
-		{
-			id: 'main-water',
-			name: 'Main dough water',
-			nameDa: 'Vand (hoveddej)',
-			percentage: 45,
-			type: 'water',
-			stage: 'main'
-		},
-		{
-			id: 'main-salt',
-			name: 'Salt',
-			nameDa: 'Salt',
-			percentage: 2.5,
-			type: 'salt',
-			stage: 'main'
+			id: 'main',
+			name: 'Main dough',
+			nameDa: 'Hoveddej',
+			ingredients: [
+				{
+					id: 'main-flour',
+					percentage: 80,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
+				{
+					id: 'main-water',
+					name: 'Main dough water',
+					nameDa: 'Vand (hoveddej)',
+					percentage: 45,
+					type: 'water'
+				},
+				{
+					id: 'main-salt',
+					name: 'Salt',
+					nameDa: 'Salt',
+					percentage: 2.5,
+					type: 'salt'
+				}
+			]
 		}
 	],
-	schedule: { stages: [], totalTime: 0 }
+	timeline: []
 };
 
 // 100% biga recipe: all flour in predough, no main flour
@@ -76,50 +79,59 @@ const biga100Recipe: Recipe = {
 	category: 'biga',
 	baseWeight: 270,
 	hydration: 65,
-	yieldPizzas: 4,
-	ingredients: [
+	mixingSteps: [
 		{
-			id: 'biga-flour',
-			name: 'Biga flour',
-			nameDa: 'Mel (biga)',
-			percentage: 100,
-			type: 'flour',
-			stage: 'biga'
+			id: 'biga',
+			name: 'Biga',
+			nameDa: 'Biga',
+			predough: true,
+			ingredients: [
+				{
+					id: 'biga-flour',
+					percentage: 100,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
+				{
+					id: 'biga-water',
+					name: 'Biga water',
+					nameDa: 'Vand (biga)',
+					percentage: 44,
+					type: 'water'
+				},
+				{
+					id: 'biga-yeast',
+					name: 'Biga yeast',
+					nameDa: 'Gaer (biga)',
+					percentage: 0.1,
+					type: 'yeast',
+					yeastType: 'fresh'
+				}
+			]
 		},
 		{
-			id: 'biga-water',
-			name: 'Biga water',
-			nameDa: 'Vand (biga)',
-			percentage: 44,
-			type: 'water',
-			stage: 'biga'
-		},
-		{
-			id: 'biga-yeast',
-			name: 'Biga yeast',
-			nameDa: 'Gaer (biga)',
-			percentage: 0.1,
-			type: 'yeast',
-			stage: 'biga'
-		},
-		{
-			id: 'main-water',
-			name: 'Main water',
-			nameDa: 'Vand (hoveddej)',
-			percentage: 21,
-			type: 'water',
-			stage: 'main'
-		},
-		{
-			id: 'main-salt',
-			name: 'Salt',
-			nameDa: 'Salt',
-			percentage: 2.7,
-			type: 'salt',
-			stage: 'main'
+			id: 'main',
+			name: 'Main dough',
+			nameDa: 'Hoveddej',
+			ingredients: [
+				{
+					id: 'main-water',
+					name: 'Main water',
+					nameDa: 'Vand (hoveddej)',
+					percentage: 21,
+					type: 'water'
+				},
+				{
+					id: 'main-salt',
+					name: 'Salt',
+					nameDa: 'Salt',
+					percentage: 2.7,
+					type: 'salt'
+				}
+			]
 		}
 	],
-	schedule: { stages: [], totalTime: 0 }
+	timeline: []
 };
 
 const blendedPoolishRecipe: Recipe = {
@@ -129,74 +141,77 @@ const blendedPoolishRecipe: Recipe = {
 	category: 'poolish',
 	baseWeight: 270,
 	hydration: 65,
-	yieldPizzas: 4,
-	ingredients: [
+	mixingSteps: [
 		{
-			id: 'poolish-flour-a',
-			name: 'Poolish flour A',
-			nameDa: 'Poolish mel A',
-			percentage: 12,
-			type: 'flour',
-			stage: 'poolish'
+			id: 'poolish',
+			name: 'Poolish',
+			nameDa: 'Poolish',
+			predough: true,
+			ingredients: [
+				{
+					id: 'poolish-flour-a',
+					percentage: 12,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
+				{
+					id: 'poolish-flour-b',
+					percentage: 8,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
+				{
+					id: 'poolish-water',
+					name: 'Poolish water',
+					nameDa: 'Vand (poolish)',
+					percentage: 20,
+					type: 'water'
+				},
+				{
+					id: 'poolish-yeast',
+					name: 'Poolish yeast',
+					nameDa: 'Gaer (poolish)',
+					percentage: 0.1,
+					type: 'yeast',
+					yeastType: 'fresh'
+				}
+			]
 		},
 		{
-			id: 'poolish-flour-b',
-			name: 'Poolish flour B',
-			nameDa: 'Poolish mel B',
-			percentage: 8,
-			type: 'flour',
-			stage: 'poolish'
-		},
-		{
-			id: 'poolish-water',
-			name: 'Poolish water',
-			nameDa: 'Vand (poolish)',
-			percentage: 20,
-			type: 'water',
-			stage: 'poolish'
-		},
-		{
-			id: 'poolish-yeast',
-			name: 'Poolish yeast',
-			nameDa: 'Gaer (poolish)',
-			percentage: 0.1,
-			type: 'yeast',
-			stage: 'poolish'
-		},
-		{
-			id: 'main-flour-a',
-			name: 'Main flour A',
-			nameDa: 'Mel A (hoveddej)',
-			percentage: 60,
-			type: 'flour',
-			stage: 'main'
-		},
-		{
-			id: 'main-flour-b',
-			name: 'Main flour B',
-			nameDa: 'Mel B (hoveddej)',
-			percentage: 20,
-			type: 'flour',
-			stage: 'main'
-		},
-		{
-			id: 'main-water',
-			name: 'Main dough water',
-			nameDa: 'Vand (hoveddej)',
-			percentage: 45,
-			type: 'water',
-			stage: 'main'
-		},
-		{
-			id: 'main-salt',
-			name: 'Salt',
-			nameDa: 'Salt',
-			percentage: 2.5,
-			type: 'salt',
-			stage: 'main'
+			id: 'main',
+			name: 'Main dough',
+			nameDa: 'Hoveddej',
+			ingredients: [
+				{
+					id: 'main-flour-a',
+					percentage: 60,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
+				{
+					id: 'main-flour-b',
+					percentage: 20,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
+				{
+					id: 'main-water',
+					name: 'Main dough water',
+					nameDa: 'Vand (hoveddej)',
+					percentage: 45,
+					type: 'water'
+				},
+				{
+					id: 'main-salt',
+					name: 'Salt',
+					nameDa: 'Salt',
+					percentage: 2.5,
+					type: 'salt'
+				}
+			]
 		}
 	],
-	schedule: { stages: [], totalTime: 0 }
+	timeline: []
 };
 
 const defaultInput = { numberOfPizzas: 4, doughBallWeight: 270 };
@@ -207,7 +222,7 @@ describe('Predough flour split - UI data layer', () => {
 			const result = scaleRecipe(poolishRecipe, defaultInput);
 
 			const predoughFlourPercent = result.scaledIngredients
-				.filter((i) => i.type === 'flour' && isPredoughStage(i.stage))
+				.filter((i) => i.type === 'flour' && isPredoughStep(poolishRecipe, i.mixingStepId))
 				.reduce((sum, i) => sum + i.percentage, 0);
 
 			expect(predoughFlourPercent).toBe(20);
@@ -217,7 +232,7 @@ describe('Predough flour split - UI data layer', () => {
 			const result = scaleRecipe(poolishRecipe, defaultInput);
 
 			const predoughFlourWeight = result.scaledIngredients
-				.filter((i) => i.type === 'flour' && isPredoughStage(i.stage))
+				.filter((i) => i.type === 'flour' && isPredoughStep(poolishRecipe, i.mixingStepId))
 				.reduce((sum, i) => sum + i.weight, 0);
 
 			// Predough flour should be 20% of total flour
@@ -231,10 +246,10 @@ describe('Predough flour split - UI data layer', () => {
 			});
 
 			const predoughFlour = result.scaledIngredients.find(
-				(i) => i.type === 'flour' && isPredoughStage(i.stage)
+				(i) => i.type === 'flour' && isPredoughStep(poolishRecipe, i.mixingStepId)
 			);
 			const mainFlour = result.scaledIngredients.find(
-				(i) => i.type === 'flour' && !isPredoughStage(i.stage)
+				(i) => i.type === 'flour' && !isPredoughStep(poolishRecipe, i.mixingStepId)
 			);
 
 			// Predough flour should now be 40% of total
@@ -352,24 +367,29 @@ describe('Predough flour split - UI data layer', () => {
 				category: 'direct',
 				baseWeight: 270,
 				hydration: 65,
-				yieldPizzas: 4,
-				ingredients: [
+				mixingSteps: [
 					{
-						id: 'flour',
-						name: 'Flour',
-						nameDa: 'Mel',
-						percentage: 100,
-						type: 'flour'
-					},
-					{
-						id: 'water',
-						name: 'Water',
-						nameDa: 'Vand',
-						percentage: 65,
-						type: 'water'
+						id: 'main',
+						name: 'Main dough',
+						nameDa: 'Hoveddej',
+						ingredients: [
+							{
+								id: 'flour',
+								percentage: 100,
+								type: 'flour',
+								flourType: 'tipo-00'
+							},
+							{
+								id: 'water',
+								name: 'Water',
+								nameDa: 'Vand',
+								percentage: 65,
+								type: 'water'
+							}
+						]
 					}
 				],
-				schedule: { stages: [], totalTime: 0 }
+				timeline: []
 			};
 
 			const ratio = getOriginalPredoughRatio(directRecipe);
@@ -441,10 +461,10 @@ describe('Predough flour split - UI data layer', () => {
 			});
 
 			const predoughFlours = result.scaledIngredients.filter(
-				(i) => i.type === 'flour' && isPredoughStage(i.stage)
+				(i) => i.type === 'flour' && isPredoughStep(blendedPoolishRecipe, i.mixingStepId)
 			);
 			const mainFlours = result.scaledIngredients.filter(
-				(i) => i.type === 'flour' && !isPredoughStage(i.stage)
+				(i) => i.type === 'flour' && !isPredoughStep(blendedPoolishRecipe, i.mixingStepId)
 			);
 
 			const predoughTotal = predoughFlours.reduce((sum, f) => sum + f.percentage, 0);
@@ -463,28 +483,6 @@ describe('Predough flour split - UI data layer', () => {
 			);
 			expect(mainFlours.find((f) => f.id === 'main-flour-a')?.stagePercentage).toBeCloseTo(75, 2);
 			expect(mainFlours.find((f) => f.id === 'main-flour-b')?.stagePercentage).toBeCloseTo(25, 2);
-		});
-	});
-
-	describe('isPredoughStage helper', () => {
-		it('should identify poolish as predough', () => {
-			expect(isPredoughStage('poolish')).toBe(true);
-		});
-
-		it('should identify biga as predough', () => {
-			expect(isPredoughStage('biga')).toBe(true);
-		});
-
-		it('should identify preferment as predough', () => {
-			expect(isPredoughStage('preferment')).toBe(true);
-		});
-
-		it('should not identify main as predough', () => {
-			expect(isPredoughStage('main')).toBe(false);
-		});
-
-		it('should not identify undefined as predough', () => {
-			expect(isPredoughStage(undefined)).toBe(false);
 		});
 	});
 });

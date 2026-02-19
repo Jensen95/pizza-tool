@@ -1,0 +1,13 @@
+{
+	"formulaDa": "Vandtemperatur = (Ønsket dejtemp × 2) − Meltemp − (Lav hast. min × 1) − (Mellem hast. min × 2)",
+	"frictionHeat": {
+		"lowSpeedPerMin": 1,
+		"mediumSpeedPerMin": 2
+	},
+	"targetDoughTemp": {
+		"min": 24,
+		"max": 27,
+		"notesDa": "Hvedemel. Bigadej typisk 18-20°C."
+	},
+	"exampleDa": "Eks: Ønsket dejtemp 25°C, meltemp 22°C, 5 min lav, 5 min mellem → Vand = (25×2) − 22 − (5×1) − (5×2) = 50 − 22 − 5 − 10 = 13°C"
+}

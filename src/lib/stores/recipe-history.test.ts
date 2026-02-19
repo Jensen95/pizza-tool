@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { get } from 'svelte/store';
 import { calculator, recipeHistory } from '$lib/stores';
-import type { Recipe } from '$lib/types';
+import type { Recipe } from '$lib/models';
 import * as storage from '$lib/utils/storage';
 
 const baseRecipe: Recipe = {
@@ -11,58 +11,65 @@ const baseRecipe: Recipe = {
 	category: 'poolish',
 	baseWeight: 270,
 	hydration: 65,
-	yieldPizzas: 4,
-	ingredients: [
+	mixingSteps: [
 		{
-			id: 'poolish-flour',
-			name: 'Poolish flour',
-			nameDa: 'Poolish mel',
-			percentage: 20,
-			type: 'flour',
-			stage: 'poolish'
+			id: 'poolish',
+			name: 'Poolish',
+			nameDa: 'Poolish',
+			predough: true,
+			ingredients: [
+				{
+					id: 'poolish-flour',
+					percentage: 20,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
+				{
+					id: 'poolish-water',
+					name: 'Poolish water',
+					nameDa: 'Poolish vand',
+					percentage: 20,
+					type: 'water'
+				},
+				{
+					id: 'poolish-yeast',
+					name: 'Poolish yeast',
+					nameDa: 'Poolish gær',
+					percentage: 0.1,
+					type: 'yeast',
+					yeastType: 'fresh'
+				}
+			]
 		},
 		{
-			id: 'poolish-water',
-			name: 'Poolish water',
-			nameDa: 'Poolish vand',
-			percentage: 20,
-			type: 'water',
-			stage: 'poolish'
-		},
-		{
-			id: 'poolish-yeast',
-			name: 'Poolish yeast',
-			nameDa: 'Poolish gær',
-			percentage: 0.1,
-			type: 'yeast',
-			stage: 'poolish'
-		},
-		{
-			id: 'main-flour',
-			name: 'Main flour',
-			nameDa: 'Mel',
-			percentage: 80,
-			type: 'flour',
-			stage: 'main'
-		},
-		{
-			id: 'main-water',
-			name: 'Main water',
-			nameDa: 'Vand',
-			percentage: 45,
-			type: 'water',
-			stage: 'main'
-		},
-		{
-			id: 'salt',
-			name: 'Salt',
-			nameDa: 'Salt',
-			percentage: 2.5,
-			type: 'salt',
-			stage: 'main'
+			id: 'main',
+			name: 'Main dough',
+			nameDa: 'Hoveddej',
+			ingredients: [
+				{
+					id: 'main-flour',
+					percentage: 80,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
+				{
+					id: 'main-water',
+					name: 'Main water',
+					nameDa: 'Vand',
+					percentage: 45,
+					type: 'water'
+				},
+				{
+					id: 'salt',
+					name: 'Salt',
+					nameDa: 'Salt',
+					percentage: 2.5,
+					type: 'salt'
+				}
+			]
 		}
 	],
-	schedule: { stages: [], totalTime: 0 }
+	timeline: []
 };
 
 beforeEach(() => {
@@ -101,7 +108,7 @@ describe('recipe history', () => {
 		expect(entry.ingredients.salt).toBeCloseTo(3.2);
 
 		calculator.resetAllCustomizations();
-		calculator.setNumberOfPizzas(baseRecipe.yieldPizzas);
+		calculator.setNumberOfPizzas(4);
 		calculator.setDoughBallWeight(baseRecipe.baseWeight);
 		calculator.resetHydration();
 		calculator.setPredoughRatio(null);

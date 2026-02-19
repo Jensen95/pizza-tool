@@ -1,0 +1,66 @@
+{
+	"hydrationByStyle": [
+		{
+			"style": "Chicago Deep Dish",
+			"styleDa": "Chicago Deep Dish",
+			"hydrationMin": 55,
+			"hydrationMax": 60
+		},
+		{ "style": "Detroit", "styleDa": "Detroit", "hydrationMin": 65, "hydrationMax": 75 },
+		{ "style": "Neapolitan", "styleDa": "Napolitansk", "hydrationMin": 58, "hydrationMax": 70 },
+		{ "style": "New York", "styleDa": "New York", "hydrationMin": 55, "hydrationMax": 65 },
+		{
+			"style": "Roman (Tonda)",
+			"styleDa": "Romersk (Tonda)",
+			"hydrationMin": 65,
+			"hydrationMax": 70
+		},
+		{
+			"style": "Roman (Teglia)",
+			"styleDa": "Romersk (Teglia)",
+			"hydrationMin": 70,
+			"hydrationMax": 85
+		},
+		{ "style": "Sicilian", "styleDa": "Siciliansk", "hydrationMin": 65, "hydrationMax": 75 }
+	],
+	"wStrengthTiers": [
+		{
+			"tierDa": "Svagt mel",
+			"wMin": 90,
+			"wMax": 160,
+			"proteinMin": 9,
+			"proteinMax": 10.5,
+			"useDa": "Kager, kiks, småkager"
+		},
+		{
+			"tierDa": "Medium mel",
+			"wMin": 160,
+			"wMax": 250,
+			"proteinMin": 10.5,
+			"proteinMax": 12,
+			"useDa": "Brød, focaccia, kort fermentering (4-12t)"
+		},
+		{
+			"tierDa": "Stærkt mel",
+			"wMin": 250,
+			"wMax": 310,
+			"proteinMin": 12,
+			"proteinMax": 13.5,
+			"useDa": "Pizza, lang fermentering (12-48t), biga, poolish"
+		},
+		{
+			"tierDa": "Meget stærkt mel (Manitoba)",
+			"wMin": 310,
+			"wMax": 400,
+			"proteinMin": 13.5,
+			"proteinMax": 15,
+			"useDa": "Meget lang fermentering (48-72t+), panettone, croissant"
+		}
+	],
+	"proteinToW": [
+		{ "proteinMin": 9, "proteinMax": 10.5, "wMin": 90, "wMax": 160 },
+		{ "proteinMin": 10.5, "proteinMax": 12, "wMin": 160, "wMax": 250 },
+		{ "proteinMin": 12, "proteinMax": 13.5, "wMin": 250, "wMax": 310 },
+		{ "proteinMin": 13.5, "proteinMax": 15, "wMin": 310, "wMax": 400 }
+	]
+}

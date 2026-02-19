@@ -1,13 +1,18 @@
 <script lang="ts">
-	import type { Recipe } from '$lib/types';
-	import { categoryLabels } from '$lib/types';
-	import { formatDuration } from '$lib/types/timer';
+	import type { Recipe } from '$lib/models';
+	import { categoryLabels } from '$lib/models';
+	import { formatDuration } from '$lib/models/timer.types';
 
 	let { recipe }: { recipe: Recipe } = $props();
 
 	let categoryLabel = $derived(categoryLabels[recipe.category]);
-	let totalTimeFormatted = $derived(formatDuration(recipe.schedule.totalTime));
-	let ingredientCount = $derived(recipe.ingredients.length);
+	let totalTime = $derived(
+		recipe.timeline.filter((s) => s.duration).reduce((sum, s) => sum + (s.duration || 0), 0)
+	);
+	let totalTimeFormatted = $derived(formatDuration(totalTime));
+	let ingredientCount = $derived(
+		recipe.mixingSteps.reduce((sum, step) => sum + step.ingredients.length, 0)
+	);
 </script>
 
 <a href="/recipe/{recipe.id}" class="recipe-card">

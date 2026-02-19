@@ -6,6 +6,7 @@
 	import FermentationSchedule from '$lib/components/recipe/FermentationSchedule.svelte';
 	import KeepAwakeToggle from '$lib/components/timer/KeepAwakeToggle.svelte';
 	import type { RecipeHistoryEntry } from '$lib/stores';
+	import { getAllIngredients } from '$lib/utils/baker-percentage';
 
 	let recipeId = $derived(page.params.id);
 	let recipe = $derived(recipeId ? getRecipeById(recipeId) : undefined);
@@ -35,8 +36,9 @@
 		if (!recipe) return [];
 
 		const changes: { name: string; original: number; custom: number }[] = [];
+		const allIngredients = getAllIngredients(recipe);
 		for (const [ingredientId, customValue] of Object.entries(entry.ingredients)) {
-			const ingredient = recipe.ingredients.find((i) => i.id === ingredientId);
+			const ingredient = allIngredients.find((i) => i.id === ingredientId);
 			if (ingredient) {
 				changes.push({
 					name: ingredient.nameDa,

@@ -1,13 +1,14 @@
 <script lang="ts">
-	import type { Recipe, YeastInfo } from '$lib/types';
+	import type { Recipe, YeastInfo } from '$lib/models';
 	import { calculator, totalWeight, flourWeight, predoughRatio, recipeHistory } from '$lib/stores';
 	import {
 		formatWeight,
 		getOriginalPredoughRatio as getRecipePredoughRatio,
-		calculateHydration
+		calculateHydration,
+		getAllIngredients
 	} from '$lib/utils/baker-percentage';
-	import type { FlourTypeOption, FlourType } from '$lib/types';
-	import { flourTypeLabels, yeastTypeLabels } from '$lib/types';
+	import type { FlourTypeOption, FlourType } from '$lib/models';
+	import { flourTypeLabels, yeastTypeLabels } from '$lib/models';
 	import { yeastInfo } from '$lib/data/reference';
 	import { getRecipeYeastType } from '$lib/utils/yeast';
 
@@ -54,13 +55,13 @@
 	let originalHydration = $derived(recipe.hydration);
 	let effectiveHydration = $derived.by(() => {
 		if ($calculator.hydration !== null) return $calculator.hydration;
-		return calculateHydration(recipe.ingredients);
+		return calculateHydration(getAllIngredients(recipe));
 	});
 	let hydrationChanged = $derived(
 		$calculator.hydration !== null && $calculator.hydration !== originalHydration
 	);
 
-	let hasYeast = $derived(recipe.ingredients.some((ing) => ing.type === 'yeast'));
+	let hasYeast = $derived(getAllIngredients(recipe).some((ing) => ing.type === 'yeast'));
 	let baseYeastType = $derived(getRecipeYeastType(recipe));
 	let selectedYeastType = $derived($calculator.yeastType ?? baseYeastType);
 
@@ -77,7 +78,7 @@
 	let flourStageTotals = $derived.by(() => {
 		const totals: Record<string, number> = {};
 		for (const blend of flourBlends) {
-			totals[blend.stage] = blend.flours.reduce((sum, flour) => sum + flour.percentage, 0);
+			totals[blend.mixingStepId] = blend.flours.reduce((sum, flour) => sum + flour.percentage, 0);
 		}
 		return totals;
 	});
@@ -94,7 +95,7 @@
 		void $calculator.scaledIngredients;
 		const map: Record<string, FlourTypeOption[]> = {};
 		for (const blend of flourBlends) {
-			map[blend.stage] = calculator.getAvailableFlourTypes(blend.stage);
+			map[blend.mixingStepId] = calculator.getAvailableFlourTypes(blend.mixingStepId);
 		}
 		return map;
 	});
@@ -114,18 +115,14 @@
 		return calculator.hasCustomizations();
 	});
 
-	let hasRecipeChanges = $derived(
-		hasCustomizations ||
-			numberOfPizzas !== recipe.yieldPizzas ||
-			doughBallWeight !== recipe.baseWeight
-	);
+	let hasRecipeChanges = $derived(hasCustomizations || doughBallWeight !== recipe.baseWeight);
 
 	let fullGrainPercentage = $derived.by(() => {
 		let total = 0;
 		let fullGrain = 0;
 
 		for (const blend of flourBlends) {
-			const stageCustoms = customFloursByStage[blend.stage] || [];
+			const stageCustoms = customFloursByStage[blend.mixingStepId] || [];
 			for (const flour of blend.flours) {
 				const customMatch = stageCustoms.find((f) => f.flourId === flour.id);
 				const flourTypeId = customMatch?.flourTypeId || flour.id;
@@ -333,7 +330,7 @@
 		</div>
 
 		<div class="input-group">
-			<label class="label" for="ball-weight">Kuglevaegt (g)</label>
+			<label class="label" for="ball-weight">Kuglevægt (g)</label>
 			<div class="input-with-buttons">
 				<button
 					class="btn btn-secondary"
@@ -452,7 +449,9 @@
 						{#each flourBlends as blend}
 							<div class="flour-blend">
 								<div class="flour-stage">
-									<span class="stage-chip">{stageLabels[blend.stage] || blend.stage}</span>
+									<span class="stage-chip"
+										>{stageLabels[blend.mixingStepId] || blend.mixingStepId}</span
+									>
 								</div>
 								{#each blend.flours as flour}
 									<div class="flour-blend-item">
@@ -462,7 +461,7 @@
 											</label>
 											<button
 												class="btn-icon flour-remove"
-												onclick={() => removeFlour(blend.stage, flour.id)}
+												onclick={() => removeFlour(blend.mixingStepId, flour.id)}
 												disabled={blend.flours.length <= 1}
 												title="Fjern meltype"
 											>
@@ -474,10 +473,10 @@
 												id="flour-{flour.id}"
 												type="number"
 												class="input compact-input"
-												value={getStageFlourPercent(flour, blend.stage).toFixed(1)}
+												value={getStageFlourPercent(flour, blend.mixingStepId).toFixed(1)}
 												onchange={(e) =>
 													handleFlourBlendChange(
-														blend.stage,
+														blend.mixingStepId,
 														flour.id,
 														(e.target as HTMLInputElement).value
 													)}
@@ -492,46 +491,50 @@
 								<div class="flour-add">
 									<select
 										class="input select-input"
-										id="add-flour-{blend.stage}"
-										value={selectedFlourTypes[blend.stage] ?? ''}
+										id="add-flour-{blend.mixingStepId}"
+										value={selectedFlourTypes[blend.mixingStepId] ?? ''}
 										onchange={(e) =>
-											setSelectedFlourType(blend.stage, (e.target as HTMLSelectElement).value)}
+											setSelectedFlourType(
+												blend.mixingStepId,
+												(e.target as HTMLSelectElement).value
+											)}
 									>
 										<option value="">Vælg meltype</option>
-										{#each availableFlourTypesByStage[blend.stage] ?? [] as flourType}
+										{#each availableFlourTypesByStage[blend.mixingStepId] ?? [] as flourType}
 											<option value={flourType.id}>{flourType.nameDa}</option>
 										{/each}
 										<option value={customFlourOption}>Anden meltype...</option>
 									</select>
 									<button
 										class="btn btn-secondary add-flour-btn"
-										onclick={() => handleAddFlour(blend.stage)}
-										disabled={isAddFlourDisabled(blend.stage)}
+										onclick={() => handleAddFlour(blend.mixingStepId)}
+										disabled={isAddFlourDisabled(blend.mixingStepId)}
 										title="Tilføj meltype"
 									>
 										+
 									</button>
 								</div>
-								{#if shouldShowCustomFlourFields(blend.stage)}
+								{#if shouldShowCustomFlourFields(blend.mixingStepId)}
 									<div class="custom-flour-fields">
 										<input
 											type="text"
 											class="input"
 											placeholder="Caputo Nuvola Super"
-											value={customFlourNames[blend.stage] ?? ''}
+											value={customFlourNames[blend.mixingStepId] ?? ''}
 											oninput={(e) =>
 												(customFlourNames = {
 													...customFlourNames,
-													[blend.stage]: (e.target as HTMLInputElement).value
+													[blend.mixingStepId]: (e.target as HTMLInputElement).value
 												})}
 										/>
 										<select
 											class="input select-input"
-											value={customFlourTypes[blend.stage] ?? 'other'}
+											value={customFlourTypes[blend.mixingStepId] ?? 'other'}
 											onchange={(e) =>
 												(customFlourTypes = {
 													...customFlourTypes,
-													[blend.stage]: (e.target as HTMLSelectElement).value as FlourType['type']
+													[blend.mixingStepId]: (e.target as HTMLSelectElement)
+														.value as FlourType['type']
 												})}
 										>
 											{#each Object.entries(flourTypeLabels) as [type, label]}

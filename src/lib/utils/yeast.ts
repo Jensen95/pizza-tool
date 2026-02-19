@@ -1,6 +1,8 @@
-import type { Recipe } from '$lib/types/recipe';
-import type { YeastInfo } from '$lib/types/reference';
+// ABOUTME: Yeast type detection and conversion between fresh, active-dry, and instant
+import type { Recipe } from '$lib/models/recipe.types';
+import type { YeastInfo } from '$lib/models/reference.types';
 import { yeastInfo } from '$lib/data/reference';
+import { getAllIngredients } from './baker-percentage';
 
 const yeastByType = new Map<YeastInfo['type'], YeastInfo>(
 	yeastInfo.map((info) => [info.type, info])
@@ -26,14 +28,12 @@ export function convertYeastPercentage(
 }
 
 export function getRecipeYeastType(recipe: Recipe): YeastInfo['type'] {
-	if (recipe.yeastType) return recipe.yeastType;
+	const allIngredients = getAllIngredients(recipe);
+	const yeastIngredients = allIngredients.filter((ing) => ing.type === 'yeast');
 
-	const yeastIngredients = recipe.ingredients.filter((ing) => ing.type === 'yeast');
+	// Use explicit yeastType from ingredient
 	for (const ing of yeastIngredients) {
-		const name = ing.name.toLowerCase();
-		const nameDa = ing.nameDa.toLowerCase();
-		if (name.includes('instant') || nameDa.includes('instant')) return 'instant';
-		if (name.includes('dry') || nameDa.includes('tørgær')) return 'active-dry';
+		if (ing.type === 'yeast' && ing.yeastType) return ing.yeastType;
 	}
 
 	return 'fresh';

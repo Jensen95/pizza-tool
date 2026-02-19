@@ -1,6 +1,7 @@
+<!-- ABOUTME: Flour types cards + hydration-by-style, W-strength, protein-to-W reference tables -->
 <script lang="ts">
-	import { flourTypes } from '$lib/data/reference';
-	import { flourTypeLabels } from '$lib/types';
+	import { flourTypes, flourReference } from '$lib/data/reference';
+	import { flourTypeLabels } from '$lib/models';
 
 	let sortedFlours = $derived([...flourTypes].sort((a, b) => a.proteinMin - b.proteinMin));
 </script>
@@ -45,6 +46,70 @@
 				</div>
 			</div>
 		{/each}
+	</div>
+
+	<h3 class="section-heading">Hydrering efter stil</h3>
+	<div class="table-wrapper">
+		<table class="ref-table">
+			<thead>
+				<tr>
+					<th>Stil</th>
+					<th>Hydrering</th>
+				</tr>
+			</thead>
+			<tbody>
+				{#each flourReference.hydrationByStyle as row}
+					<tr>
+						<td>{row.styleDa}</td>
+						<td>{row.hydrationMin}-{row.hydrationMax}%</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</div>
+
+	<h3 class="section-heading">W-styrke klassifikation</h3>
+	<div class="table-wrapper">
+		<table class="ref-table">
+			<thead>
+				<tr>
+					<th>Kategori</th>
+					<th>W-værdi</th>
+					<th>Protein</th>
+					<th>Anvendelse</th>
+				</tr>
+			</thead>
+			<tbody>
+				{#each flourReference.wStrengthTiers as tier}
+					<tr>
+						<td>{tier.tierDa}</td>
+						<td>{tier.wMin}-{tier.wMax}</td>
+						<td>{tier.proteinMin}-{tier.proteinMax}%</td>
+						<td>{tier.useDa}</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</div>
+
+	<h3 class="section-heading">Protein → W-værdi</h3>
+	<div class="table-wrapper">
+		<table class="ref-table">
+			<thead>
+				<tr>
+					<th>Protein</th>
+					<th>W-værdi</th>
+				</tr>
+			</thead>
+			<tbody>
+				{#each flourReference.proteinToW as row}
+					<tr>
+						<td>{row.proteinMin}-{row.proteinMax}%</td>
+						<td>{row.wMin}-{row.wMax}</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
 	</div>
 </div>
 
@@ -102,5 +167,47 @@
 
 	.detail-value {
 		color: var(--color-text);
+	}
+
+	.section-heading {
+		margin: var(--spacing-md) 0 0;
+		font-size: var(--font-size-md);
+		color: var(--color-primary);
+	}
+
+	.table-wrapper {
+		overflow-x: auto;
+	}
+
+	.ref-table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: var(--font-size-sm);
+		background: var(--color-background);
+		border-radius: var(--radius-md);
+		overflow: hidden;
+	}
+
+	.ref-table th,
+	.ref-table td {
+		padding: var(--spacing-sm) var(--spacing-md);
+		text-align: left;
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.ref-table th {
+		font-weight: 600;
+		color: var(--color-text-secondary);
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		font-size: var(--font-size-xs, 0.75rem);
+	}
+
+	.ref-table td {
+		color: var(--color-text);
+	}
+
+	.ref-table tbody tr:last-child td {
+		border-bottom: none;
 	}
 </style>

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { Recipe } from '$lib/types';
-	import { categoryLabels } from '$lib/types';
-	import { formatDuration } from '$lib/types/timer';
+	import type { Recipe } from '$lib/models';
+	import { categoryLabels } from '$lib/models';
+	import { formatDuration } from '$lib/models/timer.types';
 
 	let { recipe }: { recipe: Recipe } = $props();
 
@@ -21,12 +21,16 @@
 				<span class="stat-label">Hydrering</span>
 			</div>
 			<div class="stat">
-				<span class="stat-value">{formatDuration(recipe.schedule.totalTime)}</span>
+				<span class="stat-value"
+					>{formatDuration(
+						recipe.timeline.filter((s) => s.duration).reduce((sum, s) => sum + (s.duration || 0), 0)
+					)}</span
+				>
 				<span class="stat-label">Total tid</span>
 			</div>
 			<div class="stat">
-				<span class="stat-value">{recipe.yieldPizzas}</span>
-				<span class="stat-label">Pizzaer</span>
+				<span class="stat-value">{recipe.baseWeight} g</span>
+				<span class="stat-label">Dejklump</span>
 			</div>
 		</div>
 	</section>

@@ -1,13 +1,13 @@
 import { writable, derived, get } from 'svelte/store';
-import type { Recipe, RecipeIngredient, FermentationStage } from '$lib/types/recipe';
+import type { Recipe } from '$lib/models/recipe.types';
 import type {
 	CalculatorState,
 	ScaledIngredient,
 	RecipeControls,
 	CustomFlour,
 	CustomFlourState
-} from '$lib/types/ingredient';
-import type { FlourTypeOption, YeastInfo } from '$lib/types/reference';
+} from '$lib/models/ingredient.types';
+import type { FlourCategory, FlourTypeOption, YeastInfo } from '$lib/models/reference.types';
 import {
 	scaleRecipe,
 	getOriginalPredoughRatio,
@@ -15,8 +15,11 @@ import {
 	rebalanceFlourBlend,
 	calculateHydration,
 	addFlourToStage,
-	removeFlourFromStage
+	removeFlourFromStage,
+	getAllIngredients,
+	recipeWithFlatIngredients
 } from '$lib/utils/baker-percentage';
+import type { FlatIngredient } from '$lib/utils/baker-percentage';
 import { flourTypes as flourTypeOptions } from '$lib/data/reference/flour-types';
 import { convertYeastPercentage, getRecipeYeastType } from '$lib/utils/yeast';
 import * as storage from '$lib/utils/storage';
@@ -72,8 +75,29 @@ function saveCustomIngredients(data: Record<string, Record<string, number>>) {
 	storage.set('custom-ingredients', data);
 }
 
+const FLOUR_ID_MIGRATION: Record<string, string> = {
+	'bread-flour': 'bread',
+	semola: 'semolina'
+};
+
 function loadCustomFlours(): CustomFlourState {
-	return storage.get<CustomFlourState>(CUSTOM_FLOUR_STORAGE_KEY, {});
+	const state = storage.get<CustomFlourState>(CUSTOM_FLOUR_STORAGE_KEY, {});
+	let migrated = false;
+	for (const recipeFlours of Object.values(state)) {
+		for (const flours of Object.values(recipeFlours)) {
+			for (const flour of flours) {
+				const newId = FLOUR_ID_MIGRATION[flour.flourTypeId];
+				if (newId) {
+					flour.flourTypeId = newId;
+					migrated = true;
+				}
+			}
+		}
+	}
+	if (migrated) {
+		storage.set(CUSTOM_FLOUR_STORAGE_KEY, state);
+	}
+	return state;
 }
 
 function saveCustomFlours(data: CustomFlourState) {
@@ -119,11 +143,11 @@ function createCalculatorStore() {
 		return get(yeastTypeOverridesStore)[recipe.id] ?? getRecipeYeastType(recipe);
 	}
 
-	function buildIngredientsWithCustomizations(recipe: Recipe): RecipeIngredient[] {
+	function buildIngredientsWithCustomizations(recipe: Recipe): FlatIngredient[] {
 		const customIngredients = get(customIngredientsStore)[recipe.id] || {};
 		const recipeCustomFlours = getCustomFloursForRecipe(recipe.id);
 
-		const baseIngredients = recipe.ingredients
+		const baseIngredients = getAllIngredients(recipe)
 			.map((ing) => {
 				const override = customIngredients[ing.id];
 				const percentage = override !== undefined ? override : ing.percentage;
@@ -131,23 +155,25 @@ function createCalculatorStore() {
 			})
 			.filter((ing) => !(ing.type === 'flour' && customIngredients[ing.id] === 0));
 
-		const customFlourIngredients: RecipeIngredient[] = [];
-		for (const [stage, flours] of Object.entries(recipeCustomFlours)) {
-			const stageKey = getStageKey(stage);
+		const customFlourIngredients: FlatIngredient[] = [];
+		for (const [mixingStepId, flours] of Object.entries(recipeCustomFlours)) {
+			const stageKey = getStageKey(mixingStepId);
 			for (const flour of flours) {
-				const flourType = flourTypeOptions.find((f) => f.id === flour.flourTypeId);
+				const flourTypeOption = flourTypeOptions.find((f) => f.id === flour.flourTypeId);
 				const override = customIngredients[flour.flourId];
 				const percentage = override !== undefined ? override : flour.percentage;
 				const customName = flour.customName;
-				const name = customName || flourType?.name || flour.flourTypeId;
-				const nameDa = customName || flourType?.nameDa || flourType?.name || flour.flourTypeId;
+				const name = customName || flourTypeOption?.name || flour.flourTypeId;
+				const nameDa =
+					customName || flourTypeOption?.nameDa || flourTypeOption?.name || flour.flourTypeId;
 				customFlourIngredients.push({
 					id: flour.flourId,
 					name,
 					nameDa,
 					percentage,
 					type: 'flour',
-					stage: stageKey === 'main' ? undefined : (stageKey as FermentationStage)
+					flourType: flour.flourType || (flour.flourTypeId as FlourCategory),
+					mixingStepId: stageKey
 				});
 			}
 		}
@@ -158,13 +184,13 @@ function createCalculatorStore() {
 	function persistStageFlours(
 		recipeId: string,
 		stage: string,
-		updatedIngredients: RecipeIngredient[],
+		updatedIngredients: FlatIngredient[],
 		removedFlourId?: string,
 		customFlourMeta: Record<string, Partial<CustomFlour>> = {}
 	) {
 		const stageKey = getStageKey(stage);
 		const stageFlours = updatedIngredients.filter(
-			(ing) => ing.type === 'flour' && getStageKey(ing.stage) === stageKey
+			(ing) => ing.type === 'flour' && ing.mixingStepId === stageKey
 		);
 
 		customIngredientsStore.update((state) => {
@@ -237,13 +263,11 @@ function createCalculatorStore() {
 		const customIngredients = get(customIngredientsStore)[currentRecipe.id] || {};
 		const recipeCustomFlours = getCustomFloursForRecipe(currentRecipe.id);
 		const recipeIngredients = buildIngredientsWithCustomizations(currentRecipe);
-		const recipeWithCustoms: Recipe = {
-			...currentRecipe,
-			ingredients: recipeIngredients.map((ing) => ({
-				...ing,
-				percentage: customIngredients[ing.id] ?? ing.percentage
-			}))
-		};
+		const customizedIngredients = recipeIngredients.map((ing) => ({
+			...ing,
+			percentage: customIngredients[ing.id] ?? ing.percentage
+		}));
+		const recipeWithCustoms = recipeWithFlatIngredients(currentRecipe, customizedIngredients);
 
 		// Get hydration override for this recipe
 		const hydrationOverride =
@@ -371,7 +395,9 @@ function createCalculatorStore() {
 					}
 
 					if (type === baseType) {
-						const baseYeasts = currentRecipe!.ingredients.filter((ing) => ing.type === 'yeast');
+						const baseYeasts = getAllIngredients(currentRecipe!).filter(
+							(ing) => ing.type === 'yeast'
+						);
 						for (const yeast of baseYeasts) {
 							const stored = recipeCustoms[yeast.id];
 							if (stored !== undefined && Math.abs(stored - yeast.percentage) < 0.0001) {
@@ -420,7 +446,7 @@ function createCalculatorStore() {
 			const hydrationOverride = get(hydrationOverridesStore)[currentRecipe.id];
 			if (hydrationOverride !== undefined) return hydrationOverride;
 
-			return calculateHydration(currentRecipe.ingredients);
+			return calculateHydration(getAllIngredients(currentRecipe));
 		},
 
 		/**
@@ -442,11 +468,16 @@ function createCalculatorStore() {
 			const flour = activeIngredients.find((i) => i.id === flourId && i.type === 'flour');
 			if (!flour) return;
 
-			const stage = getStageKey(flour.stage);
+			const mixingStepId = flour.mixingStepId;
 
-			const rebalanced = rebalanceFlourBlend(activeIngredients, flourId, newPercentage, stage);
+			const rebalanced = rebalanceFlourBlend(
+				activeIngredients,
+				flourId,
+				newPercentage,
+				mixingStepId
+			);
 
-			persistStageFlours(currentRecipe.id, stage, rebalanced);
+			persistStageFlours(currentRecipe.id, mixingStepId, rebalanced);
 
 			// Trigger recalculation
 			update((state) => recalculate(state));
@@ -529,8 +560,8 @@ function createCalculatorStore() {
 			const stageKey = getStageKey(stage);
 			const recipeFlours = get(customFloursStore)[currentRecipe.id] || {};
 			const usedIds = new Set((recipeFlours[stageKey] || []).map((f) => f.flourTypeId));
-			const baseStageFlours = currentRecipe.ingredients.filter(
-				(ing) => ing.type === 'flour' && getStageKey(ing.stage) === stageKey
+			const baseStageFlours = getAllIngredients(currentRecipe).filter(
+				(ing) => ing.type === 'flour' && ing.mixingStepId === stageKey
 			);
 			for (const flour of baseStageFlours) {
 				usedIds.add(flour.id);
@@ -572,10 +603,8 @@ function createCalculatorStore() {
 		getRecipeControls(): RecipeControls | null {
 			if (!currentRecipe) return null;
 			const customIngredients = get(customIngredientsStore)[currentRecipe.id] || {};
-			const recipeWithCustoms: Recipe = {
-				...currentRecipe,
-				ingredients: buildIngredientsWithCustomizations(currentRecipe)
-			};
+			const customizedIngredients = buildIngredientsWithCustomizations(currentRecipe);
+			const recipeWithCustoms = recipeWithFlatIngredients(currentRecipe, customizedIngredients);
 			return getControllableIngredients(recipeWithCustoms, customIngredients);
 		},
 
@@ -797,7 +826,7 @@ export const ingredientsByStage = derived(calculator, ($calculator) => {
 	const stages = new Map<string, ScaledIngredient[]>();
 
 	for (const ingredient of $calculator.scaledIngredients) {
-		const stage = ingredient.stage || 'main';
+		const stage = ingredient.mixingStepId;
 		const existing = stages.get(stage) || [];
 		existing.push(ingredient);
 		stages.set(stage, existing);

@@ -3,14 +3,18 @@
 	import SauceRecipes from '$lib/components/reference/SauceRecipes.svelte';
 	import TipsSection from '$lib/components/reference/TipsSection.svelte';
 	import PizzaSuggestions from '$lib/components/reference/PizzaSuggestions.svelte';
+	import YeastReference from '$lib/components/reference/YeastReference.svelte';
+	import SizeGuide from '$lib/components/reference/SizeGuide.svelte';
 
-	type Tab = 'pizzas' | 'flour' | 'sauce' | 'tips';
+	type Tab = 'pizzas' | 'flour' | 'sauce' | 'yeast' | 'sizes' | 'tips';
 	let activeTab = $state<Tab>('pizzas');
 
 	const tabs: { id: Tab; label: string }[] = [
 		{ id: 'pizzas', label: 'Pizzaer' },
 		{ id: 'flour', label: 'Mel' },
 		{ id: 'sauce', label: 'Sauce' },
+		{ id: 'yeast', label: 'Gær' },
+		{ id: 'sizes', label: 'Størrelser' },
 		{ id: 'tips', label: 'Tips' }
 	];
 </script>
@@ -37,6 +41,10 @@
 			<FlourReference />
 		{:else if activeTab === 'sauce'}
 			<SauceRecipes />
+		{:else if activeTab === 'yeast'}
+			<YeastReference />
+		{:else if activeTab === 'sizes'}
+			<SizeGuide />
 		{:else if activeTab === 'tips'}
 			<TipsSection />
 		{/if}

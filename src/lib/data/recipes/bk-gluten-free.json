@@ -3,82 +3,91 @@
 	"name": "BK Glutenfri",
 	"nameDa": "BK Glutenfri",
 	"category": "direct",
-	"yeastType": "active-dry",
 	"baseWeight": 270,
 	"hydration": 74,
-	"yieldPizzas": 4,
-	"ingredients": [
+	"mixingSteps": [
 		{
-			"id": "flour",
-			"name": "Gluten-free flour mix",
-			"nameDa": "Roed Finax melblanding",
-			"percentage": 100,
-			"type": "flour"
-		},
-		{
-			"id": "water",
-			"name": "Water",
-			"nameDa": "Vand",
-			"percentage": 74,
-			"type": "water"
-		},
-		{
-			"id": "oil",
-			"name": "Oil",
-			"nameDa": "Olie",
-			"percentage": 4,
-			"type": "oil"
-		},
-		{
-			"id": "salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 3,
-			"type": "salt"
-		},
-		{
-			"id": "yeast",
-			"name": "Dry yeast",
-			"nameDa": "Tørgær",
-			"percentage": 0.4,
-			"type": "yeast"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "flour",
+					"flourId": "finax-glutenfri-roed",
+					"percentage": 100,
+					"type": "flour",
+					"flourType": "gluten-free"
+				},
+				{
+					"id": "water",
+					"name": "Water",
+					"nameDa": "Vand",
+					"percentage": 74,
+					"type": "water"
+				},
+				{
+					"id": "oil",
+					"name": "Oil",
+					"nameDa": "Olie",
+					"percentage": 4.17,
+					"type": "oil"
+				},
+				{
+					"id": "salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 3,
+					"type": "salt"
+				},
+				{
+					"id": "yeast",
+					"name": "Dry yeast",
+					"nameDa": "Tørgær",
+					"percentage": 0.42,
+					"type": "yeast",
+					"yeastType": "instant"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Mix",
-				"nameDa": "Bland dej",
-				"duration": 30,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": false,
-				"instructionsDa": "Tørgæren vendes i den glutenfrie mel. Tilsæt vand og olie og bland godt."
-			},
-			{
-				"id": "stage-2",
-				"name": "Bulk ferment",
-				"nameDa": "Stuehævning",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Lad hæve ved stuetemperatur."
-			},
-			{
-				"id": "stage-3",
-				"name": "Ball rest",
-				"nameDa": "Kuglehvile",
-				"duration": 180,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Del i kugler og lad hvile."
-			}
-		],
-		"totalTime": 330
-	},
+	"timeline": [
+		{
+			"section": "Dag 1",
+			"instructionsDa": "Tørgæren vendes i den glutenfrie mel (stuetempereret mel).",
+			"ingredients": ["yeast", "flour"]
+		},
+		{
+			"instructionsDa": "Tilføj vand (ca. 15-20°C), olie og salt. Dejen er ret lind, så sørg for at blande det godt sammen i 2-3 min.",
+			"ingredients": ["water", "oil", "salt"],
+			"duration": 2,
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Lad dejen stå i 1½-2 timer ved stuetemperatur i en lufttæt beholder. Dejen sætter sig og bliver nemmere at arbejde med.",
+			"duration": 120,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Del dejen i klumper af ca. 270 g."
+		},
+		{
+			"instructionsDa": "Stram op som kugler - her kan det godt blive lidt klistret, da dejen er blød. Form dem så godt du kan og kom dem i en hævekasse.",
+			"tipDa": "Selvom dejen er blød i denne proces, bliver den mere fast efter den har været på køl."
+		},
+		{
+			"instructionsDa": "Sæt dem på køl i ca. 18-22 timer.",
+			"duration": 1320,
+			"location": "fridge",
+			"canSetTimer": true
+		},
+		{
+			"section": "Dag 2",
+			"instructionsDa": "Tag dejen ud og form til pizza direkte fra køl i f.eks. rismel.",
+			"tipDa": "Dejen kan evt. også tages ud ca. 1 time før brug."
+		}
+	],
 	"tipsDa": [
 		"Den færdige dej-temperatur må ikke overstige 27 grader.",
 		"Tørgæren arbejder bedst når dejen bliver 25-27 grader.",

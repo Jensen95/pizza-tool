@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import type { Timer } from '$lib/types';
-	import { formatTimeRemaining } from '$lib/types/timer';
+	import type { Timer } from '$lib/models';
+	import { formatTimeRemaining } from '$lib/models/timer.types';
 	import { timers, getTimeRemaining } from '$lib/stores';
 
 	let { timer }: { timer: Timer } = $props();

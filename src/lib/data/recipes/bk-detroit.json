@@ -3,86 +3,127 @@
 	"name": "BK Detroit",
 	"nameDa": "BK Detroit",
 	"category": "detroit",
-	"yeastType": "active-dry",
 	"baseWeight": 290,
 	"hydration": 72,
-	"yieldPizzas": 4,
-	"ingredients": [
+	"mixingSteps": [
 		{
-			"id": "flour",
-			"name": "Flour tipo 00",
-			"nameDa": "Mel tipo 00",
-			"percentage": 100,
-			"type": "flour"
-		},
-		{
-			"id": "water",
-			"name": "Water",
-			"nameDa": "Vand",
-			"percentage": 72,
-			"type": "water"
-		},
-		{
-			"id": "sourdough",
-			"name": "Wheat sourdough",
-			"nameDa": "Hvedesur",
-			"percentage": 5,
-			"type": "other"
-		},
-		{
-			"id": "salt",
-			"name": "Salt",
-			"nameDa": "Salt",
-			"percentage": 2,
-			"type": "salt"
-		},
-		{
-			"id": "yeast",
-			"name": "Dry yeast",
-			"nameDa": "Tørgær",
-			"percentage": 0.6,
-			"type": "yeast"
+			"id": "main",
+			"name": "Main dough",
+			"nameDa": "Hoveddej",
+			"ingredients": [
+				{
+					"id": "flour",
+					"percentage": 100,
+					"type": "flour",
+					"flourType": "tipo-00"
+				},
+				{
+					"id": "water",
+					"name": "Water",
+					"nameDa": "Vand",
+					"percentage": 72,
+					"type": "water"
+				},
+				{
+					"id": "sourdough",
+					"name": "Wheat sourdough",
+					"nameDa": "Hvedesur",
+					"percentage": 5,
+					"type": "other"
+				},
+				{
+					"id": "salt",
+					"name": "Salt",
+					"nameDa": "Salt",
+					"percentage": 2,
+					"type": "salt"
+				},
+				{
+					"id": "yeast",
+					"name": "Dry yeast",
+					"nameDa": "Tørgær",
+					"percentage": 0.6,
+					"type": "yeast",
+					"yeastType": "instant"
+				}
+			]
 		}
 	],
-	"schedule": {
-		"stages": [
-			{
-				"id": "stage-1",
-				"name": "Autolyse",
-				"nameDa": "Autolyse",
-				"duration": 45,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Vand, mel og hvedesur røres let sammen og hviler."
-			},
-			{
-				"id": "stage-2",
-				"name": "Bulk ferment",
-				"nameDa": "Hævning",
-				"duration": 120,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Tilsæt salt og gær og æl godt. Lad hæve."
-			},
-			{
-				"id": "stage-3",
-				"name": "Pan proof",
-				"nameDa": "Pande-hævning",
-				"duration": 60,
-				"temperature": 20,
-				"location": "room",
-				"canSetTimer": true,
-				"instructionsDa": "Tryk ud i smørt pande og lad hvile."
-			}
-		],
-		"totalTime": 225
-	},
+	"timeline": [
+		{
+			"instructionsDa": "Vand, mel og hvedesur røres let sammen.",
+			"ingredients": ["water", "flour", "sourdough"]
+		},
+		{
+			"instructionsDa": "Hviletid i 45 min. (autolyse).",
+			"duration": 45,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Salt og gær tilsættes.",
+			"ingredients": ["salt", "yeast"]
+		},
+		{
+			"instructionsDa": "Ælt 5 min. ved lav hastighed.",
+			"duration": 5,
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Lad dejen hvile 5 min.",
+			"duration": 5,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Ælt ca. 5 min. ved mellem hastighed. Når dejen er \"skær\" (helt blank og glat), er den klar.",
+			"duration": 5,
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Lad dejen hæve i en lukket beholder i 2 timer ved stuetemperatur.",
+			"duration": 120,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Del dejen i klumper af ca. 290 g. og placer dem i hver sin olierede bakke."
+		},
+		{
+			"instructionsDa": "Tryk dejen ud - dog ikke helt ud til kanten.",
+			"tipDa": "Alternativt: placer dem overdækket på køl indtil dagen efter for mere smag. Temperer dem 1 time før brug."
+		},
+		{
+			"instructionsDa": "Lad dem hvile tildækket i 30 min., hvorefter de trykkes helt ud til kanten.",
+			"duration": 30,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Lad dem hvile tildækket yderligere 1-2 timer ved stuetemperatur.",
+			"duration": 120,
+			"temperature": 20,
+			"location": "room",
+			"canSetTimer": true
+		},
+		{
+			"instructionsDa": "Ost fordeles generøst, hvorefter 3 striber tomatsauce og pepperoni."
+		},
+		{
+			"instructionsDa": "Bages i en forvarmet konventionel ovn ved 240-260°C i ca. 15-20 min. til de er gyldne og gennembagte."
+		}
+	],
 	"tipsDa": [
 		"Der anbefales en mel med protein-indhold 12,5-14,5%.",
 		"Pizzaen er færdig når osten ved kanterne er sydende og mørk.",
-		"De 290 g dej passer til en bradepande på 20x25 cm."
+		"De 290 g dej passer til en bradepande på 20x25 cm.",
+		"Dejvægt-formel for rektangulær pande: længde × bredde × 0,579",
+		"Olier formen generøst.",
+		"Tryk dejen ud i to omgange (først ikke til kanten, hvil 30 min, derefter til kanten).",
+		"Ost først (generøst), derefter 3 striber tomatsauce, så pepperoni.",
+		"Brug en tynd palet til at løsne kanterne efter bagning.",
+		"Valgfrit: overdækket på køl natten over for mere smag."
 	],
 	"source": "BK_detroit"
 }

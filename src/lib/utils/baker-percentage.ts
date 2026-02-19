@@ -1,27 +1,97 @@
-import type { Recipe, RecipeIngredient, FermentationStage } from '$lib/types/recipe';
+// ABOUTME: Baker's percentage calculations, recipe scaling, and ingredient management
+import type {
+	Recipe,
+	RecipeIngredient,
+	MixingStep,
+	IngredientType
+} from '$lib/models/recipe.types';
 import type {
 	ScaledIngredient,
 	CalculatorInput,
 	RecipeControls,
 	FlourBlendInfo,
 	ExtraIngredientInfo
-} from '$lib/types/ingredient';
-import type { FlourTypeOption } from '$lib/types/reference';
-
-// Predough stage types
-const PREDOUGH_STAGES: FermentationStage[] = ['poolish', 'biga', 'preferment'];
+} from '$lib/models/ingredient.types';
+import type { FlourCategory, FlourTypeOption } from '$lib/models/reference.types';
+import { resolveFlourDisplayName } from '$lib/utils/flour-display';
 
 // Non-controllable ingredient types (flour and water are controlled via hydration/blend)
 const NON_EXTRA_TYPES = ['flour', 'water'] as const;
 
-function getTotalFlourPercentage(ingredients: RecipeIngredient[]): number {
+// Minimal ingredient shape for percentage-based calculations
+type PercentageIngredient = { type: IngredientType; percentage: number };
+
+// A UI-ready ingredient with resolved display names and mixing step tag
+export interface FlatIngredient {
+	id: string;
+	name: string;
+	nameDa: string;
+	percentage: number;
+	type: IngredientType;
+	mixingStepId: string;
+	notes?: string;
+	flourType?: FlourCategory;
+	flourId?: string;
+	yeastType?: 'fresh' | 'active-dry' | 'instant';
+}
+
+/**
+ * Flatten all ingredients from a recipe's mixing steps into a single array.
+ * Each ingredient is tagged with its mixingStepId for grouping.
+ * Flour ingredients get their display names resolved from flourType/flourId.
+ */
+export function getAllIngredients(recipe: Recipe): FlatIngredient[] {
+	const result: FlatIngredient[] = [];
+	for (const step of recipe.mixingSteps) {
+		for (const ing of step.ingredients) {
+			if (ing.type === 'flour') {
+				// Check for pre-resolved names (from recipeWithFlatIngredients round-trip)
+				const runtime = ing as unknown as Record<string, unknown>;
+				const hasName = typeof runtime.name === 'string' && runtime.name !== '';
+				const resolved = hasName
+					? { name: runtime.name as string, nameDa: (runtime.nameDa as string) || '' }
+					: resolveFlourDisplayName(ing.flourType, ing.flourId);
+				result.push({
+					id: ing.id,
+					name: resolved.name,
+					nameDa: resolved.nameDa,
+					percentage: ing.percentage,
+					type: ing.type,
+					mixingStepId: step.id,
+					notes: ing.notes,
+					flourType: ing.flourType,
+					flourId: ing.flourId
+				});
+			} else {
+				result.push({ ...ing, mixingStepId: step.id });
+			}
+		}
+	}
+	return result;
+}
+
+/**
+ * Check if a mixing step is a predough step
+ */
+export function isPredoughStep(recipe: Recipe, mixingStepId: string): boolean {
+	return recipe.mixingSteps.find((s) => s.id === mixingStepId)?.predough === true;
+}
+
+/**
+ * Get the predough mixing step from a recipe (if any)
+ */
+export function getPredoughStep(recipe: Recipe): MixingStep | undefined {
+	return recipe.mixingSteps.find((s) => s.predough === true);
+}
+
+function getTotalFlourPercentage(ingredients: FlatIngredient[]): number {
 	return ingredients
 		.filter((ing) => ing.type === 'flour')
 		.reduce((sum, ing) => sum + ing.percentage, 0);
 }
 
-function normalizeFlourPercentages(ingredients: RecipeIngredient[]): {
-	ingredients: RecipeIngredient[];
+function normalizeFlourPercentages(ingredients: FlatIngredient[]): {
+	ingredients: FlatIngredient[];
 	flourTotal: number;
 } {
 	const flourTotal = getTotalFlourPercentage(ingredients);
@@ -39,10 +109,6 @@ function normalizeFlourPercentages(ingredients: RecipeIngredient[]): {
 	return { ingredients: normalizedIngredients, flourTotal };
 }
 
-function getStageKey(stage?: string): string {
-	return stage || 'main';
-}
-
 /**
  * Calculate ingredient weight from flour weight and percentage
  * Returns weight with two decimal precision
@@ -54,34 +120,26 @@ export function calculateIngredientWeight(flourWeight: number, percentage: numbe
 /**
  * Get total percentage of all ingredients (flour is always 100%)
  */
-export function getTotalPercentage(ingredients: RecipeIngredient[]): number {
+export function getTotalPercentage(ingredients: PercentageIngredient[]): number {
 	return ingredients.reduce((sum, ing) => sum + ing.percentage, 0);
 }
 
-/**
- * Check if an ingredient belongs to a predough stage
- */
-export function isPredoughStage(stage?: FermentationStage): boolean {
-	return stage !== undefined && PREDOUGH_STAGES.includes(stage);
-}
-
 export function addFlourToStage(
-	ingredients: RecipeIngredient[],
-	stage: string,
+	ingredients: FlatIngredient[],
+	mixingStepId: string,
 	flourType: FlourTypeOption,
 	percentage: number
-): RecipeIngredient[] {
-	const stageKey = getStageKey(stage);
-	const floursInStage = ingredients.filter(
-		(ing) => ing.type === 'flour' && getStageKey(ing.stage) === stageKey
+): FlatIngredient[] {
+	const floursInStep = ingredients.filter(
+		(ing) => ing.type === 'flour' && ing.mixingStepId === mixingStepId
 	);
 
-	if (floursInStage.length === 0) return ingredients;
+	if (floursInStep.length === 0) return ingredients;
 
-	const flourId = `custom-flour-${stageKey}-${flourType.id}`;
+	const flourId = `custom-flour-${mixingStepId}-${flourType.id}`;
 	if (ingredients.some((ing) => ing.id === flourId)) return ingredients;
 
-	const largest = floursInStage.reduce((max, current) =>
+	const largest = floursInStep.reduce((max, current) =>
 		current.percentage > max.percentage ? current : max
 	);
 	const adjustment = Math.min(percentage, largest.percentage);
@@ -94,40 +152,40 @@ export function addFlourToStage(
 		return ing;
 	});
 
-	const newFlour: RecipeIngredient = {
+	const newFlour: FlatIngredient = {
 		id: flourId,
 		name: flourType.name,
 		nameDa: flourType.nameDa,
 		percentage: Math.round(adjustment * 100) / 100,
 		type: 'flour',
-		stage: stageKey === 'main' ? undefined : (stageKey as FermentationStage)
+		flourType: flourType.id as FlourCategory,
+		mixingStepId
 	};
 
 	return [...updatedIngredients, newFlour];
 }
 
 export function removeFlourFromStage(
-	ingredients: RecipeIngredient[],
-	stage: string,
+	ingredients: FlatIngredient[],
+	mixingStepId: string,
 	flourId: string
-): RecipeIngredient[] {
-	const stageKey = getStageKey(stage);
-	const floursInStage = ingredients.filter(
-		(ing) => ing.type === 'flour' && getStageKey(ing.stage) === stageKey
+): FlatIngredient[] {
+	const floursInStep = ingredients.filter(
+		(ing) => ing.type === 'flour' && ing.mixingStepId === mixingStepId
 	);
 
-	if (floursInStage.length <= 1) return ingredients;
+	if (floursInStep.length <= 1) return ingredients;
 
-	const flourToRemove = floursInStage.find((f) => f.id === flourId);
+	const flourToRemove = floursInStep.find((f) => f.id === flourId);
 	if (!flourToRemove) return ingredients;
 
-	const remaining = floursInStage.filter((f) => f.id !== flourId);
+	const remaining = floursInStep.filter((f) => f.id !== flourId);
 	if (remaining.length === 0) return ingredients;
 
 	const remainingTotal = remaining.reduce((sum, f) => sum + f.percentage, 0);
 	const redistribute = flourToRemove.percentage;
 
-	const updatedStageFlours = remaining.map((flour) => {
+	const updatedStepFlours = remaining.map((flour) => {
 		const baseShare = remainingTotal > 0 ? flour.percentage / remainingTotal : 1 / remaining.length;
 		const adjusted = flour.percentage + redistribute * baseShare;
 		return { ...flour, percentage: Math.round(adjusted * 100) / 100 };
@@ -136,8 +194,8 @@ export function removeFlourFromStage(
 	return ingredients
 		.filter((ing) => ing.id !== flourId)
 		.map((ing) => {
-			if (ing.type === 'flour' && getStageKey(ing.stage) === stageKey) {
-				const replacement = updatedStageFlours.find((f) => f.id === ing.id);
+			if (ing.type === 'flour' && ing.mixingStepId === mixingStepId) {
+				const replacement = updatedStepFlours.find((f) => f.id === ing.id);
 				if (replacement) return replacement;
 			}
 			return ing;
@@ -145,21 +203,14 @@ export function removeFlourFromStage(
 }
 
 /**
- * Get the predough stage name from a recipe (if any)
- */
-export function getPredoughStageName(recipe: Recipe): FermentationStage | null {
-	const predoughIngredient = recipe.ingredients.find((ing) => isPredoughStage(ing.stage));
-	return predoughIngredient?.stage || null;
-}
-
-/**
  * Get the original predough flour ratio from a recipe
  * Returns the percentage of total flour that goes into the predough (as a decimal, e.g., 0.1935 for 19.35%)
  */
 export function getOriginalPredoughRatio(recipe: Recipe): number | null {
-	const totalFlour = getTotalFlourPercentage(recipe.ingredients);
-	const predoughFlourTotal = recipe.ingredients
-		.filter((ing) => ing.type === 'flour' && isPredoughStage(ing.stage))
+	const allIngredients = getAllIngredients(recipe);
+	const totalFlour = getTotalFlourPercentage(allIngredients);
+	const predoughFlourTotal = allIngredients
+		.filter((ing) => ing.type === 'flour' && isPredoughStep(recipe, ing.mixingStepId))
 		.reduce((sum, ing) => sum + ing.percentage, 0);
 
 	if (predoughFlourTotal === 0 || totalFlour === 0) return null;
@@ -172,10 +223,10 @@ export function getOriginalPredoughRatio(recipe: Recipe): number | null {
  * Preserves proportional split between stages (if poolish had 30% of total water, it keeps 30%).
  */
 export function redistributeWater(
-	ingredients: RecipeIngredient[],
+	ingredients: FlatIngredient[],
 	newHydration: number,
 	oldHydration: number
-): RecipeIngredient[] {
+): FlatIngredient[] {
 	if (oldHydration === 0) return ingredients;
 
 	const ratio = newHydration / oldHydration;
@@ -189,34 +240,33 @@ export function redistributeWater(
 }
 
 /**
- * Rebalance flour blend when one flour in a stage changes.
- * For 2 flours: other flour = stageTotal - newPercentage.
+ * Rebalance flour blend when one flour in a step changes.
+ * For 2 flours: other flour = stepTotal - newPercentage.
  * For 3+ flours: distribute the delta proportionally across remaining flours.
  */
 export function rebalanceFlourBlend(
-	ingredients: RecipeIngredient[],
+	ingredients: FlatIngredient[],
 	changedFlourId: string,
 	newPercentage: number,
-	stage: string
-): RecipeIngredient[] {
-	const stageKey = getStageKey(stage);
-	const floursInStage = ingredients.filter(
-		(ing) => ing.type === 'flour' && getStageKey(ing.stage) === stageKey
+	mixingStepId: string
+): FlatIngredient[] {
+	const floursInStep = ingredients.filter(
+		(ing) => ing.type === 'flour' && ing.mixingStepId === mixingStepId
 	);
 
-	if (floursInStage.length < 2) return ingredients;
+	if (floursInStep.length < 2) return ingredients;
 
-	const stageFlourTotal = floursInStage.reduce((sum, ing) => sum + ing.percentage, 0);
-	const changedFlour = floursInStage.find((f) => f.id === changedFlourId);
+	const stepFlourTotal = floursInStep.reduce((sum, ing) => sum + ing.percentage, 0);
+	const changedFlour = floursInStep.find((f) => f.id === changedFlourId);
 	if (!changedFlour) return ingredients;
 
 	const oldPercentage = changedFlour.percentage;
 	const delta = newPercentage - oldPercentage;
-	const otherFlours = floursInStage.filter((f) => f.id !== changedFlourId);
+	const otherFlours = floursInStep.filter((f) => f.id !== changedFlourId);
 
 	if (otherFlours.length === 1) {
 		// For 2 flours: simply set the other to the remaining
-		const otherNewPct = stageFlourTotal - newPercentage;
+		const otherNewPct = stepFlourTotal - newPercentage;
 		return ingredients.map((ing) => {
 			if (ing.id === changedFlourId) {
 				return { ...ing, percentage: newPercentage };
@@ -254,35 +304,36 @@ export function getControllableIngredients(
 ): RecipeControls {
 	const customs = customIngredients || {};
 
+	const allIngredients = getAllIngredients(recipe);
+
 	// Calculate hydration from current ingredients (considering customizations)
-	const ingredientsWithCustoms = recipe.ingredients.map((ing) => ({
+	const ingredientsWithCustoms = allIngredients.map((ing) => ({
 		...ing,
 		percentage: customs[ing.id] ?? ing.percentage
 	}));
 	const { ingredients: normalizedIngredients } = normalizeFlourPercentages(ingredientsWithCustoms);
-	const { ingredients: normalizedBaseIngredients } = normalizeFlourPercentages(recipe.ingredients);
-	const normalizedRecipe = { ...recipe, ingredients: normalizedIngredients };
+	const { ingredients: normalizedBaseIngredients } = normalizeFlourPercentages(allIngredients);
 	const hydration = calculateHydration(normalizedIngredients);
 
 	// Predough ratio
+	const normalizedRecipe = recipeWithFlatIngredients(recipe, normalizedIngredients);
 	const predoughRatio = getOriginalPredoughRatio(normalizedRecipe);
 
-	// Flour blends: stages with flour types (single or multiple)
+	// Flour blends: mixing steps with flour types (single or multiple)
 	const flours: FlourBlendInfo[] = [];
-	const stageMap = new Map<string, RecipeIngredient[]>();
+	const stepMap = new Map<string, FlatIngredient[]>();
 	for (const ing of normalizedIngredients) {
 		if (ing.type === 'flour') {
-			const stage = ing.stage || 'main';
-			const existing = stageMap.get(stage) || [];
+			const existing = stepMap.get(ing.mixingStepId) || [];
 			existing.push(ing);
-			stageMap.set(stage, existing);
+			stepMap.set(ing.mixingStepId, existing);
 		}
 	}
-	for (const [stage, stageFlours] of stageMap) {
-		if (stageFlours.length >= 1) {
+	for (const [mixingStepId, stepFlours] of stepMap) {
+		if (stepFlours.length >= 1) {
 			flours.push({
-				stage,
-				flours: stageFlours.map((f) => ({
+				mixingStepId,
+				flours: stepFlours.map((f) => ({
 					id: f.id,
 					name: f.name,
 					nameDa: f.nameDa,
@@ -302,7 +353,7 @@ export function getControllableIngredients(
 				name: ing.name,
 				nameDa: ing.nameDa,
 				type: ing.type,
-				stage: ing.stage,
+				mixingStepId: ing.mixingStepId,
 				percentage: customs[ing.id] ?? ing.percentage,
 				originalPercentage: original?.percentage ?? ing.percentage
 			});
@@ -332,6 +383,24 @@ export function calculateTotalFlour(
 }
 
 /**
+ * Build a temporary recipe with flat ingredients mapped back into mixing steps.
+ * Used internally so functions like getOriginalPredoughRatio() work with modified ingredients.
+ * Extra fields (name, nameDa) are preserved at runtime for the getAllIngredients round-trip.
+ */
+export function recipeWithFlatIngredients(
+	recipe: Recipe,
+	flatIngredients: FlatIngredient[]
+): Recipe {
+	const mixingSteps = recipe.mixingSteps.map((step) => ({
+		...step,
+		ingredients: flatIngredients
+			.filter((ing) => ing.mixingStepId === step.id)
+			.map(({ mixingStepId: _, ...rest }) => rest) as RecipeIngredient[]
+	}));
+	return { ...recipe, mixingSteps };
+}
+
+/**
  * Scale entire recipe to desired number of pizzas and ball weight
  * Supports adjustable predough ratio and hydration override
  */
@@ -341,22 +410,24 @@ export function scaleRecipe(
 ): { scaledIngredients: ScaledIngredient[]; totalFlourWeight: number; totalDoughWeight: number } {
 	const { numberOfPizzas, doughBallWeight, predoughRatio, hydration: hydrationOverride } = input;
 	const totalDoughWeight = numberOfPizzas * doughBallWeight;
-	const { ingredients: normalizedIngredients } = normalizeFlourPercentages(recipe.ingredients);
-	const normalizedRecipe = { ...recipe, ingredients: normalizedIngredients };
+	const { ingredients: normalizedIngredients } = normalizeFlourPercentages(
+		getAllIngredients(recipe)
+	);
+	const normalizedRecipe = recipeWithFlatIngredients(recipe, normalizedIngredients);
 
 	// Get original predough ratio from recipe
 	const originalPredoughRatio = getOriginalPredoughRatio(normalizedRecipe);
-	const predoughStage = getPredoughStageName(normalizedRecipe);
+	const predoughStep = getPredoughStep(normalizedRecipe);
 
 	// Determine if we need to adjust predough percentages
-	const hasPredough = originalPredoughRatio !== null && predoughStage !== null;
+	const hasPredough = originalPredoughRatio !== null && predoughStep !== null;
 	const effectivePredoughRatio =
 		hasPredough && predoughRatio !== null && predoughRatio !== undefined
 			? predoughRatio
 			: originalPredoughRatio;
 
 	// Calculate adjusted ingredients if predough ratio changed
-	let adjustedIngredients: RecipeIngredient[] = [...normalizedIngredients];
+	let adjustedIngredients: FlatIngredient[] = [...normalizedIngredients];
 	if (
 		hasPredough &&
 		effectivePredoughRatio !== null &&
@@ -369,10 +440,10 @@ export function scaleRecipe(
 		const targetMainFlourPct = 100 - targetPredoughFlourPct;
 
 		const originalPredoughFlourTotal = normalizedIngredients
-			.filter((ing) => ing.type === 'flour' && isPredoughStage(ing.stage))
+			.filter((ing) => ing.type === 'flour' && isPredoughStep(normalizedRecipe, ing.mixingStepId))
 			.reduce((sum, ing) => sum + ing.percentage, 0);
 		const originalMainFlourTotal = normalizedIngredients
-			.filter((ing) => ing.type === 'flour' && !isPredoughStage(ing.stage))
+			.filter((ing) => ing.type === 'flour' && !isPredoughStep(normalizedRecipe, ing.mixingStepId))
 			.reduce((sum, ing) => sum + ing.percentage, 0);
 		const predoughFlourMultiplier =
 			originalPredoughFlourTotal > 0 ? targetPredoughFlourPct / originalPredoughFlourTotal : 0;
@@ -381,7 +452,7 @@ export function scaleRecipe(
 
 		// Calculate original predough water percentage to maintain total hydration
 		const originalPredoughWater = normalizedIngredients
-			.filter((ing) => ing.type === 'water' && isPredoughStage(ing.stage))
+			.filter((ing) => ing.type === 'water' && isPredoughStep(normalizedRecipe, ing.mixingStepId))
 			.reduce((sum, ing) => sum + ing.percentage, 0);
 
 		// Calculate new predough water percentage after scaling
@@ -392,24 +463,25 @@ export function scaleRecipe(
 
 		// Check if main flour exists
 		const hasMainFlour = normalizedIngredients.some(
-			(ing) => ing.type === 'flour' && !isPredoughStage(ing.stage)
+			(ing) => ing.type === 'flour' && !isPredoughStep(normalizedRecipe, ing.mixingStepId)
 		);
 
-		const mainStage =
-			normalizedIngredients.find((ing) => !isPredoughStage(ing.stage))?.stage ?? 'main';
+		// Find the main mixing step id
+		const mainStep = normalizedRecipe.mixingSteps.find((s) => !s.predough);
+		const mainStepId = mainStep?.id ?? 'main';
 
 		adjustedIngredients = normalizedIngredients.map((ing) => {
-			if (isPredoughStage(ing.stage)) {
+			if (isPredoughStep(normalizedRecipe, ing.mixingStepId)) {
 				// Scale predough ingredients by the ratio change
 				if (ing.type === 'flour') {
 					return { ...ing, percentage: ing.percentage * predoughFlourMultiplier };
 				}
 				// Scale other predough ingredients proportionally
 				return { ...ing, percentage: ing.percentage * ratioMultiplier };
-			} else if (ing.type === 'flour' && !isPredoughStage(ing.stage)) {
+			} else if (ing.type === 'flour' && !isPredoughStep(normalizedRecipe, ing.mixingStepId)) {
 				// Adjust main dough flour proportionally to maintain total flour at 100%
 				return { ...ing, percentage: ing.percentage * mainFlourMultiplier };
-			} else if (ing.type === 'water' && !isPredoughStage(ing.stage)) {
+			} else if (ing.type === 'water' && !isPredoughStep(normalizedRecipe, ing.mixingStepId)) {
 				// Adjust main dough water to maintain total hydration
 				return { ...ing, percentage: ing.percentage + waterDifference };
 			}
@@ -425,13 +497,14 @@ export function scaleRecipe(
 				nameDa: 'Mel',
 				percentage: newMainFlourPct,
 				type: 'flour',
-				stage: mainStage
+				flourType: 'tipo-00',
+				mixingStepId: mainStepId
 			});
 		}
 
 		// Add main water if it doesn't exist and there's water to redistribute
 		const hasMainWater = normalizedIngredients.some(
-			(ing) => ing.type === 'water' && !isPredoughStage(ing.stage)
+			(ing) => ing.type === 'water' && !isPredoughStep(normalizedRecipe, ing.mixingStepId)
 		);
 		if (!hasMainWater && waterDifference > 0) {
 			adjustedIngredients.push({
@@ -440,7 +513,7 @@ export function scaleRecipe(
 				nameDa: 'Vand',
 				percentage: waterDifference,
 				type: 'water',
-				stage: mainStage
+				mixingStepId: mainStepId
 			});
 		}
 	}
@@ -463,11 +536,11 @@ export function scaleRecipe(
 	// Calculate flour weight needed
 	const totalFlourWeight = calculateTotalFlour(numberOfPizzas, doughBallWeight, totalPercentage);
 
-	// Calculate stage flour weights from actual flour distribution
+	// Calculate step flour weights from actual flour distribution
 	const flourIngredients = adjustedIngredients.filter((ing) => ing.type === 'flour');
 	const totalFlourPercentage = flourIngredients.reduce((sum, ing) => sum + ing.percentage, 0);
 	const predoughFlourPercentage = flourIngredients
-		.filter((ing) => isPredoughStage(ing.stage))
+		.filter((ing) => isPredoughStep(normalizedRecipe, ing.mixingStepId))
 		.reduce((sum, ing) => sum + ing.percentage, 0);
 	const mainFlourPercentage = totalFlourPercentage - predoughFlourPercentage;
 
@@ -479,16 +552,17 @@ export function scaleRecipe(
 		mainFlourWeight = (mainFlourPercentage / totalFlourPercentage) * totalFlourWeight;
 	}
 
-	// Scale each ingredient and calculate stage percentages
+	// Scale each ingredient and calculate step percentages
 	const scaledIngredients: ScaledIngredient[] = adjustedIngredients.map((ing) => {
 		const weight = calculateIngredientWeight(totalFlourWeight, ing.percentage);
+		const isPredough = isPredoughStep(normalizedRecipe, ing.mixingStepId);
 
-		// Calculate stage percentage (relative to the stage's flour)
+		// Calculate step percentage (relative to the step's flour)
 		let stagePercentage = ing.percentage;
-		if (isPredoughStage(ing.stage) && predoughFlourWeight > 0) {
+		if (isPredough && predoughFlourWeight > 0) {
 			// For predough ingredients, calculate percentage relative to predough flour
 			stagePercentage = (weight / predoughFlourWeight) * 100;
-		} else if (!isPredoughStage(ing.stage) && mainFlourWeight > 0) {
+		} else if (!isPredough && mainFlourWeight > 0) {
 			// For main dough ingredients, calculate percentage relative to main flour
 			stagePercentage = (weight / mainFlourWeight) * 100;
 		}
@@ -501,7 +575,7 @@ export function scaleRecipe(
 			stagePercentage: Math.round(stagePercentage * 100) / 100,
 			weight,
 			type: ing.type,
-			stage: ing.stage,
+			mixingStepId: ing.mixingStepId,
 			notes: ing.notes
 		};
 	});
@@ -532,8 +606,16 @@ export function formatWeight(grams: number): string {
 /**
  * Calculate hydration percentage from ingredients
  */
-export function calculateHydration(ingredients: RecipeIngredient[]): number {
-	const { ingredients: normalizedIngredients } = normalizeFlourPercentages(ingredients);
+export function calculateHydration(ingredients: PercentageIngredient[]): number {
+	// Tag with dummy mixingStepId for normalization
+	const flat: FlatIngredient[] = ingredients.map((ing) => ({
+		id: '',
+		name: '',
+		nameDa: '',
+		...ing,
+		mixingStepId: (ing as FlatIngredient).mixingStepId ?? 'main'
+	}));
+	const { ingredients: normalizedIngredients } = normalizeFlourPercentages(flat);
 	const flourIngredients = normalizedIngredients.filter((i) => i.type === 'flour');
 	const waterIngredients = normalizedIngredients.filter((i) => i.type === 'water');
 
@@ -551,7 +633,8 @@ export function calculateHydration(ingredients: RecipeIngredient[]): number {
  */
 export function validateRecipe(recipe: Recipe): { valid: boolean; errors: string[] } {
 	const errors: string[] = [];
-	const { ingredients: normalizedIngredients } = normalizeFlourPercentages(recipe.ingredients);
+	const allIngredients = getAllIngredients(recipe);
+	const { ingredients: normalizedIngredients } = normalizeFlourPercentages(allIngredients);
 
 	// Check for flour
 	const hasFlour = normalizedIngredients.some((i) => i.type === 'flour');

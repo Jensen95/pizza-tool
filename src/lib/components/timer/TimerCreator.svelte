@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { timers } from '$lib/stores';
-	import { defaultPresets } from '$lib/types/timer';
+	import { defaultPresets } from '$lib/models/timer.types';
 	import { requestPermission } from '$lib/utils/notification';
 
 	let { oncreated }: { oncreated?: () => void } = $props();
