@@ -1,5 +1,6 @@
+<!-- ABOUTME: Sauce recipes + spread/condiment recipes displayed as cards -->
 <script lang="ts">
-	import { sauceRecipes } from '$lib/data/reference';
+	import { sauceRecipes, spreadRecipes } from '$lib/data/reference';
 </script>
 
 <div class="sauce-recipes">
@@ -40,6 +41,49 @@
 					<h5 class="section-label">Tips</h5>
 					<ul class="tips-list">
 						{#each sauce.tipsDa as tip}
+							<li>{tip}</li>
+						{/each}
+					</ul>
+				</div>
+			{/if}
+		</div>
+	{/each}
+
+	<h3 class="spreads-heading">Spreads & tilbehør</h3>
+
+	{#each spreadRecipes as spread}
+		<div class="sauce-card">
+			<h4 class="sauce-name">{spread.nameDa}</h4>
+			{#if spread.descriptionDa}
+				<p class="sauce-description">{spread.descriptionDa}</p>
+			{/if}
+
+			<div class="sauce-section">
+				<h5 class="section-label">Ingredienser</h5>
+				<ul class="ingredient-list">
+					{#each spread.ingredients as ingredient}
+						<li>
+							<span class="ing-amount">{ingredient.amountDa || ingredient.amount}</span>
+							<span class="ing-name">{ingredient.nameDa}</span>
+						</li>
+					{/each}
+				</ul>
+			</div>
+
+			<div class="sauce-section">
+				<h5 class="section-label">Fremgangsmaade</h5>
+				<ol class="instructions-list">
+					{#each spread.instructionsDa as step}
+						<li>{step}</li>
+					{/each}
+				</ol>
+			</div>
+
+			{#if spread.tipsDa && spread.tipsDa.length > 0}
+				<div class="sauce-tips">
+					<h5 class="section-label">Tips</h5>
+					<ul class="tips-list">
+						{#each spread.tipsDa as tip}
 							<li>{tip}</li>
 						{/each}
 					</ul>
@@ -114,5 +158,11 @@
 		margin-top: var(--spacing-md);
 		padding-top: var(--spacing-md);
 		border-top: 1px solid var(--color-border);
+	}
+
+	.spreads-heading {
+		margin: var(--spacing-md) 0 0;
+		font-size: var(--font-size-md);
+		color: var(--color-primary);
 	}
 </style>
