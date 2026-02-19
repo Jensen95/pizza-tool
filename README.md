@@ -214,3 +214,9 @@ TODO:
 - Some steps in the timeline references the dough ball weight, we should make that dynamic
 - Kneading times right now use lower bound, maybe we need a way to support ranges for duration?
   Would also be neat to add machine type or specific machines kneading time in the future
+- Move water temp, to tool section, maybe include on the recipes?
+- Tray weight could be added to recipes and calculated instead of a reference
+- Topping could be moved to calculator
+- Yeast reference could be moved to yeast calculator
+- Tools could be reorderd with tabs
+- Percentages seems to be goofed up again
