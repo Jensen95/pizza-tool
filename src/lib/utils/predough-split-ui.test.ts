@@ -19,10 +19,9 @@ const poolishRecipe: Recipe = {
 			ingredients: [
 				{
 					id: 'poolish-flour',
-					name: 'Poolish flour',
-					nameDa: 'Mel (poolish)',
 					percentage: 20,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'poolish-water',
@@ -48,10 +47,9 @@ const poolishRecipe: Recipe = {
 			ingredients: [
 				{
 					id: 'main-flour',
-					name: 'Main dough flour',
-					nameDa: 'Mel (hoveddej)',
 					percentage: 80,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'main-water',
@@ -90,10 +88,9 @@ const biga100Recipe: Recipe = {
 			ingredients: [
 				{
 					id: 'biga-flour',
-					name: 'Biga flour',
-					nameDa: 'Mel (biga)',
 					percentage: 100,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'biga-water',
@@ -153,17 +150,15 @@ const blendedPoolishRecipe: Recipe = {
 			ingredients: [
 				{
 					id: 'poolish-flour-a',
-					name: 'Poolish flour A',
-					nameDa: 'Poolish mel A',
 					percentage: 12,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'poolish-flour-b',
-					name: 'Poolish flour B',
-					nameDa: 'Poolish mel B',
 					percentage: 8,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'poolish-water',
@@ -189,17 +184,15 @@ const blendedPoolishRecipe: Recipe = {
 			ingredients: [
 				{
 					id: 'main-flour-a',
-					name: 'Main flour A',
-					nameDa: 'Mel A (hoveddej)',
 					percentage: 60,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'main-flour-b',
-					name: 'Main flour B',
-					nameDa: 'Mel B (hoveddej)',
 					percentage: 20,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'main-water',
@@ -382,10 +375,9 @@ describe('Predough flour split - UI data layer', () => {
 						ingredients: [
 							{
 								id: 'flour',
-								name: 'Flour',
-								nameDa: 'Mel',
 								percentage: 100,
-								type: 'flour'
+								type: 'flour',
+								flourType: 'tipo-00'
 							},
 							{
 								id: 'water',

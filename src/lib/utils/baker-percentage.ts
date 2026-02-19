@@ -1,5 +1,10 @@
 // ABOUTME: Baker's percentage calculations, recipe scaling, and ingredient management
-import type { Recipe, RecipeIngredient, MixingStep } from '$lib/models/recipe.types';
+import type {
+	Recipe,
+	RecipeIngredient,
+	MixingStep,
+	IngredientType
+} from '$lib/models/recipe.types';
 import type {
 	ScaledIngredient,
 	CalculatorInput,
@@ -7,23 +12,59 @@ import type {
 	FlourBlendInfo,
 	ExtraIngredientInfo
 } from '$lib/models/ingredient.types';
-import type { FlourTypeOption } from '$lib/models/reference.types';
+import type { FlourCategory, FlourTypeOption } from '$lib/models/reference.types';
+import { resolveFlourDisplayName } from '$lib/utils/flour-display';
 
 // Non-controllable ingredient types (flour and water are controlled via hydration/blend)
 const NON_EXTRA_TYPES = ['flour', 'water'] as const;
 
-// A recipe ingredient tagged with its mixing step
-export type FlatIngredient = RecipeIngredient & { mixingStepId: string };
+// Minimal ingredient shape for percentage-based calculations
+type PercentageIngredient = { type: IngredientType; percentage: number };
+
+// A UI-ready ingredient with resolved display names and mixing step tag
+export interface FlatIngredient {
+	id: string;
+	name: string;
+	nameDa: string;
+	percentage: number;
+	type: IngredientType;
+	mixingStepId: string;
+	notes?: string;
+	flourType?: FlourCategory;
+	flourId?: string;
+	yeastType?: 'fresh' | 'active-dry' | 'instant';
+}
 
 /**
  * Flatten all ingredients from a recipe's mixing steps into a single array.
  * Each ingredient is tagged with its mixingStepId for grouping.
+ * Flour ingredients get their display names resolved from flourType/flourId.
  */
 export function getAllIngredients(recipe: Recipe): FlatIngredient[] {
 	const result: FlatIngredient[] = [];
 	for (const step of recipe.mixingSteps) {
 		for (const ing of step.ingredients) {
-			result.push({ ...ing, mixingStepId: step.id });
+			if (ing.type === 'flour') {
+				// Check for pre-resolved names (from recipeWithFlatIngredients round-trip)
+				const runtime = ing as unknown as Record<string, unknown>;
+				const hasName = typeof runtime.name === 'string' && runtime.name !== '';
+				const resolved = hasName
+					? { name: runtime.name as string, nameDa: (runtime.nameDa as string) || '' }
+					: resolveFlourDisplayName(ing.flourType, ing.flourId);
+				result.push({
+					id: ing.id,
+					name: resolved.name,
+					nameDa: resolved.nameDa,
+					percentage: ing.percentage,
+					type: ing.type,
+					mixingStepId: step.id,
+					notes: ing.notes,
+					flourType: ing.flourType,
+					flourId: ing.flourId
+				});
+			} else {
+				result.push({ ...ing, mixingStepId: step.id });
+			}
 		}
 	}
 	return result;
@@ -79,7 +120,7 @@ export function calculateIngredientWeight(flourWeight: number, percentage: numbe
 /**
  * Get total percentage of all ingredients (flour is always 100%)
  */
-export function getTotalPercentage(ingredients: RecipeIngredient[]): number {
+export function getTotalPercentage(ingredients: PercentageIngredient[]): number {
 	return ingredients.reduce((sum, ing) => sum + ing.percentage, 0);
 }
 
@@ -117,6 +158,7 @@ export function addFlourToStage(
 		nameDa: flourType.nameDa,
 		percentage: Math.round(adjustment * 100) / 100,
 		type: 'flour',
+		flourType: flourType.id as FlourCategory,
 		mixingStepId
 	};
 
@@ -343,6 +385,7 @@ export function calculateTotalFlour(
 /**
  * Build a temporary recipe with flat ingredients mapped back into mixing steps.
  * Used internally so functions like getOriginalPredoughRatio() work with modified ingredients.
+ * Extra fields (name, nameDa) are preserved at runtime for the getAllIngredients round-trip.
  */
 export function recipeWithFlatIngredients(
 	recipe: Recipe,
@@ -352,7 +395,7 @@ export function recipeWithFlatIngredients(
 		...step,
 		ingredients: flatIngredients
 			.filter((ing) => ing.mixingStepId === step.id)
-			.map(({ mixingStepId: _, ...rest }) => rest)
+			.map(({ mixingStepId: _, ...rest }) => rest) as RecipeIngredient[]
 	}));
 	return { ...recipe, mixingSteps };
 }
@@ -454,6 +497,7 @@ export function scaleRecipe(
 				nameDa: 'Mel',
 				percentage: newMainFlourPct,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: mainStepId
 			});
 		}
@@ -562,9 +606,12 @@ export function formatWeight(grams: number): string {
 /**
  * Calculate hydration percentage from ingredients
  */
-export function calculateHydration(ingredients: RecipeIngredient[]): number {
+export function calculateHydration(ingredients: PercentageIngredient[]): number {
 	// Tag with dummy mixingStepId for normalization
 	const flat: FlatIngredient[] = ingredients.map((ing) => ({
+		id: '',
+		name: '',
+		nameDa: '',
 		...ing,
 		mixingStepId: (ing as FlatIngredient).mixingStepId ?? 'main'
 	}));

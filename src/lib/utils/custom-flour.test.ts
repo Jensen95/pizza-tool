@@ -51,7 +51,12 @@ const baseRecipe: Recipe = {
 			name: 'Main dough',
 			nameDa: 'Hoveddej',
 			ingredients: [
-				{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+				{
+					id: 'flour',
+					percentage: 100,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
 				{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
 			]
 		}
@@ -68,8 +73,18 @@ const twoFlourRecipe: Recipe = {
 			name: 'Main dough',
 			nameDa: 'Hoveddej',
 			ingredients: [
-				{ id: 'main-a', name: 'Main A', nameDa: 'A', percentage: 60, type: 'flour' },
-				{ id: 'main-b', name: 'Main B', nameDa: 'B', percentage: 40, type: 'flour' },
+				{
+					id: 'main-a',
+					percentage: 60,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
+				{
+					id: 'main-b',
+					percentage: 40,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
 				{
 					id: 'water',
 					name: 'Water',
@@ -96,10 +111,9 @@ const predoughRecipe: Recipe = {
 			ingredients: [
 				{
 					id: 'poolish-flour',
-					name: 'Poolish flour',
-					nameDa: 'Poolish mel',
 					percentage: 20,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'poolish-water',
@@ -117,10 +131,9 @@ const predoughRecipe: Recipe = {
 			ingredients: [
 				{
 					id: 'main-flour',
-					name: 'Main flour',
-					nameDa: 'Main mel',
 					percentage: 80,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'main-water',
@@ -144,7 +157,12 @@ const typedFlourRecipe: Recipe = {
 			name: 'Main dough',
 			nameDa: 'Hoveddej',
 			ingredients: [
-				{ id: 'semola', name: 'Semola', nameDa: 'Semola', percentage: 100, type: 'flour' },
+				{
+					id: 'semolina',
+					percentage: 100,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
 				{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
 			]
 		}
@@ -172,10 +190,11 @@ describe('flour helpers', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'flour',
-				name: 'Flour',
-				nameDa: 'Mel',
+				name: '',
+				nameDa: '',
 				percentage: 100,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			}
 		];
@@ -183,7 +202,7 @@ describe('flour helpers', () => {
 		const result = addFlourToStage(
 			ingredients,
 			'main',
-			{ id: 'semola', name: 'Semola', nameDa: 'Semola' },
+			{ id: 'semolina', name: 'Semolina', nameDa: 'Semolina' },
 			10
 		);
 
@@ -199,18 +218,20 @@ describe('flour helpers', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'a',
-				name: 'A',
-				nameDa: 'A',
+				name: '',
+				nameDa: '',
 				percentage: 70,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
 				id: 'b',
-				name: 'B',
-				nameDa: 'B',
+				name: '',
+				nameDa: '',
 				percentage: 30,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			}
 		];
@@ -235,10 +256,11 @@ describe('flour helpers', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'only',
-				name: 'Only',
-				nameDa: 'Only',
+				name: '',
+				nameDa: '',
 				percentage: 100,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			}
 		];
@@ -251,26 +273,29 @@ describe('flour helpers', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'a',
-				name: 'A',
-				nameDa: 'A',
+				name: '',
+				nameDa: '',
 				percentage: 50,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
 				id: 'b',
-				name: 'B',
-				nameDa: 'B',
+				name: '',
+				nameDa: '',
 				percentage: 30,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
 				id: 'c',
-				name: 'C',
-				nameDa: 'C',
+				name: '',
+				nameDa: '',
 				percentage: 20,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			}
 		];
@@ -290,10 +315,10 @@ describe('calculator custom flours', () => {
 		const calculator = await loadCalculator();
 		calculator.setRecipe(baseRecipe);
 
-		calculator.addFlourType('main', 'semola', 10);
+		calculator.addFlourType('main', 'semolina', 10);
 
 		const stored = storage.get<CustomFlourState>('custom-flours', {});
-		expect(stored[baseRecipe.id]?.main?.[0]?.flourTypeId).toBe('semola');
+		expect(stored[baseRecipe.id]?.main?.[0]?.flourTypeId).toBe('semolina');
 	});
 
 	it('stores custom flour name and type for custom additions', async () => {
@@ -322,15 +347,15 @@ describe('calculator custom flours', () => {
 		calculator.setRecipe(typedFlourRecipe);
 
 		const available = calculator.getAvailableFlourTypes('main');
-		expect(available.find((f) => f.id === 'semola')).toBeUndefined();
+		expect(available.find((f) => f.id === 'semolina')).toBeUndefined();
 	});
 
 	it('removes custom flour and updates storage', async () => {
 		const calculator = await loadCalculator();
 		calculator.setRecipe(baseRecipe);
-		calculator.addFlourType('main', 'semola', 10);
+		calculator.addFlourType('main', 'semolina', 10);
 
-		calculator.removeFlourType('main', 'custom-flour-main-semola');
+		calculator.removeFlourType('main', 'custom-flour-main-semolina');
 
 		const stored = storage.get<CustomFlourState>('custom-flours', {});
 		expect(stored[baseRecipe.id]?.main ?? []).toHaveLength(0);
@@ -339,7 +364,7 @@ describe('calculator custom flours', () => {
 	it('clears custom flours on resetAllCustomizations', async () => {
 		const calculator = await loadCalculator();
 		calculator.setRecipe(baseRecipe);
-		calculator.addFlourType('main', 'semola', 10);
+		calculator.addFlourType('main', 'semolina', 10);
 
 		calculator.resetAllCustomizations();
 
@@ -350,23 +375,23 @@ describe('calculator custom flours', () => {
 	it('restores custom flours from storage on reload', async () => {
 		const calculator = await loadCalculator();
 		calculator.setRecipe(baseRecipe);
-		calculator.addFlourType('main', 'semola', 10);
+		calculator.addFlourType('main', 'semolina', 10);
 
 		const storedBefore = storage.get<CustomFlourState>('custom-flours', {});
-		expect(storedBefore[baseRecipe.id]?.main?.[0]?.flourTypeId).toBe('semola');
+		expect(storedBefore[baseRecipe.id]?.main?.[0]?.flourTypeId).toBe('semolina');
 
 		vi.resetModules();
 		const freshCalculator = await loadCalculator();
 		freshCalculator.setRecipe(baseRecipe);
 		const state = get(freshCalculator);
 
-		expect(state.customFlours.main?.[0]?.flourTypeId).toBe('semola');
+		expect(state.customFlours.main?.[0]?.flourTypeId).toBe('semolina');
 	});
 
 	it('keeps custom flours recipe-specific', async () => {
 		const calculator = await loadCalculator();
 		calculator.setRecipe(baseRecipe);
-		calculator.addFlourType('main', 'semola', 10);
+		calculator.addFlourType('main', 'semolina', 10);
 
 		calculator.setRecipe(twoFlourRecipe);
 
@@ -379,11 +404,11 @@ describe('calculator custom flours', () => {
 		calculator.setRecipe(predoughRecipe);
 
 		calculator.addFlourType('poolish', 'spelt', 5);
-		calculator.addFlourType('main', 'semola', 10);
+		calculator.addFlourType('main', 'semolina', 10);
 
 		const state = get(calculator);
 		expect(state.customFlours.poolish?.[0]?.flourTypeId).toBe('spelt');
-		expect(state.customFlours.main?.[0]?.flourTypeId).toBe('semola');
+		expect(state.customFlours.main?.[0]?.flourTypeId).toBe('semolina');
 	});
 
 	it('keeps stage percentages sane when adding flours to predough and main', async () => {
@@ -391,7 +416,7 @@ describe('calculator custom flours', () => {
 		calculator.setRecipe(predoughRecipe);
 
 		calculator.addFlourType('poolish', 'spelt', 5);
-		calculator.addFlourType('main', 'semola', 10);
+		calculator.addFlourType('main', 'semolina', 10);
 
 		const stagePercentages = get(calculator)
 			.scaledIngredients.filter((i) => i.type === 'flour' || i.type === 'water')
@@ -424,7 +449,7 @@ describe('calculator custom flours', () => {
 	it('keeps flour blends stable when hydration changes', async () => {
 		const calculator = await loadCalculator();
 		calculator.setRecipe(twoFlourRecipe);
-		calculator.addFlourType('main', 'semola', 10);
+		calculator.addFlourType('main', 'semolina', 10);
 
 		const before = get(calculator).scaledIngredients.filter((i) => i.type === 'flour');
 		calculator.setHydration(70);
@@ -439,7 +464,7 @@ describe('calculator custom flours', () => {
 	it('rebalances correctly with three flours after custom addition', async () => {
 		const calculator = await loadCalculator();
 		calculator.setRecipe(twoFlourRecipe);
-		calculator.addFlourType('main', 'semola', 10);
+		calculator.addFlourType('main', 'semolina', 10);
 
 		calculator.setFlourBlend('main-a', 50);
 

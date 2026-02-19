@@ -8,18 +8,20 @@ describe('rebalanceFlourBlend', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'nuvola',
-				name: 'Nuvola',
-				nameDa: 'Mel - Caputo Nuvola',
+				name: '',
+				nameDa: '',
 				percentage: 70,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
 				id: 'semola',
-				name: 'Semola',
-				nameDa: 'Mel - Semola',
+				name: '',
+				nameDa: '',
 				percentage: 30,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
@@ -46,18 +48,20 @@ describe('rebalanceFlourBlend', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'nuvola',
-				name: 'Nuvola',
-				nameDa: 'Mel - Caputo Nuvola',
+				name: '',
+				nameDa: '',
 				percentage: 70,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
 				id: 'semola',
-				name: 'Semola',
-				nameDa: 'Mel - Semola',
+				name: '',
+				nameDa: '',
 				percentage: 30,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			}
 		];
@@ -75,18 +79,20 @@ describe('rebalanceFlourBlend', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'nuvola',
-				name: 'Nuvola',
-				nameDa: 'Mel - Caputo Nuvola',
+				name: '',
+				nameDa: '',
 				percentage: 70,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
 				id: 'semola',
-				name: 'Semola',
-				nameDa: 'Mel - Semola',
+				name: '',
+				nameDa: '',
 				percentage: 30,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			}
 		];
@@ -104,18 +110,20 @@ describe('rebalanceFlourBlend', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'nuvola',
-				name: 'Nuvola',
-				nameDa: 'Mel - Caputo Nuvola',
+				name: '',
+				nameDa: '',
 				percentage: 70,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
 				id: 'semola',
-				name: 'Semola',
-				nameDa: 'Mel - Semola',
+				name: '',
+				nameDa: '',
 				percentage: 30,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			}
 		];
@@ -135,27 +143,30 @@ describe('rebalanceFlourBlend', () => {
 			// Main stage flours
 			{
 				id: 'main-nuvola',
-				name: 'Main Nuvola',
-				nameDa: 'Mel - Caputo Nuvola',
+				name: '',
+				nameDa: '',
 				percentage: 20,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
 				id: 'main-pizzeria',
-				name: 'Main Pizzeria',
-				nameDa: 'Mel - Caputo Pizzeria',
+				name: '',
+				nameDa: '',
 				percentage: 30,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			// Biga stage flour (single, should not be affected)
 			{
 				id: 'biga-flour',
-				name: 'Biga flour',
-				nameDa: 'Mel',
+				name: '',
+				nameDa: '',
 				percentage: 50,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'biga'
 			}
 		];
@@ -178,26 +189,29 @@ describe('rebalanceFlourBlend', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'flour-a',
-				name: 'Flour A',
-				nameDa: 'Mel A',
+				name: '',
+				nameDa: '',
 				percentage: 50,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
 				id: 'flour-b',
-				name: 'Flour B',
-				nameDa: 'Mel B',
+				name: '',
+				nameDa: '',
 				percentage: 30,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
 				id: 'flour-c',
-				name: 'Flour C',
-				nameDa: 'Mel C',
+				name: '',
+				nameDa: '',
 				percentage: 20,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			}
 		];
@@ -225,10 +239,11 @@ describe('rebalanceFlourBlend', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'flour',
-				name: 'Flour',
-				nameDa: 'Mel',
+				name: '',
+				nameDa: '',
 				percentage: 100,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
@@ -263,7 +278,12 @@ describe('getControllableIngredients', () => {
 				name: 'Main dough',
 				nameDa: 'Hoveddej',
 				ingredients: [
-					{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+					{
+						id: 'flour',
+						percentage: 100,
+						type: 'flour',
+						flourType: 'tipo-00'
+					},
 					{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
 					{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.7, type: 'salt' },
 					{
@@ -296,10 +316,9 @@ describe('getControllableIngredients', () => {
 				ingredients: [
 					{
 						id: 'poolish-flour',
-						name: 'Poolish flour',
-						nameDa: 'Mel',
 						percentage: 20,
-						type: 'flour'
+						type: 'flour',
+						flourType: 'tipo-00'
 					},
 					{
 						id: 'poolish-water',
@@ -325,10 +344,9 @@ describe('getControllableIngredients', () => {
 				ingredients: [
 					{
 						id: 'main-flour',
-						name: 'Main flour',
-						nameDa: 'Mel',
 						percentage: 80,
-						type: 'flour'
+						type: 'flour',
+						flourType: 'tipo-00'
 					},
 					{
 						id: 'main-water',
@@ -366,10 +384,9 @@ describe('getControllableIngredients', () => {
 				ingredients: [
 					{
 						id: 'biga-flour',
-						name: 'Biga flour',
-						nameDa: 'Mel - Nuvola',
 						percentage: 50,
-						type: 'flour'
+						type: 'flour',
+						flourType: 'tipo-00'
 					}
 				]
 			},
@@ -380,17 +397,15 @@ describe('getControllableIngredients', () => {
 				ingredients: [
 					{
 						id: 'main-nuvola',
-						name: 'Nuvola',
-						nameDa: 'Mel - Nuvola',
 						percentage: 20,
-						type: 'flour'
+						type: 'flour',
+						flourType: 'tipo-00'
 					},
 					{
 						id: 'main-pizzeria',
-						name: 'Pizzeria',
-						nameDa: 'Mel - Pizzeria',
 						percentage: 30,
-						type: 'flour'
+						type: 'flour',
+						flourType: 'tipo-00'
 					},
 					{
 						id: 'water',
@@ -425,7 +440,12 @@ describe('getControllableIngredients', () => {
 				name: 'Main dough',
 				nameDa: 'Hoveddej',
 				ingredients: [
-					{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+					{
+						id: 'flour',
+						percentage: 100,
+						type: 'flour',
+						flourType: 'tipo-00'
+					},
 					{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
 					{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.5, type: 'salt' },
 					{
@@ -525,10 +545,9 @@ describe('getControllableIngredients', () => {
 					ingredients: [
 						{
 							id: 'flour',
-							name: 'Flour',
-							nameDa: 'Mel',
 							percentage: 100,
-							type: 'flour'
+							type: 'flour',
+							flourType: 'tipo-00'
 						},
 						{
 							id: 'water',
@@ -592,10 +611,9 @@ describe('getControllableIngredients', () => {
 					ingredients: [
 						{
 							id: 'poolish-flour',
-							name: 'Poolish flour',
-							nameDa: 'Mel',
 							percentage: 10,
-							type: 'flour'
+							type: 'flour',
+							flourType: 'tipo-00'
 						},
 						{
 							id: 'poolish-water',
@@ -621,10 +639,9 @@ describe('getControllableIngredients', () => {
 					ingredients: [
 						{
 							id: 'main-flour',
-							name: 'Main flour',
-							nameDa: 'Mel',
 							percentage: 90,
-							type: 'flour'
+							type: 'flour',
+							flourType: 'tipo-00'
 						},
 						{
 							id: 'main-water',

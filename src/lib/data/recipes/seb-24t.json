@@ -3,7 +3,6 @@
 	"name": "Seb 24 timer",
 	"nameDa": "Seb 24 timer",
 	"category": "neapolitan",
-	"yeastType": "fresh",
 	"baseWeight": 270,
 	"hydration": 70,
 	"mixingSteps": [
@@ -14,10 +13,9 @@
 			"ingredients": [
 				{
 					"id": "flour",
-					"name": "Flour tipo 0 or 00",
-					"nameDa": "Mel tipo 0 eller 00",
 					"percentage": 100,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "tipo-00"
 				},
 				{
 					"id": "water",

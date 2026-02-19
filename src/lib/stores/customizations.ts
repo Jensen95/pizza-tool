@@ -1,8 +1,9 @@
 import { writable, derived, get } from 'svelte/store';
 import * as storage from '$lib/utils/storage';
-import type { Recipe, RecipeIngredient } from '$lib/models/recipe.types';
+import type { Recipe } from '$lib/models/recipe.types';
 import { defaultCalculatorInput } from '$lib/models/ingredient.types';
 import { getAllIngredients } from '$lib/utils/baker-percentage';
+import type { FlatIngredient } from '$lib/utils/baker-percentage';
 
 const CUSTOMIZATIONS_KEY = 'recipe-customizations';
 const HISTORY_KEY = 'recipe-history';
@@ -130,7 +131,7 @@ function createCustomizationsStore() {
 		/**
 		 * Apply customizations to recipe ingredients
 		 */
-		applyToIngredients(recipe: Recipe): RecipeIngredient[] {
+		applyToIngredients(recipe: Recipe): FlatIngredient[] {
 			const customization = get({ subscribe })[recipe.id];
 			const allIngredients = getAllIngredients(recipe);
 			if (!customization) return allIngredients;

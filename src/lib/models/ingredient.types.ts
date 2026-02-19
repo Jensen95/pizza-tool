@@ -1,6 +1,6 @@
 // ABOUTME: Calculator and ingredient types for scaling recipes and UI controls
 import type { RecipeIngredient, IngredientType } from './recipe.types';
-import type { FlourType, YeastInfo } from './reference.types';
+import type { FlourCategory, YeastInfo } from './reference.types';
 
 export interface ScaledIngredient {
 	id: string;
@@ -93,7 +93,7 @@ export interface CustomFlour {
 	flourTypeId: string;
 	percentage: number;
 	customName?: string;
-	flourType?: FlourType['type'];
+	flourType?: FlourCategory;
 }
 
 export type CustomFlourState = Record<string, Record<string, CustomFlour[]>>;

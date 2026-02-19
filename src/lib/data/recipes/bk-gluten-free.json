@@ -13,10 +13,10 @@
 			"ingredients": [
 				{
 					"id": "flour",
-					"name": "Gluten-free flour mix",
-					"nameDa": "Roed Finax melblanding",
+					"flourId": "finax-glutenfri-roed",
 					"percentage": 100,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "gluten-free"
 				},
 				{
 					"id": "water",

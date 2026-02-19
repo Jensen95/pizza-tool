@@ -13,10 +13,9 @@
 			"ingredients": [
 				{
 					"id": "flour",
-					"name": "Flour tipo 00",
-					"nameDa": "Mel tipo 00",
 					"percentage": 100,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "tipo-00"
 				},
 				{
 					"id": "water",

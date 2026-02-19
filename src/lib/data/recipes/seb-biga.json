@@ -14,10 +14,10 @@
 			"ingredients": [
 				{
 					"id": "biga-flour",
-					"name": "Biga flour (Caputo Nuvola Super)",
-					"nameDa": "Mel - Caputo Nuvola Super",
+					"flourId": "caputo-nuvola-super",
 					"percentage": 50,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "tipo-0"
 				},
 				{
 					"id": "biga-water",
@@ -43,17 +43,17 @@
 			"ingredients": [
 				{
 					"id": "main-flour-nuvola",
-					"name": "Main flour (Caputo Nuvola Super)",
-					"nameDa": "Mel - Caputo Nuvola Super",
+					"flourId": "caputo-nuvola-super",
 					"percentage": 20,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "tipo-0"
 				},
 				{
 					"id": "main-flour-pizzeria",
-					"name": "Main flour (Caputo Pizzeria)",
-					"nameDa": "Mel - Caputo Pizzeria",
+					"flourId": "caputo-pizzeria",
 					"percentage": 30,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "tipo-00"
 				},
 				{
 					"id": "main-water",

@@ -1,5 +1,5 @@
 // ABOUTME: Core recipe type definitions — mixing steps + timeline model
-import type { YeastInfo } from './reference.types';
+import type { FlourCategory, YeastInfo } from './reference.types';
 
 export type RecipeCategory =
 	| 'neapolitan'
@@ -14,24 +14,33 @@ export type RecipeCategory =
 
 export type IngredientType = 'flour' | 'water' | 'yeast' | 'salt' | 'oil' | 'sugar' | 'other';
 
-interface BaseIngredient {
+interface IngredientBase {
 	id: string;
-	name: string;
-	nameDa: string;
 	percentage: number;
 	notes?: string;
 }
 
-export interface YeastIngredient extends BaseIngredient {
+interface NamedIngredient extends IngredientBase {
+	name: string;
+	nameDa: string;
+}
+
+export interface FlourIngredient extends IngredientBase {
+	type: 'flour';
+	flourType: FlourCategory;
+	flourId?: string;
+}
+
+export interface YeastIngredient extends NamedIngredient {
 	type: 'yeast';
 	yeastType: YeastInfo['type'];
 }
 
-interface SimpleIngredient extends BaseIngredient {
-	type: Exclude<IngredientType, 'yeast'>;
+interface SimpleIngredient extends NamedIngredient {
+	type: Exclude<IngredientType, 'yeast' | 'flour'>;
 }
 
-export type RecipeIngredient = YeastIngredient | SimpleIngredient;
+export type RecipeIngredient = FlourIngredient | YeastIngredient | SimpleIngredient;
 
 export interface MixingStep {
 	id: string;

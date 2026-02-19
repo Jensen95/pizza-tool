@@ -22,7 +22,12 @@ function buildRecipe(
 				name: 'Main dough',
 				nameDa: 'Hoveddej',
 				ingredients: [
-					{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+					{
+						id: 'flour',
+						percentage: 100,
+						type: 'flour',
+						flourType: 'tipo-00'
+					},
 					{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
 					{
 						id: 'yeast',

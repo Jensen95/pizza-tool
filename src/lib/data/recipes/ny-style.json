@@ -13,17 +13,16 @@
 			"ingredients": [
 				{
 					"id": "flour-00",
-					"name": "Wheat flour tipo 00",
-					"nameDa": "Hvedemel tipo 00",
 					"percentage": 90.77,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "tipo-00"
 				},
 				{
 					"id": "flour-wholegrain",
-					"name": "Fine wholegrain flour",
-					"nameDa": "Fintmalet fuldkornsmel",
 					"percentage": 9.23,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "whole-wheat",
+					"notes": "Fine wholegrain flour / Fintmalet fuldkornsmel"
 				},
 				{
 					"id": "water",

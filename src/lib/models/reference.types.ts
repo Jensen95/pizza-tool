@@ -1,3 +1,16 @@
+export type FlourCategory =
+	| 'tipo-00'
+	| 'tipo-0'
+	| 'tipo-1'
+	| 'bread'
+	| 'all-purpose'
+	| 'whole-wheat'
+	| 'semolina'
+	| 'rye'
+	| 'spelt'
+	| 'gluten-free'
+	| 'other';
+
 export interface FlourType {
 	id: string;
 	name: string;
@@ -8,15 +21,7 @@ export interface FlourType {
 	wValue?: number;
 	wValueMin?: number;
 	wValueMax?: number;
-	type:
-		| 'tipo-00'
-		| 'tipo-0'
-		| 'tipo-1'
-		| 'bread'
-		| 'all-purpose'
-		| 'whole-wheat'
-		| 'semolina'
-		| 'other';
+	type: FlourCategory;
 	origin?: string;
 	notes?: string;
 	notesDa?: string;
@@ -89,7 +94,7 @@ export const toppingCategoryLabels: Record<Topping['category'], string> = {
 	other: 'Andet'
 };
 
-export const flourTypeLabels: Record<FlourType['type'], string> = {
+export const flourTypeLabels: Record<FlourCategory, string> = {
 	'tipo-00': 'Tipo 00',
 	'tipo-0': 'Tipo 0',
 	'tipo-1': 'Tipo 1',
@@ -97,6 +102,9 @@ export const flourTypeLabels: Record<FlourType['type'], string> = {
 	'all-purpose': 'Hvedemel',
 	'whole-wheat': 'Fuldkornsmel',
 	semolina: 'Semolina',
+	rye: 'Rugmel',
+	spelt: 'Speltmel',
+	'gluten-free': 'Glutenfri',
 	other: 'Andet'
 };
 

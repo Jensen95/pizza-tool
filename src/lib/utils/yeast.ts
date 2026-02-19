@@ -31,9 +31,9 @@ export function getRecipeYeastType(recipe: Recipe): YeastInfo['type'] {
 	const allIngredients = getAllIngredients(recipe);
 	const yeastIngredients = allIngredients.filter((ing) => ing.type === 'yeast');
 
-	// Use explicit yeastType from ingredient (discriminated union)
+	// Use explicit yeastType from ingredient
 	for (const ing of yeastIngredients) {
-		if (ing.type === 'yeast') return ing.yeastType;
+		if (ing.type === 'yeast' && ing.yeastType) return ing.yeastType;
 	}
 
 	return 'fresh';

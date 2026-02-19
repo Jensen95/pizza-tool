@@ -48,17 +48,15 @@ const mixedStageRecipe: Recipe = {
 			ingredients: [
 				{
 					id: 'base-flour',
-					name: 'Flour',
-					nameDa: 'Mel',
 					percentage: 70,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'main-flour',
-					name: 'Main flour',
-					nameDa: 'Mel (hoveddej)',
 					percentage: 30,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
 			]
@@ -83,17 +81,15 @@ const poolishRecipe: Recipe = {
 			ingredients: [
 				{
 					id: 'poolish-flour-a',
-					name: 'Poolish flour A',
-					nameDa: 'Poolish mel A',
 					percentage: 10,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'poolish-flour-b',
-					name: 'Poolish flour B',
-					nameDa: 'Poolish mel B',
 					percentage: 10,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'poolish-water',
@@ -119,10 +115,9 @@ const poolishRecipe: Recipe = {
 			ingredients: [
 				{
 					id: 'main-flour',
-					name: 'Main dough flour',
-					nameDa: 'Mel (hoveddej)',
 					percentage: 80,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'main-water',

@@ -10,6 +10,9 @@ A SvelteKit application for pizza recipe management with baker's percentage calc
 - 📖 Reference materials (flour types, sauces, tips)
 - 📱 Progressive Web App (PWA) support
 
+TODO:
+Extract more context from recipes by using the excel plugin in cluade.
+
 ### PWA install support
 
 - The in-app install banner relies on the `beforeinstallprompt` event, which is available in Chromium-based browsers (Chrome, Edge, Brave) and will surface when the app meets install criteria.

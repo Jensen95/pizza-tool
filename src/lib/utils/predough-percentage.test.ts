@@ -27,10 +27,9 @@ describe('Predough Percentage Calculations', () => {
 					ingredients: [
 						{
 							id: 'biga-flour',
-							name: 'Biga flour',
-							nameDa: 'Mel (biga)',
 							percentage: 100,
-							type: 'flour'
+							type: 'flour',
+							flourType: 'tipo-00'
 						},
 						{
 							id: 'biga-water',
@@ -132,10 +131,9 @@ describe('Predough Percentage Calculations', () => {
 					ingredients: [
 						{
 							id: 'poolish-flour',
-							name: 'Poolish flour',
-							nameDa: 'Mel (poolish)',
 							percentage: 50,
-							type: 'flour'
+							type: 'flour',
+							flourType: 'tipo-00'
 						},
 						{
 							id: 'poolish-water',
@@ -161,10 +159,9 @@ describe('Predough Percentage Calculations', () => {
 					ingredients: [
 						{
 							id: 'main-flour',
-							name: 'Main dough flour',
-							nameDa: 'Mel (hoveddej)',
 							percentage: 50,
-							type: 'flour'
+							type: 'flour',
+							flourType: 'tipo-00'
 						},
 						{
 							id: 'main-water',
@@ -248,10 +245,9 @@ describe('Predough Percentage Calculations', () => {
 						ingredients: [
 							{
 								id: 'biga-flour',
-								name: 'Biga flour',
-								nameDa: 'Mel (biga)',
 								percentage: 100,
-								type: 'flour'
+								type: 'flour',
+								flourType: 'tipo-00'
 							},
 							{
 								id: 'biga-water',
@@ -326,10 +322,9 @@ describe('Predough Percentage Calculations', () => {
 							// Add main dough flour (50% of total)
 							{
 								id: 'main-flour',
-								name: 'Main flour',
-								nameDa: 'Mel (hoveddej)',
 								percentage: 50,
-								type: 'flour'
+								type: 'flour',
+								flourType: 'tipo-00'
 							},
 							// Adjust main water to maintain overall hydration
 							// Original total water: 65%, biga now has 22%, so main needs 43%
@@ -391,10 +386,9 @@ describe('Predough Percentage Calculations', () => {
 						ingredients: [
 							{
 								id: 'poolish-flour',
-								name: 'Flour',
-								nameDa: 'Mel',
 								percentage: 100,
-								type: 'flour'
+								type: 'flour',
+								flourType: 'tipo-00'
 							},
 							{
 								id: 'poolish-water',
@@ -434,10 +428,9 @@ describe('Predough Percentage Calculations', () => {
 						ingredients: [
 							{
 								id: 'poolish-flour',
-								name: 'Flour',
-								nameDa: 'Mel',
 								percentage: 30,
-								type: 'flour'
+								type: 'flour',
+								flourType: 'tipo-00'
 							},
 							{
 								id: 'poolish-water',
@@ -455,10 +448,9 @@ describe('Predough Percentage Calculations', () => {
 						ingredients: [
 							{
 								id: 'main-flour',
-								name: 'Flour',
-								nameDa: 'Mel',
 								percentage: 70,
-								type: 'flour'
+								type: 'flour',
+								flourType: 'tipo-00'
 							},
 							{
 								id: 'main-water',
@@ -509,10 +501,9 @@ describe('Predough Percentage Calculations', () => {
 					ingredients: [
 						{
 							id: 'biga-flour',
-							name: 'Biga flour',
-							nameDa: 'Mel (biga)',
 							percentage: 100,
-							type: 'flour'
+							type: 'flour',
+							flourType: 'tipo-00'
 						},
 						{
 							id: 'biga-water',
@@ -643,10 +634,9 @@ describe('Predough Percentage Calculations', () => {
 						ingredients: [
 							{
 								id: 'autolyse-flour',
-								name: 'Flour',
-								nameDa: 'Mel',
 								percentage: 100,
-								type: 'flour'
+								type: 'flour',
+								flourType: 'tipo-00'
 							},
 							{
 								id: 'autolyse-water',
@@ -724,10 +714,9 @@ describe('Predough Percentage Calculations', () => {
 						ingredients: [
 							{
 								id: 'poolish-flour',
-								name: 'Poolish flour',
-								nameDa: 'Mel (poolish)',
 								percentage: 30,
-								type: 'flour'
+								type: 'flour',
+								flourType: 'tipo-00'
 							},
 							{
 								id: 'poolish-water',
@@ -745,10 +734,9 @@ describe('Predough Percentage Calculations', () => {
 						ingredients: [
 							{
 								id: 'main-flour',
-								name: 'Main flour',
-								nameDa: 'Mel (hoveddej)',
 								percentage: 90,
-								type: 'flour'
+								type: 'flour',
+								flourType: 'tipo-00'
 							},
 							{
 								id: 'main-water',
@@ -804,10 +792,9 @@ describe('Recipe Page Gram Display', () => {
 				ingredients: [
 					{
 						id: 'biga-flour',
-						name: 'Biga flour',
-						nameDa: 'Mel (biga)',
 						percentage: 100,
-						type: 'flour'
+						type: 'flour',
+						flourType: 'tipo-00'
 					},
 					{
 						id: 'biga-water',

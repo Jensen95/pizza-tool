@@ -3,7 +3,6 @@
 	"name": "Roma Teglia Biga (Piergiorgio Giorilli)",
 	"nameDa": "Roma teglia biga (Piergiorgio Giorilli)",
 	"category": "roman",
-	"yeastType": "fresh",
 	"baseWeight": 900,
 	"hydration": 75,
 	"mixingSteps": [
@@ -15,10 +14,9 @@
 			"ingredients": [
 				{
 					"id": "biga-flour",
-					"name": "Flour (biga)",
-					"nameDa": "Mel (biga)",
 					"percentage": 70,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "tipo-00"
 				},
 				{
 					"id": "biga-water",
@@ -44,10 +42,9 @@
 			"ingredients": [
 				{
 					"id": "main-flour",
-					"name": "Flour (final dough)",
-					"nameDa": "Mel (hoveddej)",
 					"percentage": 30,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "tipo-00"
 				},
 				{
 					"id": "main-water",

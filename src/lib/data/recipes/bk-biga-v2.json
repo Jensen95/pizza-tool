@@ -14,10 +14,9 @@
 			"ingredients": [
 				{
 					"id": "biga-flour",
-					"name": "Biga flour",
-					"nameDa": "Mel",
 					"percentage": 50,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "tipo-00"
 				},
 				{
 					"id": "biga-water",
@@ -43,10 +42,9 @@
 			"ingredients": [
 				{
 					"id": "main-flour",
-					"name": "Main dough flour",
-					"nameDa": "Mel",
 					"percentage": 50,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "tipo-00"
 				},
 				{
 					"id": "main-water",

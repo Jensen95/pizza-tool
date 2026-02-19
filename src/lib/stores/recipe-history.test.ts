@@ -20,10 +20,9 @@ const baseRecipe: Recipe = {
 			ingredients: [
 				{
 					id: 'poolish-flour',
-					name: 'Poolish flour',
-					nameDa: 'Poolish mel',
 					percentage: 20,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'poolish-water',
@@ -49,10 +48,9 @@ const baseRecipe: Recipe = {
 			ingredients: [
 				{
 					id: 'main-flour',
-					name: 'Main flour',
-					nameDa: 'Mel',
 					percentage: 80,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'main-water',

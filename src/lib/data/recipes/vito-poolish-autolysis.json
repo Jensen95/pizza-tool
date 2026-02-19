@@ -14,10 +14,9 @@
 			"ingredients": [
 				{
 					"id": "poolish-flour",
-					"name": "Flour (poolish)",
-					"nameDa": "Mel",
 					"percentage": 19.35,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "tipo-00"
 				},
 				{
 					"id": "poolish-water",
@@ -50,10 +49,9 @@
 			"ingredients": [
 				{
 					"id": "main-flour",
-					"name": "Flour (main dough)",
-					"nameDa": "Mel",
 					"percentage": 80.65,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "tipo-00"
 				},
 				{
 					"id": "main-water",

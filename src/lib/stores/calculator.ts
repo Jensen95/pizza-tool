@@ -7,7 +7,7 @@ import type {
 	CustomFlour,
 	CustomFlourState
 } from '$lib/models/ingredient.types';
-import type { FlourTypeOption, YeastInfo } from '$lib/models/reference.types';
+import type { FlourCategory, FlourTypeOption, YeastInfo } from '$lib/models/reference.types';
 import {
 	scaleRecipe,
 	getOriginalPredoughRatio,
@@ -75,8 +75,29 @@ function saveCustomIngredients(data: Record<string, Record<string, number>>) {
 	storage.set('custom-ingredients', data);
 }
 
+const FLOUR_ID_MIGRATION: Record<string, string> = {
+	'bread-flour': 'bread',
+	semola: 'semolina'
+};
+
 function loadCustomFlours(): CustomFlourState {
-	return storage.get<CustomFlourState>(CUSTOM_FLOUR_STORAGE_KEY, {});
+	const state = storage.get<CustomFlourState>(CUSTOM_FLOUR_STORAGE_KEY, {});
+	let migrated = false;
+	for (const recipeFlours of Object.values(state)) {
+		for (const flours of Object.values(recipeFlours)) {
+			for (const flour of flours) {
+				const newId = FLOUR_ID_MIGRATION[flour.flourTypeId];
+				if (newId) {
+					flour.flourTypeId = newId;
+					migrated = true;
+				}
+			}
+		}
+	}
+	if (migrated) {
+		storage.set(CUSTOM_FLOUR_STORAGE_KEY, state);
+	}
+	return state;
 }
 
 function saveCustomFlours(data: CustomFlourState) {
@@ -138,18 +159,20 @@ function createCalculatorStore() {
 		for (const [mixingStepId, flours] of Object.entries(recipeCustomFlours)) {
 			const stageKey = getStageKey(mixingStepId);
 			for (const flour of flours) {
-				const flourType = flourTypeOptions.find((f) => f.id === flour.flourTypeId);
+				const flourTypeOption = flourTypeOptions.find((f) => f.id === flour.flourTypeId);
 				const override = customIngredients[flour.flourId];
 				const percentage = override !== undefined ? override : flour.percentage;
 				const customName = flour.customName;
-				const name = customName || flourType?.name || flour.flourTypeId;
-				const nameDa = customName || flourType?.nameDa || flourType?.name || flour.flourTypeId;
+				const name = customName || flourTypeOption?.name || flour.flourTypeId;
+				const nameDa =
+					customName || flourTypeOption?.nameDa || flourTypeOption?.name || flour.flourTypeId;
 				customFlourIngredients.push({
 					id: flour.flourId,
 					name,
 					nameDa,
 					percentage,
 					type: 'flour',
+					flourType: flour.flourType || (flour.flourTypeId as FlourCategory),
 					mixingStepId: stageKey
 				});
 			}

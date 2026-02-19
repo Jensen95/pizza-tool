@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { scaleRecipe, calculateHydration } from '$lib/utils/baker-percentage';
+import { scaleRecipe } from '$lib/utils/baker-percentage';
 import type { Recipe } from '$lib/models/recipe.types';
 
 // Test recipe: 65% hydration, 20% poolish
@@ -19,10 +19,9 @@ const poolishRecipe: Recipe = {
 			ingredients: [
 				{
 					id: 'poolish-flour',
-					name: 'Poolish flour',
-					nameDa: 'Mel',
 					percentage: 20,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'poolish-water',
@@ -48,10 +47,9 @@ const poolishRecipe: Recipe = {
 			ingredients: [
 				{
 					id: 'main-flour',
-					name: 'Main flour',
-					nameDa: 'Mel',
 					percentage: 80,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'main-water',
@@ -87,7 +85,12 @@ const simpleRecipe: Recipe = {
 			name: 'Main dough',
 			nameDa: 'Hoveddej',
 			ingredients: [
-				{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+				{
+					id: 'flour',
+					percentage: 100,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
 				{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
 				{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.7, type: 'salt' },
 				{
@@ -119,17 +122,14 @@ describe('End-to-end calculation tests', () => {
 		const water = result.scaledIngredients.find((i) => i.id === 'water');
 		expect(water?.percentage).toBeCloseTo(70, 0);
 
-		// Verify the scaled hydration
-		const scaledHydration = calculateHydration(
-			result.scaledIngredients.map((i) => ({
-				id: i.id,
-				name: i.name,
-				nameDa: i.nameDa,
-				percentage: i.percentage,
-				type: i.type
-			}))
-		);
-		expect(scaledHydration).toBe(70);
+		// Verify the scaled hydration from percentages
+		const flourPct = result.scaledIngredients
+			.filter((i) => i.type === 'flour')
+			.reduce((sum, i) => sum + i.percentage, 0);
+		const waterPct = result.scaledIngredients
+			.filter((i) => i.type === 'water')
+			.reduce((sum, i) => sum + i.percentage, 0);
+		expect(Math.round((waterPct / flourPct) * 100)).toBe(70);
 	});
 
 	it('should set predough split to 30% and verify flour/water redistribution', () => {

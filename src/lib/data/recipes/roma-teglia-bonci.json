@@ -3,7 +3,6 @@
 	"name": "Roma Teglia (Gabriele Bonci)",
 	"nameDa": "Roma teglia (Gabriele Bonci)",
 	"category": "roman",
-	"yeastType": "fresh",
 	"baseWeight": 900,
 	"hydration": 75,
 	"mixingSteps": [
@@ -14,10 +13,9 @@
 			"ingredients": [
 				{
 					"id": "flour",
-					"name": "Strong flour tipo 0/00",
-					"nameDa": "Stærk hvedemel tipo 0/00",
 					"percentage": 100,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "tipo-00"
 				},
 				{
 					"id": "water",

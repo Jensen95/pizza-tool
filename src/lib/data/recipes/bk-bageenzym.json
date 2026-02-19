@@ -3,7 +3,6 @@
 	"name": "BK Bageenzym",
 	"nameDa": "BK Bageenzym",
 	"category": "direct",
-	"yeastType": "instant",
 	"baseWeight": 270,
 	"hydration": 64,
 	"mixingSteps": [
@@ -14,10 +13,9 @@
 			"ingredients": [
 				{
 					"id": "flour",
-					"name": "Flour tipo 00",
-					"nameDa": "Mel tipo 00",
 					"percentage": 100,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "tipo-00"
 				},
 				{
 					"id": "water",

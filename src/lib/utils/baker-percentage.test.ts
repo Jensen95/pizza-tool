@@ -40,10 +40,9 @@ describe("Baker's Percentage - Basic Calculations", () => {
 			const ingredients: RecipeIngredient[] = [
 				{
 					id: 'flour',
-					name: 'Flour',
-					nameDa: 'Mel',
 					percentage: 100,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'water',
@@ -125,10 +124,9 @@ describe("Baker's Percentage - Recipe Scaling", () => {
 				ingredients: [
 					{
 						id: 'flour',
-						name: 'Flour',
-						nameDa: 'Mel',
 						percentage: 100,
-						type: 'flour'
+						type: 'flour',
+						flourType: 'tipo-00'
 					},
 					{
 						id: 'water',
@@ -206,24 +204,21 @@ describe("Baker's Percentage - Recipe Scaling", () => {
 						ingredients: [
 							{
 								id: 'main-flour',
-								name: 'Flour',
-								nameDa: 'Mel',
 								percentage: 100,
-								type: 'flour'
+								type: 'flour',
+								flourType: 'tipo-00'
 							},
 							{
 								id: 'tipo-00',
-								name: 'Tipo 00',
-								nameDa: 'Tipo 00',
 								percentage: 60,
-								type: 'flour'
+								type: 'flour',
+								flourType: 'tipo-00'
 							},
 							{
 								id: 'tipo-0',
-								name: 'Tipo 0',
-								nameDa: 'Tipo 0',
 								percentage: 40,
-								type: 'flour'
+								type: 'flour',
+								flourType: 'tipo-00'
 							},
 							{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
 							{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.7, type: 'salt' }
@@ -266,7 +261,12 @@ describe("Baker's Percentage - Recipe Scaling", () => {
 describe("Baker's Percentage - Hydration Calculation", () => {
 	it('should calculate hydration for simple recipe', () => {
 		const ingredients: RecipeIngredient[] = [
-			{ id: '1', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+			{
+				id: '1',
+				percentage: 100,
+				type: 'flour',
+				flourType: 'tipo-00'
+			},
 			{ id: '2', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
 		];
 		expect(calculateHydration(ingredients)).toBe(65);
@@ -274,7 +274,12 @@ describe("Baker's Percentage - Hydration Calculation", () => {
 
 	it('should calculate hydration with multiple water sources', () => {
 		const ingredients: RecipeIngredient[] = [
-			{ id: '1', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+			{
+				id: '1',
+				percentage: 100,
+				type: 'flour',
+				flourType: 'tipo-00'
+			},
 			{ id: '2', name: 'Water 1', nameDa: 'Vand 1', percentage: 40, type: 'water' },
 			{ id: '3', name: 'Water 2', nameDa: 'Vand 2', percentage: 25, type: 'water' }
 		];
@@ -304,7 +309,12 @@ describe("Baker's Percentage - Recipe Validation", () => {
 					name: 'Main dough',
 					nameDa: 'Hoveddej',
 					ingredients: [
-						{ id: '1', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+						{
+							id: '1',
+							percentage: 100,
+							type: 'flour',
+							flourType: 'tipo-00'
+						},
 						{ id: '2', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
 						{ id: '3', name: 'Salt', nameDa: 'Salt', percentage: 2.7, type: 'salt' }
 					]
@@ -355,7 +365,14 @@ describe("Baker's Percentage - Recipe Validation", () => {
 					id: 'main',
 					name: 'Main dough',
 					nameDa: 'Hoveddej',
-					ingredients: [{ id: '1', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' }]
+					ingredients: [
+						{
+							id: '1',
+							percentage: 100,
+							type: 'flour',
+							flourType: 'tipo-00'
+						}
+					]
 				}
 			],
 			timeline: []
@@ -380,7 +397,12 @@ describe("Baker's Percentage - Recipe Validation", () => {
 					name: 'Main dough',
 					nameDa: 'Hoveddej',
 					ingredients: [
-						{ id: '1', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+						{
+							id: '1',
+							percentage: 100,
+							type: 'flour',
+							flourType: 'tipo-00'
+						},
 						{ id: '2', name: 'Water', nameDa: 'Vand', percentage: 10, type: 'water' }
 					]
 				}

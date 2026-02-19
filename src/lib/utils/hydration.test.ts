@@ -22,7 +22,12 @@ const simpleRecipe: Recipe = {
 			name: 'Main dough',
 			nameDa: 'Hoveddej',
 			ingredients: [
-				{ id: 'flour', name: 'Flour', nameDa: 'Mel', percentage: 100, type: 'flour' },
+				{
+					id: 'flour',
+					percentage: 100,
+					type: 'flour',
+					flourType: 'tipo-00'
+				},
 				{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
 				{ id: 'salt', name: 'Salt', nameDa: 'Salt', percentage: 2.7, type: 'salt' },
 				{
@@ -56,10 +61,9 @@ const poolishRecipe: Recipe = {
 			ingredients: [
 				{
 					id: 'poolish-flour',
-					name: 'Poolish flour',
-					nameDa: 'Mel',
 					percentage: 20,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'poolish-water',
@@ -85,10 +89,9 @@ const poolishRecipe: Recipe = {
 			ingredients: [
 				{
 					id: 'main-flour',
-					name: 'Main flour',
-					nameDa: 'Mel',
 					percentage: 80,
-					type: 'flour'
+					type: 'flour',
+					flourType: 'tipo-00'
 				},
 				{
 					id: 'main-water',
@@ -115,10 +118,11 @@ describe('redistributeWater', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'flour',
-				name: 'Flour',
-				nameDa: 'Mel',
+				name: '',
+				nameDa: '',
 				percentage: 100,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
@@ -161,10 +165,11 @@ describe('redistributeWater', () => {
 			},
 			{
 				id: 'flour',
-				name: 'Flour',
-				nameDa: 'Mel',
+				name: '',
+				nameDa: '',
 				percentage: 100,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			}
 		];
@@ -188,10 +193,11 @@ describe('redistributeWater', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'flour',
-				name: 'Flour',
-				nameDa: 'Mel',
+				name: '',
+				nameDa: '',
 				percentage: 100,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			}
 		];
@@ -205,10 +211,11 @@ describe('redistributeWater', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'flour',
-				name: 'Flour',
-				nameDa: 'Mel',
+				name: '',
+				nameDa: '',
 				percentage: 100,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
@@ -230,10 +237,11 @@ describe('redistributeWater', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'flour',
-				name: 'Flour',
-				nameDa: 'Mel',
+				name: '',
+				nameDa: '',
 				percentage: 100,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
@@ -255,10 +263,11 @@ describe('redistributeWater', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'flour',
-				name: 'Flour',
-				nameDa: 'Mel',
+				name: '',
+				nameDa: '',
 				percentage: 100,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{
@@ -282,10 +291,11 @@ describe('redistributeWater', () => {
 		const ingredients: FlatIngredient[] = [
 			{
 				id: 'flour',
-				name: 'Flour',
-				nameDa: 'Mel',
+				name: '',
+				nameDa: '',
 				percentage: 100,
 				type: 'flour',
+				flourType: 'tipo-00',
 				mixingStepId: 'main'
 			},
 			{

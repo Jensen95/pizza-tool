@@ -13,10 +13,9 @@
 			"ingredients": [
 				{
 					"id": "flour",
-					"name": "Flour",
-					"nameDa": "Mel",
 					"percentage": 100,
-					"type": "flour"
+					"type": "flour",
+					"flourType": "bread"
 				},
 				{
 					"id": "water",
