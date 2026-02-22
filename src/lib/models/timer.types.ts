@@ -96,6 +96,13 @@ export function formatDuration(minutes: number): string {
 	return `${hours}t ${remainingMinutes}m`;
 }
 
+export function formatFinishTime(timestamp: number): string {
+	const date = new Date(timestamp);
+	const hours = date.getHours().toString().padStart(2, '0');
+	const minutes = date.getMinutes().toString().padStart(2, '0');
+	return `${hours}:${minutes}`;
+}
+
 export function formatTimeRemaining(ms: number): string {
 	if (ms <= 0) return '0:00';
 
