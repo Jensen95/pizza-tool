@@ -22,6 +22,7 @@ import {
 import type { FlatIngredient } from '$lib/utils/baker-percentage';
 import { flourTypes as flourTypeOptions } from '$lib/data/reference/flour-types';
 import { convertYeastPercentage, getRecipeYeastType } from '$lib/utils/yeast';
+import { yeastInfo } from '$lib/data/reference';
 import * as storage from '$lib/utils/storage';
 
 const CALCULATOR_STORAGE_KEY = 'calculator';
@@ -263,10 +264,20 @@ function createCalculatorStore() {
 		const customIngredients = get(customIngredientsStore)[currentRecipe.id] || {};
 		const recipeCustomFlours = getCustomFloursForRecipe(currentRecipe.id);
 		const recipeIngredients = buildIngredientsWithCustomizations(currentRecipe);
-		const customizedIngredients = recipeIngredients.map((ing) => ({
-			...ing,
-			percentage: customIngredients[ing.id] ?? ing.percentage
-		}));
+		const selectedYeastType = getSelectedYeastType(currentRecipe);
+		const selectedYeastInfoItem = yeastInfo.find((y) => y.type === selectedYeastType);
+		const customizedIngredients = recipeIngredients.map((ing) => {
+			const percentage = customIngredients[ing.id] ?? ing.percentage;
+			if (ing.type === 'yeast' && selectedYeastInfoItem) {
+				return {
+					...ing,
+					percentage,
+					name: selectedYeastInfoItem.name,
+					nameDa: selectedYeastInfoItem.nameDa
+				};
+			}
+			return { ...ing, percentage };
+		});
 		const recipeWithCustoms = recipeWithFlatIngredients(currentRecipe, customizedIngredients);
 
 		// Get hydration override for this recipe
