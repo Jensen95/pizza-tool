@@ -62,7 +62,7 @@ jobs:
           ls -lh screenshots/base/ || echo "No base screenshots"
 
       - name: Upload to ImgBB and create comment
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         if: always()
         env:
           IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
