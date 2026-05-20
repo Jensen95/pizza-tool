@@ -92,7 +92,12 @@
 		width: 100%;
 		max-height: 90vh;
 		overflow: auto;
-		animation: modalIn 0.2s ease-out;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.modal {
+			animation: modalIn 0.2s ease-out;
+		}
 	}
 
 	@keyframes modalIn {

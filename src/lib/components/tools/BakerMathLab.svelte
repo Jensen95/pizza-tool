@@ -379,8 +379,8 @@
 
 	.remove {
 		align-self: center;
-		width: 36px;
-		height: 36px;
+		width: 44px;
+		height: 44px;
 		border-radius: var(--radius-full);
 		border: 1px solid var(--color-border);
 		background: var(--color-surface);

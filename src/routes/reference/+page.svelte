@@ -68,6 +68,13 @@
 		gap: var(--spacing-xs);
 		border-bottom: 2px solid var(--color-border);
 		margin-bottom: var(--spacing-md);
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+	}
+
+	.tabs::-webkit-scrollbar {
+		display: none;
 	}
 
 	.tab {
@@ -94,18 +101,9 @@
 		border-bottom: 2px solid var(--color-primary);
 	}
 
-	.tab-content {
-		animation: fadeIn 0.2s ease-out;
-	}
-
-	@keyframes fadeIn {
-		from {
-			opacity: 0;
-			transform: translateY(4px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
+	@media (prefers-reduced-motion: no-preference) {
+		.tab-content {
+			animation: fadeIn 0.2s ease-out;
 		}
 	}
 </style>

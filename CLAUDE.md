@@ -18,17 +18,17 @@ no trailing commas, printWidth 100. Tests: Vitest (unit) + Playwright (e2e).
 
 ## Common npm scripts
 
-| Task | Command |
-|------|---------|
-| Dev server | `npm run dev` |
-| Type check | `npm run svelte:check` |
-| Both type checks | `npm run typecheck` |
-| Unit tests | `npm run test:unit` |
-| E2E tests | `npm run test:e2e` |
-| Screenshot tests | `npm run test:screenshots` |
-| Lint | `npm run lint` / `npm run lint:fix` |
-| Format | `npm run format` / `npm run format:check` |
-| Icons | `npm run generate:icons` |
+| Task             | Command                                   |
+| ---------------- | ----------------------------------------- |
+| Dev server       | `npm run dev`                             |
+| Type check       | `npm run svelte:check`                    |
+| Both type checks | `npm run typecheck`                       |
+| Unit tests       | `npm run test:unit`                       |
+| E2E tests        | `npm run test:e2e`                        |
+| Screenshot tests | `npm run test:screenshots`                |
+| Lint             | `npm run lint` / `npm run lint:fix`       |
+| Format           | `npm run format` / `npm run format:check` |
+| Icons            | `npm run generate:icons`                  |
 
 ## Patterns & gotchas
 
@@ -47,6 +47,7 @@ no trailing commas, printWidth 100. Tests: Vitest (unit) + Playwright (e2e).
 For richer TS navigation/diagnostics, use the `typescript-lsp` plugin from
 `anthropics/claude-plugins-official`. There is no "TypeScript PSP plugin" — that
 name does not exist. Install via the plugin marketplace:
+
 ```
 /plugin marketplace add anthropics/claude-plugins-official
 /plugin install typescript-lsp

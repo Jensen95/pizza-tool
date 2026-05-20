@@ -10,6 +10,7 @@ Two-phase pattern validated on this project.
 ## Phase 1 — Analyze (Opus)
 
 Consult `model: opus` agent with all relevant component code. Ask for:
+
 - Prioritized improvement list (highest impact first)
 - For each: what to change, exact file + element, and why
 - CSS bugs (missing variables, broken declarations)
@@ -33,7 +34,9 @@ file group. Keep scopes non-overlapping to avoid conflicts.
 
 A missing custom property in `app.css :root` breaks every `rgba(var(--…), …)`
 call **silently**. Before reviewing, grep:
+
 ```bash
 grep -r 'var(--' src/ | grep -oP 'var\(--[^)]+\)' | sort -u
 ```
+
 Confirm each referenced var is declared in `:root`.

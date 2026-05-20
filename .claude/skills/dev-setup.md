@@ -29,12 +29,12 @@ npm run dev            # starts Vite at http://localhost:5173
 
 ## Common scripts
 
-| Task | Command |
-|------|---------|
-| Dev server | `npm run dev` |
+| Task       | Command                |
+| ---------- | ---------------------- |
+| Dev server | `npm run dev`          |
 | Type check | `npm run svelte:check` |
-| Unit tests | `npm run test:unit` |
-| E2E tests | `npm run test:e2e` |
-| Format | `npm run format` |
-| Lint | `npm run lint` |
-| All checks | `npm run typecheck` |
+| Unit tests | `npm run test:unit`    |
+| E2E tests  | `npm run test:e2e`     |
+| Format     | `npm run format`       |
+| Lint       | `npm run lint`         |
+| All checks | `npm run typecheck`    |
