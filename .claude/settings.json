@@ -19,8 +19,7 @@
 			"Bash(npm run test:screenshots:*)",
 			"Bash(npx @sveltejs/mcp:*)",
 			"Bash(agent-browser:*)",
-			"Bash(npx agent-browser:*)",
-			"Bash(npm install --engine-strict=false)"
+			"Bash(npx agent-browser:*)"
 		]
 	}
 }

@@ -7,9 +7,9 @@ IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning
 
 ## Environment
 
-- Requires **Node >=24** (`.npmrc` has `engine-strict=true`); this env may have Node 22.
-- Install/repair: `npm install --engine-strict=false`
-- Broken node_modules: `rm -rf node_modules && npm install --engine-strict=false`
+- Requires **Node 24** (`.nvmrc` is `24`, `.npmrc` has `engine-strict=true`).
+- Switch to the correct version: `nvm use` (reads `.nvmrc`) or `fnm use`.
+- Then install: `npm install`
 
 ## Tech stack
 

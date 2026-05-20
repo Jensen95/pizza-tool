@@ -1,22 +1,20 @@
 ---
 name: dev-setup
-description: Get the project installed and runnable in this environment. Use when npm install fails on the engine check, node_modules is broken/missing, or the dev server won't start.
-allowed-tools: Bash(npm install:*), Bash(rm -rf node_modules)
+description: Get the project installed and runnable in this environment. Use when npm install fails, node_modules is broken/missing, or the dev server won't start.
+allowed-tools: Bash(npm install)
 ---
 
 # Dev Setup
 
-This project requires Node >=24 (`.npmrc` sets `engine-strict=true`), but the
-environment may run Node 22. A plain `npm install` will fail the engine check.
+This project requires **Node 24** (`.nvmrc` is `24`, `.npmrc` has `engine-strict=true`).
+Use the correct Node version — do NOT skip the engine check.
 
-## Install / repair
+## Switch Node version + install
 
 ```bash
-# Normal install (bypasses engine check)
-npm install --engine-strict=false
-
-# Broken node_modules
-rm -rf node_modules && npm install --engine-strict=false
+nvm use        # reads .nvmrc (Node 24)
+# or: fnm use
+npm install
 ```
 
 ## Verify
