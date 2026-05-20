@@ -1,5 +1,6 @@
 :root {
 	--color-primary: #d32f2f;
+	--color-primary-rgb: 211, 47, 47;
 	--color-primary-dark: #b71c1c;
 	--color-primary-light: #ef5350;
 	--color-background: #fafafa;
@@ -261,17 +262,38 @@ h3 {
 }
 
 /* Page transitions */
-.page-enter {
-	animation: fadeIn 0.2s ease-out;
+@media (prefers-reduced-motion: no-preference) {
+	.page-enter {
+		animation: fadeIn 0.2s ease-out;
+	}
+
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(8px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
 }
 
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-		transform: translateY(8px);
+@media (prefers-reduced-motion: reduce) {
+	.btn:active {
+		transform: none;
 	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-background: #121212;
+		--color-surface: #1e1e1e;
+		--color-text: #e8e8e8;
+		--color-text-secondary: #a0a0a0;
+		--color-border: #333333;
+		--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+		--shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5);
+		--shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.6);
 	}
 }

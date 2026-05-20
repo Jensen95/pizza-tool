@@ -97,7 +97,7 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		height: 4px;
+		height: 6px;
 		width: var(--progress, 0%);
 		background: var(--color-primary);
 		transition: width 1s linear;
@@ -105,6 +105,26 @@
 
 	.timer-card.completed .timer-progress {
 		background: var(--color-success);
+	}
+
+	.timer-card.paused .timer-progress {
+		background: var(--color-warning);
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		@keyframes completedPulse {
+			0%,
+			100% {
+				box-shadow: var(--shadow-sm);
+			}
+			50% {
+				box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.3);
+			}
+		}
+
+		.timer-card.completed {
+			animation: completedPulse 2s ease-in-out 3;
+		}
 	}
 
 	.timer-content {
