@@ -61,7 +61,7 @@
 		"vitest": "^4.0.18"
 	},
 	"dependencies": {
-		"workbox-window": "^7.4.0"
+		"workbox-window": "^7.4.1"
 	},
 	"lint-staged": {
 		"*.{svelte,ts,js,css,json,md}": "prettier --write",
