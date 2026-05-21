@@ -2,6 +2,7 @@
 	import { timers } from '$lib/stores';
 	import { defaultPresets } from '$lib/models/timer.types';
 	import { requestPermission } from '$lib/utils/notification';
+	import { slide } from 'svelte/transition';
 
 	let { oncreated }: { oncreated?: () => void } = $props();
 
@@ -45,7 +46,7 @@
 
 <div class="timer-creator">
 	{#if showCustom}
-		<div class="custom-timer-form">
+		<div class="custom-timer-form" transition:slide={{ duration: 200 }}>
 			<h3 class="form-title">Ny timer</h3>
 
 			<div class="form-group">
@@ -90,7 +91,7 @@
 			</div>
 		</div>
 	{:else}
-		<div class="presets">
+		<div class="presets" transition:slide={{ duration: 200 }}>
 			<h3 class="presets-title">Hurtige timere</h3>
 
 			<div class="preset-grid">
@@ -146,6 +147,7 @@
 		border: 1px solid var(--color-border);
 		border-radius: var(--radius-md);
 		text-align: left;
+		min-height: 44px;
 		transition:
 			border-color 0.2s,
 			background 0.2s;

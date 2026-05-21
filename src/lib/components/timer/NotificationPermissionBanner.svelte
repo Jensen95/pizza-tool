@@ -91,8 +91,8 @@
 
 <style>
 	.notification-banner {
-		background: var(--color-warning, #fff3cd);
-		border: 1px solid var(--color-warning-border, #ffc107);
+		background: var(--color-warning-bg, #fff3e0);
+		border: 1px solid var(--color-warning-border, #ffb74d);
 		border-radius: var(--radius-md);
 		padding: var(--spacing-md);
 		margin-bottom: var(--spacing-md);
@@ -140,8 +140,8 @@
 		padding: 0;
 		margin-left: var(--spacing-xs);
 		flex-shrink: 0;
-		width: 24px;
-		height: 24px;
+		width: 44px;
+		height: 44px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -152,7 +152,7 @@
 	}
 
 	.dismiss-button:hover {
-		background-color: rgba(0, 0, 0, 0.1);
+		background-color: var(--color-border);
 		color: var(--color-text);
 	}
 

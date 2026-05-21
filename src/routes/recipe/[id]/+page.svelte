@@ -7,6 +7,7 @@
 	import KeepAwakeToggle from '$lib/components/timer/KeepAwakeToggle.svelte';
 	import type { RecipeHistoryEntry } from '$lib/stores';
 	import { getAllIngredients } from '$lib/utils/baker-percentage';
+	import { slide } from 'svelte/transition';
 
 	let recipeId = $derived(page.params.id);
 	let recipe = $derived(recipeId ? getRecipeById(recipeId) : undefined);
@@ -101,7 +102,7 @@
 			</div>
 
 			{#if showHistory && recipeHistoryEntries.length > 0}
-				<div class="history-section">
+				<div class="history-section" transition:slide={{ duration: 200 }}>
 					<h3 class="history-title">Tidligere tilpasninger</h3>
 					<div class="history-list">
 						{#each recipeHistoryEntries as entry (entry.id)}

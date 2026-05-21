@@ -224,8 +224,8 @@
 		padding: 0;
 		margin-left: var(--spacing-xs);
 		flex-shrink: 0;
-		width: 24px;
-		height: 24px;
+		width: 44px;
+		height: 44px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -236,7 +236,7 @@
 	}
 
 	.dismiss-button:hover {
-		background-color: rgba(0, 0, 0, 0.06);
+		background-color: var(--color-border);
 		color: var(--color-text);
 	}
 

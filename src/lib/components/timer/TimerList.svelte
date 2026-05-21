@@ -16,7 +16,21 @@
 <div class="timer-list">
 	{#if !hasAnyTimers}
 		<div class="empty-state">
-			<span class="empty-icon">⏱️</span>
+			<span class="empty-icon" aria-hidden="true">
+				<svg
+					width="48"
+					height="48"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="1.5"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<circle cx="12" cy="12" r="10" />
+					<polyline points="12 6 12 12 16 14" />
+				</svg>
+			</span>
 			<p class="empty-text">Ingen aktive timere</p>
 			<p class="empty-hint">Opret en timer nedenfor eller start en fra en opskrift</p>
 		</div>
@@ -63,7 +77,7 @@
 	}
 
 	.empty-icon {
-		font-size: 3rem;
+		color: var(--color-text-secondary);
 		display: block;
 		margin-bottom: var(--spacing-md);
 	}
@@ -98,7 +112,6 @@
 	.clear-btn {
 		font-size: var(--font-size-sm);
 		padding: var(--spacing-xs) var(--spacing-sm);
-		min-height: auto;
 	}
 
 	.timer-grid {
