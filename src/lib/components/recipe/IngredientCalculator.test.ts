@@ -1,9 +1,10 @@
 // @vitest-environment happy-dom
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, waitFor } from '@testing-library/svelte';
 import { beforeEach, describe, it, expect } from 'vitest';
 import IngredientCalculator from '$lib/components/recipe/IngredientCalculator.svelte';
 import type { Recipe } from '$lib/models/recipe.types';
 import * as storage from '$lib/utils/storage';
+import { calculator } from '$lib/stores';
 
 class MemoryStorage {
 	private store = new Map<string, string>();
@@ -197,5 +198,72 @@ describe('IngredientCalculator grouping', () => {
 		expect(cells[0]?.classList.contains('flour-bar')).toBe(true);
 		expect(cells[1]?.classList.contains('flour-bar')).toBe(false);
 		expect(cells[2]?.classList.contains('flour-bar')).toBe(false);
+	});
+});
+
+const freshYeastRecipe: Recipe = {
+	id: 'fresh-yeast-recipe',
+	name: 'Fresh Yeast Recipe',
+	nameDa: 'Frisk Gær Opskrift',
+	category: 'direct',
+	baseWeight: 250,
+	hydration: 65,
+	mixingSteps: [
+		{
+			id: 'main',
+			name: 'Main dough',
+			nameDa: 'Hoveddej',
+			ingredients: [
+				{ id: 'flour', percentage: 100, type: 'flour', flourType: 'tipo-00' },
+				{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' },
+				{
+					id: 'yeast',
+					name: 'Fresh yeast',
+					nameDa: 'Frisk gær',
+					percentage: 0.8,
+					type: 'yeast',
+					yeastType: 'fresh'
+				}
+			]
+		}
+	],
+	timeline: []
+};
+
+describe('yeast type update in ingredients list', () => {
+	it('updates yeast ingredient name when yeast type changes to instant', async () => {
+		// Use a unique recipe id to avoid cross-test yeast-type-override pollution
+		const recipe: Recipe = { ...freshYeastRecipe, id: 'yeast-test-instant' };
+		render(IngredientCalculator, { props: { recipe } });
+
+		const initialCells = await screen.findAllByText('Frisk gær');
+		const initialTd = initialCells.find((el) => el.tagName === 'TD');
+		expect(initialTd).toBeTruthy();
+
+		calculator.setYeastType('instant');
+
+		await waitFor(() => {
+			const cells = screen.queryAllByText('Instant gær');
+			const td = cells.find((el) => el.tagName === 'TD');
+			expect(td).toBeTruthy();
+		});
+	});
+
+	it('updates yeast ingredient name when yeast type changes to active-dry', async () => {
+		// Use a unique recipe id to avoid cross-test yeast-type-override pollution
+		const recipe: Recipe = { ...freshYeastRecipe, id: 'yeast-test-active-dry' };
+		render(IngredientCalculator, { props: { recipe } });
+
+		const initialCells = await screen.findAllByText('Frisk gær');
+		const initialTd = initialCells.find((el) => el.tagName === 'TD');
+		expect(initialTd).toBeTruthy();
+
+		calculator.setYeastType('active-dry');
+
+		await waitFor(() => {
+			const cells = screen.queryAllByText('Aktiv tørgær');
+			const td = cells.find((el) => el.tagName === 'TD');
+			expect(td).toBeTruthy();
+		});
 	});
 });
