@@ -96,6 +96,26 @@ export function formatDuration(minutes: number): string {
 	return `${hours}t ${remainingMinutes}m`;
 }
 
+export function formatFinishTime(timestamp: number, now: number = Date.now()): string {
+	const date = new Date(timestamp);
+	const hours = date.getHours().toString().padStart(2, '0');
+	const minutes = date.getMinutes().toString().padStart(2, '0');
+	const time = `${hours}:${minutes}`;
+
+	const today = new Date(now);
+	today.setHours(0, 0, 0, 0);
+	const finishDay = new Date(timestamp);
+	finishDay.setHours(0, 0, 0, 0);
+	const dayDiff = Math.round((finishDay.getTime() - today.getTime()) / (24 * 60 * 60 * 1000));
+
+	if (dayDiff === 1) {
+		return `${time} (i morgen)`;
+	} else if (dayDiff > 1) {
+		return `${time} (+ ${dayDiff} dage)`;
+	}
+	return time;
+}
+
 export function formatTimeRemaining(ms: number): string {
 	if (ms <= 0) return '0:00';
 

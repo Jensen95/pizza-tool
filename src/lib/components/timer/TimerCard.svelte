@@ -1,18 +1,26 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import type { Timer } from '$lib/models';
-	import { formatTimeRemaining } from '$lib/models/timer.types';
+	import { formatTimeRemaining, formatFinishTime } from '$lib/models/timer.types';
 	import { timers, getTimeRemaining } from '$lib/stores';
 
 	let { timer }: { timer: Timer } = $props();
 
 	let timeRemaining = $state(0);
 	let progress = $state(0);
+	let finishTime = $state(0);
 	let intervalId: ReturnType<typeof setInterval>;
 
 	function updateTimer() {
 		timeRemaining = getTimeRemaining(timer);
 		progress = timer.duration > 0 ? ((timer.duration - timeRemaining) / timer.duration) * 100 : 100;
+		if (timer.status === 'active') {
+			finishTime = timer.endTime;
+		} else if (timer.status === 'paused' && timer.remainingWhenPaused !== undefined) {
+			finishTime = Date.now() + timer.remainingWhenPaused;
+		} else {
+			finishTime = 0;
+		}
 	}
 
 	onMount(() => {
@@ -60,6 +68,9 @@
 
 		<div class="timer-display">
 			<span class="time-remaining">{formatTimeRemaining(timeRemaining)}</span>
+			{#if finishTime > 0}
+				<span class="finish-time">Færdig: {formatFinishTime(finishTime)}</span>
+			{/if}
 		</div>
 
 		<div class="timer-actions">
@@ -171,6 +182,15 @@
 	.timer-display {
 		text-align: center;
 		padding: var(--spacing-sm) 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--spacing-xs);
+	}
+
+	.finish-time {
+		font-size: var(--font-size-sm);
+		color: var(--color-text-muted);
 	}
 
 	.time-remaining {
