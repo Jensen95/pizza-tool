@@ -13,6 +13,7 @@
 			}
 		]
 	},
+	"enabledMcpjsonServers": ["context7"],
 	"permissions": {
 		"deny": [
 			"Bash(npm install --engine-strict=false*)",

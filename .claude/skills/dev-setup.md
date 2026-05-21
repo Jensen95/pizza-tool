@@ -38,15 +38,3 @@ npm run dev            # starts Vite at http://localhost:5173
 | Format     | `npm run format`       |
 | Lint       | `npm run lint`         |
 | All checks | `npm run typecheck`    |
-
-## Installing official skills
-
-Skills (slash commands) from external repos are installed via:
-
-```bash
-npx skills add <owner>/<repo>
-# example: npx skills add vercel-labs/agent-browser
-```
-
-This installs to `.agents/skills/<name>/` and creates a symlink in `.claude/skills/`.
-Custom project skills live in `.claude/commands/` as markdown files.

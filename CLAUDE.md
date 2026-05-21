@@ -34,7 +34,7 @@ no trailing commas, printWidth 100. Tests: Vitest (unit) + Playwright (e2e).
 ## Patterns & gotchas
 
 - **UI/UX work**: consult Opus for an analysis/plan, then fan out parallel Sonnet
-  agents (one per independent file) to implement. See the `/ui-ux-review` command.
+  agents (one per independent file) to implement. See the `ui-ux-review` skill.
 - **CSS vars**: a missing custom property in `app.css :root` (e.g. `--color-primary-rgb`)
   breaks every `rgba(var(--…-rgb), …)` call **silently**. Keep all referenced vars declared.
 - **Dark mode**: never hardcode hex literals (`#fff4f4`, `#ffb74d`, etc.) in component CSS —
@@ -43,14 +43,14 @@ no trailing commas, printWidth 100. Tests: Vitest (unit) + Playwright (e2e).
 - **A11y baseline**: global `:focus-visible` outline in `app.css`; all interactive elements
   need `min-height/width: 44px`; horizontal-scroll containers need `overflow-x: auto`
   (missing this makes last tabs unreachable on mobile).
-- **Svelte 5**: use the `/svelte` command — fetch real docs via `npx @sveltejs/mcp`
+- **Svelte 5**: use the `svelte` skill — fetch real docs via `npx @sveltejs/mcp`
   and run `svelte-autofixer` on edited components.
-- **Browser verification**: use the `/agent-browser` command for manual checks.
-- **Session learnings**: use the `/session-review` command at end of session to capture
+- **Browser verification**: use the `agent-browser` skill for manual checks.
+- **Session learnings**: use the `session-review` skill at end of session to capture
   memories, skills, and settings updates before closing.
-- **Custom commands**: project slash commands live in `.claude/commands/*.md` — these are
-  invokable as `/command-name`. Official external skills go in `.agents/skills/` via
-  `npx skills add <owner>/<repo>`; they are NOT the same as `.claude/commands/` files.
+- **Skills vs memories**: conditional workflows (triggered by context) go in `.claude/skills/`
+  as markdown files. Always-on facts go in `CLAUDE.md`. Official external skills are installed
+  via `npx skills add <owner>/<repo>` into `.agents/skills/` with a symlink in `.claude/skills/`.
 
 ## Formatting is automatic — don't hand-format generated code
 
