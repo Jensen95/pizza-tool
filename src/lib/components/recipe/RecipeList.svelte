@@ -52,12 +52,22 @@
 		</div>
 
 		<div class="category-filter">
-			<select class="input" bind:value={selectedCategory}>
-				<option value="all">Alle kategorier</option>
-				{#each categories as cat}
-					<option value={cat}>{categoryLabels[cat]}</option>
-				{/each}
-			</select>
+			<button
+				class="filter-chip"
+				class:active={selectedCategory === 'all'}
+				onclick={() => (selectedCategory = 'all')}
+			>
+				Alle
+			</button>
+			{#each categories as cat}
+				<button
+					class="filter-chip"
+					class:active={selectedCategory === cat}
+					onclick={() => (selectedCategory = cat)}
+				>
+					{categoryLabels[cat]}
+				</button>
+			{/each}
 		</div>
 	</div>
 
@@ -96,20 +106,6 @@
 		z-index: 50;
 	}
 
-	@media (min-width: 480px) {
-		.filters {
-			flex-direction: row;
-		}
-
-		.search-wrapper {
-			flex: 1;
-		}
-
-		.category-filter {
-			min-width: 180px;
-		}
-	}
-
 	.search-input {
 		width: 100%;
 	}
@@ -132,5 +128,45 @@
 
 	.empty-state p {
 		margin-bottom: var(--spacing-md);
+	}
+
+	.category-filter {
+		display: flex;
+		gap: var(--spacing-xs);
+		overflow-x: auto;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+		padding-bottom: 2px;
+	}
+
+	.category-filter::-webkit-scrollbar {
+		display: none;
+	}
+
+	.filter-chip {
+		display: inline-flex;
+		align-items: center;
+		white-space: nowrap;
+		padding: 6px var(--spacing-sm);
+		border-radius: var(--radius-full);
+		border: 1.5px solid var(--color-border);
+		background: var(--color-surface);
+		color: var(--color-text-secondary);
+		font-size: var(--font-size-sm);
+		font-weight: 500;
+		cursor: pointer;
+		transition: all 0.15s;
+		min-height: 36px;
+	}
+
+	.filter-chip:hover {
+		border-color: var(--color-primary);
+		color: var(--color-primary);
+	}
+
+	.filter-chip.active {
+		background: var(--color-primary);
+		border-color: var(--color-primary);
+		color: var(--color-text-light);
 	}
 </style>

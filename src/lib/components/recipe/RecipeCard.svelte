@@ -58,6 +58,11 @@
 		text-decoration: none;
 	}
 
+	.recipe-card:active {
+		transform: scale(0.98);
+		box-shadow: var(--shadow-sm);
+	}
+
 	.card-header {
 		display: flex;
 		align-items: center;

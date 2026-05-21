@@ -9,10 +9,26 @@
 	}
 
 	const navItems: NavItem[] = [
-		{ href: '/', label: 'Opskrifter', icon: '📖' },
-		{ href: '/timers', label: 'Timere', icon: '⏱️' },
-		{ href: '/tools', label: 'Værktøjer', icon: '🛠️' },
-		{ href: '/reference', label: 'Reference', icon: '📚' }
+		{
+			href: '/',
+			label: 'Opskrifter',
+			icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`
+		},
+		{
+			href: '/timers',
+			label: 'Timere',
+			icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`
+		},
+		{
+			href: '/tools',
+			label: 'Værktøjer',
+			icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`
+		},
+		{
+			href: '/reference',
+			label: 'Reference',
+			icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
+		}
 	];
 
 	function isActive(href: string, pathname: string): boolean {
@@ -25,7 +41,7 @@
 	{#each navItems as item}
 		<a href={item.href} class="nav-item" class:active={isActive(item.href, page.url.pathname)}>
 			<span class="nav-icon">
-				{item.icon}
+				{@html item.icon}
 				{#if item.href === '/timers' && $activeTimerCount > 0}
 					<span class="badge">{$activeTimerCount}</span>
 				{/if}
@@ -75,8 +91,7 @@
 
 	.nav-icon {
 		position: relative;
-		font-size: 1.5rem;
-		line-height: 1;
+		line-height: 0;
 	}
 
 	.nav-label {

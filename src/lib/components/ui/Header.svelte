@@ -33,7 +33,21 @@
 
 		{#if $activeTimerCount > 0}
 			<a href="/timers" class="timer-indicator" aria-label="{$activeTimerCount} aktive timere">
-				<span class="timer-icon">⏱️</span>
+				<span class="timer-icon">
+					<svg
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2.5"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					>
+						<circle cx="12" cy="12" r="10" />
+						<polyline points="12 6 12 12 16 14" />
+					</svg>
+				</span>
 				<span class="timer-count">{$activeTimerCount}</span>
 			</a>
 		{/if}
@@ -100,7 +114,7 @@
 	}
 
 	.timer-icon {
-		font-size: 1rem;
+		line-height: 0;
 	}
 
 	.timer-count {

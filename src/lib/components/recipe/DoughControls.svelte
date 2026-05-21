@@ -680,6 +680,7 @@
 	.input-with-buttons .btn {
 		padding: var(--spacing-sm);
 		min-width: 44px;
+		min-height: 44px;
 	}
 
 	.number-input {
@@ -714,6 +715,7 @@
 		cursor: pointer;
 		list-style: none;
 		padding: var(--spacing-xs) var(--spacing-sm);
+		min-height: 44px;
 		border-radius: var(--radius-sm);
 		transition:
 			background 0.15s ease,
@@ -864,7 +866,12 @@
 		background: none;
 		border: none;
 		cursor: pointer;
-		padding: 4px;
+		padding: 0;
+		min-width: 44px;
+		min-height: 44px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
 		color: var(--color-text-secondary);
 	}
 

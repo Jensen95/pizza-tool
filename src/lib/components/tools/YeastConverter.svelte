@@ -175,7 +175,7 @@
 	}
 
 	.swap:hover {
-		background: #fff4f4;
+		background: rgba(var(--color-primary-rgb), 0.08);
 	}
 
 	.results {
@@ -185,7 +185,7 @@
 	}
 
 	.highlight {
-		background: #fff6f6;
+		background: var(--color-warning-bg, rgba(var(--color-primary-rgb), 0.06));
 		border: 1px solid var(--color-primary-light);
 		border-radius: var(--radius-md);
 		padding: var(--spacing-md);

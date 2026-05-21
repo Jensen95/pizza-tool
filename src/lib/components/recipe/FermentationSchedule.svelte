@@ -226,8 +226,8 @@
 
 	.stage-instructions {
 		margin: 0 0 var(--spacing-sm);
-		font-size: var(--font-size-sm);
-		color: var(--color-text-secondary);
+		font-size: var(--font-size-md);
+		color: var(--color-text);
 	}
 
 	.stage-tip {
