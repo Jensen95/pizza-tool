@@ -8,8 +8,9 @@ IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning
 ## Environment
 
 - Requires **Node 24** (`.nvmrc` is `24`, `.npmrc` has `engine-strict=true`).
-- Switch to the correct version: `nvm use` (reads `.nvmrc`) or `fnm use`.
+- Switch to the correct version: `nvm install 24 && nvm use` or `fnm use`.
 - Then install: `npm install`
+- **Never** bypass with `--engine-strict=false` or `--ignore-engines` — install the right Node version instead.
 
 ## Tech stack
 
@@ -33,14 +34,34 @@ no trailing commas, printWidth 100. Tests: Vitest (unit) + Playwright (e2e).
 ## Patterns & gotchas
 
 - **UI/UX work**: consult Opus for an analysis/plan, then fan out parallel Sonnet
-  agents (one per independent file) to implement. See the `ui-ux-review` skill.
+  agents (one per independent file) to implement. See the `/ui-ux-review` command.
 - **CSS vars**: a missing custom property in `app.css :root` (e.g. `--color-primary-rgb`)
   breaks every `rgba(var(--…-rgb), …)` call **silently**. Keep all referenced vars declared.
-- **Svelte 5**: use the `svelte` skill — fetch real docs via `npx @sveltejs/mcp`
+- **Dark mode**: never hardcode hex literals (`#fff4f4`, `#ffb74d`, etc.) in component CSS —
+  use CSS custom properties from `app.css :root`. Hardcoded colors silently break dark mode.
+  Audit: `grep -rn '#[0-9a-fA-F]\{3,6\}' src/lib/components/`
+- **A11y baseline**: global `:focus-visible` outline in `app.css`; all interactive elements
+  need `min-height/width: 44px`; horizontal-scroll containers need `overflow-x: auto`
+  (missing this makes last tabs unreachable on mobile).
+- **Svelte 5**: use the `/svelte` command — fetch real docs via `npx @sveltejs/mcp`
   and run `svelte-autofixer` on edited components.
-- **Browser verification**: use the `agent-browser` skill for manual checks.
-- **Session learnings**: use the `session-review` skill at end of session to capture
+- **Browser verification**: use the `/agent-browser` command for manual checks.
+- **Session learnings**: use the `/session-review` command at end of session to capture
   memories, skills, and settings updates before closing.
+- **Custom commands**: project slash commands live in `.claude/commands/*.md` — these are
+  invokable as `/command-name`. Official external skills go in `.agents/skills/` via
+  `npx skills add <owner>/<repo>`; they are NOT the same as `.claude/commands/` files.
+
+## Formatting is automatic — don't hand-format generated code
+
+The PostToolUse hook runs `prettier --write` on every written/edited file immediately.
+
+- Don't spend tokens on indentation, quote style, or trailing commas — Prettier fixes them.
+- Code must be **syntactically valid** — the hook silently no-ops on parse errors, leaving
+  the file unformatted. Broken syntax won't be caught until lint/typecheck.
+- When using the Edit tool, `old_string` must match the **current file content** (tabs, not
+  spaces after the hook has run) — read the file first if unsure.
+- Prettier only fixes formatting; ESLint logic errors still require `npm run lint`.
 
 ## TypeScript LSP
 

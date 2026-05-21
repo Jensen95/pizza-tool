@@ -14,6 +14,11 @@
 		]
 	},
 	"permissions": {
+		"deny": [
+			"Bash(npm install --engine-strict=false*)",
+			"Bash(npm install --ignore-engines*)",
+			"Bash(npm ci --ignore-engines*)"
+		],
 		"allow": [
 			"Bash(ls:*)",
 			"Bash(npm run lint:*)",

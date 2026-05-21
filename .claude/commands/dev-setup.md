@@ -7,12 +7,14 @@ allowed-tools: Bash(npm install)
 # Dev Setup
 
 This project requires **Node 24** (`.nvmrc` is `24`, `.npmrc` has `engine-strict=true`).
-Use the correct Node version — do NOT skip the engine check.
+Use the correct Node version — do NOT skip the engine check with `--engine-strict=false`
+or `--ignore-engines`. If the check fails, install the right Node version first.
 
 ## Switch Node version + install
 
 ```bash
-nvm use        # reads .nvmrc (Node 24)
+nvm install 24   # if not yet installed
+nvm use          # reads .nvmrc (Node 24)
 # or: fnm use
 npm install
 ```
@@ -21,7 +23,7 @@ npm install
 
 ```bash
 npm run svelte:check   # type check
-npm run test:unit      # 154 unit tests
+npm run test:unit      # unit tests
 npm run dev            # starts Vite at http://localhost:5173
 ```
 
@@ -36,3 +38,15 @@ npm run dev            # starts Vite at http://localhost:5173
 | Format     | `npm run format`       |
 | Lint       | `npm run lint`         |
 | All checks | `npm run typecheck`    |
+
+## Installing official skills
+
+Skills (slash commands) from external repos are installed via:
+
+```bash
+npx skills add <owner>/<repo>
+# example: npx skills add vercel-labs/agent-browser
+```
+
+This installs to `.agents/skills/<name>/` and creates a symlink in `.claude/skills/`.
+Custom project skills live in `.claude/commands/` as markdown files.

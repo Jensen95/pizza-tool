@@ -30,7 +30,7 @@ file group. Keep scopes non-overlapping to avoid conflicts.
 3. `npm run format` — clean
 4. Use `agent-browser` skill or `npm run test:screenshots` to eyeball results
 
-## CSS gotcha
+## CSS gotchas
 
 A missing custom property in `app.css :root` breaks every `rgba(var(--…), …)`
 call **silently**. Before reviewing, grep:
@@ -40,3 +40,7 @@ grep -r 'var(--' src/ | grep -oP 'var\(--[^)]+\)' | sort -u
 ```
 
 Confirm each referenced var is declared in `:root`.
+
+**Never hardcode hex literals** (`#fff4f4`, `#ffb74d`, etc.) in component CSS.
+Always use tokens from `app.css :root`. Hardcoded colors silently break dark mode.
+Audit before and after: `grep -rn '#[0-9a-fA-F]\{3,6\}' src/lib/components/`

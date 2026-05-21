@@ -15,7 +15,7 @@ valuable durable learnings. Goal: turn one-off discoveries into reusable setup.
 2. Pick the ~5 highest-value items. Prefer things that will recur over trivia.
 3. Classify each item as exactly one of:
    - **memory** → add to `CLAUDE.md` (project-wide facts, gotchas, commands)
-   - **skill** → new/updated file in `.claude/skills/` (a repeatable workflow)
+   - **skill** → new/updated file in `.claude/commands/` (a repeatable workflow)
    - **settings** → permission/env change in `.claude/settings.json`
 4. Output a single prioritized list. For each item give:
    - Priority (P1/P2/P3)
