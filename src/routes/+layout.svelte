@@ -11,15 +11,65 @@
 
 	let { children } = $props();
 
+	// Reflect the active theme's --color-primary into the theme-color meta so the
+	// browser/OS chrome matches. Read after the theme attributes are applied.
+	function updateThemeColor() {
+		if (typeof document === 'undefined') return;
+		const primaryColor = getComputedStyle(document.documentElement)
+			.getPropertyValue('--color-primary')
+			.trim();
+		if (!primaryColor) return;
+		let meta = document.querySelector('meta[name="theme-color"]');
+		if (!meta) {
+			meta = document.createElement('meta');
+			meta.setAttribute('name', 'theme-color');
+			document.head.appendChild(meta);
+		}
+		meta.setAttribute('content', primaryColor);
+	}
+
+	// §3.2 wiring: drive data-theme / data-primary on <html> from preferences.
+	// - theme 'system' → remove data-theme so @media(prefers-color-scheme) drives it
+	// - any explicit theme → set data-theme (wins over the media query)
+	// - data-primary is only meaningful for Light/Dark (and system, which resolves
+	//   to one of them); it is removed under Grey/Italiano.
+	$effect(() => {
+		const theme = $preferences.theme;
+		const primary = $preferences.primary;
+		if (typeof document === 'undefined') return;
+		const root = document.documentElement;
+
+		if (theme === 'system') {
+			root.removeAttribute('data-theme');
+		} else {
+			root.setAttribute('data-theme', theme);
+		}
+
+		if (theme === 'light' || theme === 'dark' || theme === 'system') {
+			root.setAttribute('data-primary', primary);
+		} else {
+			root.removeAttribute('data-primary');
+		}
+
+		updateThemeColor();
+	});
+
 	onMount(() => {
 		// Initialize timers store (loads from localStorage and starts checking)
 		timers.init();
 
 		const removeVisibilityHandler = setupWakeLockVisibilityHandler();
 
+		// In system mode the resolved primary flips with the OS light/dark
+		// preference, so keep the theme-color meta in sync when it changes.
+		const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+		const handleSchemeChange = () => updateThemeColor();
+		darkModeQuery.addEventListener('change', handleSchemeChange);
+
 		return () => {
 			timers.destroy();
 			removeVisibilityHandler();
+			darkModeQuery.removeEventListener('change', handleSchemeChange);
 			void syncWakeLock(false);
 		};
 	});

@@ -157,7 +157,7 @@
 	}
 
 	.dismiss-button:focus {
-		outline: 2px solid var(--color-primary, #007bff);
+		outline: 2px solid var(--color-primary, #2e7d32);
 		outline-offset: 2px;
 	}
 

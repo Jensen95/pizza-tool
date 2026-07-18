@@ -1,19 +1,31 @@
 :root {
-	--color-primary: #d32f2f;
-	--color-primary-rgb: 211, 47, 47;
-	--color-primary-dark: #b71c1c;
-	--color-primary-light: #ef5350;
+	/* Theme: Light + Basil primary (default). See docs/redesign/DESIGN_PLAN.md §3.4. */
+	--color-primary: #2e7d32;
+	--color-primary-rgb: 46, 125, 50;
+	--color-primary-dark: #1b5e20;
+	--color-primary-light: #4caf50;
+	--color-on-primary: #ffffff;
+
+	/* Basil is the default primary → accent is promoted to a warm crust-tan (§3.5). */
+	--color-accent: #9c5a2c;
+	--color-on-accent: #ffffff;
+
 	--color-background: #fafafa;
 	--color-surface: #ffffff;
+	--color-surface-elevated: #ffffff;
 	--color-text: #212121;
 	--color-text-secondary: #757575;
+	--color-text-tertiary: rgba(0, 0, 0, 0.55);
+	--color-text-muted: rgba(0, 0, 0, 0.55);
+	/* on-primary alias kept for legacy components that read --color-text-light. */
 	--color-text-light: #ffffff;
 	--color-border: #e0e0e0;
-	--color-success: #4caf50;
-	--color-warning: #ff9800;
+
+	--color-success: #2e7d32;
+	--color-warning: #c2410c;
 	--color-warning-bg: #fff3e0;
 	--color-warning-border: #ffb74d;
-	--color-error: #f44336;
+	--color-error: #d70015;
 
 	--spacing-xs: 0.25rem;
 	--spacing-sm: 0.5rem;
@@ -42,6 +54,161 @@
 
 	--nav-height: 64px;
 	--header-height: 56px;
+}
+
+/* ============================================================================
+   Theme system (§3). Neutral/state tokens re-declared per theme; the
+   --color-primary family is layered on top via [data-primary] for Light/Dark.
+   System default (no [data-theme]) is driven by the media query at the bottom
+   of this file, scoped to :root:not([data-theme]) so an explicit choice wins.
+   ============================================================================ */
+
+/* ---- Dark theme (explicit choice) -------------------------------------- */
+:root[data-theme='dark'] {
+	--color-primary: #66bb6a;
+	--color-primary-rgb: 102, 187, 106;
+	--color-primary-dark: #4caf50;
+	--color-primary-light: #81c784;
+	--color-on-primary: #1a1a1a;
+
+	--color-accent: #d9a05b;
+	--color-on-accent: #1a1a1a;
+
+	--color-background: #121212;
+	--color-surface: #1e1e1e;
+	--color-surface-elevated: #2a2a2a;
+	--color-text: #e8e8e8;
+	--color-text-secondary: rgba(255, 255, 255, 0.6);
+	--color-text-tertiary: rgba(255, 255, 255, 0.4);
+	--color-text-muted: rgba(255, 255, 255, 0.4);
+	--color-text-light: #1a1a1a;
+	--color-border: #333333;
+
+	--color-success: #4caf50;
+	--color-warning: #ff6b35;
+	--color-warning-bg: rgba(255, 152, 0, 0.15);
+	--color-warning-border: rgba(255, 152, 0, 0.5);
+	--color-error: #ff453a;
+
+	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+	--shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5);
+	--shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+/* ---- Grey theme (neutral, steel-blue primary; ignores data-primary) ---- */
+:root[data-theme='grey'] {
+	--color-primary: #3a6494;
+	--color-primary-rgb: 58, 100, 148;
+	--color-primary-dark: #2f5178;
+	--color-primary-light: #4d7fb2;
+	--color-on-primary: #ffffff;
+
+	--color-accent: #4d7fb2;
+	--color-on-accent: #ffffff;
+
+	--color-background: #f4f4f5;
+	--color-surface: #ffffff;
+	--color-surface-elevated: #fafafa;
+	--color-text: #1a1a1a;
+	--color-text-secondary: rgba(0, 0, 0, 0.62);
+	--color-text-tertiary: rgba(0, 0, 0, 0.45);
+	--color-text-muted: rgba(0, 0, 0, 0.45);
+	--color-text-light: #ffffff;
+	--color-border: #d4d4d8;
+
+	--color-success: #2e7d32;
+	--color-warning: #b45309;
+	--color-warning-bg: rgba(180, 83, 9, 0.1);
+	--color-warning-border: rgba(180, 83, 9, 0.35);
+	--color-error: #b91c1c;
+}
+
+/* ---- Italiano theme (pomodoro/basil/cream; ignores data-primary) ------- */
+:root[data-theme='italiano'] {
+	--color-primary: #c8362f;
+	--color-primary-rgb: 200, 54, 47;
+	--color-primary-dark: #a52a24;
+	--color-primary-light: #d8564f;
+	--color-on-primary: #fffdf8;
+
+	--color-accent: #3f7d3a;
+	--color-on-accent: #fffdf8;
+
+	--color-background: #fbf7ef;
+	--color-surface: #fffdf8;
+	--color-surface-elevated: #ffffff;
+	--color-text: #2a1f18;
+	--color-text-secondary: rgba(42, 31, 24, 0.66);
+	--color-text-tertiary: rgba(42, 31, 24, 0.48);
+	--color-text-muted: rgba(42, 31, 24, 0.48);
+	--color-text-light: #fffdf8;
+	--color-border: #ece2d2;
+
+	--color-success: #3f7d3a;
+	--color-warning: #c2410c;
+	--color-warning-bg: rgba(194, 65, 12, 0.1);
+	--color-warning-border: rgba(194, 65, 12, 0.35);
+	--color-error: #b3261e;
+}
+
+/* ---- Primary family overrides (Light/Dark only, via data-primary) ------
+   Only meaningful when the resolved theme is light or dark. Grey/Italiano
+   set data-theme explicitly, so none of the selectors below can match them,
+   and +layout.svelte also removes data-primary outside Light/Dark. Crust and
+   Flip keep the basil accent; only the default (Basil) uses the crust-tan
+   accent declared in :root. ------------------------------------------------ */
+
+/* Crust — Light (explicit light + system-light default) */
+:root[data-theme='light'][data-primary='crust'],
+:root:not([data-theme])[data-primary='crust'] {
+	--color-primary: #ea580c;
+	--color-primary-rgb: 234, 88, 12;
+	--color-primary-dark: #c2410c;
+	--color-primary-light: #fb923c;
+	--color-on-primary: #ffffff;
+	--color-text-light: #ffffff;
+	--color-accent: #2e7d32;
+	--color-on-accent: #ffffff;
+	/* warning shifts to amber so it stays distinct from the orange primary */
+	--color-warning: #b45309;
+}
+
+/* Crust — Dark (explicit dark) */
+:root[data-theme='dark'][data-primary='crust'] {
+	--color-primary: #fa8938;
+	--color-primary-rgb: 250, 137, 56;
+	--color-primary-dark: #ea580c;
+	--color-primary-light: #fbad6f;
+	--color-on-primary: #1a1a1a;
+	--color-text-light: #1a1a1a;
+	--color-accent: #66bb6a;
+	--color-on-accent: #1a1a1a;
+	--color-warning: #f59e0b;
+}
+
+/* Flip — Light (explicit light + system-light default) */
+:root[data-theme='light'][data-primary='flip'],
+:root:not([data-theme])[data-primary='flip'] {
+	--color-primary: #a435d2;
+	--color-primary-rgb: 164, 53, 210;
+	--color-primary-dark: #8a24b5;
+	--color-primary-light: #bd63e0;
+	--color-on-primary: #ffffff;
+	--color-text-light: #ffffff;
+	--color-accent: #2e7d32;
+	--color-on-accent: #ffffff;
+}
+
+/* Flip — Dark (explicit dark) */
+:root[data-theme='dark'][data-primary='flip'] {
+	--color-primary: #d0ff00;
+	--color-primary-rgb: 208, 255, 0;
+	--color-primary-dark: #a6cc00;
+	--color-primary-light: #ddff4d;
+	--color-on-primary: #000000;
+	--color-text-light: #000000;
+	--color-accent: #66bb6a;
+	--color-on-accent: #1a1a1a;
 }
 
 * {
@@ -170,7 +337,9 @@ h3 {
 }
 
 .btn-secondary:hover {
-	background: #d0d0d0;
+	/* Token-based hover: nudge the border toward text so it darkens in light
+	   themes and lightens in dark — no hardcoded literal (§3.3.1). */
+	background: color-mix(in srgb, var(--color-border), var(--color-text) 12%);
 }
 
 .btn-outline {
@@ -292,17 +461,68 @@ h3 {
 	}
 }
 
+/* ============================================================================
+   System default: when the user has NOT made an explicit choice (no
+   [data-theme]), follow the OS. Scoped to :root:not([data-theme]) so any
+   explicit theme above always wins. The full Dark token set is mirrored here,
+   plus the Crust/Flip primary overrides for system-dark (the system-light
+   overrides live above, un-mediated, since Light is the :root default).
+   ============================================================================ */
 @media (prefers-color-scheme: dark) {
-	:root {
+	:root:not([data-theme]) {
+		--color-primary: #66bb6a;
+		--color-primary-rgb: 102, 187, 106;
+		--color-primary-dark: #4caf50;
+		--color-primary-light: #81c784;
+		--color-on-primary: #1a1a1a;
+
+		--color-accent: #d9a05b;
+		--color-on-accent: #1a1a1a;
+
 		--color-background: #121212;
 		--color-surface: #1e1e1e;
+		--color-surface-elevated: #2a2a2a;
 		--color-text: #e8e8e8;
-		--color-text-secondary: #a0a0a0;
+		--color-text-secondary: rgba(255, 255, 255, 0.6);
+		--color-text-tertiary: rgba(255, 255, 255, 0.4);
+		--color-text-muted: rgba(255, 255, 255, 0.4);
+		--color-text-light: #1a1a1a;
 		--color-border: #333333;
+
+		--color-success: #4caf50;
+		--color-warning: #ff6b35;
+		--color-warning-bg: rgba(255, 152, 0, 0.15);
+		--color-warning-border: rgba(255, 152, 0, 0.5);
+		--color-error: #ff453a;
+
 		--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
 		--shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5);
 		--shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.6);
-		--color-warning-bg: rgba(255, 152, 0, 0.15);
-		--color-warning-border: rgba(255, 152, 0, 0.5);
+	}
+
+	/* Crust — system dark. Higher specificity + later than the system-light
+	   Crust rule above, so it wins once the OS reports dark. */
+	:root:not([data-theme])[data-primary='crust'] {
+		--color-primary: #fa8938;
+		--color-primary-rgb: 250, 137, 56;
+		--color-primary-dark: #ea580c;
+		--color-primary-light: #fbad6f;
+		--color-on-primary: #1a1a1a;
+		--color-text-light: #1a1a1a;
+		--color-accent: #66bb6a;
+		--color-on-accent: #1a1a1a;
+		--color-warning: #f59e0b;
+	}
+
+	/* Flip — system dark. */
+	:root:not([data-theme])[data-primary='flip'] {
+		--color-primary: #d0ff00;
+		--color-primary-rgb: 208, 255, 0;
+		--color-primary-dark: #a6cc00;
+		--color-primary-light: #ddff4d;
+		--color-on-primary: #000000;
+		--color-text-light: #000000;
+		--color-accent: #66bb6a;
+		--color-on-accent: #1a1a1a;
 	}
 }

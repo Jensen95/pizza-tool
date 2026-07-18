@@ -3,11 +3,20 @@ import * as storage from '$lib/utils/storage';
 
 const PREFERENCES_STORAGE_KEY = 'preferences';
 
+export type Theme = 'light' | 'dark' | 'grey' | 'italiano' | 'system';
+export type Primary = 'basil' | 'crust' | 'flip';
+
 export interface Preferences {
 	defaultPizzaCount: number;
 	defaultDoughWeight: number;
 	notificationsEnabled: boolean;
-	theme: 'light' | 'dark' | 'system';
+	theme: Theme;
+	/**
+	 * Light/Dark primary accent (§3.1). Additive/optional: old stored preference
+	 * objects predate this field and merge over the default at read time, so no
+	 * migration is needed. Ignored while the resolved theme is Grey or Italiano.
+	 */
+	primary: Primary;
 	notificationBannerDismissed: boolean;
 	keepScreenAwake: boolean;
 }
@@ -16,7 +25,8 @@ const defaultPreferences: Preferences = {
 	defaultPizzaCount: 4,
 	defaultDoughWeight: 270,
 	notificationsEnabled: true,
-	theme: 'light',
+	theme: 'system',
+	primary: 'basil',
 	notificationBannerDismissed: false,
 	keepScreenAwake: false
 };
@@ -103,8 +113,15 @@ function createPreferencesStore() {
 		/**
 		 * Set theme
 		 */
-		setTheme(theme: 'light' | 'dark' | 'system') {
+		setTheme(theme: Theme) {
 			this.updatePreference('theme', theme);
+		},
+
+		/**
+		 * Set the Light/Dark primary accent (no-op visually under Grey/Italiano).
+		 */
+		setPrimary(primary: Primary) {
+			this.updatePreference('primary', primary);
 		},
 
 		/**
