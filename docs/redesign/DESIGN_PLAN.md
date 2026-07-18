@@ -1,6 +1,6 @@
 # Pizza Tool — UI Redesign & Theme System Plan
 
-**Status:** Decision document. Phase 0 (production fixes, §7) and Phase 0.5 (cheap hardening, §7.5) are **APPROVED scope** — the repo owner has signed off on folding the audit's confirmed findings in as committed pre-work. Themes, UI proposals, and the Dough Log feature (§§2–5) remain pending owner decisions (see §6). **Update:** Dough Log approved; Light/Dark primary under review (red retired outside Italiano) — see §3.5 and §6 decision 1/10.
+**Status:** Decision document. Phase 0 (production fixes, §7) and Phase 0.5 (cheap hardening, §7.5) are **APPROVED scope** — the repo owner has signed off on folding the audit's confirmed findings in as committed pre-work. Themes, UI proposals, and the Dough Log feature (§§2–5) remain pending owner decisions (see §6). **Update:** Dough Log approved; Light/Dark primary shortlist narrowed to Basil/Crust/Flip (final pick pending) — see §3.5 and §6 decision 1/10. **Round 2:** default theme decided (follow system, user-overridable, §6 decision 1); Grey theme recolored with a steel-blue primary/accent (§3.4); new approved task — SVG logo & app icon redesign (§4.4, §6 decision 16).
 **Date:** 2026-07-18
 **Author:** Design lead
 **Scope:** Theme/token architecture, screen-level UI improvements, and a new Dough Log feature.
@@ -182,13 +182,15 @@ All four grounded in `app.css` today plus nostromo/iamjarl values where they fit
 | `--color-text` | `#1a1a1a` | — |
 | `--color-text-secondary` | `rgba(0,0,0,0.62)` | ladder |
 | `--color-text-tertiary` | `rgba(0,0,0,0.45)` | — |
-| `--color-primary` | `#3f3f46` | graphite (accent = grey, near-monochrome UI) |
-| `--color-on-primary` | `#ffffff` | — |
-| `--color-accent` | `#52525b` | secondary graphite |
+| `--color-primary` | ~~`#3f3f46` graphite~~ → `#3a6494` steel-blue | AA-darkened `sulaco` (nostromo `#4d7fb2` family); revised per owner feedback |
+| `--color-on-primary` | `#ffffff` | unchanged |
+| `--color-accent` | ~~`#52525b`~~ → `#4d7fb2` | sulaco steel-blue accent (lighter step than primary); revised per owner feedback |
 | `--color-success` | `#2e7d32` | kept for meaning even in grey theme |
 | `--color-warning` | `#b45309` | — |
 | `--color-error` | `#b91c1c` | — |
 | `--color-border` | `#d4d4d8` | — |
+
+> **Note (round 2):** revised per owner feedback — neutral surfaces with a cool steel accent instead of graphite-on-grey. All Grey neutrals (background/surface/text/border) and state colors (success/warning/error) are unchanged; only primary and accent moved from graphite to steel-blue.
 
 #### Italiano (fun — pomodoro red / basil green / mozzarella cream)
 
@@ -219,13 +221,15 @@ Owner decision: Light and Dark themes will **not** keep the Material-red primary
 
 | Candidate | Light | Dark | Trade-offs |
 | --- | --- | --- | --- |
-| **Basil green** *(recommended)* | `#2e7d32` | `#66bb6a` | Promoted from today's `--color-accent`. Accent then becomes a warm crust-tan (`~#9c5a2c` light / `~#d9a05b` dark). Reuses an already AA-validated value (iamjarl success text) — low risk, calm, food-appropriate — but shares its hue family with `--color-success`, so the accent swap needs to fully separate the two meanings visually. |
-| Crust orange | `~#ea580c` | brightened (from nostromo `lv-426` `#f96b06`) | Warm and appetizing, but close to `--color-warning`; warning would need to shift to amber (`~#b45309` light / `~#f59e0b` dark) to avoid clashing. |
-| Steel blue family | `#4d7fb2` (darkened for AA in light) | `#4d7fb2` family | Sourced from nostromo `sulaco`. Cool, professional "ops console" mood — furthest from a pizza/culinary feel of the set; needs darkening to clear AA on light backgrounds. |
-| Warm graphite | `~#4a4038` | `~#d6cec4` | Near-monochrome; the primary carries almost no color, pushing the meaning-bearing color budget onto success/warning/error. Safest for a11y/colorblind users, least "branded." |
-| Nostromo violet | `#691eeb` | `#691eeb` (as authored) | nostromo's own default-theme primary. Distinctive, but no inherent link to pizza/Italian styling — a purely borrowed hue. |
-| Mother cyan | `#00bfff` (darkened for AA in light) | `#00bfff` | nostromo `mother` theme's signature cyan. Cold/clinical mood, furthest from Italiano's warmth; needs darkening to pass AA on light backgrounds. |
-| iamjarl flip | `#A435D2` | `#D0FF00` | Accent-flip pattern — hue changes between modes, not just lightness. Most novel option, but highest implementation/testing cost: two unrelated hues, each needing AA validation and harmonization with success/warning/error in both modes. |
+| **Basil green** *(recommended)* — ✅ **SHORTLISTED** | `#2e7d32` | `#66bb6a` | Promoted from today's `--color-accent`. Accent then becomes a warm crust-tan (`~#9c5a2c` light / `~#d9a05b` dark). Reuses an already AA-validated value (iamjarl success text) — low risk, calm, food-appropriate — but shares its hue family with `--color-success`, so the accent swap needs to fully separate the two meanings visually. |
+| Crust orange — ✅ **SHORTLISTED** | `~#ea580c` | brightened (from nostromo `lv-426` `#f96b06`) | Warm and appetizing, but close to `--color-warning`; warning would need to shift to amber (`~#b45309` light / `~#f59e0b` dark) to avoid clashing. |
+| ~~Steel blue family~~ — ❌ **REJECTED** | `#4d7fb2` (darkened for AA in light) | `#4d7fb2` family | Sourced from nostromo `sulaco`. Cool, professional "ops console" mood — furthest from a pizza/culinary feel of the set; needs darkening to clear AA on light backgrounds. |
+| ~~Warm graphite~~ — ❌ **REJECTED** | `~#4a4038` | `~#d6cec4` | Near-monochrome; the primary carries almost no color, pushing the meaning-bearing color budget onto success/warning/error. Safest for a11y/colorblind users, least "branded." |
+| ~~Nostromo violet~~ — ❌ **REJECTED** | `#691eeb` | `#691eeb` (as authored) | nostromo's own default-theme primary. Distinctive, but no inherent link to pizza/Italian styling — a purely borrowed hue. |
+| ~~Mother cyan~~ — ❌ **REJECTED** | `#00bfff` (darkened for AA in light) | `#00bfff` | nostromo `mother` theme's signature cyan. Cold/clinical mood, furthest from Italiano's warmth; needs darkening to pass AA on light backgrounds. |
+| iamjarl flip — ✅ **SHORTLISTED** | `#A435D2` | `#D0FF00` | Accent-flip pattern — hue changes between modes, not just lightness. Most novel option, but highest implementation/testing cost: two unrelated hues, each needing AA validation and harmonization with success/warning/error in both modes. |
+
+**Owner decision (round 2):** shortlist narrowed to three — **Basil green, Crust orange, and iamjarl flip** ("Basil, Crust and Flip"). Steel blue, Warm graphite, Nostromo violet, and Mother cyan are **rejected**. Final pick among the three shortlisted candidates is still **pending** — see §6 decision 1.
 
 Note: `--color-success`, `--color-warning`, `--color-error`, and all neutral tokens (background/surface/text/border) in §3.4 are **unaffected** by this choice — only `--color-primary` (and, if the "promoted" pattern is chosen, `--color-accent`/`--color-on-primary`/`--color-on-accent`) moves.
 
@@ -257,6 +261,18 @@ The densest screen (ui-map §2, rough edges #3, #4, #7). Proposals:
 - **Confirmation on destructive actions** (rough edge #9): deleting history entries and "Ryd alle" completed timers have no confirm. Add a lightweight inline confirm (tap-to-confirm on the X, or an undo toast). This also sets up the Dough Log's delete affordance (§5).
 - **Timer progress direction** (rough edge #5): progress bar fills but direction is ambiguous. Add the remaining-time as the fill label and a subtle color shift toward `--color-warning` as it nears completion.
 - **Reference tab overflow indicator** (rough edge #6): 6 tabs scroll horizontally with no affordance. Add a right-edge fade mask so users know more tabs exist (CLAUDE.md a11y note: horizontal-scroll containers need `overflow-x: auto` — verify present).
+
+### 4.4 New task — SVG logo & app icon (approved)
+
+**Owner decision (round 2):** design a nicer SVG logo/icon, replacing the current placeholder. **Approved scope.**
+
+**Current state (verified):** `src/lib/assets/favicon.svg` exists — but it is the **default SvelteKit starter logo** (`<title>svelte-logo</title>`, 107×128 viewbox, the orange-and-white Svelte "S" mark, `fill:#ff3e00`), not anything pizza-themed, and it has **zero references anywhere in `src/`** — it's dead placeholder art left over from `sv create`. The app's actual favicon/PWA icon in current use is a different file, `static/icons/icon.svg` — a hand-drawn pizza (concentric crust/cheese circles with pepperoni and basil-fleck dots, hardcoded hex fills), wired via `<link rel="icon" href="/icons/icon.svg" />` in `src/routes/+layout.svelte` and as the default `icon`/`badge` in `src/lib/utils/notification.ts`. Neither file is currently used as a **header** logo — there is no header logo mark today.
+
+**Scope of the task:** design one nicer SVG (or small SVG set) to serve as (a) the app icon exported by the icon pipeline, (b) a header logo mark, and (c) the browser favicon — consolidating the current split/dead state (unused `favicon.svg` + hardcoded-hex `icon.svg`) into a single tokenized source of truth. The icon pipeline is `npm run generate:icons`, which runs `scripts/generate-icons.mjs`: it reads `static/icons/icon.svg`, rasterizes it via `sharp` at 8 sizes (72/96/128/144/152/192/384/512 px) to `static/icons/icon-{size}.png` for the PWA manifest. The new logo must therefore work as `static/icons/icon.svg` (the pipeline's actual input) and hold up legibly at the smallest rasterized sizes (72px and favicon-scale).
+
+- Replace the dead `src/lib/assets/favicon.svg` (delete or repurpose) and the hardcoded-hex `static/icons/icon.svg` with the new design.
+- Should work at favicon sizes (simple enough silhouette to read at 16–32px) and ideally adapt to themes — either `currentColor`-driven strokes/fills so it inherits `--color-primary`/`--color-text` from context, or explicit per-theme variants (Light/Dark/Grey/Italiano), consistent with the §3 token architecture rather than today's hardcoded circle fills.
+- **Open decision (small):** style direction — a pizza/dough motif (icon-first, in the spirit of today's pepperoni circles) vs. a wordmark/lettermark treatment. See §6 decision 16.
 
 ---
 
@@ -347,7 +363,7 @@ Decisions 1–15 below still stand as-is for themes, UI proposals, and the Dough
 
 The owner must decide each of these before implementation:
 
-1. ~~**Default theme** — which of Light / Dark / Grey / Italiano / System is the out-of-box default?~~ **Superseded.** Red-outside-Italiano is ruled out — Italiano keeps pomodoro `#c8362f` as the app's only red primary, Grey keeps graphite. The real remaining choice is now two-part: (a) which Light/Dark primary candidate from §3.5 to lock in, and (b) which of Light / Dark / Grey / Italiano / System is the out-of-box default. (Recommendation unchanged on (b): `system`, preserving today's behavior, Italiano as an opt-in personality; on (a): basil green, §3.5 — pending owner sign-off in the HTML preview.)
+1. ~~**Default theme** — which of Light / Dark / Grey / Italiano / System is the out-of-box default?~~ **Superseded**, then **✅ DECIDED (round 2).** Red-outside-Italiano is ruled out — Italiano keeps pomodoro `#c8362f` as the app's only red primary, Grey keeps a steel-blue primary (§3.4, revised from graphite). The question was two-part: (a) which Light/Dark primary candidate from §3.5 to lock in, and (b) which of Light / Dark / Grey / Italiano / System is the out-of-box default. **(b) is now decided:** the app follows the system preference (`prefers-color-scheme`) by default, explicitly overridable by the user via the in-app theme switcher — exactly the §3.1/§3.2 architecture (no `data-theme` set for `system`; the switcher sets it explicitly and wins over the media query). **Still open:** (a), the final Light/Dark primary pick among the three §3.5-shortlisted candidates — Basil / Crust / Flip.
 2. **Ship all four themes, or a subset?** — e.g. Light + Dark + Italiano and drop Grey, or Light + Dark only for v1 with Grey/Italiano later.
 3. **Italiano dark variant** — build the espresso-brown dark Italiano now, or defer? (§3.4)
 4. **Theme switcher location** — header gear icon, a new Settings screen, or tucked into the Reference tab? (§3.2)
@@ -362,6 +378,7 @@ The owner must decide each of these before implementation:
 13. **Dough Log outcome rating** — include the 1–5 star rating, or keep entries note-only?
 14. **Dough Log global view** — per-recipe surfacing only, or also a global "Bagedagbog" journal screen? (§5.5)
 15. **Dough Log storage failure handling** — add the toast-on-`storage.set`-failure deviation from the swallow-everything convention (recommended for precious data), or keep silent-degrade parity with the rest of the app? (§5.1)
+16. **Logo style direction** — a pizza/dough motif (icon-first) or a wordmark/lettermark treatment for the new SVG logo/app icon? (§4.4; task itself is approved, this is the remaining style call.)
 
 **Note on 11–15:** now that the Dough Log itself is approved (decision 10), these five sub-decisions remain open — but absent an explicit owner objection, the plan's stated defaults apply as the working assumption: both entry paths with quick-log-after-bake as the primary one (11, §5.4); index+snapshot for the `TimelineStep` reference rather than a model change (12, §5.1); the 1–5 star rating included, as already specced in `DoughLogEntry.outcome` (13, §5.2); per-recipe surfacing only for now, with the global "Bagedagbog" view left as a future optional add-on (14, §5.5); and toast-on-`storage.set`-failure rather than silent-degrade, given the precious-data caveat (15, §5.1).
 
