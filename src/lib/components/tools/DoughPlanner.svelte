@@ -131,6 +131,30 @@
 	}
 </script>
 
+{#snippet warningItem(text: string)}
+	<p class="warning" role="alert">
+		<svg
+			class="warning-icon"
+			aria-hidden="true"
+			viewBox="0 0 24 24"
+			width="20"
+			height="20"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		>
+			<path
+				d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+			/>
+			<line x1="12" y1="9" x2="12" y2="13" />
+			<line x1="12" y1="17" x2="12.01" y2="17" />
+		</svg>
+		<span>{text}</span>
+	</p>
+{/snippet}
+
 <div class="tool-card" data-testid="dough-planner">
 	<div class="card-header">
 		<div>
@@ -390,11 +414,11 @@
 				</ol>
 
 				{#each yeastPlan.warnings as warning}
-					<p class="warning">{warningLabels[warning]}</p>
+					{@render warningItem(warningLabels[warning])}
 				{/each}
 			</div>
 		{:else}
-			<p class="warning">{warningLabels['no-proof-time']}</p>
+			{@render warningItem(warningLabels['no-proof-time'])}
 		{/if}
 	{:else if sourdoughPlan}
 		<div class="results">
@@ -452,7 +476,7 @@
 			</p>
 
 			{#each sourdoughPlan.warnings as warning}
-				<p class="warning">{warningLabels[warning]}</p>
+				{@render warningItem(warningLabels[warning])}
 			{/each}
 		</div>
 	{/if}
@@ -580,7 +604,7 @@
 	}
 
 	.highlight {
-		background: var(--color-warning-bg, rgba(var(--color-primary-rgb), 0.06));
+		background: rgba(var(--color-primary-rgb), 0.06);
 		border: 1px solid var(--color-primary-light);
 		border-radius: var(--radius-md);
 		padding: var(--spacing-md);
@@ -649,13 +673,22 @@
 	}
 
 	.warning {
+		display: flex;
+		align-items: flex-start;
+		gap: var(--spacing-sm);
 		margin: 0;
 		padding: var(--spacing-sm) var(--spacing-md);
 		border-radius: var(--radius-md);
-		background: rgba(var(--color-primary-rgb), 0.08);
-		border: 1px solid var(--color-primary-light);
+		background: var(--color-warning-bg);
+		border: 1px solid var(--color-warning-border);
 		color: var(--color-text);
 		font-size: var(--font-size-sm);
+	}
+
+	.warning-icon {
+		flex-shrink: 0;
+		margin-top: 1px;
+		color: var(--color-warning);
 	}
 
 	.save-row {

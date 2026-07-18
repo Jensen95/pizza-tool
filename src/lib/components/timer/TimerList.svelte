@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { activeTimers, completedTimers, timers } from '$lib/stores';
 	import type { TimerStatus } from '$lib/models';
 	import { getPermissionStatus, isNotificationSupported } from '$lib/utils/notification';
@@ -30,8 +30,23 @@
 
 	let showNotificationHint = $derived(hasActiveTimers && permissionStatus === 'granted');
 
+	// Tap-again-to-confirm: first tap arms the confirm state (auto-reverts after a few
+	// seconds if untouched); a second tap while armed actually clears the timers.
+	let confirmingClear = $state(false);
+	let confirmClearTimeoutId: ReturnType<typeof setTimeout> | undefined;
+
 	function clearCompleted() {
-		timers.clearCompleted();
+		if (confirmingClear) {
+			if (confirmClearTimeoutId) clearTimeout(confirmClearTimeoutId);
+			confirmingClear = false;
+			timers.clearCompleted();
+			return;
+		}
+
+		confirmingClear = true;
+		confirmClearTimeoutId = setTimeout(() => {
+			confirmingClear = false;
+		}, 3000);
 	}
 
 	// Visually-hidden live region: announce timer status transitions (complete/pause/resume)
@@ -54,6 +69,10 @@
 			}
 		}
 		previousStatuses = new Map(current.map((timer) => [timer.id, timer.status]));
+	});
+
+	onDestroy(() => {
+		if (confirmClearTimeoutId) clearTimeout(confirmClearTimeoutId);
 	});
 </script>
 
@@ -96,7 +115,16 @@
 			<section class="timer-section">
 				<div class="section-header">
 					<h3 class="section-title">Færdige timere</h3>
-					<button class="btn btn-secondary clear-btn" onclick={clearCompleted}> Ryd alle </button>
+					<button
+						class="btn btn-secondary clear-btn"
+						class:confirming={confirmingClear}
+						onclick={clearCompleted}
+						aria-label={confirmingClear
+							? 'Tryk igen for at rydde alle færdige timere'
+							: 'Ryd alle færdige timere'}
+					>
+						{confirmingClear ? 'Sikker?' : 'Ryd alle'}
+					</button>
 				</div>
 				<div class="timer-grid">
 					{#each $completedTimers as timer (timer.id)}
@@ -177,6 +205,11 @@
 	.clear-btn {
 		font-size: var(--font-size-sm);
 		padding: var(--spacing-xs) var(--spacing-sm);
+	}
+
+	.clear-btn.confirming {
+		background: var(--color-error, var(--color-warning));
+		color: var(--color-text-light);
 	}
 
 	.timer-grid {

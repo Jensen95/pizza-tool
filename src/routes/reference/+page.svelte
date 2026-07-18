@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import FlourReference from '$lib/components/reference/FlourReference.svelte';
 	import SauceRecipes from '$lib/components/reference/SauceRecipes.svelte';
 	import TipsSection from '$lib/components/reference/TipsSection.svelte';
@@ -17,6 +18,22 @@
 		{ id: 'sizes', label: 'Størrelser' },
 		{ id: 'tips', label: 'Tips' }
 	];
+
+	// Right-edge fade mask: only visible while there is more tab-bar content to
+	// scroll to, so it never lies about overflow that no longer exists.
+	let tabsEl: HTMLElement | undefined = $state();
+	let canScrollRight = $state(false);
+
+	function updateScrollState() {
+		if (!tabsEl) return;
+		canScrollRight = tabsEl.scrollWidth - tabsEl.clientWidth - tabsEl.scrollLeft > 1;
+	}
+
+	onMount(() => {
+		updateScrollState();
+		window.addEventListener('resize', updateScrollState);
+		return () => window.removeEventListener('resize', updateScrollState);
+	});
 </script>
 
 <svelte:head>
@@ -26,13 +43,20 @@
 <div class="reference-page">
 	<h1 class="page-title">Reference</h1>
 
-	<nav class="tabs">
-		{#each tabs as tab}
-			<button class="tab" class:active={activeTab === tab.id} onclick={() => (activeTab = tab.id)}>
-				{tab.label}
-			</button>
-		{/each}
-	</nav>
+	<div class="tabs-wrapper">
+		<nav class="tabs" bind:this={tabsEl} onscroll={updateScrollState}>
+			{#each tabs as tab}
+				<button
+					class="tab"
+					class:active={activeTab === tab.id}
+					onclick={() => (activeTab = tab.id)}
+				>
+					{tab.label}
+				</button>
+			{/each}
+		</nav>
+		<div class="tabs-fade" class:visible={canScrollRight} aria-hidden="true"></div>
+	</div>
 
 	<div class="tab-content">
 		{#if activeTab === 'pizzas'}
@@ -63,11 +87,15 @@
 		font-size: var(--font-size-xl);
 	}
 
+	.tabs-wrapper {
+		position: relative;
+		margin-bottom: var(--spacing-md);
+	}
+
 	.tabs {
 		display: flex;
 		gap: var(--spacing-xs);
 		border-bottom: 2px solid var(--color-border);
-		margin-bottom: var(--spacing-md);
 		overflow-x: auto;
 		-webkit-overflow-scrolling: touch;
 		scrollbar-width: none;
@@ -77,8 +105,27 @@
 		display: none;
 	}
 
+	.tabs-fade {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 2px;
+		width: 32px;
+		background: linear-gradient(to right, transparent, var(--color-background));
+		opacity: 0;
+		transition: opacity 0.2s ease;
+		pointer-events: none;
+	}
+
+	.tabs-fade.visible {
+		opacity: 1;
+	}
+
 	.tab {
 		flex-shrink: 0;
+		min-height: 44px;
+		display: flex;
+		align-items: center;
 		padding: var(--spacing-sm) var(--spacing-md);
 		background: none;
 		border: none;

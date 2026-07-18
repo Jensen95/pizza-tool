@@ -10,6 +10,8 @@
 	let progress = $state(0);
 	let finishTime = $state(0);
 	let intervalId: ReturnType<typeof setInterval>;
+	let confirmingDelete = $state(false);
+	let confirmTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
 	function updateTimer() {
 		timeRemaining = getTimeRemaining(timer);
@@ -30,6 +32,7 @@
 
 	onDestroy(() => {
 		if (intervalId) clearInterval(intervalId);
+		if (confirmTimeoutId) clearTimeout(confirmTimeoutId);
 	});
 
 	function handlePause() {
@@ -40,17 +43,36 @@
 		timers.resume(timer.id);
 	}
 
+	// Tap-again-to-confirm: first tap arms the confirm state (and reverts on its own
+	// after a few seconds if untouched); a second tap while armed performs the delete.
 	function handleCancel() {
-		timers.remove(timer.id);
+		if (confirmingDelete) {
+			if (confirmTimeoutId) clearTimeout(confirmTimeoutId);
+			confirmingDelete = false;
+			timers.remove(timer.id);
+			return;
+		}
+
+		confirmingDelete = true;
+		confirmTimeoutId = setTimeout(() => {
+			confirmingDelete = false;
+		}, 3000);
 	}
 
 	let isCompleted = $derived(timer.status === 'completed');
 	let isPaused = $derived(timer.status === 'paused');
 	let isActive = $derived(timer.status === 'active');
+	let isNearingCompletion = $derived(isActive && progress >= 85);
+	let deleteLabel = $derived(isCompleted ? 'Fjern' : 'Annuller');
 </script>
 
 <div class="timer-card" class:completed={isCompleted} class:paused={isPaused}>
-	<div class="timer-progress" style="--progress: {progress}%"></div>
+	<div class="timer-meter" class:nearing={isNearingCompletion} aria-hidden="true">
+		<div class="timer-meter-fill" style="width: {progress}%"></div>
+	</div>
+	{#if !isCompleted}
+		<p class="timer-meter-label">{formatTimeRemaining(timeRemaining)} tilbage</p>
+	{/if}
 
 	<div class="timer-content">
 		<div class="timer-info">
@@ -80,8 +102,15 @@
 				<button class="btn btn-primary" onclick={handleResume}> Fortsæt </button>
 			{/if}
 
-			<button class="btn btn-secondary delete-btn" onclick={handleCancel}>
-				{isCompleted ? 'Fjern' : 'Annuller'}
+			<button
+				class="btn btn-secondary delete-btn"
+				class:confirming={confirmingDelete}
+				onclick={handleCancel}
+				aria-label={confirmingDelete
+					? `Tryk igen for at ${deleteLabel.toLowerCase()} "${timer.name}"`
+					: `${deleteLabel} "${timer.name}"`}
+			>
+				{confirmingDelete ? 'Sikker?' : deleteLabel}
 			</button>
 		</div>
 	</div>
@@ -104,22 +133,39 @@
 		opacity: 0.8;
 	}
 
-	.timer-progress {
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 6px;
-		width: var(--progress, 0%);
-		background: var(--color-primary);
-		transition: width 1s linear;
+	.timer-meter {
+		height: 8px;
+		width: 100%;
+		background: var(--color-border);
 	}
 
-	.timer-card.completed .timer-progress {
+	.timer-meter-fill {
+		height: 100%;
+		background: var(--color-primary);
+		transition:
+			width 1s linear,
+			background-color 0.3s ease;
+	}
+
+	.timer-card.completed .timer-meter-fill {
 		background: var(--color-success);
 	}
 
-	.timer-card.paused .timer-progress {
+	.timer-card.paused .timer-meter-fill {
 		background: var(--color-warning);
+	}
+
+	.timer-meter.nearing .timer-meter-fill {
+		background: var(--color-warning);
+	}
+
+	.timer-meter-label {
+		margin: 0;
+		padding: 4px var(--spacing-md) 0;
+		font-size: var(--font-size-xs);
+		color: var(--color-text-secondary);
+		text-align: right;
+		font-variant-numeric: tabular-nums;
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
@@ -215,5 +261,10 @@
 
 	.delete-btn {
 		flex: 0 0 auto !important;
+	}
+
+	.delete-btn.confirming {
+		background: var(--color-error, var(--color-warning));
+		color: var(--color-text-light);
 	}
 </style>
