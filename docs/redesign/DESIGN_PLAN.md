@@ -1,6 +1,6 @@
 # Pizza Tool — UI Redesign & Theme System Plan
 
-**Status:** Decision document — nothing here is implemented yet. The repo owner reads this and picks options (see §6) before any code is written.
+**Status:** Decision document. Phase 0 (production fixes, §7) and Phase 0.5 (cheap hardening, §7.5) are **APPROVED scope** — the repo owner has signed off on folding the audit's confirmed findings in as committed pre-work. Themes, UI proposals, and the Dough Log feature (§§2–5) remain pending owner decisions (see §6).
 **Date:** 2026-07-18
 **Author:** Design lead
 **Scope:** Theme/token architecture, screen-level UI improvements, and a new Dough Log feature.
@@ -327,6 +327,8 @@ The sheet reuses `--color-surface-elevated`, the slide-in pattern from the histo
 
 ## 6. Open decisions
 
+Decisions 1–15 below still stand as-is for themes, UI proposals, and the Dough Log (§§2–5) — none of that is scheduled or approved yet. The production fixes from the audit are **no longer decisions**: the owner has approved them as Phase 0 / Phase 0.5 pre-work (§7, §7.5) regardless of how 1–15 resolve.
+
 The owner must decide each of these before implementation:
 
 1. **Default theme** — which of Light / Dark / Grey / Italiano / System is the out-of-box default? (Recommendation: `system`, preserving today's behavior; Italiano as an opt-in personality.)
@@ -344,3 +346,67 @@ The owner must decide each of these before implementation:
 13. **Dough Log outcome rating** — include the 1–5 star rating, or keep entries note-only?
 14. **Dough Log global view** — per-recipe surfacing only, or also a global "Bagedagbog" journal screen? (§5.5)
 15. **Dough Log storage failure handling** — add the toast-on-`storage.set`-failure deviation from the swallow-everything convention (recommended for precious data), or keep silent-degrade parity with the rest of the app? (§5.1)
+
+---
+
+## 7. Phase 0 — Production fixes (approved scope)
+
+The owner has approved folding all 8 CONFIRMED findings from `docs/redesign/AUDIT.md` into the plan as committed pre-work, independent of how §6's theme/UI/Dough-Log decisions land. Each item below is a fix, not a decision — implementation can start without waiting on §6.
+
+### 7.1 storage.set() failures are swallowed everywhere
+
+- **File**: `src/lib/utils/storage.ts:37`
+- **Fix approach**: Change `storage.set()`'s callers, not its signature — it already returns a boolean, nothing reads it. Add a small `storageFailure` writable (or a callback param threaded through `storage.set`) that every persisting store (`dough-plans.ts`, `preferences.ts`, `customizations.ts`, `timer-manager.ts`, `calculator.ts`) checks after each write. Surface one global "changes couldn't be saved" toast/banner from that single store rather than duplicating UI per caller.
+
+### 7.2 Corrupted/partial localStorage treated as "never saved"
+
+- **File**: `src/lib/utils/storage.ts:25`
+- **Fix approach**: In `get<T>()`, distinguish `item === null` (genuinely missing) from a `JSON.parse` throw (corrupt). On parse failure, back up the raw string under `<key>.corrupt` before returning `defaultValue`, and report through the same failure surface as §7.1 so a vanished timer/plan isn't silently indistinguishable from "nothing was ever saved."
+
+### 7.3 Concurrent tabs clobber each other's writes
+
+- **File**: `src/lib/stores/dough-plans.ts:21` (same pattern in `customizations.ts`, `calculator.ts`, `preferences.ts`)
+- **Fix approach**: Add a `window.addEventListener('storage', …)` listener in the storage wrapper (or in each store) that rehydrates the affected store when another tab changes its key. For the array-backed stores (dough-plans, timers, customizations/history) prefer a re-read-merge-before-write in the mutator itself, so a save in tab A can't be blown away by a stale snapshot written from tab B.
+
+### 7.4 getAvailableFlourTypes matches by id instead of flourType
+
+- **File**: `src/lib/stores/calculator.ts:578`
+- **Fix approach**: Build `usedIds` from `flour.flourType` (falling back to `flour.id` only when `flourType` is absent) so a recipe's base flour type is correctly excluded from the "add flour" dropdown. Fix the misleading fixture in `src/lib/utils/custom-flour.test.ts:161-164` (`id: 'semolina'` coincidentally equal to the flourType-option id) so the test actually exercises the id/flourType distinction instead of masking it.
+
+### 7.5 No SvelteKit base path for GitHub Pages deployment
+
+- **File**: `svelte.config.js:5`
+- **Confidence gap to close first**: confirm the live URL is `jensen95.github.io/pizza-tool/` (project site) rather than a custom domain — there is no `CNAME` file anywhere in the repo, which supports the project-site path but should be checked against the actual GitHub Pages settings/deployed URL before merging.
+- **Fix approach**: Set `kit.paths.base = process.env.BASE_PATH || ''` in `svelte.config.js`, wire `BASE_PATH=/pizza-tool` in `.github/workflows/deploy.yml`. Switch `static/manifest.json`'s `start_url`/icon `src` and `src/app.html`'s manifest/icon links to base-aware/relative forms, and switch in-app links (e.g. `RecipeCard.svelte`'s `<a href="/recipe/{recipe.id}">`) to use `$app/paths`'s `base` or SvelteKit's relative-link resolution.
+
+### 7.6 Corrupted/missing localStorage silently drops active timers (cross-tab race)
+
+- **File**: `src/lib/utils/timer-manager.ts:163`
+- **Fix approach**: Covered by the storage-event listener / re-read-merge fix in §7.3 — `checkTimers()` should re-read before it writes back, not just before it reads for completion checks, so a concurrent pause/resume in another tab isn't overwritten by a stale snapshot. **Acceptance test**: pause a timer in tab A while tab B's `checkTimers` loop completes and writes a different timer in the same tick; tab A's pause must survive.
+
+### 7.7 Foreground-only timer notifications
+
+- **File**: `src/lib/utils/timer-manager.ts:182`
+- **Fix approach**: Store the timer's absolute deadline (already available as `endTime`/equivalent) rather than relying purely on the running interval. On `visibilitychange`/`pageshow`, recompute elapsed time against that deadline and fire any notifications that were missed while backgrounded. True background push (via the already-dead `service-worker.js` push handler) is out of scope for a static PWA with no push server — document in-UI that "notifications fire when the app is open" so expectations are set correctly rather than promising background delivery.
+
+### 7.8 Three `<select>` controls in DoughControls have no accessible name
+
+- **File**: `src/lib/components/recipe/DoughControls.svelte:492, 530, 564`
+- **Fix approach**: Add `<label for="...">` (visually-hidden if the layout doesn't have room) or `aria-label` to each of the three selects — add-flour, add-custom-flour-type, and yeast-type — so screen readers announce their purpose instead of just the current option value.
+
+### 7.9 Phase 0.5 — Cheap hardening (approved)
+
+Four split-verdict findings from `AUDIT.md`'s "Needs a second look" section are worth fixing regardless of the split verdict — each is cheap, low-risk, and either already-wrong-looking code or a straightforward a11y gap:
+
+- **PwaPrompts `%sveltekit.assets%` literal** (`src/lib/components/ui/PwaPrompts.svelte:74`, finding A) — replace the literal string with `import { base, assets } from '$app/paths'`. Even though a refuter cast doubt on the exact failure mechanism (`getRegistration` argument semantics), the literal is unambiguously wrong code and should use the real base-path import regardless of whether update detection is fully broken or only partially degraded today.
+- **No `aria-live` announcement for timer completion** (`src/lib/components/timer/TimerCard.svelte:58`, finding B) — add an `aria-live="polite"` (or `role="status"`) region that announces "Timer done" in-app alongside the existing system Notification, so the completion isn't visual-only for screen-reader users who don't have notifications granted.
+- **Icon-only reset/undo buttons lack accessible names** (`src/lib/components/recipe/DoughControls.svelte:365` and its two siblings, finding H) — add `aria-label="Nulstil ..."` to each reset button; don't rely on the Unicode glyph or `title` attribute, which loses to text-content precedence in accessible-name computation.
+- **Modal.svelte has no focus trap** (`src/lib/components/ui/Modal.svelte:43`, finding G) — either add focus-on-open plus Tab-cycling (a small, well-understood a11y fix), or delete the component since it currently has zero call sites anywhere in `src/`. Fixing it now is cheap insurance against the moment a feature (e.g. Dough Log's entry sheet, §5.4) adopts it without re-auditing.
+
+The remaining split-verdict items are **tracked, not scheduled** — real concerns, but each has a refuter argument that keeps it out of approved Phase 0/0.5 scope for now:
+
+- **Schema versioning in `storage.get`** (finding C) — no live bug today; the only precedent (`FLOUR_ID_MIGRATION`) patches one field for one key, so this is a future-proofing question, not a current defect.
+- **Cap-50 truncation on dough-plans/history** (finding E) — a refuter called this a deliberate, documented design choice (named constant, explicit comment) defending against localStorage quota, not an accidental data-loss bug.
+- **Unclamped `setIngredientPercentage`/`applyCustomIngredients`** (finding F) — the one live caller (`DoughControls.svelte handleExtraChange`) already guards range/`isNaN`; the store method is unguarded but currently unreachable out-of-range.
+- **Live-reference getters in `customizations.ts`** (finding I) — `getForRecipe`/`applyToIngredients` hand out un-cloned internal state, but both have zero call sites in `src/` today; revisit if Dough Log or another feature starts calling them.
+- **Ingredient-id uniqueness not enforced** (finding D) — a latent type-system gap (`IngredientBase.id` isn't scoped per mixing-step), but all 22 current recipe JSONs are collision-free and recipes are static, not user-authored.
