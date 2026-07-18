@@ -1,6 +1,6 @@
 # Pizza Tool — UI Redesign & Theme System Plan
 
-**Status:** Decision document. Phase 0 (production fixes, §7) and Phase 0.5 (cheap hardening, §7.5) are **APPROVED scope** — the repo owner has signed off on folding the audit's confirmed findings in as committed pre-work. Themes, UI proposals, and the Dough Log feature (§§2–5) remain pending owner decisions (see §6). **Update:** Dough Log approved; Light/Dark primary shortlist narrowed to Basil/Crust/Flip (final pick pending) — see §3.5 and §6 decision 1/10. **Round 2:** default theme decided (follow system, user-overridable, §6 decision 1); Grey theme recolored with a steel-blue primary/accent (§3.4); new approved task — SVG logo & app icon redesign (§4.4, §6 decision 16).
+**Status:** Decision document — **all design decisions are now made.** Phase 0 (production fixes, §7) and Phase 0.5 (cheap hardening, §7.5) are **APPROVED scope** — the repo owner has signed off on folding the audit's confirmed findings in as committed pre-work, and Phase 0 implementation is starting. Themes, UI proposals, and the Dough Log feature (§§2–5) are **decided** (see §6). **Update:** Dough Log approved; Light/Dark primary shortlist narrowed to Basil/Crust/Flip (final pick pending) — see §3.5 and §6 decision 1/10. **Round 2:** default theme decided (follow system, user-overridable, §6 decision 1); Grey theme recolored with a steel-blue primary/accent (§3.4); new approved task — SVG logo & app icon redesign (§4.4, §6 decision 16). **Round 3 (final):** rather than picking one Light/Dark primary, all three shortlisted candidates ship as a user-selectable preference, default Basil (§3.5, §6 decision 1); all four themes ship (§6 decision 2); Redesign Proposals A, B, and C are accepted in full (§6 decisions 7–9); the logo is a dough/pizza motif, not a wordmark (§6 decision 16); the Italiano dark variant is deferred unless it stays trivial during implementation (§6 decision 3); and the Phase 0 base-path finding is resolved as a **non-bug** via live-site verification — no code change ships (§7.5). **Remaining open items: none** — decisions 4, 6, and 11–15 default to the plan's stated recommendations (see §6).
 **Date:** 2026-07-18
 **Author:** Design lead
 **Scope:** Theme/token architecture, screen-level UI improvements, and a new Dough Log feature.
@@ -118,12 +118,24 @@ Plus a **system-following default**: when the user's stored preference is `syste
 
 **New token names to add** (superset of today's, so nothing breaks): `--color-surface-elevated` (cards that sit above other cards — modals, popovers, history panel), `--color-text-tertiary` (the 55% step), `--color-accent` + `--color-accent-contrast`, and `on*` contrast tokens `--color-on-primary`, `--color-on-accent`. Existing names (`--color-primary`, `--color-surface`, `--color-text`, `--color-text-secondary`, `--color-border`, `--color-success/warning/error`) keep their meaning.
 
+**Owner decision (round 3, final):** rather than locking in one §3.5 candidate, **all three shortlisted primaries ship** — Basil green, Crust orange, and iamjarl Flip — as a user-selectable "accent/primary" preference layered on top of Light and Dark (Grey keeps its steel-blue primary; Italiano keeps pomodoro; neither is affected by this choice). This is a **second attribute on the root**, alongside `data-theme`:
+
+```
+:root[data-theme="light"][data-primary="basil"]  → Light + Basil (default)
+:root[data-theme="light"][data-primary="crust"]  → Light + Crust
+:root[data-theme="light"][data-primary="flip"]   → Light + iamjarl Flip
+:root[data-theme="dark"][data-primary="…"]       → same three options under Dark
+```
+
+`data-primary` is only meaningful when the resolved theme is `light` or `dark`; it's ignored (unset or irrelevant) under Grey/Italiano. Default is `basil`. See §3.5 for the per-candidate values and the Crust/Flip interactions with warning and accent.
+
 ### 3.2 Persistence & system preference
 
 - `preferences.theme` type widens from `'light' | 'dark' | 'system'` to `'light' | 'dark' | 'grey' | 'italiano' | 'system'` (backward-compatible: `preferences.ts` already merges over defaults, so old stored values survive — store-map §3 confirms this is the safest key in the app).
-- `+layout.svelte` gains a small `$effect`/subscription: on `$preferences.theme` change, if value is `system` remove `data-theme` from `document.documentElement`; else set it. This is the missing wiring css-map flagged.
+- **New (round 3, final):** `preferences` also gains a `primary` field — `'basil' | 'crust' | 'flip'`, default `'basil'` — additive/optional and defaulted at read time the same way `theme` is, so old stored preference objects (which predate this field) merge over the default without a migration step.
+- `+layout.svelte` gains a small `$effect`/subscription: on `$preferences.theme` change, if value is `system` remove `data-theme` from `document.documentElement`; else set it. This is the missing wiring css-map flagged. The same subscription sets/removes `data-primary` from `$preferences.primary` whenever the resolved theme is `light` or `dark` (no-op under Grey/Italiano).
 - Also update the `theme-color` meta dynamically to the active theme's `--color-primary` (fixes the hardcoded `#d32f2f`).
-- A theme switcher UI (segmented control: Light / Dark / Grey / Italiano / System) lands on a small **Settings** surface — simplest home is the Reference screen or a new gear in the header (owner decision, §6).
+- A theme switcher UI (segmented control: Light / Dark / Grey / Italiano / System) lands on a small **Settings** surface — simplest home is the Reference screen or a new gear in the header (owner decision, §6). The switcher also gains a **primary picker** (Basil / Crust / Flip), shown only when the resolved theme is Light or Dark.
 
 ### 3.3 Migration path for hardcoded colors
 
@@ -145,9 +157,9 @@ All four grounded in `app.css` today plus nostromo/iamjarl values where they fit
 | `--color-text` | `#212121` | unchanged |
 | `--color-text-secondary` | `#757575` | unchanged (~70% black) |
 | `--color-text-tertiary` | `rgba(0,0,0,0.55)` | new; iamjarl ladder |
-| `--color-primary` | TBD — candidate under review | red is confined to Italiano; see §3.5 for the seven candidates the owner is reviewing |
+| `--color-primary` | `#2e7d32` (Basil, default) — user-selectable via `data-primary`; Crust `~#ea580c` and iamjarl Flip `#A435D2` also ship | red is confined to Italiano; all three §3.5-shortlisted candidates ship as switchable `data-primary` options, not a single locked pick |
 | `--color-on-primary` | `#ffffff` | new |
-| `--color-accent` | `#2e7d32` | basil green, AA-safe as text (iamjarl `state.success` text value) |
+| `--color-accent` | `#2e7d32` | basil green, AA-safe as text (iamjarl `state.success` text value); non-basil primaries (Crust, Flip) keep this basil accent unchanged — see §3.5 |
 | `--color-on-accent` | `#ffffff` | new |
 | `--color-success` | `#2e7d32` | darkened from `#4caf50` for AA text (iamjarl fix) |
 | `--color-warning` | `#c2410c` | AA-safe warn text (iamjarl) |
@@ -164,13 +176,15 @@ All four grounded in `app.css` today plus nostromo/iamjarl values where they fit
 | `--color-text` | `#e8e8e8` | today's dark |
 | `--color-text-secondary` | `rgba(255,255,255,0.60)` | iamjarl ladder |
 | `--color-text-tertiary` | `rgba(255,255,255,0.40)` | new |
-| `--color-primary` | TBD — candidate under review | red is confined to Italiano; see §3.5 for the seven candidates the owner is reviewing |
+| `--color-primary` | `#66bb6a` (Basil, default) — user-selectable via `data-primary`; Crust (brightened `lv-426` `#f96b06` family) and iamjarl Flip `#D0FF00` also ship | red is confined to Italiano; all three §3.5-shortlisted candidates ship as switchable `data-primary` options, not a single locked pick |
 | `--color-on-primary` | `#1a1a1a` | new |
-| `--color-accent` | `#66bb6a` | brightened basil |
+| `--color-accent` | `#66bb6a` | brightened basil; non-basil primaries (Crust, Flip) keep this basil accent unchanged — see §3.5 |
 | `--color-success` | `#4caf50` | iamjarl dark success |
 | `--color-warning` | `#ff6b35` | iamjarl dark warn |
 | `--color-error` | `#ff453a` | iamjarl dark error |
 | `--color-border` | `#333333` | today's dark |
+
+> **Note (round 3, final):** when the user selects **Crust** as their Light/Dark primary, `--color-warning` shifts to amber (`~#b45309` light / `~#f59e0b` dark) to keep it distinct from the now-orange primary (§3.5). Under **Basil** (default) or **iamjarl Flip**, `--color-warning` keeps the values in the tables above. In all three cases, `--color-accent` stays basil green (light) / brightened basil (dark) — only Basil-as-primary is the exception where accent shifts to a warm crust-tan, per the "promoted" pattern already noted in §3.5's Basil row.
 
 #### Grey (neutral / low-chroma — for focus, prints, colorblind-friendly)
 
@@ -215,9 +229,9 @@ The personality theme. Cream canvas (borrowed from lv-426's warm neutral `30° 2
 
 Italiano dark variant (`:root[data-theme="italiano"]` inside a `prefers-color-scheme: dark` block, optional) can drop to an espresso-brown canvas `#1c1613` with the same tomato/basil accents brightened — deferred unless owner wants it (§6).
 
-### 3.5 Light/Dark primary — candidates (owner reviewing in HTML preview)
+### 3.5 Light/Dark primary — ✅ DECIDED (round 3, final) — ship all three, default Basil
 
-Owner decision: Light and Dark themes will **not** keep the Material-red primary. Red is confined to Italiano — Italiano keeps pomodoro `#c8362f` (§3.4) as the app's only red primary, and Grey keeps its graphite primary unchanged. The Light/Dark `--color-primary` rows in §3.4 are **TBD** pending the owner's review of the seven candidates below in an HTML preview.
+Owner decision: Light and Dark themes will **not** keep the Material-red primary. Red is confined to Italiano — Italiano keeps pomodoro `#c8362f` (§3.4) as the app's only red primary, and Grey keeps its steel-blue primary unchanged. Rather than choosing a single winner among the three shortlisted candidates below, **the owner's final call is to ship all three as a user-selectable preference** (§3.1's `data-primary` attribute, §3.2's `preferences.primary` field, §6 decision 1): **Basil green is the default**, with Crust orange and iamjarl Flip available as alternate picks in the theme switcher for Light and Dark. Grey and Italiano are unaffected — they keep their own fixed primaries regardless of the `data-primary` setting.
 
 | Candidate | Light | Dark | Trade-offs |
 | --- | --- | --- | --- |
@@ -229,7 +243,9 @@ Owner decision: Light and Dark themes will **not** keep the Material-red primary
 | ~~Mother cyan~~ — ❌ **REJECTED** | `#00bfff` (darkened for AA in light) | `#00bfff` | nostromo `mother` theme's signature cyan. Cold/clinical mood, furthest from Italiano's warmth; needs darkening to pass AA on light backgrounds. |
 | iamjarl flip — ✅ **SHORTLISTED** | `#A435D2` | `#D0FF00` | Accent-flip pattern — hue changes between modes, not just lightness. Most novel option, but highest implementation/testing cost: two unrelated hues, each needing AA validation and harmonization with success/warning/error in both modes. |
 
-**Owner decision (round 2):** shortlist narrowed to three — **Basil green, Crust orange, and iamjarl flip** ("Basil, Crust and Flip"). Steel blue, Warm graphite, Nostromo violet, and Mother cyan are **rejected**. Final pick among the three shortlisted candidates is still **pending** — see §6 decision 1.
+**Owner decision (round 2):** shortlist narrowed to three — **Basil green, Crust orange, and iamjarl flip** ("Basil, Crust and Flip"). Steel blue, Warm graphite, Nostromo violet, and Mother cyan are **rejected**.
+
+**Owner decision (round 3, final):** all three shortlisted candidates ship — no single pick was made. Basil, Crust, and iamjarl Flip are each a selectable `data-primary` value for Light and Dark, with **Basil as the default**. See §6 decision 1.
 
 Note: `--color-success`, `--color-warning`, `--color-error`, and all neutral tokens (background/surface/text/border) in §3.4 are **unaffected** by this choice — only `--color-primary` (and, if the "promoted" pattern is chosen, `--color-accent`/`--color-on-primary`/`--color-on-accent`) moves.
 
@@ -272,7 +288,7 @@ The densest screen (ui-map §2, rough edges #3, #4, #7). Proposals:
 
 - Replace the dead `src/lib/assets/favicon.svg` (delete or repurpose) and the hardcoded-hex `static/icons/icon.svg` with the new design.
 - Should work at favicon sizes (simple enough silhouette to read at 16–32px) and ideally adapt to themes — either `currentColor`-driven strokes/fills so it inherits `--color-primary`/`--color-text` from context, or explicit per-theme variants (Light/Dark/Grey/Italiano), consistent with the §3 token architecture rather than today's hardcoded circle fills.
-- **Open decision (small):** style direction — a pizza/dough motif (icon-first, in the spirit of today's pepperoni circles) vs. a wordmark/lettermark treatment. See §6 decision 16.
+- ~~**Open decision (small):** style direction — a pizza/dough motif (icon-first, in the spirit of today's pepperoni circles) vs. a wordmark/lettermark treatment.~~ **✅ DECIDED (round 3, final) — dough/pizza motif**, icon-first. See §6 decision 16.
 
 ---
 
@@ -359,28 +375,28 @@ The sheet reuses `--color-surface-elevated`, the slide-in pattern from the histo
 
 ## 6. Open decisions
 
-Decisions 1–15 below still stand as-is for themes, UI proposals, and the Dough Log (§§2–5) — none of that is scheduled or approved yet. The production fixes from the audit are **no longer decisions**: the owner has approved them as Phase 0 / Phase 0.5 pre-work (§7, §7.5) regardless of how 1–15 resolve.
+**Round 3 update (final):** every decision below is now resolved — either explicitly by the owner (marked ✅ DECIDED, round 3) in this round, in round 2, or by the plan's stated recommendation standing unopposed (decisions 4, 6, and 11–15, none of which drew an owner objection). Nothing remains open. The production fixes from the audit were **never decisions** in the first place: the owner approved them as Phase 0 / Phase 0.5 pre-work (§7, §7.5) independent of 1–16.
 
-The owner must decide each of these before implementation:
+The historical framing below ("the owner must decide") is kept for the record of how each item was resolved:
 
-1. ~~**Default theme** — which of Light / Dark / Grey / Italiano / System is the out-of-box default?~~ **Superseded**, then **✅ DECIDED (round 2).** Red-outside-Italiano is ruled out — Italiano keeps pomodoro `#c8362f` as the app's only red primary, Grey keeps a steel-blue primary (§3.4, revised from graphite). The question was two-part: (a) which Light/Dark primary candidate from §3.5 to lock in, and (b) which of Light / Dark / Grey / Italiano / System is the out-of-box default. **(b) is now decided:** the app follows the system preference (`prefers-color-scheme`) by default, explicitly overridable by the user via the in-app theme switcher — exactly the §3.1/§3.2 architecture (no `data-theme` set for `system`; the switcher sets it explicitly and wins over the media query). **Still open:** (a), the final Light/Dark primary pick among the three §3.5-shortlisted candidates — Basil / Crust / Flip.
-2. **Ship all four themes, or a subset?** — e.g. Light + Dark + Italiano and drop Grey, or Light + Dark only for v1 with Grey/Italiano later.
-3. **Italiano dark variant** — build the espresso-brown dark Italiano now, or defer? (§3.4)
+1. ~~**Default theme** — which of Light / Dark / Grey / Italiano / System is the out-of-box default?~~ **Superseded**, then **✅ DECIDED (round 2).** Red-outside-Italiano is ruled out — Italiano keeps pomodoro `#c8362f` as the app's only red primary, Grey keeps a steel-blue primary (§3.4, revised from graphite). The question was two-part: (a) which Light/Dark primary candidate from §3.5 to lock in, and (b) which of Light / Dark / Grey / Italiano / System is the out-of-box default. **(b) is decided:** the app follows the system preference (`prefers-color-scheme`) by default, explicitly overridable by the user via the in-app theme switcher — exactly the §3.1/§3.2 architecture (no `data-theme` set for `system`; the switcher sets it explicitly and wins over the media query). **(a) is now ✅ DECIDED (round 3, final):** rather than locking in a single candidate, **all three shortlisted primaries ship** — Basil / Crust / Flip — as a user-selectable `data-primary` preference for Light and Dark, **defaulting to Basil**. See §3.1, §3.2, and §3.5.
+2. ~~**Ship all four themes, or a subset?**~~ **✅ DECIDED (round 3, final) — ship all four.** Light, Dark, Grey, and Italiano all ship; no theme is dropped or deferred to a later release.
+3. **Italiano dark variant** — build the espresso-brown dark Italiano now, or defer? (§3.4) **✅ DECIDED (round 3, final) — deferred unless trivial.** Include it during theme implementation **only if it stays a single token block** (i.e. a straightforward `:root[data-theme="italiano"]` override inside the existing dark-mode selector, no new components or logic); otherwise defer it to a follow-up.
 4. **Theme switcher location** — header gear icon, a new Settings screen, or tucked into the Reference tab? (§3.2)
-5. **State-color AA fix** — adopt iamjarl's darker AA-safe success/warning values (`#2e7d32`/`#c2410c`) now (changes today's greener `#4caf50`/`#ff9800`), or keep current values? (§3.4)
+5. **State-color AA fix** — adopt iamjarl's darker AA-safe success/warning values (`#2e7d32`/`#c2410c`) now (changes today's greener `#4caf50`/`#ff9800`), or keep current values? (§3.4) **Settled by precedent, no owner objection raised:** every §3.4 token table has used the AA-safe values as the working default since round 1 (unlike the primary rows, these were never marked TBD) — treated as decided.
 6. **Hardcoded-hex CI guard** — add the grep lint step, or fix the three offenders once and move on? (§3.3)
-7. **Redesign Proposal A** (nav/chrome + theme switcher) — accept / reject.
-8. **Redesign Proposal B** (recipe detail & calculator legibility) — accept / reject, and if partial, which sub-items.
-9. **Redesign Proposal C** (tools/timers/destructive-action safety) — accept / reject, and if partial, which sub-items.
+7. ~~**Redesign Proposal A** (nav/chrome + theme switcher) — accept / reject.~~ **✅ DECIDED (round 3, final) — accepted in full.** All of §4 Proposal A ships as specced.
+8. ~~**Redesign Proposal B** (recipe detail & calculator legibility) — accept / reject, and if partial, which sub-items.~~ **✅ DECIDED (round 3, final) — accepted in full.** All of §4 Proposal B ships as specced, no partial subset.
+9. ~~**Redesign Proposal C** (tools/timers/destructive-action safety) — accept / reject, and if partial, which sub-items.~~ **✅ DECIDED (round 3, final) — accepted in full.** All of §4 Proposal C ships as specced, no partial subset.
 10. ~~**Dough Log — ship it?** — accept / reject the feature as a whole.~~ ✅ **DECIDED — YES.** Owner approved shipping the Dough Log feature (§5) as a whole.
 11. **Dough Log entry paths** — quick-log-after-bake only, manual-only, or both? (§5.4)
 12. **Dough Log `TimelineStep` reference** — add a stable `id` to `TimelineStep` in the model, or use the index+snapshot approach? (§5.1; recommendation: index+snapshot, no model change.)
 13. **Dough Log outcome rating** — include the 1–5 star rating, or keep entries note-only?
 14. **Dough Log global view** — per-recipe surfacing only, or also a global "Bagedagbog" journal screen? (§5.5)
 15. **Dough Log storage failure handling** — add the toast-on-`storage.set`-failure deviation from the swallow-everything convention (recommended for precious data), or keep silent-degrade parity with the rest of the app? (§5.1)
-16. **Logo style direction** — a pizza/dough motif (icon-first) or a wordmark/lettermark treatment for the new SVG logo/app icon? (§4.4; task itself is approved, this is the remaining style call.)
+16. ~~**Logo style direction** — a pizza/dough motif (icon-first) or a wordmark/lettermark treatment for the new SVG logo/app icon?~~ (§4.4; task itself is approved, this is the remaining style call.) **✅ DECIDED (round 3, final) — dough/pizza motif, not a wordmark.** Icon-first, in the spirit of today's pepperoni-circle art, per §4.4's style-direction question.
 
-**Note on 11–15:** now that the Dough Log itself is approved (decision 10), these five sub-decisions remain open — but absent an explicit owner objection, the plan's stated defaults apply as the working assumption: both entry paths with quick-log-after-bake as the primary one (11, §5.4); index+snapshot for the `TimelineStep` reference rather than a model change (12, §5.1); the 1–5 star rating included, as already specced in `DoughLogEntry.outcome` (13, §5.2); per-recipe surfacing only for now, with the global "Bagedagbog" view left as a future optional add-on (14, §5.5); and toast-on-`storage.set`-failure rather than silent-degrade, given the precious-data caveat (15, §5.1).
+**Note on 4, 6, and 11–15 (round 3, final):** these six items were never explicitly overridden by the owner, so — per this final round — the plan's stated defaults/recommendations are locked in as decided, with no further sign-off pending: theme switcher location defaults to the simplest home noted in §3.2 (4); the hardcoded-hex CI guard is left as a nice-to-have rather than mandatory, i.e. fix the three offenders now and revisit the lint step later (6, §3.3); and for the Dough Log (approved, decision 10) — both entry paths with quick-log-after-bake as the primary one (11, §5.4); index+snapshot for the `TimelineStep` reference rather than a model change (12, §5.1); the 1–5 star rating included, as already specced in `DoughLogEntry.outcome` (13, §5.2); per-recipe surfacing only for now, with the global "Bagedagbog" view left as a future optional add-on (14, §5.5); and toast-on-`storage.set`-failure rather than silent-degrade, given the precious-data caveat (15, §5.1).
 
 ---
 
@@ -408,11 +424,13 @@ The owner has approved folding all 8 CONFIRMED findings from `docs/redesign/AUDI
 - **File**: `src/lib/stores/calculator.ts:578`
 - **Fix approach**: Build `usedIds` from `flour.flourType` (falling back to `flour.id` only when `flourType` is absent) so a recipe's base flour type is correctly excluded from the "add flour" dropdown. Fix the misleading fixture in `src/lib/utils/custom-flour.test.ts:161-164` (`id: 'semolina'` coincidentally equal to the flourType-option id) so the test actually exercises the id/flourType distinction instead of masking it.
 
-### 7.5 No SvelteKit base path for GitHub Pages deployment
+### 7.5 No SvelteKit base path for GitHub Pages deployment — ✅ RESOLVED (round 3, final) — non-bug, no action
 
 - **File**: `svelte.config.js:5`
-- **Confidence gap to close first**: confirm the live URL is `jensen95.github.io/pizza-tool/` (project site) rather than a custom domain — there is no `CNAME` file anywhere in the repo, which supports the project-site path but should be checked against the actual GitHub Pages settings/deployed URL before merging.
-- **Fix approach**: Set `kit.paths.base = process.env.BASE_PATH || ''` in `svelte.config.js`, wire `BASE_PATH=/pizza-tool` in `.github/workflows/deploy.yml`. Switch `static/manifest.json`'s `start_url`/icon `src` and `src/app.html`'s manifest/icon links to base-aware/relative forms, and switch in-app links (e.g. `RecipeCard.svelte`'s `<a href="/recipe/{recipe.id}">`) to use `$app/paths`'s `base` or SvelteKit's relative-link resolution.
+- **Verification performed 2026-07-18 (live-site check):** `https://jensen95.github.io/pizza-tool/` **301-redirects** to the custom domain `https://pizza.jensen95.dk/`, which serves the app at the **domain root**. `/manifest.json` and `/icons/icon-192.png` both return `200` from that root. There **is** a live custom domain in front of the project-site URL (the earlier "no `CNAME` file in the repo" observation was a red herring — the custom domain is configured at the GitHub Pages/DNS level, not via an in-repo `CNAME` file).
+- **Conclusion:** root-absolute paths (`/manifest.json`, `/icons/...`, `<a href="/recipe/{id}">`, etc.) are **correct in production today**, because the app is served from the domain root, not from a `/pizza-tool/` subpath. This finding is **resolved as a non-bug** — **no code change ships.**
+- **One-line caution kept for the record:** if the custom domain (`pizza.jensen95.dk`) is ever removed and the app falls back to being served from `jensen95.github.io/pizza-tool/`, `kit.paths.base` becomes **mandatory** and this fix (base path + base-aware manifest/icon/in-app links, as originally scoped below) would need to be revisited.
+- ~~**Fix approach**: Set `kit.paths.base = process.env.BASE_PATH || ''` in `svelte.config.js`, wire `BASE_PATH=/pizza-tool` in `.github/workflows/deploy.yml`. Switch `static/manifest.json`'s `start_url`/icon `src` and `src/app.html`'s manifest/icon links to base-aware/relative forms, and switch in-app links (e.g. `RecipeCard.svelte`'s `<a href="/recipe/{recipe.id}">`) to use `$app/paths`'s `base` or SvelteKit's relative-link resolution.~~ (superseded by the resolution above — kept for reference in case the custom domain is ever removed.)
 
 ### 7.6 Corrupted/missing localStorage silently drops active timers (cross-tab race)
 
