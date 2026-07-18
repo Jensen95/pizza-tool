@@ -1,5 +1,6 @@
 <script lang="ts">
 	import BakerMathLab from '$lib/components/tools/BakerMathLab.svelte';
+	import DoughPlanner from '$lib/components/tools/DoughPlanner.svelte';
 	import YeastConverter from '$lib/components/tools/YeastConverter.svelte';
 </script>
 
@@ -11,12 +12,13 @@
 	<div class="page-header">
 		<h1>Værktøjer</h1>
 		<p class="lead">
-			Hurtige værktøjer til at justere gær, arbejde i bagerprocenter og eksperimentere med
-			hydration.
+			Hurtige værktøjer til at planlægge hævning, justere gær, arbejde i bagerprocenter og
+			eksperimentere med hydration.
 		</p>
 	</div>
 
 	<div class="tools-grid">
+		<DoughPlanner />
 		<YeastConverter />
 		<BakerMathLab />
 	</div>

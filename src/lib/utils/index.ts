@@ -11,3 +11,5 @@ export * from './storage';
 export * from './timer-manager';
 export * from './notification';
 export * from './yeast';
+export * from './dough-planner';
+export * from './sourdough';
