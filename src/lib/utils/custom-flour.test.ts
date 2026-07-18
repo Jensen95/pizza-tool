@@ -158,7 +158,29 @@ const typedFlourRecipe: Recipe = {
 			nameDa: 'Hoveddej',
 			ingredients: [
 				{
-					id: 'semolina',
+					id: 'main-flour',
+					percentage: 100,
+					type: 'flour',
+					flourType: 'semolina'
+				},
+				{ id: 'water', name: 'Water', nameDa: 'Vand', percentage: 65, type: 'water' }
+			]
+		}
+	],
+	timeline: []
+};
+
+const bigaFlourRecipe: Recipe = {
+	...baseRecipe,
+	id: 'biga-flour-recipe',
+	mixingSteps: [
+		{
+			id: 'main',
+			name: 'Main dough',
+			nameDa: 'Hoveddej',
+			ingredients: [
+				{
+					id: 'biga-flour',
 					percentage: 100,
 					type: 'flour',
 					flourType: 'tipo-00'
@@ -178,7 +200,9 @@ async function loadCalculator() {
 beforeEach(() => {
 	const memoryStorage = new MemoryStorage();
 	(globalThis as typeof globalThis & { window?: Window }).window = {
-		localStorage: memoryStorage
+		localStorage: memoryStorage,
+		addEventListener: vi.fn(),
+		removeEventListener: vi.fn()
 	} as unknown as Window & typeof globalThis;
 	(globalThis as typeof globalThis & { localStorage?: MemoryStorage }).localStorage = memoryStorage;
 	storage.clear();
@@ -348,6 +372,14 @@ describe('calculator custom flours', () => {
 
 		const available = calculator.getAvailableFlourTypes('main');
 		expect(available.find((f) => f.id === 'semolina')).toBeUndefined();
+	});
+
+	it('excludes the base flour type (by flourType, not ingredient id) from available options', async () => {
+		const calculator = await loadCalculator();
+		calculator.setRecipe(bigaFlourRecipe);
+
+		const available = calculator.getAvailableFlourTypes('main');
+		expect(available.find((f) => f.id === 'tipo-00')).toBeUndefined();
 	});
 
 	it('removes custom flour and updates storage', async () => {
