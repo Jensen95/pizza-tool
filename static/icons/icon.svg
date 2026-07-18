@@ -1,14 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <circle cx="256" cy="256" r="240" fill="#f5deb3"/>
-  <circle cx="256" cy="256" r="220" fill="#d32f2f"/>
-  <circle cx="180" cy="180" r="40" fill="#ffd700"/>
-  <circle cx="320" cy="200" r="35" fill="#ffd700"/>
-  <circle cx="200" cy="320" r="38" fill="#ffd700"/>
-  <circle cx="340" cy="330" r="32" fill="#ffd700"/>
-  <circle cx="260" cy="250" r="30" fill="#ffd700"/>
-  <circle cx="180" cy="180" r="20" fill="#2e8b57"/>
-  <circle cx="320" cy="200" r="18" fill="#2e8b57"/>
-  <circle cx="200" cy="320" r="19" fill="#2e8b57"/>
-  <circle cx="340" cy="330" r="16" fill="#2e8b57"/>
-  <circle cx="260" cy="250" r="15" fill="#2e8b57"/>
+  <title>Pizza Tool</title>
+  <!-- Cream plate fills the full canvas edge-to-edge so maskable crops (circle/squircle)
+       never reveal transparent corners; it also reads as a soft halo around the mark. -->
+  <rect width="512" height="512" fill="#fbf7ef" />
+  <!-- Dough/topping disc (basil green) -->
+  <circle cx="256" cy="256" r="168" fill="#2e7d32" />
+  <!-- Crust ring (crust-tan), donut from r=168 to r=204 — stays inside the 80% safe zone -->
+  <circle cx="256" cy="256" r="186" fill="none" stroke="#9c5a2c" stroke-width="36" />
+  <!-- Slice cut: cream wedge notched through the crust into the dough -->
+  <path
+    d="M364.10,83.00 A204,204 0 0 1 429.00,147.90 L374.73,181.81 A140,140 0 0 0 330.19,137.27 Z"
+    fill="#fbf7ef"
+  />
 </svg>
