@@ -14,6 +14,9 @@ import {
 	startTimerManager
 } from '$lib/utils/timer-manager';
 import { requestPermission } from '$lib/utils/notification';
+import * as storage from '$lib/utils/storage';
+
+const TIMERS_STORAGE_KEY = 'timers';
 
 function createTimersStore() {
 	const { subscribe, set } = writable<Timer[]>([]);
@@ -32,9 +35,23 @@ function createTimersStore() {
 			set(storedTimers);
 
 			// Start timer manager
-			cleanup = startTimerManager((timers) => {
+			const stopManager = startTimerManager((timers) => {
 				set(timers);
 			});
+
+			// Rehydrate immediately when another tab changes the timers (pause/resume/
+			// complete) instead of waiting up to a second for the next interval tick (§7.3/§7.6).
+			const stopExternal = storage.subscribeToExternalChanges<Timer[]>(
+				TIMERS_STORAGE_KEY,
+				(timers) => {
+					set(timers ?? []);
+				}
+			);
+
+			cleanup = () => {
+				stopManager();
+				stopExternal();
+			};
 		},
 
 		/**

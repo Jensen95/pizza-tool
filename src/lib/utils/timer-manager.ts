@@ -138,32 +138,67 @@ export function isTimerComplete(timer: Timer): boolean {
 }
 
 /**
- * Check all timers and send notifications for completed ones
+ * Check all timers and send notifications for completed ones.
+ *
+ * Completion is detected against each timer's **absolute** `endTime`, not against
+ * the running interval, so a timer that finished while JS was suspended (backgrounded
+ * tab / locked device) is caught the next time this runs — including from the
+ * visibility/pageshow catch-up in `startTimerManager` (§7.7).
+ *
+ * The write is race-safe (§7.6): completions are computed from an initial snapshot, but
+ * the persisted array is **re-read immediately before writing** and the completion is
+ * merged in per-timer, applied only to timers that are *still* `active` in the freshest
+ * state. A concurrent pause/resume/remove/add from another tab therefore survives — we
+ * never write back a stale whole-array snapshot. Notifications fire only for timers that
+ * actually transitioned (deduped by `notificationSent`), so multi-tab or repeated wakes
+ * don't double-notify.
  */
 export async function checkTimers(): Promise<Timer[]> {
-	const timers = getTimers();
-	let updated = false;
+	const snapshot = getTimers();
+	const now = Date.now();
 
-	for (const timer of timers) {
-		if (timer.status === 'active' && isTimerComplete(timer) && !timer.notificationSent) {
-			timer.status = 'completed';
-			timer.notificationSent = true;
-			updated = true;
-
-			// Send notification
-			await sendNotification('Timer færdig!', {
-				body: `${timer.name} er færdig`,
-				tag: timer.id,
-				requireInteraction: true
-			});
+	const completedIds = new Set<string>();
+	for (const timer of snapshot) {
+		if (timer.status === 'active' && !timer.notificationSent && now >= timer.endTime) {
+			completedIds.add(timer.id);
 		}
 	}
 
-	if (updated) {
-		saveTimers(timers);
+	if (completedIds.size === 0) {
+		return snapshot;
 	}
 
-	return timers;
+	// Re-read the freshest persisted state right before writing and merge by id, so a
+	// concurrent write from another tab (e.g. a pause) isn't clobbered by our snapshot.
+	const fresh = getTimers();
+	const toNotify: Timer[] = [];
+	for (const timer of fresh) {
+		// Only complete timers that are still active — respect a concurrent pause/resume.
+		if (completedIds.has(timer.id) && timer.status === 'active' && !timer.notificationSent) {
+			timer.status = 'completed';
+			timer.notificationSent = true;
+			timer.notifiedAt = now;
+			toNotify.push(timer);
+		}
+	}
+
+	if (toNotify.length === 0) {
+		return fresh;
+	}
+
+	// Persist the completion (and the notificationSent dedupe flag) before sending, so a
+	// concurrent tab reacting to the storage event won't also fire the same notification.
+	saveTimers(fresh);
+
+	for (const timer of toNotify) {
+		await sendNotification('Timer færdig!', {
+			body: `${timer.name} er færdig`,
+			tag: timer.id,
+			requireInteraction: true
+		});
+	}
+
+	return fresh;
 }
 
 /**
@@ -178,13 +213,48 @@ export function startTimerManager(onUpdate: (timers: Timer[]) => void): () => vo
 	// Check immediately
 	checkTimers().then(onUpdate);
 
-	// Check every second
+	// Foreground ticking. Completion detection does NOT depend on this interval having
+	// been alive at the completion moment — checkTimers() compares against absolute
+	// endTimes, so a wake-up catch-up recovers anything the frozen interval missed.
 	const intervalId = setInterval(async () => {
 		const timers = await checkTimers();
 		onUpdate(timers);
 	}, 1000);
 
-	return () => clearInterval(intervalId);
+	// Background catch-up (§7.7): mobile browsers freeze JS timers while the tab is
+	// backgrounded/suspended, so the 1s interval can't fire the completion notification
+	// at the moment a timer finishes. On every wake — tab becomes visible again, the
+	// page is restored from the bfcache (pageshow), or the window regains focus — run an
+	// immediate catch-up that recomputes remaining time, fires any missed completion
+	// notification (once), and snaps the UI to reality instead of a stale countdown.
+	const catchUp = () => {
+		void checkTimers().then(onUpdate);
+	};
+	const onVisibilityChange = () => {
+		if (typeof document === 'undefined' || document.visibilityState === 'visible') {
+			catchUp();
+		}
+	};
+
+	if (typeof document !== 'undefined') {
+		document.addEventListener('visibilitychange', onVisibilityChange);
+	}
+	if (typeof window !== 'undefined') {
+		window.addEventListener('pageshow', catchUp);
+		// Belt-and-braces: some browsers/OSes fire focus but not visibilitychange on wake.
+		window.addEventListener('focus', catchUp);
+	}
+
+	return () => {
+		clearInterval(intervalId);
+		if (typeof document !== 'undefined') {
+			document.removeEventListener('visibilitychange', onVisibilityChange);
+		}
+		if (typeof window !== 'undefined') {
+			window.removeEventListener('pageshow', catchUp);
+			window.removeEventListener('focus', catchUp);
+		}
+	};
 }
 
 /**
@@ -217,6 +287,14 @@ export function clearCompletedTimers(): Timer[] {
 export class TimerManager {
 	private intervalId: ReturnType<typeof setInterval> | null = null;
 	private isRunning = false;
+	private catchUp = () => {
+		void checkTimers();
+	};
+	private onVisibilityChange = () => {
+		if (typeof document === 'undefined' || document.visibilityState === 'visible') {
+			this.catchUp();
+		}
+	};
 
 	start(): void {
 		if (this.isRunning) return;
@@ -234,12 +312,28 @@ export class TimerManager {
 		this.intervalId = setInterval(() => {
 			checkTimers();
 		}, 1000);
+
+		// Background catch-up on wake — see startTimerManager for the rationale (§7.7).
+		if (typeof document !== 'undefined') {
+			document.addEventListener('visibilitychange', this.onVisibilityChange);
+		}
+		if (typeof window !== 'undefined') {
+			window.addEventListener('pageshow', this.catchUp);
+			window.addEventListener('focus', this.catchUp);
+		}
 	}
 
 	stop(): void {
 		if (this.intervalId) {
 			clearInterval(this.intervalId);
 			this.intervalId = null;
+		}
+		if (typeof document !== 'undefined') {
+			document.removeEventListener('visibilitychange', this.onVisibilityChange);
+		}
+		if (typeof window !== 'undefined') {
+			window.removeEventListener('pageshow', this.catchUp);
+			window.removeEventListener('focus', this.catchUp);
 		}
 		this.isRunning = false;
 	}

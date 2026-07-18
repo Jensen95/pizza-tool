@@ -13,6 +13,7 @@ export interface Timer {
 	recipeId?: string;
 	stageId?: string;
 	notificationSent: boolean;
+	notifiedAt?: number; // Unix timestamp when the completion notification was fired (dedupe)
 	createdAt: number;
 }
 
