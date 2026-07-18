@@ -41,11 +41,20 @@ function loadHistory(): RecipeHistoryEntry[] {
 
 // Create the customizations store
 function createCustomizationsStore() {
-	const { subscribe, update } = writable<Record<string, RecipeCustomization>>(loadCustomizations());
+	const { subscribe, update, set } =
+		writable<Record<string, RecipeCustomization>>(loadCustomizations());
 
 	function save(customizations: Record<string, RecipeCustomization>) {
 		storage.set(CUSTOMIZATIONS_KEY, customizations);
 	}
+
+	// Rehydrate when another tab changes this key so both tabs converge (§7.3).
+	storage.subscribeToExternalChanges<Record<string, RecipeCustomization>>(
+		CUSTOMIZATIONS_KEY,
+		(value) => {
+			set(value ?? {});
+		}
+	);
 
 	return {
 		subscribe,
@@ -157,11 +166,16 @@ function createCustomizationsStore() {
 
 // Create the history store
 function createHistoryStore() {
-	const { subscribe, set, update } = writable<RecipeHistoryEntry[]>(loadHistory());
+	const { subscribe, set } = writable<RecipeHistoryEntry[]>(loadHistory());
 
 	function save(history: RecipeHistoryEntry[]) {
 		storage.set(HISTORY_KEY, history);
 	}
+
+	// Rehydrate when another tab changes history so both tabs converge (§7.3).
+	storage.subscribeToExternalChanges<RecipeHistoryEntry[]>(HISTORY_KEY, (value) => {
+		set(value ?? []);
+	});
 
 	return {
 		subscribe,
@@ -177,35 +191,32 @@ function createHistoryStore() {
 			hydration: number | null = null,
 			predoughRatio: number | null = null
 		) {
-			update((state) => {
-				const entry: RecipeHistoryEntry = {
-					id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-					recipeId: recipe.id,
-					recipeName: recipe.nameDa,
-					ingredients: customIngredients,
-					numberOfPizzas,
-					doughBallWeight,
-					hydration,
-					predoughRatio,
-					createdAt: new Date().toISOString()
-				};
+			const entry: RecipeHistoryEntry = {
+				id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+				recipeId: recipe.id,
+				recipeName: recipe.nameDa,
+				ingredients: customIngredients,
+				numberOfPizzas,
+				doughBallWeight,
+				hydration,
+				predoughRatio,
+				createdAt: new Date().toISOString()
+			};
 
-				// Keep last 50 entries
-				const newState = [entry, ...state].slice(0, 50);
-				save(newState);
-				return newState;
-			});
+			// Re-read the freshest persisted list so a concurrent write from another
+			// tab isn't blown away by a stale in-memory snapshot (§7.3). Keep last 50.
+			const newState = [entry, ...loadHistory()].slice(0, 50);
+			save(newState);
+			set(newState);
 		},
 
 		/**
 		 * Delete a history entry
 		 */
 		deleteEntry(entryId: string) {
-			update((state) => {
-				const newState = state.filter((e) => e.id !== entryId);
-				save(newState);
-				return newState;
-			});
+			const newState = loadHistory().filter((e) => e.id !== entryId);
+			save(newState);
+			set(newState);
 		},
 
 		/**

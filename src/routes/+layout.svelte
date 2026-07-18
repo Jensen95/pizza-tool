@@ -4,6 +4,7 @@
 	import Navigation from '$lib/components/ui/Navigation.svelte';
 	import NotificationPermissionBanner from '$lib/components/timer/NotificationPermissionBanner.svelte';
 	import PwaPrompts from '$lib/components/ui/PwaPrompts.svelte';
+	import StorageHealthBanner from '$lib/components/ui/StorageHealthBanner.svelte';
 	import { onMount } from 'svelte';
 	import { timers, activeTimers, preferences } from '$lib/stores';
 	import { setupWakeLockVisibilityHandler, syncWakeLock } from '$lib/utils/wake-lock';
@@ -41,6 +42,7 @@
 	<Header />
 	<main class="main-content">
 		<PwaPrompts />
+		<StorageHealthBanner />
 		<NotificationPermissionBanner {hasActiveTimers} />
 		{@render children()}
 	</main>

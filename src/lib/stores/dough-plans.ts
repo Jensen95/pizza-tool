@@ -18,11 +18,16 @@ function loadPlans(): SavedDoughPlan[] {
 }
 
 function createDoughPlansStore() {
-	const { subscribe, update, set } = writable<SavedDoughPlan[]>(loadPlans());
+	const { subscribe, set } = writable<SavedDoughPlan[]>(loadPlans());
 
 	function save(plans: SavedDoughPlan[]) {
 		storage.set(DOUGH_PLANS_KEY, plans);
 	}
+
+	// Rehydrate when another tab changes this key so both tabs converge (§7.3).
+	storage.subscribeToExternalChanges<SavedDoughPlan[]>(DOUGH_PLANS_KEY, (value) => {
+		set(value ?? []);
+	});
 
 	return {
 		subscribe,
@@ -41,11 +46,11 @@ function createDoughPlansStore() {
 				createdAt: new Date().toISOString()
 			};
 
-			update((state) => {
-				const newState = [entry, ...state].slice(0, MAX_PLANS);
-				save(newState);
-				return newState;
-			});
+			// Re-read the freshest persisted list so a concurrent write from another
+			// tab isn't blown away by a stale in-memory snapshot (§7.3).
+			const newState = [entry, ...loadPlans()].slice(0, MAX_PLANS);
+			save(newState);
+			set(newState);
 
 			return entry;
 		},
@@ -54,11 +59,9 @@ function createDoughPlansStore() {
 		 * Delete a saved plan
 		 */
 		deletePlan(id: string) {
-			update((state) => {
-				const newState = state.filter((plan) => plan.id !== id);
-				save(newState);
-				return newState;
-			});
+			const newState = loadPlans().filter((plan) => plan.id !== id);
+			save(newState);
+			set(newState);
 		},
 
 		/**

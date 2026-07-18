@@ -30,11 +30,16 @@ function loadPreferences(): Preferences {
 }
 
 function createPreferencesStore() {
-	const { subscribe, set, update } = writable<Preferences>(loadPreferences());
+	const { subscribe, set } = writable<Preferences>(loadPreferences());
 
 	function save(prefs: Preferences) {
 		storage.set(PREFERENCES_STORAGE_KEY, prefs);
 	}
+
+	// Rehydrate when another tab changes preferences so both tabs converge (§7.3).
+	storage.subscribeToExternalChanges<Partial<Preferences>>(PREFERENCES_STORAGE_KEY, (value) => {
+		set({ ...defaultPreferences, ...(value ?? {}) });
+	});
 
 	return {
 		subscribe,
@@ -43,22 +48,20 @@ function createPreferencesStore() {
 		 * Update a single preference
 		 */
 		updatePreference<K extends keyof Preferences>(key: K, value: Preferences[K]) {
-			update((prefs) => {
-				const newPrefs = { ...prefs, [key]: value };
-				save(newPrefs);
-				return newPrefs;
-			});
+			// Merge over the freshest persisted object so a change to a different
+			// field in another tab isn't lost (§7.3).
+			const newPrefs = { ...loadPreferences(), [key]: value };
+			save(newPrefs);
+			set(newPrefs);
 		},
 
 		/**
 		 * Update multiple preferences
 		 */
 		updatePreferences(updates: Partial<Preferences>) {
-			update((prefs) => {
-				const newPrefs = { ...prefs, ...updates };
-				save(newPrefs);
-				return newPrefs;
-			});
+			const newPrefs = { ...loadPreferences(), ...updates };
+			save(newPrefs);
+			set(newPrefs);
 		},
 
 		/**
@@ -91,11 +94,10 @@ function createPreferencesStore() {
 		 * Toggle notifications
 		 */
 		toggleNotifications() {
-			update((prefs) => {
-				const newPrefs = { ...prefs, notificationsEnabled: !prefs.notificationsEnabled };
-				save(newPrefs);
-				return newPrefs;
-			});
+			const base = loadPreferences();
+			const newPrefs = { ...base, notificationsEnabled: !base.notificationsEnabled };
+			save(newPrefs);
+			set(newPrefs);
 		},
 
 		/**
@@ -116,11 +118,10 @@ function createPreferencesStore() {
 		 * Toggle keeping the screen awake
 		 */
 		toggleKeepScreenAwake() {
-			update((prefs) => {
-				const newPrefs = { ...prefs, keepScreenAwake: !prefs.keepScreenAwake };
-				save(newPrefs);
-				return newPrefs;
-			});
+			const base = loadPreferences();
+			const newPrefs = { ...base, keepScreenAwake: !base.keepScreenAwake };
+			save(newPrefs);
+			set(newPrefs);
 		}
 	};
 }

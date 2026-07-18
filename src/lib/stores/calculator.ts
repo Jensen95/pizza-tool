@@ -136,6 +136,40 @@ function createCalculatorStore() {
 
 	let currentRecipe: Recipe | null = null;
 
+	// Rehydrate each persisted sub-store when another tab writes its key, then
+	// recompute so the visible calculator reflects the change (§7.3).
+	storage.subscribeToExternalChanges<Record<string, Record<string, number>>>(
+		'custom-ingredients',
+		(value) => {
+			customIngredientsStore.set(value ?? {});
+			update((state) => recalculate(state));
+		}
+	);
+	storage.subscribeToExternalChanges<CustomFlourState>(CUSTOM_FLOUR_STORAGE_KEY, (value) => {
+		customFloursStore.set(value ?? {});
+		update((state) => recalculate(state));
+	});
+	storage.subscribeToExternalChanges<Record<string, number>>(HYDRATION_STORAGE_KEY, (value) => {
+		hydrationOverridesStore.set(value ?? {});
+		update((state) => recalculate(state));
+	});
+	storage.subscribeToExternalChanges<Record<string, YeastInfo['type']>>(
+		YEAST_TYPE_STORAGE_KEY,
+		(value) => {
+			yeastTypeOverridesStore.set(value ?? {});
+			update((state) => recalculate(state));
+		}
+	);
+	storage.subscribeToExternalChanges<Partial<CalculatorState>>(CALCULATOR_STORAGE_KEY, (value) => {
+		update((state) =>
+			recalculate({
+				...state,
+				numberOfPizzas: value?.numberOfPizzas ?? state.numberOfPizzas,
+				doughBallWeight: value?.doughBallWeight ?? state.doughBallWeight
+			})
+		);
+	});
+
 	function getCustomFloursForRecipe(recipeId: string): Record<string, CustomFlour[]> {
 		return get(customFloursStore)[recipeId] || {};
 	}
@@ -575,7 +609,7 @@ function createCalculatorStore() {
 				(ing) => ing.type === 'flour' && ing.mixingStepId === stageKey
 			);
 			for (const flour of baseStageFlours) {
-				usedIds.add(flour.id);
+				usedIds.add(flour.flourType ?? flour.id);
 			}
 			return flourTypeOptions.filter((type) => !usedIds.has(type.id));
 		},
