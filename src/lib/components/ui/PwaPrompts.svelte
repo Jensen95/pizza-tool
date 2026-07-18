@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
 
 	type BeforeInstallPromptEvent = Event & {
 		prompt: () => Promise<void>;
@@ -71,9 +72,8 @@
 	async function ensureServiceWorker() {
 		if (!('serviceWorker' in navigator)) return;
 
-		const assetBase = '%sveltekit.assets%'.replace(/\/$/, '');
-		const serviceWorkerPath = `${assetBase || ''}/service-worker.js`;
-		const serviceWorkerScope = assetBase || '/';
+		const serviceWorkerPath = `${base || ''}/service-worker.js`;
+		const serviceWorkerScope = base || '/';
 
 		try {
 			const existing = await navigator.serviceWorker.getRegistration(serviceWorkerScope);
