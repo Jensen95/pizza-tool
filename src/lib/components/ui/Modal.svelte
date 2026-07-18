@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { tick } from 'svelte';
 
 	let {
 		open = false,
@@ -17,6 +18,33 @@
 		footer?: Snippet;
 	} = $props();
 
+	let modalEl: HTMLDivElement | undefined = $state();
+	let previouslyFocused: HTMLElement | null = null;
+
+	const focusableSelector =
+		'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+	function getFocusableElements(): HTMLElement[] {
+		if (!modalEl) return [];
+		return Array.from(modalEl.querySelectorAll<HTMLElement>(focusableSelector)).filter(
+			(el) => el.offsetParent !== null
+		);
+	}
+
+	// Move focus into the dialog on open and restore it to the opener on close.
+	$effect(() => {
+		if (open) {
+			previouslyFocused = document.activeElement as HTMLElement | null;
+			tick().then(() => {
+				const focusable = getFocusableElements();
+				(focusable[0] ?? modalEl)?.focus();
+			});
+		} else if (previouslyFocused) {
+			previouslyFocused.focus();
+			previouslyFocused = null;
+		}
+	});
+
 	function handleClose() {
 		onclose?.();
 	}
@@ -24,6 +52,27 @@
 	function handleKeydown(e: KeyboardEvent) {
 		if (e.key === 'Escape') {
 			handleClose();
+			return;
+		}
+		if (e.key === 'Tab' && open) {
+			const focusable = getFocusableElements();
+			if (focusable.length === 0) {
+				e.preventDefault();
+				return;
+			}
+			const first = focusable[0];
+			const last = focusable[focusable.length - 1];
+			const active = document.activeElement;
+			const isInsideModal = active instanceof Node && modalEl?.contains(active);
+			if (e.shiftKey) {
+				if (active === first || !isInsideModal) {
+					e.preventDefault();
+					last.focus();
+				}
+			} else if (active === last || !isInsideModal) {
+				e.preventDefault();
+				first.focus();
+			}
 		}
 	}
 
@@ -40,7 +89,14 @@
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div class="modal-backdrop" onclick={handleBackdropClick}>
-		<div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+		<div
+			class="modal"
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="modal-title"
+			tabindex="-1"
+			bind:this={modalEl}
+		>
 			<div class="modal-header">
 				<h2 id="modal-title" class="modal-title">{title}</h2>
 				{#if showClose}

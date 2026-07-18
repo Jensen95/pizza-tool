@@ -362,8 +362,13 @@
 			<label class="label" for="hydration">
 				Hydrering (%)
 				{#if hydrationChanged}
-					<button class="btn-reset" onclick={resetHydration} title="Nulstil hydrering">
-						&#8634;
+					<button
+						class="btn-reset"
+						onclick={resetHydration}
+						title="Nulstil hydrering"
+						aria-label="Nulstil hydrering"
+					>
+						<span aria-hidden="true">&#8634;</span>
 					</button>
 				{/if}
 			</label>
@@ -402,8 +407,13 @@
 				<label class="label" for="predough-split">
 					Fordej (%)
 					{#if predoughChanged}
-						<button class="btn-reset" onclick={resetPredough} title="Nulstil fordeling">
-							&#8634;
+						<button
+							class="btn-reset"
+							onclick={resetPredough}
+							title="Nulstil fordeling"
+							aria-label="Nulstil fordeling"
+						>
+							<span aria-hidden="true">&#8634;</span>
 						</button>
 					{/if}
 				</label>
@@ -492,6 +502,7 @@
 									<select
 										class="input select-input"
 										id="add-flour-{blend.mixingStepId}"
+										aria-label="Vælg meltype"
 										value={selectedFlourTypes[blend.mixingStepId] ?? ''}
 										onchange={(e) =>
 											setSelectedFlourType(
@@ -529,6 +540,7 @@
 										/>
 										<select
 											class="input select-input"
+											aria-label="Tilføj ny meltype"
 											value={customFlourTypes[blend.mixingStepId] ?? 'other'}
 											onchange={(e) =>
 												(customFlourTypes = {
@@ -563,6 +575,7 @@
 						<div class="yeast-row">
 							<select
 								class="input select-input"
+								aria-label="Vælg gærtype"
 								value={selectedYeastType}
 								onchange={(e) =>
 									handleYeastTypeChange((e.target as HTMLSelectElement).value as YeastInfo['type'])}
@@ -589,8 +602,9 @@
 												class="btn-reset"
 												onclick={() => resetExtra(extra.id)}
 												title="Nulstil"
+												aria-label="Nulstil {extra.nameDa}"
 											>
-												&#8634;
+												<span aria-hidden="true">&#8634;</span>
 											</button>
 										{/if}
 									</label>
