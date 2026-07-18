@@ -1,7 +1,7 @@
 // ABOUTME: Persisted dough plans (recorded recipes) from the dough planner tool
 import { writable } from 'svelte/store';
 import * as storage from '$lib/utils/storage';
-import type { DoughPlanInput } from '$lib/utils/dough-planner';
+import type { DoughPlannerState } from '$lib/utils/dough-planner';
 
 const DOUGH_PLANS_KEY = 'dough-plans';
 const MAX_PLANS = 50;
@@ -9,7 +9,7 @@ const MAX_PLANS = 50;
 export interface SavedDoughPlan {
 	id: string;
 	name: string;
-	input: DoughPlanInput;
+	input: DoughPlannerState;
 	createdAt: string;
 }
 
@@ -30,7 +30,7 @@ function createDoughPlansStore() {
 		/**
 		 * Record a plan under a name. Returns the saved entry.
 		 */
-		savePlan(name: string, input: DoughPlanInput): SavedDoughPlan {
+		savePlan(name: string, input: DoughPlannerState): SavedDoughPlan {
 			const entry: SavedDoughPlan = {
 				id:
 					typeof crypto !== 'undefined' && crypto.randomUUID

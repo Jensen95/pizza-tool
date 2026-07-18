@@ -30,6 +30,19 @@ export interface DoughPlanInput {
 	fridgeHours: number;
 }
 
+export type LeaveningType = 'yeast' | 'sourdough';
+
+/**
+ * Full planner state as recorded in saved plans. The sourdough fields are
+ * only meaningful when leavening is 'sourdough'; plans saved before the
+ * sourdough mode existed have no leavening field and default to yeast.
+ */
+export interface DoughPlannerState extends DoughPlanInput {
+	leavening?: LeaveningType;
+	starterPercentage?: number;
+	starterHydrationPercentage?: number;
+}
+
 export interface PlannedIngredient {
 	id: string;
 	nameDa: string;

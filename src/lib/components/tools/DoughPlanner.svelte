@@ -4,15 +4,23 @@
 	import {
 		planDough,
 		flourFromDoughWeight,
-		type DoughPlanInput,
-		type DoughPlanWarning
+		type DoughPlannerState,
+		type DoughPlanWarning,
+		type LeaveningType
 	} from '$lib/utils/dough-planner';
+	import {
+		planSourdough,
+		sourdoughFlourFromDoughWeight,
+		type HourRange,
+		type SourdoughPlanWarning
+	} from '$lib/utils/sourdough';
 	import { doughPlans, type SavedDoughPlan } from '$lib/stores/dough-plans';
 
 	type WeightMode = 'flour' | 'dough';
 
 	let planName = $state('');
 	let weightMode = $state<WeightMode>('flour');
+	let leavening = $state<LeaveningType>('yeast');
 	let flourWeight = $state(1000);
 	let doughWeight = $state(1700);
 	let hydrationPercentage = $state(65);
@@ -22,24 +30,40 @@
 	let yeastType = $state<YeastInfo['type']>('fresh');
 	let roomHours = $state(4);
 	let fridgeHours = $state(0);
+	let starterPercentage = $state(20);
+	let starterHydrationPercentage = $state(100);
 	let savedMessage = $state('');
 
-	const warningLabels: Record<DoughPlanWarning, string> = {
+	const warningLabels: Record<DoughPlanWarning | SourdoughPlanWarning, string> = {
 		'no-proof-time': 'Angiv mindst én hævetid.',
 		'outside-table':
 			'Tiden ligger uden for opslagstabellen (2-18 t ved stuetemperatur, 24-72 t på køl) — gærmængden er et estimat.',
 		'tiny-yeast-amount':
-			'Gærmængden er under 0,1 g og svær at afveje. Overvej kortere hævetid eller lav en større dej og frys noget af den.'
+			'Gærmængden er under 0,1 g og svær at afveje. Overvej kortere hævetid eller lav en større dej og frys noget af den.',
+		'starter-exceeds-water':
+			'Surdejen indeholder mere vand end hydrationen tillader. Sænk surdejsprocenten eller hæv hydrationen.'
 	};
 
 	let nonFlourPercentageSum = $derived(
 		hydrationPercentage + saltPercentage + oilPercentage + sugarPercentage
 	);
+	let sourdoughPartial = $derived({
+		hydrationPercentage,
+		saltPercentage,
+		oilPercentage,
+		sugarPercentage,
+		starterPercentage,
+		starterHydrationPercentage
+	});
 	let effectiveFlourWeight = $derived(
-		weightMode === 'flour' ? flourWeight : flourFromDoughWeight(doughWeight, nonFlourPercentageSum)
+		weightMode === 'flour'
+			? flourWeight
+			: leavening === 'sourdough'
+				? sourdoughFlourFromDoughWeight(doughWeight, sourdoughPartial)
+				: flourFromDoughWeight(doughWeight, nonFlourPercentageSum)
 	);
 
-	let planInput = $derived<DoughPlanInput>({
+	let plannerState = $derived<DoughPlannerState>({
 		flourWeight: effectiveFlourWeight,
 		hydrationPercentage,
 		saltPercentage,
@@ -47,10 +71,19 @@
 		sugarPercentage,
 		yeastType,
 		roomHours,
-		fridgeHours
+		fridgeHours,
+		leavening,
+		starterPercentage,
+		starterHydrationPercentage
 	});
 
-	let plan = $derived(planDough(planInput));
+	let yeastPlan = $derived(leavening === 'yeast' ? planDough(plannerState) : null);
+	let sourdoughPlan = $derived(
+		leavening === 'sourdough'
+			? planSourdough({ flourWeight: effectiveFlourWeight, ...sourdoughPartial })
+			: null
+	);
+	let plan = $derived(leavening === 'yeast' ? yeastPlan : sourdoughPlan);
 	let yeastName = $derived(yeastInfo.find((info) => info.type === yeastType)?.nameDa ?? yeastType);
 	let totalHours = $derived(Math.max(0, roomHours) + Math.max(0, fridgeHours));
 
@@ -62,8 +95,12 @@
 		return `${whole} t ${minutes} min`;
 	}
 
+	function formatRange(range: HourRange): string {
+		return `${range.min}-${range.max} timer`;
+	}
+
 	function savePlan() {
-		doughPlans.savePlan(planName, planInput);
+		doughPlans.savePlan(planName, plannerState);
 		savedMessage = 'Opskriften er gemt.';
 		setTimeout(() => (savedMessage = ''), 3000);
 	}
@@ -71,6 +108,7 @@
 	function loadPlan(saved: SavedDoughPlan) {
 		planName = saved.name;
 		weightMode = 'flour';
+		leavening = saved.input.leavening ?? 'yeast';
 		flourWeight = saved.input.flourWeight;
 		hydrationPercentage = saved.input.hydrationPercentage;
 		saltPercentage = saved.input.saltPercentage;
@@ -79,6 +117,8 @@
 		yeastType = saved.input.yeastType;
 		roomHours = saved.input.roomHours;
 		fridgeHours = saved.input.fridgeHours;
+		starterPercentage = saved.input.starterPercentage ?? 20;
+		starterHydrationPercentage = saved.input.starterHydrationPercentage ?? 100;
 	}
 
 	function formatDate(iso: string): string {
@@ -97,8 +137,10 @@
 			<p class="eyebrow">Dejplanlægger</p>
 			<h2>Planlæg din hævning — til alt slags dej</h2>
 			<p class="muted">
-				Indtast hvor længe dejen skal hæve ved stuetemperatur (ca. 20-22 °C) og/eller i køleskabet,
-				så beregnes gærmængden til en perfekt hævet dej. Gem planen som opskrift til næste gang.
+				Med gær: indtast hvor længe dejen skal hæve ved stuetemperatur (ca. 20-22 °C) og/eller i
+				køleskabet, så beregnes gærmængden til en perfekt hævet dej. Med surdej: indtast
+				surdejsprocenten og få mængder plus en estimeret tidsplan. Gem planen som opskrift til næste
+				gang.
 			</p>
 		</div>
 	</div>
@@ -106,6 +148,14 @@
 	<div class="section">
 		<h3>Dejen</h3>
 		<div class="input-grid">
+			<label class="field">
+				<span class="label">Hævemiddel</span>
+				<select class="input" bind:value={leavening} aria-label="Hævemiddel">
+					<option value="yeast">Gær</option>
+					<option value="sourdough">Surdej</option>
+				</select>
+			</label>
+
 			<label class="field">
 				<span class="label">Beregn ud fra</span>
 				<select class="input" bind:value={weightMode} aria-label="Beregn ud fra">
@@ -210,64 +260,154 @@
 				</div>
 			</label>
 
-			<label class="field">
-				<span class="label">Gærtype</span>
-				<select class="input" bind:value={yeastType} aria-label="Gærtype">
-					{#each yeastInfo as option}
-						<option value={option.type}>{option.nameDa}</option>
+			{#if leavening === 'yeast'}
+				<label class="field">
+					<span class="label">Gærtype</span>
+					<select class="input" bind:value={yeastType} aria-label="Gærtype">
+						{#each yeastInfo as option}
+							<option value={option.type}>{option.nameDa}</option>
+						{/each}
+					</select>
+				</label>
+			{:else}
+				<label class="field">
+					<span class="label">Surdej</span>
+					<div class="input-with-unit">
+						<input
+							class="input"
+							type="number"
+							min="0"
+							max="50"
+							step="1"
+							bind:value={starterPercentage}
+							aria-label="Surdej i procent af mel"
+						/>
+						<span class="unit">%</span>
+					</div>
+				</label>
+
+				<label class="field">
+					<span class="label">Surdejens hydration</span>
+					<div class="input-with-unit">
+						<input
+							class="input"
+							type="number"
+							min="20"
+							max="200"
+							step="5"
+							bind:value={starterHydrationPercentage}
+							aria-label="Surdejens hydration i procent"
+						/>
+						<span class="unit">%</span>
+					</div>
+				</label>
+			{/if}
+		</div>
+	</div>
+
+	{#if leavening === 'yeast'}
+		<div class="section">
+			<h3>Hævetid</h3>
+			<div class="input-grid time-grid">
+				<label class="field">
+					<span class="label">Ved stuetemperatur</span>
+					<div class="input-with-unit">
+						<input
+							class="input"
+							type="number"
+							min="0"
+							max="48"
+							step="0.5"
+							bind:value={roomHours}
+							aria-label="Timer ved stuetemperatur"
+						/>
+						<span class="unit">timer</span>
+					</div>
+				</label>
+
+				<label class="field">
+					<span class="label">I køleskab</span>
+					<div class="input-with-unit">
+						<input
+							class="input"
+							type="number"
+							min="0"
+							max="120"
+							step="1"
+							bind:value={fridgeHours}
+							aria-label="Timer i køleskab"
+						/>
+						<span class="unit">timer</span>
+					</div>
+				</label>
+			</div>
+		</div>
+	{/if}
+
+	{#if leavening === 'yeast'}
+		{#if yeastPlan}
+			<div class="results">
+				<div class="highlight">
+					<div class="muted">{yeastName} til {formatHours(totalHours)} hævning</div>
+					<div class="result-value">
+						{yeastPlan.yeastWeight}
+						<span class="unit">g</span>
+						<span class="badge">{yeastPlan.yeastPercentage.toFixed(3)}%</span>
+					</div>
+					<div class="muted">Svarer til {yeastPlan.idyPercentage.toFixed(3)}% instant gær</div>
+				</div>
+
+				<div class="ingredient-table" role="table" aria-label="Ingrediensliste">
+					<div class="ingredient-row header" role="row">
+						<span role="columnheader">Ingrediens</span>
+						<span role="columnheader" class="num">%</span>
+						<span role="columnheader" class="num">Gram</span>
+					</div>
+					{#each yeastPlan.ingredients as ingredient (ingredient.id)}
+						<div class="ingredient-row" role="row">
+							<span role="cell">{ingredient.nameDa}</span>
+							<span role="cell" class="num">{ingredient.percentage.toFixed(1)}%</span>
+							<span role="cell" class="num">{ingredient.weight} g</span>
+						</div>
 					{/each}
-				</select>
-			</label>
-		</div>
-	</div>
-
-	<div class="section">
-		<h3>Hævetid</h3>
-		<div class="input-grid time-grid">
-			<label class="field">
-				<span class="label">Ved stuetemperatur</span>
-				<div class="input-with-unit">
-					<input
-						class="input"
-						type="number"
-						min="0"
-						max="48"
-						step="0.5"
-						bind:value={roomHours}
-						aria-label="Timer ved stuetemperatur"
-					/>
-					<span class="unit">timer</span>
+					<div class="ingredient-row total" role="row">
+						<span role="cell">Total</span>
+						<span role="cell" class="num"></span>
+						<span role="cell" class="num">{yeastPlan.totalWeight} g</span>
+					</div>
 				</div>
-			</label>
 
-			<label class="field">
-				<span class="label">I køleskab</span>
-				<div class="input-with-unit">
-					<input
-						class="input"
-						type="number"
-						min="0"
-						max="120"
-						step="1"
-						bind:value={fridgeHours}
-						aria-label="Timer i køleskab"
-					/>
-					<span class="unit">timer</span>
-				</div>
-			</label>
-		</div>
-	</div>
+				<ol class="schedule">
+					<li>Ælt dejen og lad den samle sig.</li>
+					{#if roomHours > 0}
+						<li>Hæv ved stuetemperatur i {formatHours(roomHours)}.</li>
+					{/if}
+					{#if fridgeHours > 0}
+						<li>Sæt dejen i køleskabet i {formatHours(fridgeHours)}.</li>
+						<li>Tag dejen ud og lad den temperere før brug.</li>
+					{/if}
+					<li>Dejen er klar til at forme og bage.</li>
+				</ol>
 
-	{#if plan}
+				{#each yeastPlan.warnings as warning}
+					<p class="warning">{warningLabels[warning]}</p>
+				{/each}
+			</div>
+		{:else}
+			<p class="warning">{warningLabels['no-proof-time']}</p>
+		{/if}
+	{:else if sourdoughPlan}
 		<div class="results">
 			<div class="highlight">
-				<div class="muted">{yeastName} til {formatHours(totalHours)} hævning</div>
+				<div class="muted">Surdej ({starterHydrationPercentage}% hydration)</div>
 				<div class="result-value">
-					{plan.yeastWeight}
+					{sourdoughPlan.starterWeight}
 					<span class="unit">g</span>
-					<span class="badge">{plan.yeastPercentage.toFixed(3)}%</span>
+					<span class="badge">{starterPercentage}%</span>
 				</div>
-				<div class="muted">Svarer til {plan.idyPercentage.toFixed(3)}% instant gær</div>
+				<div class="muted">
+					Indeholder {sourdoughPlan.flourInStarter} g mel og {sourdoughPlan.waterInStarter} g vand
+				</div>
 			</div>
 
 			<div class="ingredient-table" role="table" aria-label="Ingrediensliste">
@@ -276,7 +416,7 @@
 					<span role="columnheader" class="num">%</span>
 					<span role="columnheader" class="num">Gram</span>
 				</div>
-				{#each plan.ingredients as ingredient (ingredient.id)}
+				{#each sourdoughPlan.ingredients as ingredient (ingredient.id)}
 					<div class="ingredient-row" role="row">
 						<span role="cell">{ingredient.nameDa}</span>
 						<span role="cell" class="num">{ingredient.percentage.toFixed(1)}%</span>
@@ -286,28 +426,35 @@
 				<div class="ingredient-row total" role="row">
 					<span role="cell">Total</span>
 					<span role="cell" class="num"></span>
-					<span role="cell" class="num">{plan.totalWeight} g</span>
+					<span role="cell" class="num">{sourdoughPlan.totalWeight} g</span>
 				</div>
 			</div>
 
 			<ol class="schedule">
-				<li>Ælt dejen og lad den samle sig.</li>
-				{#if roomHours > 0}
-					<li>Hæv ved stuetemperatur i {formatHours(roomHours)}.</li>
-				{/if}
-				{#if fridgeHours > 0}
-					<li>Sæt dejen i køleskabet i {formatHours(fridgeHours)}.</li>
-					<li>Tag dejen ud og lad den temperere før brug.</li>
-				{/if}
-				<li>Dejen er klar til at forme og bage.</li>
+				<li>Fodr din surdej 8-12 timer før æltning, så den er aktiv og boblende.</li>
+				<li>Autolyse: bland mel og vand, og lad hvile 30-60 minutter uden surdej og salt.</li>
+				<li>Tilsæt surdej og salt, og ælt dem ind i dejen.</li>
+				<li>
+					Bulkfermentering: {formatRange(sourdoughPlan.schedule.bulkFermentation)} med 3-6 stræk og fold
+					i første halvdel.
+				</li>
+				<li>Forform dejen forsigtigt, og lad den hvile 20-30 minutter.</li>
+				<li>Form dejen endeligt, og læg den i hævekurv.</li>
+				<li>
+					Endelig hævning: {formatRange(sourdoughPlan.schedule.finalProofRoom)} ved stuetemperatur eller
+					{formatRange(sourdoughPlan.schedule.finalProofFridge)} i køleskab.
+				</li>
+				<li>Dejen er klar til bagning (fingerprøve).</li>
 			</ol>
 
-			{#each plan.warnings as warning}
+			<p class="muted">
+				Tiderne er estimater ved ca. 20-22 °C baseret på hydration og surdejsprocent.
+			</p>
+
+			{#each sourdoughPlan.warnings as warning}
 				<p class="warning">{warningLabels[warning]}</p>
 			{/each}
 		</div>
-	{:else}
-		<p class="warning">{warningLabels['no-proof-time']}</p>
 	{/if}
 
 	<div class="section save-section">
@@ -336,9 +483,13 @@
 							<span class="saved-name">{saved.name}</span>
 							<span class="muted">
 								{formatDate(saved.createdAt)} · {saved.input.hydrationPercentage}% hydration ·
-								{formatHours(
-									Math.max(0, saved.input.roomHours) + Math.max(0, saved.input.fridgeHours)
-								)}
+								{#if saved.input.leavening === 'sourdough'}
+									{saved.input.starterPercentage ?? 20}% surdej
+								{:else}
+									{formatHours(
+										Math.max(0, saved.input.roomHours) + Math.max(0, saved.input.fridgeHours)
+									)}
+								{/if}
 							</span>
 						</div>
 						<div class="saved-actions">
