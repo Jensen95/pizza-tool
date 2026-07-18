@@ -1,0 +1,74 @@
+// ABOUTME: Persisted dough plans (recorded recipes) from the dough planner tool
+import { writable } from 'svelte/store';
+import * as storage from '$lib/utils/storage';
+import type { DoughPlanInput } from '$lib/utils/dough-planner';
+
+const DOUGH_PLANS_KEY = 'dough-plans';
+const MAX_PLANS = 50;
+
+export interface SavedDoughPlan {
+	id: string;
+	name: string;
+	input: DoughPlanInput;
+	createdAt: string;
+}
+
+function loadPlans(): SavedDoughPlan[] {
+	return storage.get<SavedDoughPlan[]>(DOUGH_PLANS_KEY, []);
+}
+
+function createDoughPlansStore() {
+	const { subscribe, update, set } = writable<SavedDoughPlan[]>(loadPlans());
+
+	function save(plans: SavedDoughPlan[]) {
+		storage.set(DOUGH_PLANS_KEY, plans);
+	}
+
+	return {
+		subscribe,
+
+		/**
+		 * Record a plan under a name. Returns the saved entry.
+		 */
+		savePlan(name: string, input: DoughPlanInput): SavedDoughPlan {
+			const entry: SavedDoughPlan = {
+				id:
+					typeof crypto !== 'undefined' && crypto.randomUUID
+						? crypto.randomUUID()
+						: `plan-${Date.now()}`,
+				name: name.trim() || 'Uden navn',
+				input: { ...input },
+				createdAt: new Date().toISOString()
+			};
+
+			update((state) => {
+				const newState = [entry, ...state].slice(0, MAX_PLANS);
+				save(newState);
+				return newState;
+			});
+
+			return entry;
+		},
+
+		/**
+		 * Delete a saved plan
+		 */
+		deletePlan(id: string) {
+			update((state) => {
+				const newState = state.filter((plan) => plan.id !== id);
+				save(newState);
+				return newState;
+			});
+		},
+
+		/**
+		 * Remove all saved plans
+		 */
+		clearPlans() {
+			set([]);
+			save([]);
+		}
+	};
+}
+
+export const doughPlans = createDoughPlansStore();

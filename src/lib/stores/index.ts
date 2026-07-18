@@ -23,3 +23,4 @@ export {
 	type RecipeCustomization,
 	type RecipeHistoryEntry
 } from './customizations';
+export { doughPlans, type SavedDoughPlan } from './dough-plans';
