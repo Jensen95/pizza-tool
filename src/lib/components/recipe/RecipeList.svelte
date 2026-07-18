@@ -100,10 +100,15 @@
 		gap: var(--spacing-sm);
 		position: sticky;
 		top: var(--header-height);
-		background: var(--color-background);
+		background: var(--color-surface);
+		border-bottom: 1px solid var(--color-border);
 		padding: var(--spacing-sm) 0;
 		margin: calc(-1 * var(--spacing-sm)) 0 0 0;
-		z-index: 50;
+		/* Stay below the header's own z-index (also 50): with an equal value the
+		   later-in-DOM element wins ties and would paint over header content
+		   (e.g. the theme-switcher popover) if this ever widened to the
+		   viewport edge again. */
+		z-index: 10;
 	}
 
 	.search-input {

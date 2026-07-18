@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { activeTimerCount } from '$lib/stores';
+	import ThemeSwitcher from './ThemeSwitcher.svelte';
 
 	let {
 		title = 'Pizza Tool',
@@ -29,6 +30,17 @@
 			</a>
 		{/if}
 
+		{#if !showBack}
+			<img
+				src="/icons/icon.svg"
+				alt=""
+				aria-hidden="true"
+				class="header-logo"
+				width="28"
+				height="28"
+			/>
+		{/if}
+
 		<h1 class="header-title">{title}</h1>
 
 		{#if $activeTimerCount > 0}
@@ -51,6 +63,8 @@
 				<span class="timer-count">{$activeTimerCount}</span>
 			</a>
 		{/if}
+
+		<ThemeSwitcher />
 	</div>
 </header>
 
@@ -84,6 +98,13 @@
 
 	.back-button:hover {
 		opacity: 0.8;
+	}
+
+	.header-logo {
+		flex-shrink: 0;
+		width: 28px;
+		height: 28px;
+		border-radius: var(--radius-sm);
 	}
 
 	.header-title {

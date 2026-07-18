@@ -68,6 +68,7 @@
 	}
 
 	.nav-item {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -78,6 +79,7 @@
 		color: var(--color-text-secondary);
 		transition: color 0.2s;
 		min-width: 64px;
+		min-height: 44px;
 	}
 
 	.nav-item:hover {
@@ -87,6 +89,18 @@
 
 	.nav-item.active {
 		color: var(--color-primary);
+	}
+
+	.nav-item.active::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 26px;
+		height: 3px;
+		border-radius: var(--radius-full);
+		background: var(--color-accent);
 	}
 
 	.nav-icon {

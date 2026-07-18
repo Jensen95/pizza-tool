@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { getRecipeById, recipeHistory, calculator } from '$lib/stores';
+	import { getRecipeById, recipeHistory, calculator, doughLog } from '$lib/stores';
 	import RecipeDetail from '$lib/components/recipe/RecipeDetail.svelte';
 	import IngredientCalculator from '$lib/components/recipe/IngredientCalculator.svelte';
 	import FermentationSchedule from '$lib/components/recipe/FermentationSchedule.svelte';
-	import KeepAwakeToggle from '$lib/components/timer/KeepAwakeToggle.svelte';
+	import DoughLogSection from '$lib/components/doughlog/DoughLogSection.svelte';
+	import DoughLogSheet from '$lib/components/doughlog/DoughLogSheet.svelte';
 	import type { RecipeHistoryEntry } from '$lib/stores';
-	import { getAllIngredients } from '$lib/utils/baker-percentage';
+	import type { NewDoughLogEntry } from '$lib/models';
+	import { getAllIngredients, calculateHydration } from '$lib/utils/baker-percentage';
 	import { slide } from 'svelte/transition';
 
 	let recipeId = $derived(page.params.id);
@@ -16,6 +18,37 @@
 	let recipeHistoryEntries = $derived(
 		recipeId ? $recipeHistory.filter((e) => e.recipeId === recipeId) : []
 	);
+
+	// Past bakes for this recipe (§5.5), reactive to the dough-log store.
+	let doughLogEntries = $derived.by(() => {
+		void $doughLog;
+		return recipeId ? doughLog.getForRecipe(recipeId) : [];
+	});
+
+	// --- Manual dough-log entry (§5.4.2) --------------------------------------
+	let manualLogOpen = $state(false);
+
+	let effectiveHydration = $derived(
+		recipe ? ($calculator.hydration ?? calculateHydration(getAllIngredients(recipe))) : null
+	);
+
+	function openManualLog() {
+		manualLogOpen = true;
+	}
+
+	function handleManualLogSave(entry: NewDoughLogEntry): boolean {
+		const { persisted } = doughLog.add(entry);
+		if (persisted) manualLogOpen = false;
+		return persisted;
+	}
+
+	function cancelManualLog() {
+		manualLogOpen = false;
+	}
+
+	function deleteDoughLogEntry(id: string) {
+		doughLog.delete(id);
+	}
 
 	function toggleHistory() {
 		showHistory = !showHistory;
@@ -51,8 +84,30 @@
 		return changes;
 	}
 
-	function deleteHistoryEntry(entryId: string) {
+	let confirmingDeleteId = $state<string | null>(null);
+	let confirmTimeout: ReturnType<typeof setTimeout> | null = null;
+
+	function requestDeleteHistoryEntry(entryId: string) {
+		confirmingDeleteId = entryId;
+		if (confirmTimeout) clearTimeout(confirmTimeout);
+		// Auto-dismiss the confirm affordance if the user doesn't act.
+		confirmTimeout = setTimeout(() => {
+			confirmingDeleteId = null;
+			confirmTimeout = null;
+		}, 4000);
+	}
+
+	function cancelDeleteHistoryEntry() {
+		confirmingDeleteId = null;
+		if (confirmTimeout) {
+			clearTimeout(confirmTimeout);
+			confirmTimeout = null;
+		}
+	}
+
+	function confirmDeleteHistoryEntry(entryId: string) {
 		recipeHistory.deleteEntry(entryId);
+		cancelDeleteHistoryEntry();
 	}
 
 	function applyHistoryEntry(entry: RecipeHistoryEntry) {
@@ -81,7 +136,6 @@
 {#if recipe}
 	<div class="recipe-page">
 		<a href="/" class="back-link">&larr; Tilbage til opskrifter</a>
-		<KeepAwakeToggle />
 		<RecipeDetail {recipe} />
 
 		<section class="recipe-section">
@@ -112,24 +166,64 @@
 									<span class="entry-info"
 										>{entry.numberOfPizzas} pizzaer, {entry.doughBallWeight}g</span
 									>
-									<span
-										class="btn-icon delete-btn"
-										role="button"
-										tabindex="0"
-										onclick={(e) => {
-											e.stopPropagation();
-											deleteHistoryEntry(entry.id);
-										}}
-										onkeydown={(e) => {
-											if (e.key === 'Enter') {
+									{#if confirmingDeleteId === entry.id}
+										<span class="delete-confirm">
+											<span
+												class="delete-confirm-yes"
+												role="button"
+												tabindex="0"
+												onclick={(e) => {
+													e.stopPropagation();
+													confirmDeleteHistoryEntry(entry.id);
+												}}
+												onkeydown={(e) => {
+													if (e.key === 'Enter' || e.key === ' ') {
+														e.stopPropagation();
+														confirmDeleteHistoryEntry(entry.id);
+													}
+												}}
+											>
+												Slet
+											</span>
+											<span
+												class="delete-confirm-no"
+												role="button"
+												tabindex="0"
+												onclick={(e) => {
+													e.stopPropagation();
+													cancelDeleteHistoryEntry();
+												}}
+												onkeydown={(e) => {
+													if (e.key === 'Enter' || e.key === ' ') {
+														e.stopPropagation();
+														cancelDeleteHistoryEntry();
+													}
+												}}
+											>
+												Fortryd
+											</span>
+										</span>
+									{:else}
+										<span
+											class="btn-icon delete-btn"
+											role="button"
+											tabindex="0"
+											onclick={(e) => {
 												e.stopPropagation();
-												deleteHistoryEntry(entry.id);
-											}
-										}}
-										title="Slet"
-									>
-										&times;
-									</span>
+												requestDeleteHistoryEntry(entry.id);
+											}}
+											onkeydown={(e) => {
+												if (e.key === 'Enter' || e.key === ' ') {
+													e.stopPropagation();
+													requestDeleteHistoryEntry(entry.id);
+												}
+											}}
+											aria-label="Slet tilpasning"
+											title="Slet"
+										>
+											&times;
+										</span>
+									{/if}
 								</div>
 								{#if Object.keys(entry.ingredients).length > 0}
 									<ul class="entry-changes">
@@ -151,7 +245,28 @@
 
 			<IngredientCalculator {recipe} />
 		</section>
+
+		<section class="recipe-section">
+			<div class="section-header">
+				<h2 class="section-title">Bagelog</h2>
+				<button class="btn btn-outline btn-sm" onclick={openManualLog}>Log en bagning</button>
+			</div>
+			<DoughLogSection entries={doughLogEntries} ondelete={deleteDoughLogEntry} />
+		</section>
 	</div>
+
+	<DoughLogSheet
+		open={manualLogOpen}
+		recipeId={recipe.id}
+		recipeName={recipe.nameDa}
+		recipeCategory={recipe.category}
+		numberOfPizzas={$calculator.numberOfPizzas}
+		doughBallWeight={$calculator.doughBallWeight}
+		hydration={effectiveHydration}
+		title="Log en bagning"
+		onsave={handleManualLogSave}
+		oncancel={cancelManualLog}
+	/>
 {:else}
 	<div class="not-found">
 		<h2>Opskrift ikke fundet</h2>
@@ -293,8 +408,49 @@
 		opacity: 1;
 	}
 
+	.delete-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 44px;
+		min-height: 44px;
+	}
+
 	.delete-btn:hover {
 		color: var(--color-error);
+	}
+
+	.delete-confirm {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--spacing-xs);
+	}
+
+	.delete-confirm-yes,
+	.delete-confirm-no {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 44px;
+		padding: 0 var(--spacing-sm);
+		border-radius: var(--radius-sm);
+		font-size: var(--font-size-sm);
+		font-weight: 600;
+		cursor: pointer;
+		line-height: 1;
+	}
+
+	.delete-confirm-yes {
+		background: var(--color-error);
+		color: var(--color-text-light);
+	}
+
+	.delete-confirm-no {
+		color: var(--color-text-secondary);
+	}
+
+	.delete-confirm-no:hover {
+		color: var(--color-text);
 	}
 
 	.not-found {
