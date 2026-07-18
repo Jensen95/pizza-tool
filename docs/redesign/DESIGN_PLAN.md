@@ -21,11 +21,11 @@ Today's UI is a competent, mobile-first Material-flavoured PWA that works but re
 
 **Hardcoded-color debt (the migration targets):**
 
-| File | Line(s) | Offender | Nature |
-| --- | --- | --- | --- |
-| `src/app.css` | 173 | `.btn-secondary:hover { background: #d0d0d0 }` | **Real bug** — no dark-mode override; light-grey hover on a dark surface |
-| `src/lib/components/ui/PwaPrompts.svelte` | 244 | `outline: 2px solid var(--color-primary, #007bff)` | Fallback only; blue, off-brand |
-| `src/lib/components/timer/NotificationPermissionBanner.svelte` | 94–95, 160 | `#fff3e0`, `#ffb74d`, `#007bff` fallbacks | Fallback-only; won't adapt to dark |
+| File                                                           | Line(s)    | Offender                                           | Nature                                                                   |
+| -------------------------------------------------------------- | ---------- | -------------------------------------------------- | ------------------------------------------------------------------------ |
+| `src/app.css`                                                  | 173        | `.btn-secondary:hover { background: #d0d0d0 }`     | **Real bug** — no dark-mode override; light-grey hover on a dark surface |
+| `src/lib/components/ui/PwaPrompts.svelte`                      | 244        | `outline: 2px solid var(--color-primary, #007bff)` | Fallback only; blue, off-brand                                           |
+| `src/lib/components/timer/NotificationPermissionBanner.svelte` | 94–95, 160 | `#fff3e0`, `#ffb74d`, `#007bff` fallbacks          | Fallback-only; won't adapt to dark                                       |
 
 That is the entire hardcoded-hex surface — small and tractable. The codebase is already ~95% tokenized, which makes a proper multi-theme system cheap to add.
 
@@ -41,24 +41,24 @@ Both are public repos by **JarlLyng**. We will **not install either package** �
 
 A production React + Tailwind component library. Its central idea worth stealing: **theme = a `[data-theme="<name>"]` attribute on the root**, each theme a full token set, with dark handled by a second `[data-color-scheme="dark"]` attribute. Four Alien-franchise themes:
 
-| Theme | Brand hue | Primary (light) | Background (light) | Mood |
-| --- | --- | --- | --- | --- |
-| `nostromo` (default) | 262° violet | `#691eeb` | `#fafafa` | Clean technical sci-fi dashboard |
-| `mother` | 195° cyan | `#00bfff` | `#ffffff` | Cold, clinical, high-key AI terminal |
-| `lv-426` | 25° orange/rust | `#f96b06` | `#fbfaf9` | Warm, rustic, gradient-heavy marketing look |
-| `sulaco` | 210° steel blue | `#4d7fb2` | `#fafafa` | Desaturated professional/military ops console |
+| Theme                | Brand hue       | Primary (light) | Background (light) | Mood                                          |
+| -------------------- | --------------- | --------------- | ------------------ | --------------------------------------------- |
+| `nostromo` (default) | 262° violet     | `#691eeb`       | `#fafafa`          | Clean technical sci-fi dashboard              |
+| `mother`             | 195° cyan       | `#00bfff`       | `#ffffff`          | Cold, clinical, high-key AI terminal          |
+| `lv-426`             | 25° orange/rust | `#f96b06`       | `#fbfaf9`          | Warm, rustic, gradient-heavy marketing look   |
+| `sulaco`             | 210° steel blue | `#4d7fb2`       | `#fafafa`          | Desaturated professional/military ops console |
 
 Selected concrete `lv-426` light tokens (the warm theme closest to pizza's palette; HSL as authored, hex approx):
 
-| Token | HSL | Hex |
-| --- | --- | --- |
-| `--color-background` | `30 20% 98%` | `#fbfaf9` |
-| `--color-foreground` | `30 20% 10%` | `#1f1a14` |
-| `--color-muted` | `30 20% 95%` | `#f5f2f0` |
-| `--color-border` | `30 20% 90%` | `#ebe6e0` |
-| `--color-primary` | `25 95% 50%` | `#f96b06` |
-| `--color-accent` | `25 95% 90%` | `#fee1cd` |
-| `--color-destructive` | `0 80% 50%` | `#e61919` |
+| Token                 | HSL          | Hex       |
+| --------------------- | ------------ | --------- |
+| `--color-background`  | `30 20% 98%` | `#fbfaf9` |
+| `--color-foreground`  | `30 20% 10%` | `#1f1a14` |
+| `--color-muted`       | `30 20% 95%` | `#f5f2f0` |
+| `--color-border`      | `30 20% 90%` | `#ebe6e0` |
+| `--color-primary`     | `25 95% 50%` | `#f96b06` |
+| `--color-accent`      | `25 95% 90%` | `#fee1cd` |
+| `--color-destructive` | `0 80% 50%`  | `#e61919` |
 
 Notable nostromo patterns we adopt: full semantic token layer (background/foreground/muted/card/border/primary/accent/destructive/ring + `-foreground` pairings), WCAG-AA contrast validated in-source, and the `lv-426` neutral trick of a **warm-tinted grey** (`30° 20%`, not true grey) — directly useful for the "Italiano" theme's cream surfaces. We **do not** adopt: HSL-triple authoring for Tailwind, gradient buttons, or the Alien naming.
 
@@ -68,29 +68,29 @@ A machine-readable **design-token package** (no components). Two modes only — 
 
 Light mode (selected):
 
-| Token | Var | Value |
-| --- | --- | --- |
-| primary | `--ij-color-primary` | `#A435D2` (bold purple/magenta) |
-| text.primary | `--ij-color-text-primary` | `#000000` |
-| text.secondary | `--ij-color-text-secondary` | `rgba(0,0,0,0.70)` |
-| background.app | `--ij-color-bg-app` | `#FFFFFF` |
-| background.card | `--ij-color-bg-card` | `rgba(0,0,0,0.04)` |
-| surface.raised | `--ij-color-surface-raised` | `rgba(0,0,0,0.02)` |
-| border.subtle | `--ij-color-border-subtle` | `rgba(0,0,0,0.10)` |
-| border.default | `--ij-color-border-default` | `rgba(0,0,0,0.16)` |
-| state.success | `--ij-color-state-success` | `#2E7D32` |
-| state.warning | `--ij-color-state-warning` | `#C2410C` |
-| state.error | `--ij-color-state-error` | `#D70015` |
+| Token           | Var                         | Value                           |
+| --------------- | --------------------------- | ------------------------------- |
+| primary         | `--ij-color-primary`        | `#A435D2` (bold purple/magenta) |
+| text.primary    | `--ij-color-text-primary`   | `#000000`                       |
+| text.secondary  | `--ij-color-text-secondary` | `rgba(0,0,0,0.70)`              |
+| background.app  | `--ij-color-bg-app`         | `#FFFFFF`                       |
+| background.card | `--ij-color-bg-card`        | `rgba(0,0,0,0.04)`              |
+| surface.raised  | `--ij-color-surface-raised` | `rgba(0,0,0,0.02)`              |
+| border.subtle   | `--ij-color-border-subtle`  | `rgba(0,0,0,0.10)`              |
+| border.default  | `--ij-color-border-default` | `rgba(0,0,0,0.16)`              |
+| state.success   | `--ij-color-state-success`  | `#2E7D32`                       |
+| state.warning   | `--ij-color-state-warning`  | `#C2410C`                       |
+| state.error     | `--ij-color-state-error`    | `#D70015`                       |
 
 Dark mode (selected):
 
-| Token | Value |
-| --- | --- |
-| primary | `#D0FF00` (neon chartreuse) |
-| text.primary | `#FFFFFF` |
-| background.app | `#000000` |
-| background.card | `rgba(255,255,255,0.05)` |
-| border.subtle | `rgba(255,255,255,0.12)` |
+| Token                           | Value                             |
+| ------------------------------- | --------------------------------- |
+| primary                         | `#D0FF00` (neon chartreuse)       |
+| text.primary                    | `#FFFFFF`                         |
+| background.app                  | `#000000`                         |
+| background.card                 | `rgba(255,255,255,0.05)`          |
+| border.subtle                   | `rgba(255,255,255,0.12)`          |
 | state.success / warning / error | `#4CAF50` / `#FF6B35` / `#FF453A` |
 
 Patterns we adopt from iamjarl: **graded-opacity text hierarchy** (100/70/55/35% in light; 100/75/60/35% in dark) instead of hand-picked greys; **translucent washes over hard borders** for cards (`rgba(0,0,0,0.04)`); **separate "fill" vs "AA-safe text" state colors** (their design.md warns raw `#4CAF50` success on white is only 2.78:1 — fails AA — hence the darker `#2E7D32` text variant); strict **`on*` color pairing** for text on colored fills; a 2px/2px focus ring in the mode's primary. Shared scale references: radius 8/12/16px, spacing 4/8/12/16/20/24/32, shadows `0 1px 2px rgba(0,0,0,.05)` / `0 4px 8px rgba(0,0,0,.08)` / `0 8px 24px rgba(0,0,0,.12)`.
@@ -149,60 +149,60 @@ All four grounded in `app.css` today plus nostromo/iamjarl values where they fit
 
 #### Light (default — largely today's values, formalized)
 
-| Token | Value | Source note |
-| --- | --- | --- |
-| `--color-background` | `#fafafa` | unchanged |
-| `--color-surface` | `#ffffff` | unchanged |
-| `--color-surface-elevated` | `#ffffff` + `--shadow-md` | new; modals/popovers |
-| `--color-text` | `#212121` | unchanged |
-| `--color-text-secondary` | `#757575` | unchanged (~70% black) |
-| `--color-text-tertiary` | `rgba(0,0,0,0.55)` | new; iamjarl ladder |
-| `--color-primary` | `#2e7d32` (Basil, default) — user-selectable via `data-primary`; Crust `~#ea580c` and iamjarl Flip `#A435D2` also ship | red is confined to Italiano; all three §3.5-shortlisted candidates ship as switchable `data-primary` options, not a single locked pick |
-| `--color-on-primary` | `#ffffff` | new |
-| `--color-accent` | `#2e7d32` | basil green, AA-safe as text (iamjarl `state.success` text value); non-basil primaries (Crust, Flip) keep this basil accent unchanged — see §3.5 |
-| `--color-on-accent` | `#ffffff` | new |
-| `--color-success` | `#2e7d32` | darkened from `#4caf50` for AA text (iamjarl fix) |
-| `--color-warning` | `#c2410c` | AA-safe warn text (iamjarl) |
-| `--color-error` | `#d70015` | iamjarl error |
-| `--color-border` | `#e0e0e0` | unchanged |
+| Token                      | Value                                                                                                                  | Source note                                                                                                                                      |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `--color-background`       | `#fafafa`                                                                                                              | unchanged                                                                                                                                        |
+| `--color-surface`          | `#ffffff`                                                                                                              | unchanged                                                                                                                                        |
+| `--color-surface-elevated` | `#ffffff` + `--shadow-md`                                                                                              | new; modals/popovers                                                                                                                             |
+| `--color-text`             | `#212121`                                                                                                              | unchanged                                                                                                                                        |
+| `--color-text-secondary`   | `#757575`                                                                                                              | unchanged (~70% black)                                                                                                                           |
+| `--color-text-tertiary`    | `rgba(0,0,0,0.55)`                                                                                                     | new; iamjarl ladder                                                                                                                              |
+| `--color-primary`          | `#2e7d32` (Basil, default) — user-selectable via `data-primary`; Crust `~#ea580c` and iamjarl Flip `#A435D2` also ship | red is confined to Italiano; all three §3.5-shortlisted candidates ship as switchable `data-primary` options, not a single locked pick           |
+| `--color-on-primary`       | `#ffffff`                                                                                                              | new                                                                                                                                              |
+| `--color-accent`           | `#2e7d32`                                                                                                              | basil green, AA-safe as text (iamjarl `state.success` text value); non-basil primaries (Crust, Flip) keep this basil accent unchanged — see §3.5 |
+| `--color-on-accent`        | `#ffffff`                                                                                                              | new                                                                                                                                              |
+| `--color-success`          | `#2e7d32`                                                                                                              | darkened from `#4caf50` for AA text (iamjarl fix)                                                                                                |
+| `--color-warning`          | `#c2410c`                                                                                                              | AA-safe warn text (iamjarl)                                                                                                                      |
+| `--color-error`            | `#d70015`                                                                                                              | iamjarl error                                                                                                                                    |
+| `--color-border`           | `#e0e0e0`                                                                                                              | unchanged                                                                                                                                        |
 
 #### Dark
 
-| Token | Value | Source note |
-| --- | --- | --- |
-| `--color-background` | `#121212` | today's dark |
-| `--color-surface` | `#1e1e1e` | today's dark |
-| `--color-surface-elevated` | `#2a2a2a` | new; one step above surface |
-| `--color-text` | `#e8e8e8` | today's dark |
-| `--color-text-secondary` | `rgba(255,255,255,0.60)` | iamjarl ladder |
-| `--color-text-tertiary` | `rgba(255,255,255,0.40)` | new |
-| `--color-primary` | `#66bb6a` (Basil, default) — user-selectable via `data-primary`; Crust (brightened `lv-426` `#f96b06` family) and iamjarl Flip `#D0FF00` also ship | red is confined to Italiano; all three §3.5-shortlisted candidates ship as switchable `data-primary` options, not a single locked pick |
-| `--color-on-primary` | `#1a1a1a` | new |
-| `--color-accent` | `#66bb6a` | brightened basil; non-basil primaries (Crust, Flip) keep this basil accent unchanged — see §3.5 |
-| `--color-success` | `#4caf50` | iamjarl dark success |
-| `--color-warning` | `#ff6b35` | iamjarl dark warn |
-| `--color-error` | `#ff453a` | iamjarl dark error |
-| `--color-border` | `#333333` | today's dark |
+| Token                      | Value                                                                                                                                              | Source note                                                                                                                            |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `--color-background`       | `#121212`                                                                                                                                          | today's dark                                                                                                                           |
+| `--color-surface`          | `#1e1e1e`                                                                                                                                          | today's dark                                                                                                                           |
+| `--color-surface-elevated` | `#2a2a2a`                                                                                                                                          | new; one step above surface                                                                                                            |
+| `--color-text`             | `#e8e8e8`                                                                                                                                          | today's dark                                                                                                                           |
+| `--color-text-secondary`   | `rgba(255,255,255,0.60)`                                                                                                                           | iamjarl ladder                                                                                                                         |
+| `--color-text-tertiary`    | `rgba(255,255,255,0.40)`                                                                                                                           | new                                                                                                                                    |
+| `--color-primary`          | `#66bb6a` (Basil, default) — user-selectable via `data-primary`; Crust (brightened `lv-426` `#f96b06` family) and iamjarl Flip `#D0FF00` also ship | red is confined to Italiano; all three §3.5-shortlisted candidates ship as switchable `data-primary` options, not a single locked pick |
+| `--color-on-primary`       | `#1a1a1a`                                                                                                                                          | new                                                                                                                                    |
+| `--color-accent`           | `#66bb6a`                                                                                                                                          | brightened basil; non-basil primaries (Crust, Flip) keep this basil accent unchanged — see §3.5                                        |
+| `--color-success`          | `#4caf50`                                                                                                                                          | iamjarl dark success                                                                                                                   |
+| `--color-warning`          | `#ff6b35`                                                                                                                                          | iamjarl dark warn                                                                                                                      |
+| `--color-error`            | `#ff453a`                                                                                                                                          | iamjarl dark error                                                                                                                     |
+| `--color-border`           | `#333333`                                                                                                                                          | today's dark                                                                                                                           |
 
 > **Note (round 3, final):** when the user selects **Crust** as their Light/Dark primary, `--color-warning` shifts to amber (`~#b45309` light / `~#f59e0b` dark) to keep it distinct from the now-orange primary (§3.5). Under **Basil** (default) or **iamjarl Flip**, `--color-warning` keeps the values in the tables above. In all three cases, `--color-accent` stays basil green (light) / brightened basil (dark) — only Basil-as-primary is the exception where accent shifts to a warm crust-tan, per the "promoted" pattern already noted in §3.5's Basil row.
 
 #### Grey (neutral / low-chroma — for focus, prints, colorblind-friendly)
 
-| Token | Value | Source note |
-| --- | --- | --- |
-| `--color-background` | `#f4f4f5` | true-grey, sulaco-style neutral |
-| `--color-surface` | `#ffffff` | — |
-| `--color-surface-elevated` | `#fafafa` | — |
-| `--color-text` | `#1a1a1a` | — |
-| `--color-text-secondary` | `rgba(0,0,0,0.62)` | ladder |
-| `--color-text-tertiary` | `rgba(0,0,0,0.45)` | — |
-| `--color-primary` | ~~`#3f3f46` graphite~~ → `#3a6494` steel-blue | AA-darkened `sulaco` (nostromo `#4d7fb2` family); revised per owner feedback |
-| `--color-on-primary` | `#ffffff` | unchanged |
-| `--color-accent` | ~~`#52525b`~~ → `#4d7fb2` | sulaco steel-blue accent (lighter step than primary); revised per owner feedback |
-| `--color-success` | `#2e7d32` | kept for meaning even in grey theme |
-| `--color-warning` | `#b45309` | — |
-| `--color-error` | `#b91c1c` | — |
-| `--color-border` | `#d4d4d8` | — |
+| Token                      | Value                                         | Source note                                                                      |
+| -------------------------- | --------------------------------------------- | -------------------------------------------------------------------------------- |
+| `--color-background`       | `#f4f4f5`                                     | true-grey, sulaco-style neutral                                                  |
+| `--color-surface`          | `#ffffff`                                     | —                                                                                |
+| `--color-surface-elevated` | `#fafafa`                                     | —                                                                                |
+| `--color-text`             | `#1a1a1a`                                     | —                                                                                |
+| `--color-text-secondary`   | `rgba(0,0,0,0.62)`                            | ladder                                                                           |
+| `--color-text-tertiary`    | `rgba(0,0,0,0.45)`                            | —                                                                                |
+| `--color-primary`          | ~~`#3f3f46` graphite~~ → `#3a6494` steel-blue | AA-darkened `sulaco` (nostromo `#4d7fb2` family); revised per owner feedback     |
+| `--color-on-primary`       | `#ffffff`                                     | unchanged                                                                        |
+| `--color-accent`           | ~~`#52525b`~~ → `#4d7fb2`                     | sulaco steel-blue accent (lighter step than primary); revised per owner feedback |
+| `--color-success`          | `#2e7d32`                                     | kept for meaning even in grey theme                                              |
+| `--color-warning`          | `#b45309`                                     | —                                                                                |
+| `--color-error`            | `#b91c1c`                                     | —                                                                                |
+| `--color-border`           | `#d4d4d8`                                     | —                                                                                |
 
 > **Note (round 2):** revised per owner feedback — neutral surfaces with a cool steel accent instead of graphite-on-grey. All Grey neutrals (background/surface/text/border) and state colors (success/warning/error) are unchanged; only primary and accent moved from graphite to steel-blue.
 
@@ -210,22 +210,22 @@ All four grounded in `app.css` today plus nostromo/iamjarl values where they fit
 
 The personality theme. Cream canvas (borrowed from lv-426's warm neutral `30° 20%`), tomato-red primary, basil-green accent — tastefully as accents, not a circus. Text stays near-black on cream for readability.
 
-| Token | Value | Source note |
-| --- | --- | --- |
-| `--color-background` | `#fbf7ef` | mozzarella cream (lv-426 warm neutral direction) |
-| `--color-surface` | `#fffdf8` | lighter cream card |
-| `--color-surface-elevated` | `#ffffff` | — |
-| `--color-text` | `#2a1f18` | warm near-black (lv-426 `30 20% 10%` family) |
-| `--color-text-secondary` | `rgba(42,31,24,0.66)` | warm ladder |
-| `--color-text-tertiary` | `rgba(42,31,24,0.48)` | — |
-| `--color-primary` | `#c8362f` | pomodoro red (slightly warmer than Material red) |
-| `--color-on-primary` | `#fffdf8` | cream, not pure white |
-| `--color-accent` | `#3f7d3a` | basil green |
-| `--color-on-accent` | `#fffdf8` | — |
-| `--color-success` | `#3f7d3a` | basil doubles as success |
-| `--color-warning` | `#c2410c` | terracotta warn |
-| `--color-error` | `#b3261e` | deep tomato |
-| `--color-border` | `#ece2d2` | warm tan border (lv-426 `30 20% 90%` ≈ `#ebe6e0`) |
+| Token                      | Value                 | Source note                                       |
+| -------------------------- | --------------------- | ------------------------------------------------- |
+| `--color-background`       | `#fbf7ef`             | mozzarella cream (lv-426 warm neutral direction)  |
+| `--color-surface`          | `#fffdf8`             | lighter cream card                                |
+| `--color-surface-elevated` | `#ffffff`             | —                                                 |
+| `--color-text`             | `#2a1f18`             | warm near-black (lv-426 `30 20% 10%` family)      |
+| `--color-text-secondary`   | `rgba(42,31,24,0.66)` | warm ladder                                       |
+| `--color-text-tertiary`    | `rgba(42,31,24,0.48)` | —                                                 |
+| `--color-primary`          | `#c8362f`             | pomodoro red (slightly warmer than Material red)  |
+| `--color-on-primary`       | `#fffdf8`             | cream, not pure white                             |
+| `--color-accent`           | `#3f7d3a`             | basil green                                       |
+| `--color-on-accent`        | `#fffdf8`             | —                                                 |
+| `--color-success`          | `#3f7d3a`             | basil doubles as success                          |
+| `--color-warning`          | `#c2410c`             | terracotta warn                                   |
+| `--color-error`            | `#b3261e`             | deep tomato                                       |
+| `--color-border`           | `#ece2d2`             | warm tan border (lv-426 `30 20% 90%` ≈ `#ebe6e0`) |
 
 Italiano dark variant (`:root[data-theme="italiano"]` inside a `prefers-color-scheme: dark` block, optional) can drop to an espresso-brown canvas `#1c1613` with the same tomato/basil accents brightened — deferred unless owner wants it (§6).
 
@@ -233,15 +233,15 @@ Italiano dark variant (`:root[data-theme="italiano"]` inside a `prefers-color-sc
 
 Owner decision: Light and Dark themes will **not** keep the Material-red primary. Red is confined to Italiano — Italiano keeps pomodoro `#c8362f` (§3.4) as the app's only red primary, and Grey keeps its steel-blue primary unchanged. Rather than choosing a single winner among the three shortlisted candidates below, **the owner's final call is to ship all three as a user-selectable preference** (§3.1's `data-primary` attribute, §3.2's `preferences.primary` field, §6 decision 1): **Basil green is the default**, with Crust orange and iamjarl Flip available as alternate picks in the theme switcher for Light and Dark. Grey and Italiano are unaffected — they keep their own fixed primaries regardless of the `data-primary` setting.
 
-| Candidate | Light | Dark | Trade-offs |
-| --- | --- | --- | --- |
-| **Basil green** *(recommended)* — ✅ **SHORTLISTED** | `#2e7d32` | `#66bb6a` | Promoted from today's `--color-accent`. Accent then becomes a warm crust-tan (`~#9c5a2c` light / `~#d9a05b` dark). Reuses an already AA-validated value (iamjarl success text) — low risk, calm, food-appropriate — but shares its hue family with `--color-success`, so the accent swap needs to fully separate the two meanings visually. |
-| Crust orange — ✅ **SHORTLISTED** | `~#ea580c` | brightened (from nostromo `lv-426` `#f96b06`) | Warm and appetizing, but close to `--color-warning`; warning would need to shift to amber (`~#b45309` light / `~#f59e0b` dark) to avoid clashing. |
-| ~~Steel blue family~~ — ❌ **REJECTED** | `#4d7fb2` (darkened for AA in light) | `#4d7fb2` family | Sourced from nostromo `sulaco`. Cool, professional "ops console" mood — furthest from a pizza/culinary feel of the set; needs darkening to clear AA on light backgrounds. |
-| ~~Warm graphite~~ — ❌ **REJECTED** | `~#4a4038` | `~#d6cec4` | Near-monochrome; the primary carries almost no color, pushing the meaning-bearing color budget onto success/warning/error. Safest for a11y/colorblind users, least "branded." |
-| ~~Nostromo violet~~ — ❌ **REJECTED** | `#691eeb` | `#691eeb` (as authored) | nostromo's own default-theme primary. Distinctive, but no inherent link to pizza/Italian styling — a purely borrowed hue. |
-| ~~Mother cyan~~ — ❌ **REJECTED** | `#00bfff` (darkened for AA in light) | `#00bfff` | nostromo `mother` theme's signature cyan. Cold/clinical mood, furthest from Italiano's warmth; needs darkening to pass AA on light backgrounds. |
-| iamjarl flip — ✅ **SHORTLISTED** | `#A435D2` | `#D0FF00` | Accent-flip pattern — hue changes between modes, not just lightness. Most novel option, but highest implementation/testing cost: two unrelated hues, each needing AA validation and harmonization with success/warning/error in both modes. |
+| Candidate                                            | Light                                | Dark                                          | Trade-offs                                                                                                                                                                                                                                                                                                                                  |
+| ---------------------------------------------------- | ------------------------------------ | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Basil green** _(recommended)_ — ✅ **SHORTLISTED** | `#2e7d32`                            | `#66bb6a`                                     | Promoted from today's `--color-accent`. Accent then becomes a warm crust-tan (`~#9c5a2c` light / `~#d9a05b` dark). Reuses an already AA-validated value (iamjarl success text) — low risk, calm, food-appropriate — but shares its hue family with `--color-success`, so the accent swap needs to fully separate the two meanings visually. |
+| Crust orange — ✅ **SHORTLISTED**                    | `~#ea580c`                           | brightened (from nostromo `lv-426` `#f96b06`) | Warm and appetizing, but close to `--color-warning`; warning would need to shift to amber (`~#b45309` light / `~#f59e0b` dark) to avoid clashing.                                                                                                                                                                                           |
+| ~~Steel blue family~~ — ❌ **REJECTED**              | `#4d7fb2` (darkened for AA in light) | `#4d7fb2` family                              | Sourced from nostromo `sulaco`. Cool, professional "ops console" mood — furthest from a pizza/culinary feel of the set; needs darkening to clear AA on light backgrounds.                                                                                                                                                                   |
+| ~~Warm graphite~~ — ❌ **REJECTED**                  | `~#4a4038`                           | `~#d6cec4`                                    | Near-monochrome; the primary carries almost no color, pushing the meaning-bearing color budget onto success/warning/error. Safest for a11y/colorblind users, least "branded."                                                                                                                                                               |
+| ~~Nostromo violet~~ — ❌ **REJECTED**                | `#691eeb`                            | `#691eeb` (as authored)                       | nostromo's own default-theme primary. Distinctive, but no inherent link to pizza/Italian styling — a purely borrowed hue.                                                                                                                                                                                                                   |
+| ~~Mother cyan~~ — ❌ **REJECTED**                    | `#00bfff` (darkened for AA in light) | `#00bfff`                                     | nostromo `mother` theme's signature cyan. Cold/clinical mood, furthest from Italiano's warmth; needs darkening to pass AA on light backgrounds.                                                                                                                                                                                             |
+| iamjarl flip — ✅ **SHORTLISTED**                    | `#A435D2`                            | `#D0FF00`                                     | Accent-flip pattern — hue changes between modes, not just lightness. Most novel option, but highest implementation/testing cost: two unrelated hues, each needing AA validation and harmonization with success/warning/error in both modes.                                                                                                 |
 
 **Owner decision (round 2):** shortlist narrowed to three — **Basil green, Crust orange, and iamjarl flip** ("Basil, Crust and Flip"). Steel blue, Warm graphite, Nostromo violet, and Mother cyan are **rejected**.
 
@@ -255,14 +255,14 @@ Note: `--color-success`, `--color-warning`, `--color-error`, and all neutral tok
 
 Three proposals, each independently accept/reject. All grounded in ui-map rough edges. None require the theme work to ship first, but all benefit from it.
 
-### Proposal A — Navigation & global chrome polish  *(decision: accept / reject)*
+### Proposal A — Navigation & global chrome polish _(decision: accept / reject)_
 
 - **Add the theme switcher** (§3.2) — the single highest-leverage change; it activates work that's currently invisible.
 - **Header**: keep the sticky primary-color bar, but move the keep-awake toggle out of the recipe page's back-link area (ui-map rough edge #10 — it's global but looks recipe-specific) into the header or Settings, so its global scope reads correctly.
 - **Bottom nav** (ui-map): already solid (4 tabs, active-color, timer badge). Minor: give the active tab a subtle top-border or filled pill using `--color-accent` so active state doesn't rely on color alone (a11y — supports the Grey theme and colorblind users).
 - **Filter bar** (rough edge #2): add a 1px `--color-border` bottom edge + `--color-surface` background to the sticky recipe-list filter bar so it visually separates from scrolling content instead of floating.
 
-### Proposal B — Recipe detail & calculator legibility  *(decision: accept / reject)*
+### Proposal B — Recipe detail & calculator legibility _(decision: accept / reject)_
 
 The densest screen (ui-map §2, rough edges #3, #4, #7). Proposals:
 
@@ -271,7 +271,7 @@ The densest screen (ui-map §2, rough edges #3, #4, #7). Proposals:
 - **Baker-% clarity** (rough edge #4): the "original % → custom %" display and tiny reset buttons are opaque to non-bakers. Add a one-line inline hint and enlarge reset hit targets to the 44px baseline (some inputs currently rely only on `.btn`; css-map notes inputs/selects aren't guaranteed 44px).
 - **Stat tiles**: restyle the three header stats (hydration / total time / base weight) as `--color-surface-elevated` tiles with `--color-text-tertiary` labels — small, high-polish, theme-driven.
 
-### Proposal C — Tools, timers & destructive-action safety  *(decision: accept / reject)*
+### Proposal C — Tools, timers & destructive-action safety _(decision: accept / reject)_
 
 - **DoughPlanner warnings** (rough edge #8): warnings currently render as plain inline text. Wrap them in the existing `--color-warning-bg` / `--color-warning-border` treatment with a warning icon so they read as warnings.
 - **Confirmation on destructive actions** (rough edge #9): deleting history entries and "Ryd alle" completed timers have no confirm. Add a lightweight inline confirm (tap-to-confirm on the X, or an undo toast). This also sets up the Dough Log's delete affordance (§5).
@@ -368,7 +368,7 @@ The sheet reuses `--color-surface-elevated`, the slide-in pattern from the histo
 ### 5.5 How past logs surface
 
 - **Recipe detail screen**: a "Tidligere bagninger (N)" collapsible section beside the existing Historik panel (ui-map §2). Each entry shows date, rating, and a one-line deviation digest.
-- **The "last time" nudge**: when the calculator is open for a recipe with prior logs, show an inline hint derived from the most recent entry — e.g. *"Sidste gang brugte du 5% mindre vand"* / *"last time you used 5% less water"* — computed by diffing the latest `DoughLogEntry.hydration` against the current effective hydration. Non-blocking, dismissible.
+- **The "last time" nudge**: when the calculator is open for a recipe with prior logs, show an inline hint derived from the most recent entry — e.g. _"Sidste gang brugte du 5% mindre vand"_ / _"last time you used 5% less water"_ — computed by diffing the latest `DoughLogEntry.hydration` against the current effective hydration. Non-blocking, dismissible.
 - **Optional**: a global "Bagedagbog" (bake journal) view listing all logs across recipes, if the owner wants it as a first-class surface (§6) — otherwise it stays per-recipe.
 
 ---
