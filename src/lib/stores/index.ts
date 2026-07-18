@@ -24,3 +24,4 @@ export {
 	type RecipeHistoryEntry
 } from './customizations';
 export { doughPlans, type SavedDoughPlan } from './dough-plans';
+export { doughLog, DOUGH_LOG_KEY, type DoughLogWriteResult } from './dough-log';
