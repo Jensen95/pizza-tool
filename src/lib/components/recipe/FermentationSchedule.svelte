@@ -50,7 +50,7 @@
 				class:last={index === recipe.timeline.length - 1}
 			>
 				<div class="stage-marker">
-					<div class="marker-dot"></div>
+					<div class="marker-dot" class:can-timer={step.canSetTimer && step.duration}></div>
 					{#if index < recipe.timeline.length - 1}
 						<div class="marker-line"></div>
 					{/if}
@@ -72,14 +72,16 @@
 					</div>
 
 					{#if stepIngredients.length > 0}
-						<div class="stage-ingredients">
-							<span class="ingredients-label">Ingredienser:</span>
+						<details class="stage-ingredients">
+							<summary class="ingredients-label">
+								Ingredienser ({stepIngredients.length})
+							</summary>
 							<ul class="ingredients-list">
 								{#each stepIngredients as ingredient}
 									<li>{formatIngredient(ingredient)}</li>
 								{/each}
 							</ul>
-						</div>
+						</details>
 					{/if}
 
 					{#if step.tipDa}
@@ -157,6 +159,12 @@
 		box-shadow: 0 0 0 2px var(--color-primary);
 	}
 
+	/* Steps that can start a timer get an accent dot so actionable steps stand out. */
+	.marker-dot.can-timer {
+		background: var(--color-accent);
+		box-shadow: 0 0 0 2px var(--color-accent);
+	}
+
 	.marker-line {
 		flex: 1;
 		width: 2px;
@@ -207,8 +215,31 @@
 		font-size: var(--font-size-sm);
 		font-weight: 600;
 		color: var(--color-primary);
-		display: block;
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-xs);
+		cursor: pointer;
+		list-style: none;
+		min-height: 44px;
+	}
+
+	.ingredients-label::-webkit-details-marker {
+		display: none;
+	}
+
+	.ingredients-label::before {
+		content: '▸';
+		display: inline-block;
+		color: var(--color-text-secondary);
+		transition: transform 0.2s ease;
+	}
+
+	details[open] > .ingredients-label {
 		margin-bottom: var(--spacing-xs);
+	}
+
+	details[open] > .ingredients-label::before {
+		transform: rotate(90deg);
 	}
 
 	.ingredients-list {

@@ -1,6 +1,13 @@
 <script lang="ts">
 	import type { Recipe, YeastInfo } from '$lib/models';
-	import { calculator, totalWeight, flourWeight, predoughRatio, recipeHistory } from '$lib/stores';
+	import {
+		calculator,
+		totalWeight,
+		flourWeight,
+		predoughRatio,
+		recipeHistory,
+		doughLog
+	} from '$lib/stores';
 	import {
 		formatWeight,
 		getOriginalPredoughRatio as getRecipePredoughRatio,
@@ -9,8 +16,11 @@
 	} from '$lib/utils/baker-percentage';
 	import type { FlourTypeOption, FlourType } from '$lib/models';
 	import { flourTypeLabels, yeastTypeLabels } from '$lib/models';
+	import type { NewDoughLogEntry, IngredientDeviation } from '$lib/models';
 	import { yeastInfo } from '$lib/data/reference';
 	import { getRecipeYeastType } from '$lib/utils/yeast';
+	import DoughLogSheet from '$lib/components/doughlog/DoughLogSheet.svelte';
+	import LastBakeNudge from '$lib/components/doughlog/LastBakeNudge.svelte';
 
 	let { recipe }: { recipe: Recipe } = $props();
 
@@ -283,6 +293,43 @@
 		return Math.abs(extra.percentage - extra.originalPercentage) > 0.01;
 	}
 
+	// --- Dough Log (§5.4/§5.5) ------------------------------------------------
+
+	// Latest logged bake for this recipe, kept reactive to store changes so the
+	// "last time" nudge (§5.5) updates when a new bake is logged.
+	let latestLog = $derived.by(() => {
+		void $doughLog;
+		return doughLog.getForRecipe(recipe.id)[0] ?? null;
+	});
+
+	// Effective predough ratio (override, else the recipe's original).
+	let effectivePredoughRatio = $derived($predoughRatio ?? originalPredoughRatio);
+
+	let showLogPrompt = $state(false);
+	let logSheetOpen = $state(false);
+	let logDeviations = $state<IngredientDeviation[]>([]);
+
+	// Infer ingredient deviations the calculator already knows about: each custom
+	// ingredient percentage that differs from the recipe default (§5.4.1).
+	function inferIngredientDeviations(): IngredientDeviation[] {
+		const custom = calculator.getCustomIngredients();
+		const base = getAllIngredients(recipe);
+		const deviations: IngredientDeviation[] = [];
+		for (const [ingredientId, actualPct] of Object.entries(custom)) {
+			const ing = base.find((i) => i.id === ingredientId);
+			if (!ing) continue;
+			if (Math.abs(actualPct - ing.percentage) < 0.01) continue;
+			deviations.push({
+				ingredientId,
+				label: ing.nameDa,
+				kind: 'changed',
+				plannedPct: ing.percentage,
+				actualPct
+			});
+		}
+		return deviations;
+	}
+
 	function saveCustomRecipe() {
 		if (!hasRecipeChanges) return;
 
@@ -297,6 +344,31 @@
 			hydrationOverride,
 			predoughOverride
 		);
+
+		// Offer the non-blocking quick-log prompt after the bake is committed (§5.4.1).
+		showLogPrompt = true;
+	}
+
+	function openQuickLog() {
+		logDeviations = inferIngredientDeviations();
+		showLogPrompt = false;
+		logSheetOpen = true;
+	}
+
+	function dismissLogPrompt() {
+		showLogPrompt = false;
+	}
+
+	function handleLogSave(entry: NewDoughLogEntry): boolean {
+		const { persisted } = doughLog.add(entry);
+		// On success close the sheet; on failure return false so the sheet keeps
+		// itself open and shows its inline "kunne ikke gemmes" error (§5.1).
+		if (persisted) logSheetOpen = false;
+		return persisted;
+	}
+
+	function cancelLog() {
+		logSheetOpen = false;
 	}
 
 	// Reset all
@@ -306,6 +378,8 @@
 </script>
 
 <div class="controls">
+	<LastBakeNudge latest={latestLog} currentHydration={effectiveHydration} />
+
 	<!-- Row 1: Pizza count + Ball weight -->
 	<div class="controls-row">
 		<div class="input-group">
@@ -359,7 +433,7 @@
 	<!-- Row 2: Hydration + Predough split -->
 	<div class="controls-row">
 		<div class="input-group">
-			<label class="label" for="hydration">
+			<label class="label label-with-reset" for="hydration">
 				Hydrering (%)
 				{#if hydrationChanged}
 					<button
@@ -404,7 +478,7 @@
 
 		{#if hasPredough}
 			<div class="input-group">
-				<label class="label" for="predough-split">
+				<label class="label label-with-reset" for="predough-split">
 					Fordej (%)
 					{#if predoughChanged}
 						<button
@@ -448,6 +522,11 @@
 			</div>
 		{/if}
 	</div>
+
+	<p class="baker-hint">
+		Alle procenter er bagerprocent – andel af den samlede melvægt. »orig« viser opskriftens
+		oprindelige værdi; tryk på ↺ for at nulstille.
+	</p>
 
 	{#if flourBlends.length > 0 || extras.length > 0}
 		<details class="controls-section advanced-section">
@@ -659,7 +738,32 @@
 			{/if}
 		</div>
 	{/if}
+
+	{#if showLogPrompt}
+		<div class="log-prompt" role="status">
+			<span class="log-prompt-text">Vil du logge denne bagning?</span>
+			<div class="log-prompt-actions">
+				<button class="btn btn-primary btn-sm" onclick={openQuickLog}>Log bagning</button>
+				<button class="btn btn-secondary btn-sm" onclick={dismissLogPrompt}>Ikke nu</button>
+			</div>
+		</div>
+	{/if}
 </div>
+
+<DoughLogSheet
+	open={logSheetOpen}
+	recipeId={recipe.id}
+	recipeName={recipe.nameDa}
+	recipeCategory={recipe.category}
+	{numberOfPizzas}
+	{doughBallWeight}
+	hydration={effectiveHydration}
+	predoughRatio={effectivePredoughRatio}
+	initialIngredientDeviations={logDeviations}
+	title="Log denne bagning"
+	onsave={handleLogSave}
+	oncancel={cancelLog}
+/>
 
 <style>
 	.controls {
@@ -928,12 +1032,30 @@
 		color: var(--color-text-secondary);
 	}
 
+	.label-with-reset {
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-xs);
+	}
+
+	.baker-hint {
+		margin: 0;
+		font-size: var(--font-size-xs);
+		color: var(--color-text-tertiary);
+		line-height: 1.4;
+	}
+
 	.btn-reset {
 		background: none;
 		border: none;
 		cursor: pointer;
-		padding: 0 2px;
-		font-size: var(--font-size-md);
+		padding: 0;
+		min-width: 44px;
+		min-height: 44px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		font-size: var(--font-size-lg);
 		color: var(--color-text-secondary);
 		line-height: 1;
 	}
@@ -971,6 +1093,35 @@
 		display: flex;
 		gap: var(--spacing-sm);
 		justify-content: flex-end;
+	}
+
+	.log-prompt {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: var(--spacing-sm);
+		padding: var(--spacing-sm) var(--spacing-md);
+		background: var(--color-surface-elevated);
+		border: 1px solid var(--color-border);
+		border-left: 3px solid var(--color-accent);
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-sm);
+	}
+
+	.log-prompt-text {
+		font-size: var(--font-size-sm);
+		color: var(--color-text);
+	}
+
+	.log-prompt-actions {
+		display: flex;
+		gap: var(--spacing-sm);
+	}
+
+	.btn-sm {
+		font-size: var(--font-size-sm);
+		padding: var(--spacing-xs) var(--spacing-sm);
 	}
 
 	.info-banner {

@@ -89,15 +89,26 @@
 	let hasPredough = $derived(
 		$calculator.scaledIngredients.some((i) => isPredoughStep(recipe, i.mixingStepId))
 	);
+
+	function groupWeight(group: StageIngredientGroup): number {
+		const flourWeight = group.flours
+			.filter((ing) => !(hasPredough && ing.type === 'flour' && ing.weight <= 0))
+			.reduce((sum, ing) => sum + ing.weight, 0);
+		const otherWeight = group.others.reduce((sum, ing) => sum + ing.weight, 0);
+		return flourWeight + otherWeight;
+	}
 </script>
 
 <div class="calculator">
 	<DoughControls {recipe} />
 
 	<div class="ingredients">
-		{#each ingredientGroups as group}
-			<div class="ingredient-group">
-				<h4 class="group-title">{stageLabels[group.stage] || group.stage}</h4>
+		{#each ingredientGroups as group, index}
+			<details class="ingredient-group" open={index === 0}>
+				<summary class="group-summary">
+					<h4 class="group-title">{stageLabels[group.stage] || group.stage}</h4>
+					<span class="group-subtotal">{formatWeight(groupWeight(group))}</span>
+				</summary>
 
 				<table class="ingredient-table">
 					<thead>
@@ -149,7 +160,7 @@
 						{/each}
 					</tbody>
 				</table>
-			</div>
+			</details>
 		{/each}
 	</div>
 </div>
@@ -173,10 +184,49 @@
 		padding: var(--spacing-md);
 	}
 
+	.group-summary {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--spacing-sm);
+		cursor: pointer;
+		list-style: none;
+		min-height: 44px;
+		padding: var(--spacing-xs) 0;
+		border-radius: var(--radius-sm);
+	}
+
+	.group-summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.group-summary::before {
+		content: '▸';
+		display: inline-block;
+		color: var(--color-text-secondary);
+		transition: transform 0.2s ease;
+		flex-shrink: 0;
+	}
+
+	details[open] > .group-summary::before {
+		transform: rotate(90deg);
+	}
+
 	.group-title {
-		margin: 0 0 var(--spacing-sm);
+		margin: 0;
+		flex: 1;
 		font-size: var(--font-size-md);
 		color: var(--color-primary);
+	}
+
+	.group-subtotal {
+		font-size: var(--font-size-sm);
+		font-weight: 600;
+		color: var(--color-text-tertiary);
+	}
+
+	details[open] > .group-summary {
+		margin-bottom: var(--spacing-sm);
 	}
 
 	.ingredient-table {
