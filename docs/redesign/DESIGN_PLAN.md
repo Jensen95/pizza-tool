@@ -1,6 +1,6 @@
 # Pizza Tool — UI Redesign & Theme System Plan
 
-**Status:** Decision document. Phase 0 (production fixes, §7) and Phase 0.5 (cheap hardening, §7.5) are **APPROVED scope** — the repo owner has signed off on folding the audit's confirmed findings in as committed pre-work. Themes, UI proposals, and the Dough Log feature (§§2–5) remain pending owner decisions (see §6).
+**Status:** Decision document. Phase 0 (production fixes, §7) and Phase 0.5 (cheap hardening, §7.5) are **APPROVED scope** — the repo owner has signed off on folding the audit's confirmed findings in as committed pre-work. Themes, UI proposals, and the Dough Log feature (§§2–5) remain pending owner decisions (see §6). **Update:** Dough Log approved; Light/Dark primary under review (red retired outside Italiano) — see §3.5 and §6 decision 1/10.
 **Date:** 2026-07-18
 **Author:** Design lead
 **Scope:** Theme/token architecture, screen-level UI improvements, and a new Dough Log feature.
@@ -145,7 +145,7 @@ All four grounded in `app.css` today plus nostromo/iamjarl values where they fit
 | `--color-text` | `#212121` | unchanged |
 | `--color-text-secondary` | `#757575` | unchanged (~70% black) |
 | `--color-text-tertiary` | `rgba(0,0,0,0.55)` | new; iamjarl ladder |
-| `--color-primary` | `#d32f2f` | unchanged (Material Red 700) |
+| `--color-primary` | TBD — candidate under review | red is confined to Italiano; see §3.5 for the seven candidates the owner is reviewing |
 | `--color-on-primary` | `#ffffff` | new |
 | `--color-accent` | `#2e7d32` | basil green, AA-safe as text (iamjarl `state.success` text value) |
 | `--color-on-accent` | `#ffffff` | new |
@@ -164,7 +164,7 @@ All four grounded in `app.css` today plus nostromo/iamjarl values where they fit
 | `--color-text` | `#e8e8e8` | today's dark |
 | `--color-text-secondary` | `rgba(255,255,255,0.60)` | iamjarl ladder |
 | `--color-text-tertiary` | `rgba(255,255,255,0.40)` | new |
-| `--color-primary` | `#ef5350` | lighten red for dark contrast (today's `--color-primary-light`) |
+| `--color-primary` | TBD — candidate under review | red is confined to Italiano; see §3.5 for the seven candidates the owner is reviewing |
 | `--color-on-primary` | `#1a1a1a` | new |
 | `--color-accent` | `#66bb6a` | brightened basil |
 | `--color-success` | `#4caf50` | iamjarl dark success |
@@ -212,6 +212,22 @@ The personality theme. Cream canvas (borrowed from lv-426's warm neutral `30° 2
 | `--color-border` | `#ece2d2` | warm tan border (lv-426 `30 20% 90%` ≈ `#ebe6e0`) |
 
 Italiano dark variant (`:root[data-theme="italiano"]` inside a `prefers-color-scheme: dark` block, optional) can drop to an espresso-brown canvas `#1c1613` with the same tomato/basil accents brightened — deferred unless owner wants it (§6).
+
+### 3.5 Light/Dark primary — candidates (owner reviewing in HTML preview)
+
+Owner decision: Light and Dark themes will **not** keep the Material-red primary. Red is confined to Italiano — Italiano keeps pomodoro `#c8362f` (§3.4) as the app's only red primary, and Grey keeps its graphite primary unchanged. The Light/Dark `--color-primary` rows in §3.4 are **TBD** pending the owner's review of the seven candidates below in an HTML preview.
+
+| Candidate | Light | Dark | Trade-offs |
+| --- | --- | --- | --- |
+| **Basil green** *(recommended)* | `#2e7d32` | `#66bb6a` | Promoted from today's `--color-accent`. Accent then becomes a warm crust-tan (`~#9c5a2c` light / `~#d9a05b` dark). Reuses an already AA-validated value (iamjarl success text) — low risk, calm, food-appropriate — but shares its hue family with `--color-success`, so the accent swap needs to fully separate the two meanings visually. |
+| Crust orange | `~#ea580c` | brightened (from nostromo `lv-426` `#f96b06`) | Warm and appetizing, but close to `--color-warning`; warning would need to shift to amber (`~#b45309` light / `~#f59e0b` dark) to avoid clashing. |
+| Steel blue family | `#4d7fb2` (darkened for AA in light) | `#4d7fb2` family | Sourced from nostromo `sulaco`. Cool, professional "ops console" mood — furthest from a pizza/culinary feel of the set; needs darkening to clear AA on light backgrounds. |
+| Warm graphite | `~#4a4038` | `~#d6cec4` | Near-monochrome; the primary carries almost no color, pushing the meaning-bearing color budget onto success/warning/error. Safest for a11y/colorblind users, least "branded." |
+| Nostromo violet | `#691eeb` | `#691eeb` (as authored) | nostromo's own default-theme primary. Distinctive, but no inherent link to pizza/Italian styling — a purely borrowed hue. |
+| Mother cyan | `#00bfff` (darkened for AA in light) | `#00bfff` | nostromo `mother` theme's signature cyan. Cold/clinical mood, furthest from Italiano's warmth; needs darkening to pass AA on light backgrounds. |
+| iamjarl flip | `#A435D2` | `#D0FF00` | Accent-flip pattern — hue changes between modes, not just lightness. Most novel option, but highest implementation/testing cost: two unrelated hues, each needing AA validation and harmonization with success/warning/error in both modes. |
+
+Note: `--color-success`, `--color-warning`, `--color-error`, and all neutral tokens (background/surface/text/border) in §3.4 are **unaffected** by this choice — only `--color-primary` (and, if the "promoted" pattern is chosen, `--color-accent`/`--color-on-primary`/`--color-on-accent`) moves.
 
 ---
 
@@ -331,7 +347,7 @@ Decisions 1–15 below still stand as-is for themes, UI proposals, and the Dough
 
 The owner must decide each of these before implementation:
 
-1. **Default theme** — which of Light / Dark / Grey / Italiano / System is the out-of-box default? (Recommendation: `system`, preserving today's behavior; Italiano as an opt-in personality.)
+1. ~~**Default theme** — which of Light / Dark / Grey / Italiano / System is the out-of-box default?~~ **Superseded.** Red-outside-Italiano is ruled out — Italiano keeps pomodoro `#c8362f` as the app's only red primary, Grey keeps graphite. The real remaining choice is now two-part: (a) which Light/Dark primary candidate from §3.5 to lock in, and (b) which of Light / Dark / Grey / Italiano / System is the out-of-box default. (Recommendation unchanged on (b): `system`, preserving today's behavior, Italiano as an opt-in personality; on (a): basil green, §3.5 — pending owner sign-off in the HTML preview.)
 2. **Ship all four themes, or a subset?** — e.g. Light + Dark + Italiano and drop Grey, or Light + Dark only for v1 with Grey/Italiano later.
 3. **Italiano dark variant** — build the espresso-brown dark Italiano now, or defer? (§3.4)
 4. **Theme switcher location** — header gear icon, a new Settings screen, or tucked into the Reference tab? (§3.2)
@@ -340,12 +356,14 @@ The owner must decide each of these before implementation:
 7. **Redesign Proposal A** (nav/chrome + theme switcher) — accept / reject.
 8. **Redesign Proposal B** (recipe detail & calculator legibility) — accept / reject, and if partial, which sub-items.
 9. **Redesign Proposal C** (tools/timers/destructive-action safety) — accept / reject, and if partial, which sub-items.
-10. **Dough Log — ship it?** — accept / reject the feature as a whole.
+10. ~~**Dough Log — ship it?** — accept / reject the feature as a whole.~~ ✅ **DECIDED — YES.** Owner approved shipping the Dough Log feature (§5) as a whole.
 11. **Dough Log entry paths** — quick-log-after-bake only, manual-only, or both? (§5.4)
 12. **Dough Log `TimelineStep` reference** — add a stable `id` to `TimelineStep` in the model, or use the index+snapshot approach? (§5.1; recommendation: index+snapshot, no model change.)
 13. **Dough Log outcome rating** — include the 1–5 star rating, or keep entries note-only?
 14. **Dough Log global view** — per-recipe surfacing only, or also a global "Bagedagbog" journal screen? (§5.5)
 15. **Dough Log storage failure handling** — add the toast-on-`storage.set`-failure deviation from the swallow-everything convention (recommended for precious data), or keep silent-degrade parity with the rest of the app? (§5.1)
+
+**Note on 11–15:** now that the Dough Log itself is approved (decision 10), these five sub-decisions remain open — but absent an explicit owner objection, the plan's stated defaults apply as the working assumption: both entry paths with quick-log-after-bake as the primary one (11, §5.4); index+snapshot for the `TimelineStep` reference rather than a model change (12, §5.1); the 1–5 star rating included, as already specced in `DoughLogEntry.outcome` (13, §5.2); per-recipe surfacing only for now, with the global "Bagedagbog" view left as a future optional add-on (14, §5.5); and toast-on-`storage.set`-failure rather than silent-degrade, given the precious-data caveat (15, §5.1).
 
 ---
 
