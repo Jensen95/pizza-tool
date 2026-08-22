@@ -94,6 +94,19 @@ export const toppingCategoryLabels: Record<Topping['category'], string> = {
 	other: 'Andet'
 };
 
+export interface SeedType {
+	id: string;
+	name: string;
+	nameDa: string;
+	/** Grams of water a gram of seed binds in a soaker */
+	waterFactor: number;
+	/** How much a gram disrupts the gluten network, 0 (binds) to 1 (cuts most) */
+	structureLoad: number;
+	/** True for seeds that gel and must be soaked */
+	hydrophilic: boolean;
+	notesDa?: string;
+}
+
 export const flourTypeLabels: Record<FlourCategory, string> = {
 	'tipo-00': 'Tipo 00',
 	'tipo-0': 'Tipo 0',

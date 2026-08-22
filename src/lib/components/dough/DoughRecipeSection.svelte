@@ -1,6 +1,7 @@
 <script lang="ts">
-	import type { YeastInfo } from '$lib/models';
-	import { yeastInfo } from '$lib/data/reference';
+	import type { FlourCategory, YeastInfo } from '$lib/models';
+	import { flourTypeLabels } from '$lib/models';
+	import { seedTypes, yeastInfo } from '$lib/data/reference';
 	import { formatWeight } from '$lib/utils/baker-percentage';
 	import { flourBlendSum, type DoughIngredientRow } from '$lib/utils/dough-ingredients';
 	import type { DoughWorkbench } from '$lib/stores/dough-workbench.svelte';
@@ -11,11 +12,14 @@
 
 	const extraTypes: { value: DoughIngredientRow['type']; labelDa: string }[] = [
 		{ value: 'water', labelDa: 'Vand' },
+		{ value: 'seed', labelDa: 'Frø/kerner' },
 		{ value: 'salt', labelDa: 'Salt' },
 		{ value: 'oil', labelDa: 'Olie' },
 		{ value: 'sugar', labelDa: 'Sukker' },
 		{ value: 'other', labelDa: 'Andet' }
 	];
+
+	const flourCategories = Object.entries(flourTypeLabels) as [FlourCategory, string][];
 
 	function numberValue(event: Event): number {
 		return Number((event.currentTarget as HTMLInputElement).value) || 0;
@@ -165,10 +169,13 @@
 		</div>
 
 		{#if workbench.flours.length === 0}
-			<p class="hint">Én slags mel: 100 % af melvægten. Tilføj flere for en blanding.</p>
+			<p class="hint">
+				Én slags stærkt hvidt mel: 100 % af melvægten. Tilføj linjer for at blande — og for at
+				fortælle værktøjet om fuldkorn, rug eller spelt.
+			</p>
 		{:else}
 			{#each workbench.flours as row (row.id)}
-				<div class="row">
+				<div class="row wide">
 					<label class="sr-only" for={`${row.id}-name`}>Navn på mel</label>
 					<input
 						class="input"
@@ -180,6 +187,20 @@
 								name: (event.currentTarget as HTMLInputElement).value
 							})}
 					/>
+					<label class="sr-only" for={`${row.id}-cat`}>Meltype</label>
+					<select
+						class="input"
+						id={`${row.id}-cat`}
+						value={row.variant ?? 'tipo-00'}
+						onchange={(event) =>
+							workbench.updateRow('flours', row.id, {
+								variant: (event.currentTarget as HTMLSelectElement).value
+							})}
+					>
+						{#each flourCategories as [value, labelDa] (value)}
+							<option {value}>{labelDa}</option>
+						{/each}
+					</select>
 					<div class="with-unit narrow">
 						<label class="sr-only" for={`${row.id}-pct`}>Andel i procent</label>
 						<input
@@ -228,6 +249,13 @@
 				<button
 					class="btn btn-secondary small"
 					type="button"
+					onclick={() => workbench.addExtra('seed')}
+				>
+					+ Frø/kerner
+				</button>
+				<button
+					class="btn btn-secondary small"
+					type="button"
 					onclick={() => workbench.addExtra('other')}
 				>
 					+ Ingrediens
@@ -237,8 +265,8 @@
 
 		{#if workbench.extras.length === 0}
 			<p class="hint">
-				Tilføj malt, honning, olie — eller en vandlinje, hvis vandet skal deles op i autolyse og
-				bassinage.
+				Tilføj frø og kerner, malt, honning, olie — eller en vandlinje, hvis vandet skal deles op i
+				autolyse og bassinage.
 			</p>
 		{:else}
 			{#each workbench.extras as row (row.id)}
@@ -268,6 +296,26 @@
 							<option value={option.value}>{option.labelDa}</option>
 						{/each}
 					</select>
+					{#if row.type === 'seed'}
+						<label class="sr-only" for={`${row.id}-seed`}>Slags frø</label>
+						<select
+							class="input"
+							id={`${row.id}-seed`}
+							value={row.variant ?? 'other'}
+							onchange={(event) =>
+								workbench.updateRow('extras', row.id, {
+									variant: (event.currentTarget as HTMLSelectElement).value,
+									name:
+										seedTypes.find(
+											(seed) => seed.id === (event.currentTarget as HTMLSelectElement).value
+										)?.nameDa ?? row.name
+								})}
+						>
+							{#each seedTypes as seed (seed.id)}
+								<option value={seed.id}>{seed.nameDa}</option>
+							{/each}
+						</select>
+					{/if}
 					<div class="with-unit narrow">
 						<label class="sr-only" for={`${row.id}-epct`}>Procent af mel</label>
 						<input

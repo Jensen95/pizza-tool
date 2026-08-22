@@ -33,6 +33,7 @@ import {
 } from '$lib/utils/proofing-styles';
 import { REFERENCE_ROOM_TEMPERATURE } from '$lib/utils/fermentation';
 import { createRow } from '$lib/utils/dough-ingredients';
+import { analyseDoughStrength } from '$lib/utils/dough-strength';
 import { get } from 'svelte/store';
 import { preferences } from '$lib/stores/preferences';
 
@@ -237,6 +238,13 @@ export class DoughWorkbench {
 
 	hasPlan = $derived(Boolean(this.yeastPlan ?? this.sourdoughPlan));
 
+	strength = $derived(
+		analyseDoughStrength(this.flours, this.extras, {
+			flourWeight: this.resolvedFlourWeight,
+			hydrationPercentage: this.hydrationPercentage
+		})
+	);
+
 	totalDoughWeight = $derived(this.yeastPlan?.totalWeight ?? this.sourdoughPlan?.totalWeight ?? 0);
 
 	/** Water needed to reach the target hydration, compared with the plan's water. */
@@ -309,14 +317,23 @@ export class DoughWorkbench {
 	}
 
 	addFlour() {
-		const existing = this.flours.length;
+		const first = this.flours.length === 0;
 		this.flours = [
 			...this.flours,
-			createRow(existing === 0 ? 'Tipo 00' : 'Mel', existing === 0 ? 100 : 0, 'flour')
+			createRow(
+				first ? 'Tipo 00' : 'Fuldkornsmel',
+				first ? 100 : 0,
+				'flour',
+				first ? 'tipo-00' : 'whole-wheat'
+			)
 		];
 	}
 
 	addExtra(type: DoughIngredientRow['type'] = 'other') {
+		if (type === 'seed') {
+			this.extras = [...this.extras, createRow('Solsikkefrø', 10, 'seed', 'sunflower')];
+			return;
+		}
 		this.extras = [
 			...this.extras,
 			createRow(type === 'water' ? 'Vand (autolyse)' : 'Ny ingrediens', 0, type)

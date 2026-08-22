@@ -96,4 +96,34 @@ test.describe('Dough Planner Page', () => {
 		await expect(page.getByTestId('dough-result')).toContainText('Tilsæt gær og salt');
 		await expect(total).toHaveText(before);
 	});
+	test('should warn when the flour blend gets too weak to hold seeds', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		const panel = page.getByTestId('dough-result');
+		await expect(panel).not.toContainText('Dejens styrke');
+
+		await page.getByRole('button', { name: '+ Tilføj mel' }).click();
+		await page.getByRole('button', { name: '+ Tilføj mel' }).click();
+		const shares = page.locator('.row.wide input[type="number"]');
+		await shares.nth(0).fill('50');
+		await shares.nth(1).fill('50');
+		await page.locator('.row.wide select').nth(1).selectOption('rye');
+
+		await expect(panel).toContainText('Dejens styrke');
+		await expect(panel).toContainText('50 % rugmel');
+		await expect(panel).toContainText('50 % fuldkorn');
+	});
+
+	test('should work out the water thirsty seeds will bind', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		await page.getByRole('button', { name: '+ Frø/kerner' }).click();
+		await page.locator('select[id$="-seed"]').first().selectOption('chia');
+
+		const panel = page.getByTestId('dough-result');
+		await expect(panel).toContainText('chiafrø binder');
+		await expect(panel).toContainText('soaker');
+	});
 });

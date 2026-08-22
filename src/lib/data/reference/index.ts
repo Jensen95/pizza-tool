@@ -9,7 +9,8 @@ import type {
 	WaterTempFormula,
 	PizzaSizeGuide,
 	ToppingAmounts,
-	FlourReference
+	FlourReference,
+	SeedType
 } from '$lib/models';
 
 import flourTypesData from './flour-types.json';
@@ -22,6 +23,7 @@ import spreadRecipesData from './spread-recipes.json';
 import reheatingData from './reheating.json';
 import waterTempData from './water-temp.json';
 import pizzaSizesData from './pizza-sizes.json';
+import seedsData from './seeds.json';
 import toppingAmountsData from './topping-amounts.json';
 import flourReferenceData from './flour-reference.json';
 
@@ -41,6 +43,7 @@ export const spreadRecipes: SpreadRecipe[] = spreadRecipesData as SpreadRecipe[]
 export const reheatingMethods: ReheatingMethod[] = reheatingData as ReheatingMethod[];
 export const waterTempFormula: WaterTempFormula = waterTempData as WaterTempFormula;
 export const pizzaSizes: PizzaSizeGuide = pizzaSizesData as PizzaSizeGuide;
+export const seedTypes: SeedType[] = seedsData as SeedType[];
 export const toppingAmounts: ToppingAmounts = toppingAmountsData as ToppingAmounts;
 export const flourReference: FlourReference = flourReferenceData as FlourReference;
 

@@ -15,5 +15,6 @@ export * from './fermentation';
 export * from './dough-ingredients';
 export * from './predough';
 export * from './proofing-styles';
+export * from './dough-strength';
 export * from './dough-planner';
 export * from './sourdough';

@@ -31,13 +31,20 @@ function nonNegative(value: number): number {
 export function createRow(
 	name: string,
 	percentage: number,
-	type: DoughIngredientRow['type'] = 'other'
+	type: DoughIngredientRow['type'] = 'other',
+	variant?: string
 ): DoughIngredientRow {
-	const id =
+	// Prefixed: these ids end up in `id` attributes, and a UUID starting with a
+	// digit is a valid HTML id but an invalid CSS selector.
+	const unique =
 		typeof crypto !== 'undefined' && crypto.randomUUID
 			? crypto.randomUUID()
-			: `row-${Date.now()}-${Math.round(Math.random() * 1000)}`;
-	return { id, name, percentage, type };
+			: `${Date.now()}-${Math.round(Math.random() * 1000)}`;
+	return { id: `row-${unique}`, name, percentage, type, variant };
+}
+
+export function seedRows(rows: DoughIngredientRow[] | undefined): DoughIngredientRow[] {
+	return (rows ?? []).filter((row) => row.type === 'seed');
 }
 
 export function flourRows(rows: DoughIngredientRow[] | undefined): DoughIngredientRow[] {

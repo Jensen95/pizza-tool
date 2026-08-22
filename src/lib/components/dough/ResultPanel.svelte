@@ -3,6 +3,7 @@
 	import { formatWeight } from '$lib/utils/baker-percentage';
 	import { convertYeastPercentage } from '$lib/utils/yeast';
 	import { formatHours, warningLabels } from '$lib/utils/format-plan';
+	import { strengthLevelLabels } from '$lib/utils/dough-strength';
 	import ProofingTimeline from './ProofingTimeline.svelte';
 	import PlanSteps from './PlanSteps.svelte';
 	import type { DoughWorkbench } from '$lib/stores/dough-workbench.svelte';
@@ -33,6 +34,8 @@
 			? workbench.totalDoughWeight / workbench.ballCount
 			: 0
 	);
+	let strength = $derived(workbench.strength);
+
 	let freshEquivalent = $derived(
 		plan ? convertYeastPercentage(plan.idyPercentage, 'instant', 'fresh') : 0
 	);
@@ -166,6 +169,21 @@
 		{#each warnings as warning (warning)}
 			<p class="warning">{warningLabels[warning]}</p>
 		{/each}
+
+		{#if strength.findings.length > 0}
+			<div class="strength">
+				<h3>Dejens styrke</h3>
+				{#each strength.findings as finding (finding.id)}
+					<div class="finding {finding.level}">
+						<p class="finding-head">
+							<span class="finding-level">{strengthLevelLabels[finding.level]}</span>
+							{finding.titleDa}
+						</p>
+						<p class="finding-body">{finding.bodyDa}</p>
+					</div>
+				{/each}
+			</div>
+		{/if}
 	{/if}
 </div>
 
@@ -301,6 +319,60 @@
 	.plan-block h3 {
 		font-size: var(--font-size-md);
 		margin: 0;
+	}
+
+	.strength {
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-xs);
+	}
+
+	.strength h3 {
+		font-size: var(--font-size-md);
+		margin: 0 0 2px;
+	}
+
+	.finding {
+		border: 1px solid var(--color-border);
+		border-left: 3px solid var(--color-border);
+		border-radius: var(--radius-md);
+		padding: var(--spacing-sm);
+		background: var(--color-background);
+	}
+
+	.finding.info {
+		border-left-color: var(--color-text-secondary);
+	}
+
+	.finding.caution {
+		border-left-color: var(--color-warning);
+		background: var(--color-warning-bg);
+	}
+
+	.finding.warning {
+		border-left-color: var(--color-error);
+		background: rgba(var(--color-primary-rgb), 0.06);
+	}
+
+	.finding-head {
+		margin: 0;
+		font-weight: 600;
+		font-size: var(--font-size-sm);
+	}
+
+	.finding-level {
+		display: inline-block;
+		font-size: var(--font-size-xs);
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--color-text-secondary);
+		margin-right: var(--spacing-xs);
+	}
+
+	.finding-body {
+		margin: 2px 0 0;
+		font-size: var(--font-size-sm);
+		color: var(--color-text-secondary);
 	}
 
 	.warning {
