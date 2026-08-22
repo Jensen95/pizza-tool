@@ -5,6 +5,11 @@ export type ProofingStyleId =
 export interface ProofingSplit {
 	/** Hours the predough ferments before the main dough is mixed (0 without a predough) */
 	predoughHours: number;
+	/**
+	 * Hours of autolyse before salt and leaven go in. It uses up the window but
+	 * not the yeast budget: there is no yeast in the dough yet.
+	 */
+	autolyseHours: number;
 	/** Bulk fermentation at room temperature */
 	roomHours: number;
 	fridgeHours: number;
@@ -51,6 +56,7 @@ export const proofingStyles: ProofingStyle[] = [
 		maxHours: 10,
 		split: (hours) => ({
 			predoughHours: 0,
+			autolyseHours: 0,
 			roomHours: round(clamp(hours, 2, 10)),
 			fridgeHours: 0,
 			temperHours: 0
@@ -66,6 +72,7 @@ export const proofingStyles: ProofingStyle[] = [
 		maxHours: 30,
 		split: (hours) => ({
 			predoughHours: 0,
+			autolyseHours: 0,
 			roomHours: round(clamp(hours, 8, 30)),
 			fridgeHours: 0,
 			temperHours: 0
@@ -85,6 +92,7 @@ export const proofingStyles: ProofingStyle[] = [
 			const temper = round(clamp(total * 0.1, 1, 3));
 			return {
 				predoughHours: 0,
+				autolyseHours: 0,
 				roomHours: room,
 				fridgeHours: round(Math.max(0, total - room - temper)),
 				temperHours: temper
@@ -105,6 +113,7 @@ export const proofingStyles: ProofingStyle[] = [
 			const temper = round(clamp(total * 0.06, 1.5, 3));
 			return {
 				predoughHours: 0,
+				autolyseHours: 0,
 				roomHours: room,
 				fridgeHours: round(Math.max(0, total - room - temper)),
 				temperHours: temper
@@ -127,6 +136,7 @@ export const proofingStyles: ProofingStyle[] = [
 			const temper = round(clamp(rest * 0.1, 1, 3));
 			return {
 				predoughHours: predough,
+				autolyseHours: 0,
 				roomHours: room,
 				fridgeHours: round(Math.max(0, rest - room - temper)),
 				temperHours: temper
@@ -147,28 +157,44 @@ export interface StyleFit {
 	tooShort: boolean;
 }
 
+export interface FitOptions {
+	/** Autolyse is reserved off the top: it fills the window but ferments nothing. */
+	autolyseHours?: number;
+}
+
 /**
  * Fit a proofing style into an available window. Styles clamp to their own
  * range, so a 60-hour window handed to "samme dag" reports 50 leftover hours
  * rather than pretending the dough can sit out for that long.
  */
-export function fitStyle(id: ProofingStyleId, availableHours: number): StyleFit | null {
+export function fitStyle(
+	id: ProofingStyleId,
+	availableHours: number,
+	options: FitOptions = {}
+): StyleFit | null {
 	const style = findProofingStyle(id);
 	if (!style) return null;
 
+	const autolyseHours = Math.max(0, options.autolyseHours ?? 0);
 	const available = Math.max(0, availableHours);
-	const split = style.split(available);
-	const used = split.predoughHours + split.roomHours + split.fridgeHours + split.temperHours;
+	const forFermentation = Math.max(0, available - autolyseHours);
+	const split = { ...style.split(forFermentation), autolyseHours };
 
 	return {
 		split,
-		leftoverHours: Math.max(0, round(available - used)),
-		tooShort: available < style.minHours
+		leftoverHours: Math.max(0, round(available - splitTotalHours(split))),
+		tooShort: forFermentation < style.minHours
 	};
 }
 
 export function splitTotalHours(split: ProofingSplit): number {
-	return split.predoughHours + split.roomHours + split.fridgeHours + split.temperHours;
+	return (
+		split.predoughHours +
+		split.autolyseHours +
+		split.roomHours +
+		split.fridgeHours +
+		split.temperHours
+	);
 }
 
 /** Hours between now and a deadline. Negative windows come back as 0. */
@@ -176,7 +202,8 @@ export function hoursUntil(readyAt: Date, now: Date): number {
 	return Math.max(0, (readyAt.getTime() - now.getTime()) / 3_600_000);
 }
 
-export type PhaseKind = 'predough' | 'mix' | 'room' | 'shape' | 'fridge' | 'temper' | 'bake';
+export type PhaseKind =
+	'predough' | 'autolyse' | 'mix' | 'room' | 'shape' | 'fridge' | 'temper' | 'bake';
 
 export interface PlanPhase {
 	id: string;
@@ -186,11 +213,19 @@ export interface PlanPhase {
 	hours: number;
 }
 
+export interface PhaseOptions {
+	predoughNameDa?: string;
+	/** What goes in after the autolyse: yeast, or a sourdough starter */
+	leavening?: 'yeast' | 'sourdough';
+}
+
 /**
  * Turn a split into the phases of an actual bake, including the zero-length
  * markers (mix, shape, bake) that give the timeline its landmarks.
  */
-export function buildPhases(split: ProofingSplit, predoughNameDa = 'Fordej'): PlanPhase[] {
+export function buildPhases(split: ProofingSplit, options: PhaseOptions = {}): PlanPhase[] {
+	const predoughNameDa = options.predoughNameDa ?? 'Fordej';
+	const leavenNameDa = options.leavening === 'sourdough' ? 'surdej' : 'gær';
 	const phases: PlanPhase[] = [];
 
 	if (split.predoughHours > 0) {
@@ -208,7 +243,28 @@ export function buildPhases(split: ProofingSplit, predoughNameDa = 'Fordej'): Pl
 		});
 	}
 
-	phases.push({ id: 'mix', kind: 'mix', labelDa: 'Ælt dejen', hours: 0 });
+	if (split.autolyseHours > 0) {
+		phases.push({
+			id: 'autolyse-mix',
+			kind: 'mix',
+			labelDa: 'Bland mel og vand',
+			hours: 0
+		});
+		phases.push({
+			id: 'autolyse',
+			kind: 'autolyse',
+			labelDa: 'Autolyse — hvil uden salt og gær',
+			hours: split.autolyseHours
+		});
+		phases.push({
+			id: 'mix',
+			kind: 'mix',
+			labelDa: `Tilsæt ${leavenNameDa} og salt, ælt færdig`,
+			hours: 0
+		});
+	} else {
+		phases.push({ id: 'mix', kind: 'mix', labelDa: 'Ælt dejen', hours: 0 });
+	}
 
 	if (split.roomHours > 0) {
 		phases.push({

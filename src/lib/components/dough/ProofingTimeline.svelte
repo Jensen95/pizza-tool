@@ -8,6 +8,11 @@
 	let totalHours = $derived(segments.reduce((sum, step) => sum + step.hours, 0));
 	let first = $derived(segments[0]);
 	let last = $derived(segments[segments.length - 1]);
+
+	/** A 45-minute block next to a 24-hour one has no room for text. */
+	function fitsLabel(hours: number): boolean {
+		return totalHours > 0 && hours / totalHours > 0.08;
+	}
 </script>
 
 {#if segments.length > 0 && first && last}
@@ -19,7 +24,9 @@
 					style={`flex: ${segment.hours}`}
 					title={`${segment.labelDa}: ${formatHours(segment.hours)}`}
 				>
-					<span class="block-label">{formatHours(segment.hours)}</span>
+					{#if fitsLabel(segment.hours)}
+						<span class="block-label">{formatHours(segment.hours)}</span>
+					{/if}
 				</span>
 			{/each}
 		</div>
@@ -34,6 +41,7 @@
 				<li>
 					<span class="swatch {segment.kind}" aria-hidden="true"></span>
 					{segment.labelDa}
+					<span class="legend-hours">{formatHours(segment.hours)}</span>
 				</li>
 			{/each}
 		</ul>
@@ -58,7 +66,7 @@
 	.block {
 		display: grid;
 		place-items: center;
-		min-width: 0;
+		min-width: 3px;
 		overflow: hidden;
 	}
 
@@ -72,6 +80,10 @@
 
 	.block.predough {
 		background: var(--color-predough);
+	}
+
+	.block.autolyse {
+		background: var(--color-autolyse);
 	}
 
 	.block.room {
@@ -111,6 +123,10 @@
 		gap: var(--spacing-xs);
 	}
 
+	.legend-hours {
+		font-variant-numeric: tabular-nums;
+	}
+
 	.swatch {
 		width: 10px;
 		height: 10px;
@@ -120,6 +136,10 @@
 
 	.swatch.predough {
 		background: var(--color-predough);
+	}
+
+	.swatch.autolyse {
+		background: var(--color-autolyse);
 	}
 
 	.swatch.room {

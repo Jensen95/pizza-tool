@@ -82,4 +82,18 @@ test.describe('Dough Planner Page', () => {
 		await page.getByLabel('Vægt pr. kugle i gram').fill('250');
 		await expect(page.getByTestId('dough-form')).toContainText('mel');
 	});
+
+	test('should add an autolyse rest without changing the weights', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		const total = page.locator('.stat', { hasText: 'Samlet dej' });
+		const before = await total.innerText();
+
+		await page.getByLabel('Brug autolyse').check();
+
+		await expect(page.getByTestId('dough-result')).toContainText('Bland mel og vand');
+		await expect(page.getByTestId('dough-result')).toContainText('Tilsæt gær og salt');
+		await expect(total).toHaveText(before);
+	});
 });

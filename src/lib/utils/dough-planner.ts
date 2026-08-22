@@ -81,6 +81,11 @@ export interface DoughPlannerState extends DoughPlanInput {
 	sizing?: DoughSizing;
 	/** Which proofing style produced the hours, so a reload can show it again */
 	styleId?: ProofingStyleId;
+	/**
+	 * Autolyse before salt and leaven go in. Recorded on the plan but not part of
+	 * DoughPlanInput: it changes no weights and no yeast, only the schedule.
+	 */
+	autolyseHours?: number;
 }
 
 export interface PlanStage {

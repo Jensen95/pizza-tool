@@ -80,6 +80,7 @@ describe('buildPhases', () => {
 	test('marks mixing, shaping and baking around the fermentation phases', () => {
 		const phases = buildPhases({
 			predoughHours: 0,
+			autolyseHours: 0,
 			roomHours: 3,
 			fridgeHours: 24,
 			temperHours: 3
@@ -91,6 +92,7 @@ describe('buildPhases', () => {
 	test('a room-only plan still gets a shaping step', () => {
 		const phases = buildPhases({
 			predoughHours: 0,
+			autolyseHours: 0,
 			roomHours: 14,
 			fridgeHours: 0,
 			temperHours: 0
@@ -100,8 +102,8 @@ describe('buildPhases', () => {
 
 	test('a predough gets its own mixing step and window', () => {
 		const phases = buildPhases(
-			{ predoughHours: 16, roomHours: 2, fridgeHours: 20, temperHours: 2 },
-			'Poolish'
+			{ predoughHours: 16, autolyseHours: 0, roomHours: 2, fridgeHours: 20, temperHours: 2 },
+			{ predoughNameDa: 'Poolish' }
 		);
 		expect(phases[0].kind).toBe('mix');
 		expect(phases[1].kind).toBe('predough');
@@ -115,6 +117,7 @@ describe('scheduleBackwards', () => {
 	test('lands the last step exactly on the deadline', () => {
 		const phases = buildPhases({
 			predoughHours: 0,
+			autolyseHours: 0,
 			roomHours: 3,
 			fridgeHours: 24,
 			temperHours: 3
@@ -126,6 +129,7 @@ describe('scheduleBackwards', () => {
 	test('works back to the moment mixing has to start', () => {
 		const phases = buildPhases({
 			predoughHours: 0,
+			autolyseHours: 0,
 			roomHours: 3,
 			fridgeHours: 24,
 			temperHours: 3
@@ -138,6 +142,7 @@ describe('scheduleBackwards', () => {
 	test('phases run back to back', () => {
 		const phases = buildPhases({
 			predoughHours: 16,
+			autolyseHours: 0,
 			roomHours: 2,
 			fridgeHours: 20,
 			temperHours: 2
@@ -151,6 +156,7 @@ describe('scheduleBackwards', () => {
 	test('only offers timers for stages short enough to watch', () => {
 		const phases = buildPhases({
 			predoughHours: 0,
+			autolyseHours: 0,
 			roomHours: 3,
 			fridgeHours: 24,
 			temperHours: 3
@@ -161,5 +167,68 @@ describe('scheduleBackwards', () => {
 		expect(byId.get('fridge')!.canTimer).toBe(false);
 		expect(byId.get('bake')!.canTimer).toBe(false);
 		expect(TIMER_MAX_HOURS).toBeGreaterThan(0);
+	});
+});
+
+describe('autolyse', () => {
+	test('is reserved off the top of the window, not taken from the fermentation', () => {
+		const plain = fitStyle('cold-overnight', 30)!;
+		const withAutolyse = fitStyle('cold-overnight', 30, { autolyseHours: 1 })!;
+
+		expect(withAutolyse.split.autolyseHours).toBe(1);
+		expect(splitTotalHours(withAutolyse.split)).toBeCloseTo(30, 1);
+		// An hour of autolyse means an hour less fermentation, not a longer plan
+		const fermentation = (split: typeof plain.split) =>
+			split.roomHours + split.fridgeHours + split.temperHours;
+		expect(fermentation(withAutolyse.split)).toBeCloseTo(fermentation(plain.split) - 1, 1);
+	});
+
+	test('counts against a window that is already tight', () => {
+		expect(fitStyle('cold-overnight', 10)!.tooShort).toBe(false);
+		expect(fitStyle('cold-overnight', 10, { autolyseHours: 2 })!.tooShort).toBe(true);
+	});
+
+	test('adds a rest between mixing the flour and adding the salt', () => {
+		const phases = buildPhases({
+			predoughHours: 0,
+			autolyseHours: 0.75,
+			roomHours: 3,
+			fridgeHours: 24,
+			temperHours: 2
+		});
+		const kinds = phases.map((phase) => phase.kind);
+		expect(kinds).toEqual(['mix', 'autolyse', 'mix', 'room', 'shape', 'fridge', 'temper', 'bake']);
+		expect(phases[0].labelDa).toBe('Bland mel og vand');
+		expect(phases[2].labelDa).toContain('gær');
+	});
+
+	test('names the sourdough starter instead of yeast when asked', () => {
+		const phases = buildPhases(
+			{ predoughHours: 0, autolyseHours: 1, roomHours: 5, fridgeHours: 0, temperHours: 0 },
+			{ leavening: 'sourdough' }
+		);
+		expect(phases[2].labelDa).toContain('surdej');
+	});
+
+	test('is short enough to deserve a timer', () => {
+		const phases = buildPhases({
+			predoughHours: 0,
+			autolyseHours: 0.75,
+			roomHours: 3,
+			fridgeHours: 0,
+			temperHours: 0
+		});
+		const steps = scheduleBackwards(phases, new Date('2026-08-22T18:00:00Z'));
+		const autolyse = steps.find((step) => step.kind === 'autolyse')!;
+		expect(autolyse.canTimer).toBe(true);
+		expect(autolyse.endsAt.getTime() - autolyse.startsAt.getTime()).toBe(45 * 60 * 1000);
+	});
+
+	test('still lands the bake on the deadline', () => {
+		const readyAt = new Date('2026-08-22T18:00:00Z');
+		const fit = fitStyle('cold-overnight', 30, { autolyseHours: 1 })!;
+		const steps = scheduleBackwards(buildPhases(fit.split), readyAt);
+		expect(steps[steps.length - 1].startsAt.toISOString()).toBe(readyAt.toISOString());
+		expect(steps[0].startsAt.toISOString()).toBe('2026-08-21T12:00:00.000Z');
 	});
 });

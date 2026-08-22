@@ -58,6 +58,39 @@
 		{/if}
 	{/if}
 
+	<div class="autolyse">
+		<label class="toggle">
+			<input type="checkbox" bind:checked={workbench.autolyseEnabled} aria-label="Brug autolyse" />
+			<span>Autolyse</span>
+		</label>
+
+		{#if workbench.autolyseEnabled}
+			<label class="field inline">
+				<span class="label">Hviletid</span>
+				<div class="with-unit">
+					<input
+						class="input"
+						type="number"
+						min="0.25"
+						max="6"
+						step="0.25"
+						bind:value={workbench.autolyseHours}
+						aria-label="Autolyse i timer"
+					/>
+					<span class="unit">timer</span>
+				</div>
+			</label>
+		{/if}
+	</div>
+
+	{#if workbench.autolyseEnabled}
+		<p class="hint">
+			Mel og vand blandes først og hviler {formatHours(workbench.autolyseHours)}; salt og
+			{workbench.leavening === 'sourdough' ? 'surdej' : 'gær'} kommer i bagefter. Mængderne er de samme
+			— autolysen bruger af tiden, men ikke af gærbudgettet, for der er ingen gær i dejen endnu.
+		</p>
+	{/if}
+
 	<div class="styles">
 		<span class="label">Hævestil</span>
 		<div class="pills" role="group" aria-label="Hævestil">
@@ -280,6 +313,33 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--spacing-xs);
+	}
+
+	.autolyse {
+		display: flex;
+		align-items: end;
+		gap: var(--spacing-md);
+		flex-wrap: wrap;
+	}
+
+	.toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--spacing-xs);
+		min-height: 44px;
+		font-size: var(--font-size-sm);
+		font-weight: 600;
+		cursor: pointer;
+	}
+
+	.toggle input {
+		width: 20px;
+		height: 20px;
+		accent-color: var(--color-primary);
+	}
+
+	.field.inline {
+		max-width: 12rem;
 	}
 
 	.pills {

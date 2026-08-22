@@ -95,6 +95,8 @@ export class DoughWorkbench {
 	fridgeHours = $state(24);
 	temperHours = $state(2);
 	roomTemperature = $state(REFERENCE_ROOM_TEMPERATURE);
+	autolyseEnabled = $state(false);
+	autolyseHours = $state(0.75);
 	readyAtValue = $state(toDatetimeLocal(defaultReadyAt()));
 	nowMs = $state(Date.now());
 
@@ -107,18 +109,22 @@ export class DoughWorkbench {
 
 	availableHours = $derived(this.readyAt ? hoursUntil(this.readyAt, this.now) : 0);
 
+	autolyseWindow = $derived(this.autolyseEnabled ? Math.max(0, this.autolyseHours) : 0);
+
 	styleFit = $derived(
 		this.timeMode === 'deadline' && this.styleId !== 'custom'
-			? fitStyle(this.styleId, this.availableHours)
+			? fitStyle(this.styleId, this.availableHours, { autolyseHours: this.autolyseWindow })
 			: null
 	);
 
 	/** The proofing split in play, either fitted to the deadline or typed in directly. */
 	split = $derived<ProofingSplit>(
 		this.styleFit?.split ?? {
-			predoughHours: this.predoughEnabled
-				? Math.max(0, this.predough.roomHours) + Math.max(0, this.predough.fridgeHours)
-				: 0,
+			predoughHours:
+				this.predoughEnabled && this.leavening === 'yeast'
+					? Math.max(0, this.predough.roomHours) + Math.max(0, this.predough.fridgeHours)
+					: 0,
+			autolyseHours: this.autolyseWindow,
 			roomHours: Math.max(0, this.roomHours),
 			fridgeHours: Math.max(0, this.fridgeHours),
 			temperHours: Math.max(0, this.temperHours)
@@ -217,7 +223,8 @@ export class DoughWorkbench {
 		starterPercentage: this.starterPercentage,
 		starterHydrationPercentage: this.starterHydrationPercentage,
 		sizing: this.sizing,
-		styleId: this.styleId
+		styleId: this.styleId,
+		autolyseHours: this.autolyseWindow
 	});
 
 	yeastPlan = $derived(this.leavening === 'yeast' ? planDough(this.plannerState) : null);
@@ -242,10 +249,10 @@ export class DoughWorkbench {
 	);
 
 	phases = $derived(
-		buildPhases(
-			this.split,
-			this.predoughEnabled ? predoughDefaults[this.predough.kind].nameDa : 'Fordej'
-		)
+		buildPhases(this.split, {
+			predoughNameDa: this.predoughEnabled ? predoughDefaults[this.predough.kind].nameDa : 'Fordej',
+			leavening: this.leavening
+		})
 	);
 
 	steps = $derived(
@@ -254,7 +261,11 @@ export class DoughWorkbench {
 			: scheduleForwards(this.phases, this.now)
 	);
 
-	totalProofHours = $derived(splitTotalHours(this.split));
+	/** Fermentation only — the autolyse carries no yeast, so it is not proofing time. */
+	totalProofHours = $derived(splitTotalHours(this.split) - this.split.autolyseHours);
+
+	/** Everything the plan occupies on the clock, autolyse included. */
+	totalWindowHours = $derived(splitTotalHours(this.split));
 
 	style = $derived(findProofingStyle(this.styleId));
 
@@ -342,6 +353,9 @@ export class DoughWorkbench {
 		this.fridgeHours = state.fridgeHours;
 		this.temperHours = state.temperHours ?? 0;
 		this.roomTemperature = state.roomTemperature ?? REFERENCE_ROOM_TEMPERATURE;
+		this.autolyseHours =
+			state.autolyseHours && state.autolyseHours > 0 ? state.autolyseHours : 0.75;
+		this.autolyseEnabled = Boolean(state.autolyseHours && state.autolyseHours > 0);
 		this.flours = state.flours ? [...state.flours] : [];
 		this.extras = state.extras ? [...state.extras] : [];
 		this.starterPercentage = state.starterPercentage ?? 20;
