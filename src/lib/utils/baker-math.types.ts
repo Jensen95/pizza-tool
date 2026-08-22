@@ -1,4 +1,4 @@
-export type BakerMathIngredientType = 'water' | 'other';
+export type BakerMathIngredientType = 'flour' | 'water' | 'salt' | 'oil' | 'sugar' | 'other';
 
 export type BakerMathIngredient = {
 	id: string;

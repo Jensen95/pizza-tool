@@ -14,6 +14,11 @@
 	--color-warning-bg: #fff3e0;
 	--color-warning-border: #ffb74d;
 	--color-error: #f44336;
+	--color-predough: #7b5ea7;
+	--color-fridge: #3f7196;
+	--color-temper: #8a6320;
+	/* Text on the timeline blocks: light blocks in dark mode need dark ink */
+	--color-phase-text: #ffffff;
 
 	--spacing-xs: 0.25rem;
 	--spacing-sm: 0.5rem;
@@ -221,6 +226,18 @@ h3 {
 	color: var(--color-text-light);
 }
 
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
 .text-center {
 	text-align: center;
 }
@@ -304,5 +321,9 @@ h3 {
 		--shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.6);
 		--color-warning-bg: rgba(255, 152, 0, 0.15);
 		--color-warning-border: rgba(255, 152, 0, 0.5);
+		--color-predough: #9d80c9;
+		--color-fridge: #6ba3cc;
+		--color-temper: #d3a24d;
+		--color-phase-text: #12100e;
 	}
 }

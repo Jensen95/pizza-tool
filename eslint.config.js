@@ -51,6 +51,22 @@ export default [
 			...sveltePlugin.configs.recommended.rules
 		}
 	},
+	{
+		// Rune-powered modules (`*.svelte.ts`) are plain TypeScript to ESLint, so the
+		// runes have to be declared or `no-undef` flags every one of them.
+		files: ['**/*.svelte.ts', '**/*.svelte.js'],
+		languageOptions: {
+			globals: {
+				$state: 'readonly',
+				$derived: 'readonly',
+				$effect: 'readonly',
+				$props: 'readonly',
+				$bindable: 'readonly',
+				$inspect: 'readonly',
+				$host: 'readonly'
+			}
+		}
+	},
 	prettierRecommended,
 	{
 		ignores: [

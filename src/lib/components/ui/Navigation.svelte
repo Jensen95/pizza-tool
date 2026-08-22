@@ -20,6 +20,11 @@
 			icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`
 		},
 		{
+			href: '/dough',
+			label: 'Dej',
+			icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V9"/><path d="M12 9c0-3 2-5 5-5 0 3-2 5-5 5z"/><path d="M12 9c0-3-2-5-5-5 0 3 2 5 5 5z"/><path d="M12 16c0-3 2-5 5-5 0 3-2 5-5 5z"/><path d="M12 16c0-3-2-5-5-5 0 3 2 5 5 5z"/></svg>`
+		},
+		{
 			href: '/tools',
 			label: 'Værktøjer',
 			icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`
@@ -69,15 +74,17 @@
 
 	.nav-item {
 		display: flex;
+		flex: 1;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		gap: 2px;
-		padding: 8px 16px;
+		padding: 8px 4px;
 		text-decoration: none;
 		color: var(--color-text-secondary);
 		transition: color 0.2s;
-		min-width: 64px;
+		min-width: 0;
+		min-height: 44px;
 	}
 
 	.nav-item:hover {
@@ -97,6 +104,14 @@
 	.nav-label {
 		font-size: var(--font-size-xs);
 		font-weight: 500;
+		white-space: nowrap;
+	}
+
+	/* Five tabs have to fit the narrowest phones without wrapping */
+	@media (max-width: 400px) {
+		.nav-label {
+			font-size: 10px;
+		}
 	}
 
 	.badge {

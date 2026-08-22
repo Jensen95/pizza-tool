@@ -1,25 +1,45 @@
-// ABOUTME: Dough planner — predict yeast for a room/fridge proofing schedule and compute weights
-import type { YeastInfo, YeastLookupEntry } from '$lib/models';
-import { yeastLookup } from '$lib/data/reference';
+// ABOUTME: Dough planner — predict yeast for a proofing schedule and compute all ingredient weights
+import type { YeastInfo } from '$lib/models';
 import { convertYeastPercentage } from './yeast';
+import { predictYeast } from './fermentation';
+import { planPredough, type PredoughConfig, type PredoughPlan } from './predough';
+import type { ProofingStyleId } from './proofing-styles';
+import {
+	additionSum,
+	buildAdditionIngredients,
+	buildFlourIngredients,
+	buildWaterAllocationIngredients,
+	flourBlendSum,
+	roundWeight,
+	sumWeights,
+	waterAllocationSum,
+	type DoughIngredientRow,
+	type PlannedIngredient
+} from './dough-ingredients';
 
-export type ProofLocation = YeastLookupEntry['location'];
+export {
+	predictYeast,
+	effectiveRoomHours,
+	fermentationRateFactor,
+	REFERENCE_ROOM_TEMPERATURE,
+	TEMPER_WARM_FRACTION
+} from './fermentation';
+export type { ProofingSchedule, YeastPrediction, ProofLocation } from './fermentation';
+export type { DoughIngredientRow, PlannedIngredient } from './dough-ingredients';
 
-export interface ProofingSchedule {
-	roomHours: number;
-	fridgeHours: number;
-}
+export type LeaveningType = 'yeast' | 'sourdough';
 
-export type DoughPlanWarning = 'no-proof-time' | 'outside-table' | 'tiny-yeast-amount';
-
-export interface YeastPrediction {
-	/** Instant dry yeast as baker's percentage of flour */
-	idyPercentage: number;
-	/** True when the schedule falls outside the lookup table and the value is extrapolated */
-	extrapolated: boolean;
-}
+export type DoughPlanWarning =
+	| 'no-proof-time'
+	| 'outside-table'
+	| 'tiny-yeast-amount'
+	| 'water-over-allocated'
+	| 'flour-blend-off'
+	| 'predough-covers-yeast'
+	| 'predough-too-wet';
 
 export interface DoughPlanInput {
+	/** Total flour in the dough, predough included */
 	flourWeight: number;
 	hydrationPercentage: number;
 	saltPercentage: number;
@@ -28,9 +48,26 @@ export interface DoughPlanInput {
 	yeastType: YeastInfo['type'];
 	roomHours: number;
 	fridgeHours: number;
+	/** Hours out of the fridge before baking; half of it counts as warm time */
+	temperHours?: number;
+	/** Actual room temperature in °C */
+	roomTemperature?: number;
+	/** Flour blend; percentages of total flour, summing to 100 */
+	flours?: DoughIngredientRow[];
+	/** Free-form rows: `water` rows allocate part of the hydration, the rest add weight */
+	extras?: DoughIngredientRow[];
+	predough?: PredoughConfig | null;
 }
 
-export type LeaveningType = 'yeast' | 'sourdough';
+export type SizingMode = 'flour' | 'dough' | 'balls';
+
+export interface DoughSizing {
+	mode: SizingMode;
+	flourWeight: number;
+	doughWeight: number;
+	ballCount: number;
+	ballWeight: number;
+}
 
 /**
  * Full planner state as recorded in saved plans. The sourdough fields are
@@ -41,157 +78,35 @@ export interface DoughPlannerState extends DoughPlanInput {
 	leavening?: LeaveningType;
 	starterPercentage?: number;
 	starterHydrationPercentage?: number;
+	sizing?: DoughSizing;
+	/** Which proofing style produced the hours, so a reload can show it again */
+	styleId?: ProofingStyleId;
 }
 
-export interface PlannedIngredient {
-	id: string;
+export interface PlanStage {
+	id: 'predough' | 'main';
 	nameDa: string;
-	percentage: number;
-	weight: number;
+	ingredients: PlannedIngredient[];
+	totalWeight: number;
 }
 
 export interface DoughPlan {
+	flourWeight: number;
+	hydrationPercentage: number;
+	/** Instant dry yeast for the whole dough, as a percentage of total flour */
 	idyPercentage: number;
+	/** The same total in the chosen yeast type */
 	yeastPercentage: number;
 	yeastWeight: number;
+	/** Yeast that goes into the final dough */
+	mainYeastWeight: number;
+	/** Yeast that goes into the predough (0 without one) */
+	predoughYeastWeight: number;
+	stages: PlanStage[];
 	ingredients: PlannedIngredient[];
 	totalWeight: number;
+	predough: PredoughPlan | null;
 	warnings: DoughPlanWarning[];
-}
-
-interface TablePoint {
-	hours: number;
-	idy: number;
-}
-
-// The lookup table maps proofing hours to IDY percentage per location.
-// Both axes behave log-linearly (halving yeast roughly doubles time), so all
-// interpolation and extrapolation happens in log-log space.
-function tableFor(location: ProofLocation): TablePoint[] {
-	return yeastLookup.lookupTable
-		.filter((entry) => entry.location === location)
-		.map((entry) => ({ hours: entry.hours, idy: entry.idyPercentage }))
-		.sort((a, b) => a.hours - b.hours);
-}
-
-function interpolate(
-	points: TablePoint[],
-	x: number,
-	getX: (p: TablePoint) => number,
-	getY: (p: TablePoint) => number
-): number {
-	const sorted = [...points].sort((a, b) => getX(a) - getX(b));
-	const logX = Math.log(x);
-
-	let lower = sorted[0];
-	let upper = sorted[sorted.length - 1];
-
-	for (let i = 0; i < sorted.length - 1; i++) {
-		if (x >= getX(sorted[i]) && x <= getX(sorted[i + 1])) {
-			lower = sorted[i];
-			upper = sorted[i + 1];
-			break;
-		}
-	}
-
-	// Outside the table: extend the nearest segment's slope
-	if (x < getX(sorted[0])) {
-		lower = sorted[0];
-		upper = sorted[1];
-	} else if (x > getX(sorted[sorted.length - 1])) {
-		lower = sorted[sorted.length - 2];
-		upper = sorted[sorted.length - 1];
-	}
-
-	const x1 = Math.log(getX(lower));
-	const x2 = Math.log(getX(upper));
-	const y1 = Math.log(getY(lower));
-	const y2 = Math.log(getY(upper));
-	const t = (logX - x1) / (x2 - x1);
-	return Math.exp(y1 + t * (y2 - y1));
-}
-
-function idyForHours(location: ProofLocation, hours: number): number {
-	return interpolate(
-		tableFor(location),
-		hours,
-		(p) => p.hours,
-		(p) => p.idy
-	);
-}
-
-function hoursForIdy(location: ProofLocation, idy: number): number {
-	return interpolate(
-		tableFor(location),
-		idy,
-		(p) => p.idy,
-		(p) => p.hours
-	);
-}
-
-function isWithinTable(location: ProofLocation, hours: number): boolean {
-	const points = tableFor(location);
-	return hours >= points[0].hours && hours <= points[points.length - 1].hours;
-}
-
-const MIN_IDY = 0.005;
-const MAX_IDY = 2;
-
-/**
- * Predict the instant-dry-yeast percentage for a proofing schedule.
- *
- * For a combined schedule the dough spends a fraction of its total "proofing
- * budget" in each location: with yeast level y it needs R(y) hours at room
- * temperature or F(y) hours in the fridge, so we solve
- * roomHours / R(y) + fridgeHours / F(y) = 1 for y (bisection in log space).
- */
-export function predictYeast(schedule: ProofingSchedule): YeastPrediction | null {
-	const roomHours = Math.max(0, schedule.roomHours);
-	const fridgeHours = Math.max(0, schedule.fridgeHours);
-
-	if (roomHours <= 0 && fridgeHours <= 0) return null;
-
-	let idy: number;
-	let extrapolated: boolean;
-
-	if (fridgeHours <= 0) {
-		idy = idyForHours('room', roomHours);
-		extrapolated = !isWithinTable('room', roomHours);
-	} else if (roomHours <= 0) {
-		idy = idyForHours('fridge', fridgeHours);
-		extrapolated = !isWithinTable('fridge', fridgeHours);
-	} else {
-		const budgetUsed = (y: number) =>
-			roomHours / hoursForIdy('room', y) + fridgeHours / hoursForIdy('fridge', y);
-
-		let low = Math.log(MIN_IDY);
-		let high = Math.log(MAX_IDY);
-		for (let i = 0; i < 60; i++) {
-			const mid = (low + high) / 2;
-			if (budgetUsed(Math.exp(mid)) < 1) {
-				low = mid;
-			} else {
-				high = mid;
-			}
-		}
-		idy = Math.exp((low + high) / 2);
-		// Mixed schedules count as extrapolated when the solved yeast level falls
-		// outside the range the table covers for either location.
-		const roomTable = tableFor('room');
-		const fridgeTable = tableFor('fridge');
-		const minTableIdy = Math.min(
-			roomTable[roomTable.length - 1].idy,
-			fridgeTable[fridgeTable.length - 1].idy
-		);
-		const maxTableIdy = Math.max(roomTable[0].idy, fridgeTable[0].idy);
-		extrapolated = idy < minTableIdy || idy > maxTableIdy;
-	}
-
-	const clamped = Math.min(MAX_IDY, Math.max(MIN_IDY, idy));
-	return {
-		idyPercentage: Math.round(clamped * 1000) / 1000,
-		extrapolated: extrapolated || clamped !== idy
-	};
 }
 
 /**
@@ -206,86 +121,210 @@ export function flourFromDoughWeight(
 	return totalDoughWeight / (1 + nonFlourPercentageSum / 100);
 }
 
-function roundWeight(weight: number, decimals: number): number {
-	const factor = 10 ** decimals;
-	return Math.round(weight * factor) / factor;
+/** Total dough weight a sizing asks for. Zero in flour-weight mode. */
+export function targetDoughWeight(sizing: DoughSizing): number {
+	if (sizing.mode === 'balls') {
+		return Math.max(0, sizing.ballCount) * Math.max(0, sizing.ballWeight);
+	}
+	if (sizing.mode === 'dough') return Math.max(0, sizing.doughWeight);
+	return 0;
 }
 
 /**
- * Build a complete dough plan: predicted yeast plus ingredient weights.
+ * Everything that is not flour, as a percentage of flour: water, salt, the
+ * legacy oil and sugar fields, any added rows and the yeast itself.
+ */
+export function nonFlourPercentageSum(
+	input: Pick<
+		DoughPlanInput,
+		'hydrationPercentage' | 'saltPercentage' | 'oilPercentage' | 'sugarPercentage' | 'extras'
+	>,
+	yeastPercentage = 0
+): number {
+	return (
+		input.hydrationPercentage +
+		input.saltPercentage +
+		input.oilPercentage +
+		input.sugarPercentage +
+		additionSum(input.extras) +
+		yeastPercentage
+	);
+}
+
+/**
+ * Resolve the flour weight a sizing implies. Balls and total dough weight both
+ * work backwards through the baker's percentages; bread is still planned by
+ * flour weight, which passes straight through.
+ */
+export function resolveFlourWeight(sizing: DoughSizing, nonFlourSum: number): number {
+	if (sizing.mode === 'flour') return Math.max(0, sizing.flourWeight);
+	return flourFromDoughWeight(targetDoughWeight(sizing), nonFlourSum);
+}
+
+/**
+ * Build a complete dough plan: predicted yeast plus every ingredient weight,
+ * grouped into a predough stage and the final dough.
  */
 export function planDough(input: DoughPlanInput): DoughPlan | null {
-	const prediction = predictYeast({ roomHours: input.roomHours, fridgeHours: input.fridgeHours });
+	const prediction = predictYeast({
+		roomHours: input.roomHours,
+		fridgeHours: input.fridgeHours,
+		temperHours: input.temperHours,
+		roomTemperature: input.roomTemperature
+	});
 	if (!prediction || input.flourWeight <= 0) return null;
 
 	const warnings: DoughPlanWarning[] = [];
 	if (prediction.extrapolated) warnings.push('outside-table');
 
-	const yeastPercentage = convertYeastPercentage(
-		prediction.idyPercentage,
-		'instant',
-		input.yeastType
-	);
-	const yeastWeight = roundWeight((input.flourWeight * yeastPercentage) / 100, 2);
+	const totalFlour = input.flourWeight;
+	const predough = input.predough
+		? planPredough(
+				{
+					...input.predough,
+					roomTemperature: input.predough.roomTemperature ?? input.roomTemperature
+				},
+				totalFlour
+			)
+		: null;
+	if (predough?.extrapolated && !warnings.includes('outside-table')) {
+		warnings.push('outside-table');
+	}
+
+	// The predough already carries yeast, so it comes out of the same budget:
+	// what the final dough needs is whatever the predough does not cover.
+	const predoughIdy = predough?.idyPercentageOfTotalFlour ?? 0;
+	const mainIdy = Math.max(0, prediction.idyPercentage - predoughIdy);
+	if (predough && mainIdy <= 0) warnings.push('predough-covers-yeast');
+	const totalIdy = mainIdy + predoughIdy;
+
+	const toChosenType = (idy: number) => convertYeastPercentage(idy, 'instant', input.yeastType);
+	const yeastPercentage = toChosenType(totalIdy);
+	const mainYeastPercentage = toChosenType(mainIdy);
+	const predoughYeastPercentage = toChosenType(predoughIdy);
+
+	const yeastWeight = roundWeight((totalFlour * yeastPercentage) / 100, 2);
+	const mainYeastWeight = roundWeight((totalFlour * mainYeastPercentage) / 100, 2);
+	const predoughYeastWeight = roundWeight((totalFlour * predoughYeastPercentage) / 100, 2);
 	if (yeastWeight < 0.1) warnings.push('tiny-yeast-amount');
 
-	const ingredients: PlannedIngredient[] = [
-		{
-			id: 'flour',
-			nameDa: 'Mel',
-			percentage: 100,
-			weight: roundWeight(input.flourWeight, 1)
-		},
-		{
-			id: 'water',
-			nameDa: 'Vand',
-			percentage: input.hydrationPercentage,
-			weight: roundWeight((input.flourWeight * input.hydrationPercentage) / 100, 1)
-		},
-		{
-			id: 'salt',
-			nameDa: 'Salt',
-			percentage: input.saltPercentage,
-			weight: roundWeight((input.flourWeight * input.saltPercentage) / 100, 1)
-		}
-	];
+	// Water is a single total; the predough and any named allocations take their
+	// share out of it and the final dough gets the remainder.
+	const predoughWaterPercentage = predough?.waterPercentageOfTotalFlour ?? 0;
+	const allocatedWaterPercentage = waterAllocationSum(input.extras);
+	const mainWaterPercentage =
+		input.hydrationPercentage - predoughWaterPercentage - allocatedWaterPercentage;
+	if (predoughWaterPercentage > input.hydrationPercentage) warnings.push('predough-too-wet');
+	if (mainWaterPercentage < -0.05) warnings.push('water-over-allocated');
+
+	const blendSum = flourBlendSum(input.flours);
+	if (blendSum > 0 && Math.abs(blendSum - 100) > 0.5) warnings.push('flour-blend-off');
+
+	const asPercentageOfFlour = (weight: number) => roundWeight((weight / totalFlour) * 100, 1);
+	const rebase = (ingredients: PlannedIngredient[]): PlannedIngredient[] =>
+		ingredients.map((ingredient) => ({
+			...ingredient,
+			percentage: asPercentageOfFlour(ingredient.weight)
+		}));
+
+	const stages: PlanStage[] = [];
+
+	if (predough) {
+		const predoughIngredients: PlannedIngredient[] = [
+			...rebase(buildFlourIngredients(predough.flourWeight, input.flours, '(fordej)')),
+			{
+				id: 'predough-water',
+				nameDa: 'Vand (fordej)',
+				percentage: roundWeight(predoughWaterPercentage, 1),
+				weight: roundWeight(predough.waterWeight, 1)
+			},
+			{
+				id: 'predough-yeast',
+				nameDa: 'Gær (fordej)',
+				percentage: predoughYeastPercentage,
+				weight: predoughYeastWeight
+			}
+		];
+
+		stages.push({
+			id: 'predough',
+			nameDa: predough.nameDa,
+			ingredients: predoughIngredients,
+			totalWeight: sumWeights(predoughIngredients)
+		});
+	}
+
+	const mainFlourWeight = totalFlour - (predough?.flourWeight ?? 0);
+	const mainIngredients: PlannedIngredient[] = rebase(
+		buildFlourIngredients(mainFlourWeight, input.flours, predough ? '(hoveddej)' : '')
+	);
+
+	mainIngredients.push({
+		id: 'water',
+		nameDa: predough ? 'Vand (hoveddej)' : 'Vand',
+		percentage: roundWeight(Math.max(0, mainWaterPercentage), 1),
+		weight: roundWeight((totalFlour * Math.max(0, mainWaterPercentage)) / 100, 1)
+	});
+
+	mainIngredients.push(...buildWaterAllocationIngredients(totalFlour, input.extras));
+
+	mainIngredients.push({
+		id: 'salt',
+		nameDa: 'Salt',
+		percentage: input.saltPercentage,
+		weight: roundWeight((totalFlour * input.saltPercentage) / 100, 1)
+	});
 
 	if (input.oilPercentage > 0) {
-		ingredients.push({
+		mainIngredients.push({
 			id: 'oil',
 			nameDa: 'Olie',
 			percentage: input.oilPercentage,
-			weight: roundWeight((input.flourWeight * input.oilPercentage) / 100, 1)
+			weight: roundWeight((totalFlour * input.oilPercentage) / 100, 1)
 		});
 	}
 
 	if (input.sugarPercentage > 0) {
-		ingredients.push({
+		mainIngredients.push({
 			id: 'sugar',
 			nameDa: 'Sukker',
 			percentage: input.sugarPercentage,
-			weight: roundWeight((input.flourWeight * input.sugarPercentage) / 100, 1)
+			weight: roundWeight((totalFlour * input.sugarPercentage) / 100, 1)
 		});
 	}
 
-	ingredients.push({
-		id: 'yeast',
-		nameDa: 'Gær',
-		percentage: yeastPercentage,
-		weight: yeastWeight
+	mainIngredients.push(...buildAdditionIngredients(totalFlour, input.extras));
+
+	if (!predough || mainYeastWeight > 0) {
+		mainIngredients.push({
+			id: 'yeast',
+			nameDa: predough ? 'Gær (hoveddej)' : 'Gær',
+			percentage: mainYeastPercentage,
+			weight: mainYeastWeight
+		});
+	}
+
+	stages.push({
+		id: 'main',
+		nameDa: predough ? 'Hoveddej' : 'Dejen',
+		ingredients: mainIngredients,
+		totalWeight: sumWeights(mainIngredients)
 	});
 
-	const totalWeight = roundWeight(
-		ingredients.reduce((sum, ingredient) => sum + ingredient.weight, 0),
-		1
-	);
+	const ingredients = stages.flatMap((stage) => stage.ingredients);
 
 	return {
-		idyPercentage: prediction.idyPercentage,
+		flourWeight: roundWeight(totalFlour, 1),
+		hydrationPercentage: input.hydrationPercentage,
+		idyPercentage: roundWeight(totalIdy, 3),
 		yeastPercentage,
 		yeastWeight,
+		mainYeastWeight,
+		predoughYeastWeight,
+		stages,
 		ingredients,
-		totalWeight,
+		totalWeight: sumWeights(ingredients),
+		predough,
 		warnings
 	};
 }

@@ -54,3 +54,32 @@ test.describe('Timers Page', () => {
 		await expect(sectionHeading).toBeVisible();
 	});
 });
+
+test.describe('Dough Planner Page', () => {
+	test('should render the planner', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		await expect(page).toHaveTitle(/Dej - Pizza Tool/);
+		await expect(page.getByRole('heading', { name: 'Planlæg dejen' })).toBeVisible();
+		await expect(page.getByTestId('dough-result')).toContainText('Resultat');
+	});
+
+	test('should switch to planning from a deadline', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		await page.getByRole('button', { name: 'Klar til' }).click();
+		await expect(page.getByLabel('Tidspunkt dejen skal være klar')).toBeVisible();
+		await expect(page.getByRole('button', { name: 'Natten over, stuetemperatur' })).toBeVisible();
+	});
+
+	test('should size the dough in balls', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		await page.getByLabel('Antal kugler').fill('4');
+		await page.getByLabel('Vægt pr. kugle i gram').fill('250');
+		await expect(page.getByTestId('dough-form')).toContainText('mel');
+	});
+});

@@ -4,6 +4,9 @@ A SvelteKit application for pizza recipe management with baker's percentage calc
 
 ## Features
 
+- 🍞 Dough planner — say when the dough has to be ready and get the yeast, the
+  ingredients and a clock-time schedule (room temperature, fridge or no fridge at
+  all, predoughs, flour blends and sourdough)
 - 📊 Baker's percentage calculator
 - ⏱️ Multiple timer management
 - 📚 Recipe library
