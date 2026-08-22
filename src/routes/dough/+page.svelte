@@ -52,8 +52,11 @@
 			<hr />
 			<DoughRecipeSection {workbench} />
 			<hr />
-			<PredoughSection {workbench} />
-			<hr />
+			{#if workbench.leavening === 'yeast'}
+				<!-- Predough math only feeds the yeast planner; sourdough has its own starter -->
+				<PredoughSection {workbench} />
+				<hr />
+			{/if}
 			<TimeSection {workbench} />
 			<hr />
 			<SavedPlansSection {workbench} />

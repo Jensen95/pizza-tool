@@ -130,7 +130,7 @@ export class DoughWorkbench {
 	 * gets; a biga sits out, a poolish gets a short start before the fridge.
 	 */
 	predoughConfig = $derived<PredoughConfig | null>(
-		this.predoughEnabled
+		this.predoughEnabled && this.leavening === 'yeast'
 			? {
 					...this.predough,
 					...(this.styleFit
