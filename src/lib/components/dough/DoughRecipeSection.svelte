@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { YeastInfo } from '$lib/models';
 	import { yeastInfo } from '$lib/data/reference';
 	import { formatWeight } from '$lib/utils/baker-percentage';
 	import { flourBlendSum, type DoughIngredientRow } from '$lib/utils/dough-ingredients';
@@ -82,7 +83,15 @@
 		{#if workbench.leavening === 'yeast'}
 			<label class="field">
 				<span class="label">Gærtype</span>
-				<select class="input" bind:value={workbench.yeastType} aria-label="Gærtype">
+				<select
+					class="input"
+					value={workbench.yeastType}
+					aria-label="Gærtype"
+					onchange={(event) =>
+						workbench.setYeastType(
+							(event.currentTarget as HTMLSelectElement).value as YeastInfo['type']
+						)}
+				>
 					{#each yeastInfo as option (option.type)}
 						<option value={option.type}>{option.nameDa}</option>
 					{/each}

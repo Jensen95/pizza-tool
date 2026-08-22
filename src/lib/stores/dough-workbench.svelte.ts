@@ -33,6 +33,8 @@ import {
 } from '$lib/utils/proofing-styles';
 import { REFERENCE_ROOM_TEMPERATURE } from '$lib/utils/fermentation';
 import { createRow } from '$lib/utils/dough-ingredients';
+import { get } from 'svelte/store';
+import { preferences } from '$lib/stores/preferences';
 
 export type TimeMode = 'duration' | 'deadline';
 
@@ -76,7 +78,7 @@ export class DoughWorkbench {
 	hydrationPercentage = $state(65);
 	saltPercentage = $state(2.5);
 	targetHydrationPercentage = $state(65);
-	yeastType = $state<YeastInfo['type']>('fresh');
+	yeastType = $state<YeastInfo['type']>(get(preferences).defaultYeastType);
 	flours = $state<DoughIngredientRow[]>([]);
 	extras = $state<DoughIngredientRow[]>([]);
 	starterPercentage = $state(20);
@@ -285,6 +287,12 @@ export class DoughWorkbench {
 		this.styleId = 'custom';
 	}
 
+	/** Changing yeast type sticks, since it is a pantry fact rather than a per-plan choice. */
+	setYeastType(type: YeastInfo['type']) {
+		this.yeastType = type;
+		preferences.setDefaultYeastType(type);
+	}
+
 	setPredoughKind(kind: PredoughKind) {
 		this.predough = createPredoughConfig(kind);
 	}
@@ -329,7 +337,7 @@ export class DoughWorkbench {
 		this.saltPercentage = state.saltPercentage;
 		this.oilPercentage = state.oilPercentage ?? 0;
 		this.sugarPercentage = state.sugarPercentage ?? 0;
-		this.yeastType = state.yeastType;
+		this.setYeastType(state.yeastType);
 		this.roomHours = state.roomHours;
 		this.fridgeHours = state.fridgeHours;
 		this.temperHours = state.temperHours ?? 0;
