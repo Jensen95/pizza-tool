@@ -123,7 +123,25 @@ test.describe('Dough Planner Page', () => {
 		await page.locator('select[id$="-seed"]').first().selectOption('chia');
 
 		const panel = page.getByTestId('dough-result');
-		await expect(panel).toContainText('chiafrø binder');
-		await expect(panel).toContainText('soaker');
+		// Soak first, and say how much water — then the fallback for no time to soak
+		await expect(panel).toContainText('chiafrø skal i blød først');
+		await expect(panel).toContainText('Har du ikke tid til at lægge dem i blød?');
+	});
+	test('should account for the dough temperature after kneading', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		const panel = page.getByTestId('dough-result');
+		await expect(panel).toContainText('På vej i køleskabet');
+		await expect(panel).toContainText('Skal på køl senest');
+
+		const probe = page.getByLabel('Dejtemperatur efter æltning i celsius');
+		await probe.fill('22');
+		const cool = await panel.innerText();
+		await probe.fill('29');
+		const warm = await panel.innerText();
+
+		// A warmer dough ferments faster, so the same schedule needs less yeast
+		expect(cool).not.toEqual(warm);
 	});
 });

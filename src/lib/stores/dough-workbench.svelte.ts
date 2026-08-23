@@ -3,7 +3,6 @@ import type { YeastInfo } from '$lib/models';
 import {
 	nonFlourPercentageSum,
 	planDough,
-	predictYeast,
 	resolveFlourWeight,
 	type DoughIngredientRow,
 	type DoughPlannerState,
@@ -31,7 +30,12 @@ import {
 	type ProofingSplit,
 	type ProofingStyleId
 } from '$lib/utils/proofing-styles';
-import { REFERENCE_ROOM_TEMPERATURE } from '$lib/utils/fermentation';
+import {
+	REFERENCE_ROOM_TEMPERATURE,
+	analyseFridgeCooling,
+	maxWarmHours,
+	predictYeast as predictYeastRaw
+} from '$lib/utils/fermentation';
 import { createRow } from '$lib/utils/dough-ingredients';
 import { analyseDoughStrength } from '$lib/utils/dough-strength';
 import { get } from 'svelte/store';
@@ -96,6 +100,8 @@ export class DoughWorkbench {
 	fridgeHours = $state(24);
 	temperHours = $state(2);
 	roomTemperature = $state(REFERENCE_ROOM_TEMPERATURE);
+	/** Measured with a probe right after kneading */
+	doughTemperature = $state(24);
 	autolyseEnabled = $state(false);
 	autolyseHours = $state(0.75);
 	readyAtValue = $state(toDatetimeLocal(defaultReadyAt()));
@@ -148,16 +154,73 @@ export class DoughWorkbench {
 			: null
 	);
 
+	/**
+	 * Thermal mass of the whole dough. Estimated from the percentages rather than
+	 * read off the finished plan: the plan's yeast depends on the temperature
+	 * model, which depends on this, so taking the plan's total would be circular.
+	 */
+	estimatedDoughWeight = $derived.by(() => {
+		if (this.sizingMode === 'balls') {
+			return Math.max(0, this.ballCount) * Math.max(0, this.ballWeight);
+		}
+		if (this.sizingMode === 'dough') return Math.max(0, this.doughWeight);
+		return (
+			Math.max(0, this.flourWeight) *
+			(1 +
+				(this.hydrationPercentage +
+					this.saltPercentage +
+					this.oilPercentage +
+					this.sugarPercentage) /
+					100)
+		);
+	});
+
+	/** Weight of one piece once shaped — a ball cools far faster than a bulk. */
+	pieceWeight = $derived(
+		this.sizingMode === 'balls' && this.ballWeight > 0 ? this.ballWeight : this.estimatedDoughWeight
+	);
+
+	thermalSchedule = $derived({
+		roomHours: this.split.roomHours,
+		fridgeHours: this.split.fridgeHours,
+		temperHours: this.split.temperHours,
+		roomTemperature: this.roomTemperature,
+		doughTemperature: this.doughTemperature,
+		bulkWeight: this.estimatedDoughWeight,
+		pieceWeight: this.pieceWeight
+	});
+
+	cooling = $derived(analyseFridgeCooling(this.thermalSchedule));
+
 	/** Yeast estimate used to work backwards from a target dough weight. */
 	yeastPercentageEstimate = $derived.by(() => {
-		const prediction = predictYeast({
-			roomHours: this.split.roomHours,
-			fridgeHours: this.split.fridgeHours,
-			temperHours: this.split.temperHours,
-			roomTemperature: this.roomTemperature
-		});
+		const prediction = predictYeastRaw(this.thermalSchedule);
 		if (!prediction) return 0;
 		return convertYeastPercentage(prediction.idyPercentage, 'instant', this.yeastType);
+	});
+
+	/**
+	 * How long the dough can stay out before the yeast has used its budget — in
+	 * other words, the point where it has to go into the fridge.
+	 */
+	warmBudgetHours = $derived.by(() => {
+		if (this.split.fridgeHours <= 0) return null;
+		const prediction = predictYeastRaw(this.thermalSchedule);
+		if (!prediction) return null;
+		return maxWarmHours(this.thermalSchedule, prediction.idyPercentage);
+	});
+
+	/** Spare time between the planned bulk and the point of no return. */
+	warmSlackHours = $derived(
+		this.warmBudgetHours === null ? null : this.warmBudgetHours - this.split.roomHours
+	);
+
+	/** When the dough has to be in the fridge, on the clock. */
+	fridgeDeadline = $derived.by(() => {
+		if (this.warmBudgetHours === null) return null;
+		const mixStep = this.steps.find((step) => step.id === 'mix');
+		if (!mixStep) return null;
+		return new Date(mixStep.startsAt.getTime() + this.warmBudgetHours * 3_600_000);
 	});
 
 	sizing = $derived<DoughSizing>({
@@ -217,6 +280,9 @@ export class DoughWorkbench {
 		fridgeHours: this.split.fridgeHours,
 		temperHours: this.split.temperHours,
 		roomTemperature: this.roomTemperature,
+		doughTemperature: this.doughTemperature,
+		bulkWeight: this.estimatedDoughWeight,
+		pieceWeight: this.pieceWeight,
 		flours: this.flours,
 		extras: this.extras,
 		predough: this.predoughConfig,
@@ -241,7 +307,9 @@ export class DoughWorkbench {
 	strength = $derived(
 		analyseDoughStrength(this.flours, this.extras, {
 			flourWeight: this.resolvedFlourWeight,
-			hydrationPercentage: this.hydrationPercentage
+			hydrationPercentage: this.hydrationPercentage,
+			oilPercentage: this.oilPercentage,
+			sugarPercentage: this.sugarPercentage
 		})
 	);
 
@@ -370,6 +438,7 @@ export class DoughWorkbench {
 		this.fridgeHours = state.fridgeHours;
 		this.temperHours = state.temperHours ?? 0;
 		this.roomTemperature = state.roomTemperature ?? REFERENCE_ROOM_TEMPERATURE;
+		this.doughTemperature = state.doughTemperature ?? 24;
 		this.autolyseHours =
 			state.autolyseHours && state.autolyseHours > 0 ? state.autolyseHours : 0.75;
 		this.autolyseEnabled = Boolean(state.autolyseHours && state.autolyseHours > 0);

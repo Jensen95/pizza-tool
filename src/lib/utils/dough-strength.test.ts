@@ -122,23 +122,36 @@ describe('seeds', () => {
 });
 
 describe('thirsty seeds', () => {
-	test('works out the water chia will bind and the hydration that covers it', () => {
+	test('tells you to soak them first, and how much water in', () => {
 		const strength = analyseDoughStrength([], [seed('chia', 5)], base);
 		// 5 % of 1000 g flour is 50 g of chia, drinking 4x its weight
 		expect(strength.seedWaterWeight).toBe(200);
-		expect(strength.compensatedHydrationPercentage).toBe(85);
 
 		const finding = strength.findings.find((f) => f.id === 'seed-soaker')!;
 		expect(finding.titleDa).toContain('chiafrø');
+		expect(finding.titleDa).toContain('i blød');
 		expect(finding.bodyDa).toContain('200 g');
-		expect(finding.bodyDa).toContain('85 %');
+		expect(finding.bodyDa).toContain('30-60 minutter');
+		// Soaking keeps the dough at the hydration that was asked for
+		expect(finding.bodyDa).toContain('65 %');
 	});
 
-	test('stops suggesting hydration when the water no longer fits in the dough', () => {
+	test('also gives the number for when there is no time to soak', () => {
+		const strength = analyseDoughStrength([], [seed('chia', 5)], base);
+		expect(strength.compensatedHydrationPercentage).toBe(85);
+
+		const finding = strength.findings.find((f) => f.id === 'seed-dry-alternative')!;
+		expect(finding.bodyDa).toContain('85 %');
+		expect(finding.bodyDa).toContain('200 g');
+		// And the catch: they keep drinking through a cold ferment
+		expect(finding.bodyDa).toContain('kold hævning');
+	});
+
+	test('says a soaker is the only way when the water cannot fit in the dough', () => {
 		const strength = analyseDoughStrength([], [seed('chia', 15)], base);
-		const finding = strength.findings.find((f) => f.id === 'seed-soaker')!;
-		expect(finding.bodyDa).toContain('soaker');
-		expect(finding.bodyDa).not.toContain('hæv hydrationen');
+		const dry = strength.findings.find((f) => f.id === 'seed-dry-alternative')!;
+		expect(dry.bodyDa).toContain('soaker');
+		expect(dry.bodyDa).not.toContain('hæv dejens hydration');
 	});
 
 	test('passes on what the seed data knows about the seed', () => {
@@ -146,6 +159,11 @@ describe('thirsty seeds', () => {
 			(f) => f.id === 'seed-soaker'
 		)!;
 		expect(finding.bodyDa).toContain('Læg altid i blød');
+	});
+
+	test('dry seeds get no soaking pair of notes', () => {
+		const strength = analyseDoughStrength([], [seed('sesame', 5)], base);
+		expect(ids(strength)).not.toContain('seed-dry-alternative');
 	});
 
 	test('dry seeds do not raise a soaker note', () => {
@@ -193,5 +211,34 @@ describe('generated row ids', () => {
 			// with a digit, and these ids end up in `id` attributes.
 			expect(createRow('Solsikkefrø', 10, 'seed', 'sunflower').id).toMatch(/^[a-zA-Z]/);
 		}
+	});
+});
+
+describe('what the model deliberately does not carry', () => {
+	test('flags an enriched dough as needing more yeast than the prediction', () => {
+		const strength = analyseDoughStrength([], [], {
+			...base,
+			oilPercentage: 4,
+			sugarPercentage: 4
+		});
+		const finding = strength.findings.find((f) => f.id === 'enriched-dough')!;
+		expect(finding.bodyDa).toContain('gær');
+	});
+
+	test('leaves a lean dough alone', () => {
+		const strength = analyseDoughStrength([], [], { ...base, oilPercentage: 2 });
+		expect(ids(strength)).not.toContain('enriched-dough');
+	});
+
+	test('flags an all gluten-free flour dough', () => {
+		const strength = analyseDoughStrength([flour('gluten-free', 100)], [], base);
+		expect(ids(strength)).toContain('gluten-free-yeast');
+		expect(ids(strength)).not.toContain('gluten-free-blend');
+	});
+
+	test('computes the hydration wholegrain asks for', () => {
+		// +3 % per 25 % wholegrain, on top of the 65 % asked for
+		const strength = analyseDoughStrength([flour('whole-wheat', 50), flour('bread', 50)], [], base);
+		expect(strength.wholegrainHydrationPercentage).toBe(71);
 	});
 });

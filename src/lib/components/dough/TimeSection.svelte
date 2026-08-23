@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { proofingStyles } from '$lib/utils/proofing-styles';
-	import { REFERENCE_ROOM_TEMPERATURE, fermentationRateFactor } from '$lib/utils/fermentation';
+	import {
+		REFERENCE_ROOM_TEMPERATURE,
+		TARGET_DOUGH_TEMPERATURE,
+		fermentationRateFactor
+	} from '$lib/utils/fermentation';
 	import { formatFullDate, formatHours } from '$lib/utils/format-plan';
 	import type { DoughWorkbench } from '$lib/stores/dough-workbench.svelte';
 
@@ -210,6 +214,34 @@
 	{/if}
 
 	<label class="field">
+		<span class="label">Dejtemperatur efter æltning</span>
+		<div class="with-unit">
+			<input
+				class="input"
+				type="number"
+				min="10"
+				max="35"
+				step="0.5"
+				bind:value={workbench.doughTemperature}
+				aria-label="Dejtemperatur efter æltning i celsius"
+			/>
+			<span class="unit">°C</span>
+		</div>
+		<p class="hint">
+			{#if workbench.doughTemperature > TARGET_DOUGH_TEMPERATURE.max}
+				Over målet på {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C. Brug koldere vand,
+				eller ælt kortere.
+			{:else if workbench.doughTemperature < TARGET_DOUGH_TEMPERATURE.min - 2}
+				Under målet på {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C. Dejen kommer
+				langsomt i gang.
+			{:else}
+				Mål {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C. Mål med et stegetermometer
+				lige efter æltning — se vandtemperatur-formlen under Reference.
+			{/if}
+		</p>
+	</label>
+
+	<label class="field">
 		<span class="label">Rumtemperatur</span>
 		<div class="with-unit">
 			<input
@@ -234,7 +266,8 @@
 	</label>
 
 	<p class="hint">
-		Halvdelen af tempereringen tælles som varm hævetid, fordi dejen er kold, når den kommer ud.
+		Tempereringen tælles med efter hvor hurtigt dejen faktisk bliver varm igen, og en varm dej hæver
+		videre, mens den køler ned i køleskabet. Begge dele er regnet ind i gærmængden.
 	</p>
 </section>
 

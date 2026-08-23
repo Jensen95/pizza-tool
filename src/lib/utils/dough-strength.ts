@@ -10,8 +10,11 @@ export type StrengthFindingId =
 	| 'rye-share'
 	| 'spelt-handling'
 	| 'gluten-free-blend'
+	| 'gluten-free-yeast'
+	| 'enriched-dough'
 	| 'seed-share'
 	| 'seed-soaker'
+	| 'seed-dry-alternative'
 	| 'structure-overloaded';
 
 export interface StrengthFinding {
@@ -57,6 +60,12 @@ const wholegrainFraction: Record<FlourCategory, number> = {
 
 const DEFAULT_CATEGORY: FlourCategory = 'tipo-00';
 
+/**
+ * Extra water wholegrain flour asks for, per 25 % of the blend. The widely used
+ * rule of thumb; bakers quote 3-4 % and this takes the lower end.
+ */
+const WHOLEGRAIN_WATER_PER_25 = 3;
+
 function categoryOf(row: DoughIngredientRow): FlourCategory {
 	const variant = row.variant as FlourCategory | undefined;
 	return variant && variant in glutenFactor ? variant : DEFAULT_CATEGORY;
@@ -80,6 +89,11 @@ export interface DoughStrength {
 	seedPercentage: number;
 	/** Water the seeds will bind, in grams */
 	seedWaterWeight: number;
+	/**
+	 * Hydration the wholegrain in the blend asks for on its own: the common
+	 * rule of +3 % water for every 25 % wholegrain flour.
+	 */
+	wholegrainHydrationPercentage: number;
 	/** Hydration the dough needs to end up where it started once seeds have drunk */
 	compensatedHydrationPercentage: number;
 	/**
@@ -100,7 +114,12 @@ const seedRowsOf = (rows: DoughIngredientRow[] | undefined) =>
 export function analyseDoughStrength(
 	flours: DoughIngredientRow[] | undefined,
 	extras: DoughIngredientRow[] | undefined,
-	options: { flourWeight: number; hydrationPercentage: number }
+	options: {
+		flourWeight: number;
+		hydrationPercentage: number;
+		oilPercentage?: number;
+		sugarPercentage?: number;
+	}
 ): DoughStrength {
 	const blend = flourRows(flours);
 	const blendSum = blend.reduce((sum, row) => sum + Math.max(0, row.percentage), 0);
@@ -147,6 +166,10 @@ export function analyseDoughStrength(
 		seedPercentage: Math.round(seedPercentage * 10) / 10,
 		seedWaterWeight:
 			Math.round((seedWaterPercentage / 100) * Math.max(0, options.flourWeight) * 10) / 10,
+		wholegrainHydrationPercentage:
+			Math.round(
+				(options.hydrationPercentage + (wholegrainPercentage / 25) * WHOLEGRAIN_WATER_PER_25) * 10
+			) / 10,
 		compensatedHydrationPercentage:
 			Math.round((options.hydrationPercentage + seedWaterPercentage) * 10) / 10,
 		structureScore,
@@ -168,16 +191,14 @@ export function analyseDoughStrength(
 			id: 'wholegrain-share',
 			level: 'caution',
 			titleDa: `${strength.wholegrainPercentage} % fuldkorn`,
-			bodyDa:
-				'Over ca. 35 % fuldkorn bliver glutennettet mærkbart svagere. Ælt kortere, brug stræk og fold i stedet, og forvent en tættere krumme. Klidet fremskynder også hævningen — hold øje mod slutningen.'
+			bodyDa: `Over ca. 35 % fuldkorn bliver glutennettet mærkbart svagere. Ælt kortere, brug stræk og fold i stedet, og forvent en tættere krumme. Melet vil også have mere vand — ca. ${strength.wholegrainHydrationPercentage} % hydration — og klidet fremskynder hævningen, så hold øje mod slutningen.`
 		});
 	} else if (strength.wholegrainPercentage > 15) {
 		findings.push({
 			id: 'wholegrain-share',
 			level: 'info',
 			titleDa: `${strength.wholegrainPercentage} % fuldkorn`,
-			bodyDa:
-				'Fuldkorn suger mere vand end hvidt mel: regn med 2-5 % mere hydration. Klidet giver også hurtigere fermentering, så dejen kan være klar før tid.'
+			bodyDa: `Fuldkorn suger mere vand end hvidt mel — tommelfingerreglen er 3 % mere vand pr. 25 % fuldkorn, altså ${strength.wholegrainHydrationPercentage} % hydration her. Klidet giver også hurtigere fermentering, så dejen kan være klar før tid.`
 		});
 	}
 
@@ -252,18 +273,48 @@ export function analyseDoughStrength(
 		const kinds = thirstySeeds.map((row) => seedOf(row));
 		const names = kinds.map((seed) => seed.nameDa.toLowerCase()).join(', ');
 		const notes = [...new Set(kinds.map((seed) => seed.notesDa).filter(Boolean))].join(' ');
-		// Past roughly 95 % there is no honest way to hide that much water in the
-		// dough's own hydration — it has to become a soaker.
-		const advice =
-			strength.compensatedHydrationPercentage > 95
-				? `Så meget vand kan ikke lægges oven i dejens hydration — læg frøene i blød i ${strength.seedWaterWeight} g vand, og ælt soakeren i som sin egen ingrediens.`
-				: `Læg dem i blød i ${strength.seedWaterWeight} g vand oveni dejens eget vand, eller hæv hydrationen til ${strength.compensatedHydrationPercentage} % hvis de skal i tørre.`;
 
+		// These seeds gel. The water is the same either way; what differs is
+		// whether they drink it in a bowl beforehand or out of the dough.
 		findings.push({
 			id: 'seed-soaker',
 			level: 'info',
-			titleDa: `${names} binder ca. ${strength.seedWaterWeight} g vand`,
-			bodyDa: `Tørre frø stjæler vandet fra dejen under hævningen. ${advice}${notes ? ` ${notes}` : ''}`
+			titleDa: `${names} skal i blød først — ca. ${strength.seedWaterWeight} g vand`,
+			bodyDa: `Læg frøene i blød i ${strength.seedWaterWeight} g vand i 30-60 minutter, og ælt soakeren i til sidst. Vandet er dejens eget vand plus soakerens: hydrationen i dejen bliver ${options.hydrationPercentage} % som planlagt.${notes ? ` ${notes}` : ''}`
+		});
+
+		// The user asked for the number for when there is no time to soak.
+		const dryAdvice =
+			strength.compensatedHydrationPercentage > 95
+				? `Så meget vand kan dejen ikke bære på én gang — her er en soaker den eneste vej.`
+				: `Kom frøene tørre i og hæv dejens hydration til ${strength.compensatedHydrationPercentage} % (${strength.seedWaterWeight} g mere vand). Dejen føles våd og slap i starten og strammer op, efterhånden som frøene suger.`;
+
+		findings.push({
+			id: 'seed-dry-alternative',
+			level: 'caution',
+			titleDa: 'Har du ikke tid til at lægge dem i blød?',
+			bodyDa: `${dryAdvice} Frøene bliver ved med at suge under hævningen, så en lang kold hævning gør den tørre vej værre: dejen strammer op i køleskabet og bliver stiv at forme.`
+		});
+	}
+
+	const enrichment = (options.oilPercentage ?? 0) + (options.sugarPercentage ?? 0);
+	if (enrichment >= 5) {
+		findings.push({
+			id: 'enriched-dough',
+			level: 'info',
+			titleDa: `${Math.round(enrichment * 10) / 10} % fedt og sukker`,
+			bodyDa:
+				'Sukker og fedt bremser gæren. Opskrifter på fede pandedeje bruger typisk 2-3 gange så meget gær som gærberegningen her foreslår — start med det foreslåede, og skru op, hvis dejen ikke er kommet i gang til tiden.'
+		});
+	}
+
+	if (strength.glutenFreePercentage >= 100) {
+		findings.push({
+			id: 'gluten-free-yeast',
+			level: 'info',
+			titleDa: 'Glutenfri dej',
+			bodyDa:
+				'Uden gluten er der intet net til at holde luften, og glutenfri opskrifter bruger derfor mærkbart mere gær end beregningen her. Regn med det dobbelte, og lad dejen hæve i formen.'
 		});
 	}
 

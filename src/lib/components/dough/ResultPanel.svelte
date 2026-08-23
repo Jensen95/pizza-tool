@@ -2,8 +2,10 @@
 	import { yeastInfo } from '$lib/data/reference';
 	import { formatWeight } from '$lib/utils/baker-percentage';
 	import { convertYeastPercentage } from '$lib/utils/yeast';
-	import { formatHours, warningLabels } from '$lib/utils/format-plan';
+	import { formatClock, formatHours, warningLabels } from '$lib/utils/format-plan';
 	import { strengthLevelLabels } from '$lib/utils/dough-strength';
+	import type { DoughPlanWarning } from '$lib/utils/dough-planner';
+	import type { SourdoughPlanWarning } from '$lib/utils/sourdough';
 	import ProofingTimeline from './ProofingTimeline.svelte';
 	import PlanSteps from './PlanSteps.svelte';
 	import type { DoughWorkbench } from '$lib/stores/dough-workbench.svelte';
@@ -28,13 +30,16 @@
 					]
 				: [])
 	);
-	let warnings = $derived(plan?.warnings ?? sourdough?.warnings ?? []);
+	let warnings = $derived<(DoughPlanWarning | SourdoughPlanWarning)[]>(
+		plan?.warnings ?? sourdough?.warnings ?? []
+	);
 	let perBall = $derived(
 		workbench.sizingMode === 'balls' && workbench.ballCount > 0
 			? workbench.totalDoughWeight / workbench.ballCount
 			: 0
 	);
 	let strength = $derived(workbench.strength);
+	let cooling = $derived(workbench.cooling);
 
 	let freshEquivalent = $derived(
 		plan ? convertYeastPercentage(plan.idyPercentage, 'instant', 'fresh') : 0
@@ -149,6 +154,67 @@
 			<p class="grand-total">
 				Samlet dejvægt <strong>{formatWeight(workbench.totalDoughWeight)}</strong>
 			</p>
+		{/if}
+
+		{#if workbench.split.fridgeHours > 0}
+			<div class="cooling">
+				<h3>På vej i køleskabet</h3>
+				<div class="stats">
+					<div class="stat">
+						<span class="label">Temperatur når den sættes ind</span>
+						<strong>{cooling.temperatureAtFridgeEntry.toFixed(1)} °C</strong>
+					</div>
+					<div class="stat">
+						<span class="label">Tid før den er kold</span>
+						{#if cooling.hoursToCold >= workbench.split.fridgeHours}
+							<strong class="tight">Bliver ikke kold</strong>
+						{:else}
+							<strong>{formatHours(cooling.hoursToCold)}</strong>
+						{/if}
+					</div>
+					{#if workbench.fridgeDeadline}
+						<div class="stat">
+							<span class="label">Skal på køl senest</span>
+							<strong>{formatClock(workbench.fridgeDeadline)}</strong>
+						</div>
+					{/if}
+					{#if workbench.warmSlackHours !== null}
+						<div class="stat">
+							<span class="label">Spillerum på bordet</span>
+							<strong
+								class:tight={workbench.warmSlackHours < 0.5}
+								class:over={workbench.warmSlackHours < 0}
+							>
+								{workbench.warmSlackHours < 0 ? '−' : '+'}{formatHours(
+									Math.abs(workbench.warmSlackHours)
+								)}
+							</strong>
+						</div>
+					{/if}
+				</div>
+
+				{#if cooling.hoursToCold >= workbench.split.fridgeHours && workbench.split.fridgeHours > 0}
+					<p class="warning">
+						Dejen er stadig ikke kold, når køletiden er slut — den hæver hele vejen. Del den i
+						kugler, eller brug en lav, bred beholder.
+					</p>
+				{/if}
+
+				{#if cooling.extraWarmEquivalentHours >= 0.75}
+					<p class="warning">
+						Dejen hæver videre, mens den køler ned — det svarer til
+						{formatHours(cooling.extraWarmEquivalentHours)} ekstra hævning ved stuetemperatur, og det
+						er regnet ind i gærmængden. Del dejen i kugler eller brug en lav beholder, så den køler hurtigere.
+					</p>
+				{/if}
+
+				{#if workbench.warmSlackHours !== null && workbench.warmSlackHours < 0}
+					<p class="warning">
+						Med denne gærmængde er dejen færdighævet, før stuehævningen er slut. Kort stuehævningen
+						ned, eller sæt dejen på køl tidligere.
+					</p>
+				{/if}
+			</div>
 		{/if}
 
 		<div class="plan-block">
@@ -319,6 +385,25 @@
 	.plan-block h3 {
 		font-size: var(--font-size-md);
 		margin: 0;
+	}
+
+	.cooling {
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-xs);
+	}
+
+	.cooling h3 {
+		font-size: var(--font-size-md);
+		margin: 0;
+	}
+
+	.stat strong.tight {
+		color: var(--color-warning);
+	}
+
+	.stat strong.over {
+		color: var(--color-error);
 	}
 
 	.strength {

@@ -21,8 +21,12 @@ export {
 	predictYeast,
 	effectiveRoomHours,
 	fermentationRateFactor,
+	analyseFridgeCooling,
+	coolingTimeConstant,
+	maxWarmHours,
+	FRIDGE_TEMPERATURE,
 	REFERENCE_ROOM_TEMPERATURE,
-	TEMPER_WARM_FRACTION
+	TARGET_DOUGH_TEMPERATURE
 } from './fermentation';
 export type { ProofingSchedule, YeastPrediction, ProofLocation } from './fermentation';
 export type { DoughIngredientRow, PlannedIngredient } from './dough-ingredients';
@@ -52,6 +56,12 @@ export interface DoughPlanInput {
 	temperHours?: number;
 	/** Actual room temperature in °C */
 	roomTemperature?: number;
+	/** Final dough temperature after kneading, measured with a probe */
+	doughTemperature?: number;
+	/** Whole dough weight, for how fast the bulk changes temperature */
+	bulkWeight?: number;
+	/** Weight of one shaped piece, for how fast it cools in the fridge */
+	pieceWeight?: number;
 	/** Flour blend; percentages of total flour, summing to 100 */
 	flours?: DoughIngredientRow[];
 	/** Free-form rows: `water` rows allocate part of the hydration, the rest add weight */
@@ -175,7 +185,10 @@ export function planDough(input: DoughPlanInput): DoughPlan | null {
 		roomHours: input.roomHours,
 		fridgeHours: input.fridgeHours,
 		temperHours: input.temperHours,
-		roomTemperature: input.roomTemperature
+		roomTemperature: input.roomTemperature,
+		doughTemperature: input.doughTemperature,
+		bulkWeight: input.bulkWeight,
+		pieceWeight: input.pieceWeight
 	});
 	if (!prediction || input.flourWeight <= 0) return null;
 
