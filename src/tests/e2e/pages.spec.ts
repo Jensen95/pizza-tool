@@ -144,4 +144,18 @@ test.describe('Dough Planner Page', () => {
 		// A warmer dough ferments faster, so the same schedule needs less yeast
 		expect(cool).not.toEqual(warm);
 	});
+
+	test('should explain why the dough should not run too warm', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		const form = page.getByTestId('dough-form');
+		await page.getByLabel('Dejtemperatur efter æltning i celsius').fill('30');
+		// 30 °C against the 27 °C ceiling, at a doubling every 8 °C: 2^(3/8) ≈ 1.30
+		await expect(form).toContainText('30 % hurtigere');
+
+		await page.getByText('Hvorfor 24-27 °C?').click();
+		await expect(form).toContainText('Gæren tager ikke skade');
+		await expect(form).toContainText('kontrol');
+	});
 });

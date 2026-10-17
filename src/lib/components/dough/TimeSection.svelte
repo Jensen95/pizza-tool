@@ -11,6 +11,26 @@
 	let { workbench }: { workbench: DoughWorkbench } = $props();
 
 	let rateFactor = $derived(fermentationRateFactor(workbench.roomTemperature));
+
+	// How far the dough's own speed is from the edge of the target band, so the
+	// tip can say what being off target actually costs.
+	let fasterThanTarget = $derived(
+		Math.round(
+			(fermentationRateFactor(workbench.doughTemperature) /
+				fermentationRateFactor(TARGET_DOUGH_TEMPERATURE.max) -
+				1) *
+				100
+		)
+	);
+	let slowerThanTarget = $derived(
+		Math.round(
+			(1 -
+				fermentationRateFactor(workbench.doughTemperature) /
+					fermentationRateFactor(TARGET_DOUGH_TEMPERATURE.min)) *
+				100
+		)
+	);
+	let lotsOfWholegrain = $derived(workbench.strength.wholegrainPercentage > 35);
 	let deadlineDriven = $derived(
 		workbench.timeMode === 'deadline' && workbench.styleId !== 'custom'
 	);
@@ -227,19 +247,56 @@
 			/>
 			<span class="unit">°C</span>
 		</div>
-		<p class="hint">
+		<p class="hint" class:warn={workbench.doughTemperature > TARGET_DOUGH_TEMPERATURE.max}>
 			{#if workbench.doughTemperature > TARGET_DOUGH_TEMPERATURE.max}
-				Over målet på {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C. Brug koldere vand,
-				eller ælt kortere.
+				Over målet på {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C — dejen hæver ca.
+				<strong>{fasterThanTarget} % hurtigere</strong> end ved {TARGET_DOUGH_TEMPERATURE.max} °C. Brug
+				koldere vand, eller ælt kortere.
 			{:else if workbench.doughTemperature < TARGET_DOUGH_TEMPERATURE.min - 2}
-				Under målet på {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C. Dejen kommer
-				langsomt i gang.
+				Under målet på {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C — dejen hæver
+				ca.
+				<strong>{slowerThanTarget} % langsommere</strong> end ved {TARGET_DOUGH_TEMPERATURE.min} °C og
+				kommer sent i gang. Brug lunere vand.
+			{:else if workbench.doughTemperature < TARGET_DOUGH_TEMPERATURE.min}
+				Lidt under målet på {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C. Fint til
+				en lang hævning — dejen kommer bare lidt langsommere i gang.
 			{:else}
-				Mål {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C. Mål med et stegetermometer
-				lige efter æltning — se vandtemperatur-formlen under Reference.
+				Inden for målet på {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C. Mål med et
+				stegetermometer lige efter æltning.
 			{/if}
 		</p>
 	</label>
+
+	<details class="why">
+		<summary>Hvorfor {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C?</summary>
+		<div class="why-body">
+			<p>
+				Gæren tager ikke skade ved {TARGET_DOUGH_TEMPERATURE.max} °C — den har det fint til et godt stykke
+				over 30 °C. Grænsen handler om <strong>kontrol</strong>. Jo varmere dejen er, jo hurtigere
+				hæver den, groft regnet dobbelt så hurtigt for hver 8 °C.
+			</p>
+			<p>
+				Over ca. {TARGET_DOUGH_TEMPERATURE.max} °C går det så stærkt, at dejen er færdighævet, før smagen
+				har nået at udvikle sig. Den bliver slap og fuld af gas og er svær at åbne til en pizza, og vinduet
+				til at ramme den på det rigtige tidspunkt bliver kort.
+			</p>
+			<p>
+				Gærmængden her er regnet med dejens temperatur, så <em>farten</em> er der taget højde for. Men
+				færre gram gær gør ikke en varm dej mindre slap, og en varm dej, der skal på køl, hæver videre
+				i timevis, mens den køler ned.
+			</p>
+			{#if lotsOfWholegrain}
+				<p>
+					Med {workbench.strength.wholegrainPercentage} % fuldkorn sigter mange lavere, omkring 23 °C,
+					fordi klidet i forvejen fremskynder hævningen.
+				</p>
+			{/if}
+			<p>
+				Grænsen er en tommelfingerregel, ikke en fysisk tærskel — en biga holdes typisk på 18-20 °C.
+				Den vandtemperatur, der rammer målet, kan regnes ud under Reference.
+			</p>
+		</div>
+	</details>
 
 	<label class="field">
 		<span class="label">Rumtemperatur</span>
@@ -340,6 +397,37 @@
 
 	.hint.warn {
 		color: var(--color-error);
+	}
+
+	.why {
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		background: var(--color-background);
+	}
+
+	.why summary {
+		display: flex;
+		align-items: center;
+		min-height: 44px;
+		padding: 0 var(--spacing-sm);
+		font-size: var(--font-size-sm);
+		font-weight: 600;
+		color: var(--color-primary);
+		cursor: pointer;
+	}
+
+	.why-body {
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-xs);
+		padding: 0 var(--spacing-sm) var(--spacing-sm);
+		font-size: var(--font-size-sm);
+		color: var(--color-text-secondary);
+		max-width: 60ch;
+	}
+
+	.why-body p {
+		margin: 0;
 	}
 
 	.styles {
