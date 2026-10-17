@@ -24,3 +24,11 @@ describe('migratePreferences', () => {
 		expect(migratePreferences({ colorTheme: 'sepia' }).colorTheme).toBe('system');
 	});
 });
+
+describe('migratePreferences on whatever storage holds', () => {
+	test.each([null, 'dark', 42, true, ['dark']])('falls back to defaults for %j', (stored) => {
+		const prefs = migratePreferences(stored);
+		expect(prefs.colorTheme).toBe('system');
+		expect(prefs.defaultPizzaCount).toBe(4);
+	});
+});

@@ -20,8 +20,8 @@ function isStorageAvailable(): boolean {
  * Get an item from localStorage with type safety
  */
 export function get<T>(key: string, defaultValue: T): T {
-	if (!isStorageAvailable()) return defaultValue;
-
+	// No write probe here: a full quota makes the probe's setItem throw, which
+	// used to hide every saved preference even though reading still works.
 	try {
 		const item = window.localStorage.getItem(STORAGE_PREFIX + key);
 		if (item === null) return defaultValue;

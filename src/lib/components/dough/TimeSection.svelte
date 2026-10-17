@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { proofingStyles } from '$lib/utils/proofing-styles';
 	import {
+		MAX_DOUGH_TEMPERATURE,
+		MIN_DOUGH_TEMPERATURE,
 		REFERENCE_ROOM_TEMPERATURE,
 		TARGET_DOUGH_TEMPERATURE,
 		fermentationRateFactor
@@ -12,11 +14,25 @@
 
 	let rateFactor = $derived(fermentationRateFactor(workbench.roomTemperature));
 
+	// A cleared field binds null, and a half-typed "2" is 2 °C: neither is a dough
+	// temperature, so no percentage is computed from them. Outside 10-35 °C the
+	// rate model is clamped and would show a saturated, wrong figure.
+	let doughTemperature = $derived(
+		typeof workbench.doughTemperature === 'number' && Number.isFinite(workbench.doughTemperature)
+			? workbench.doughTemperature
+			: null
+	);
+	let outsideModel = $derived(
+		doughTemperature !== null &&
+			(doughTemperature < MIN_DOUGH_TEMPERATURE || doughTemperature > MAX_DOUGH_TEMPERATURE)
+	);
+	let isYeast = $derived(workbench.leavening === 'yeast');
+
 	// How far the dough's own speed is from the edge of the target band, so the
 	// tip can say what being off target actually costs.
 	let fasterThanTarget = $derived(
 		Math.round(
-			(fermentationRateFactor(workbench.doughTemperature) /
+			(fermentationRateFactor(doughTemperature ?? TARGET_DOUGH_TEMPERATURE.max) /
 				fermentationRateFactor(TARGET_DOUGH_TEMPERATURE.max) -
 				1) *
 				100
@@ -25,7 +41,7 @@
 	let slowerThanTarget = $derived(
 		Math.round(
 			(1 -
-				fermentationRateFactor(workbench.doughTemperature) /
+				fermentationRateFactor(doughTemperature ?? TARGET_DOUGH_TEMPERATURE.min) /
 					fermentationRateFactor(TARGET_DOUGH_TEMPERATURE.min)) *
 				100
 		)
@@ -109,7 +125,11 @@
 
 	{#if workbench.autolyseEnabled}
 		<p class="hint">
-			Mel og vand blandes først og hviler {formatHours(workbench.autolyseHours)}; salt og
+			Mel og {workbench.holdBackShare > 0
+				? workbench.holdBackShare < 0.5
+					? 'det meste af vandet'
+					: 'en del af vandet'
+				: 'vand'} blandes først og hviler {formatHours(workbench.autolyseHours)}; salt og
 			{workbench.leavening === 'sourdough' ? 'surdej' : 'gær'} kommer i bagefter. Mængderne er de samme
 			— autolysen bruger af tiden, men ikke af gærbudgettet, for der er ingen gær i dejen endnu.
 		</p>
@@ -247,19 +267,31 @@
 			/>
 			<span class="unit">°C</span>
 		</div>
-		<p class="hint" class:warn={workbench.doughTemperature > TARGET_DOUGH_TEMPERATURE.max}>
-			{#if workbench.doughTemperature > TARGET_DOUGH_TEMPERATURE.max}
-				Over målet på {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C — dejen hæver ca.
-				<strong>{fasterThanTarget} % hurtigere</strong> end ved {TARGET_DOUGH_TEMPERATURE.max} °C. Brug
-				koldere vand, eller ælt kortere.
-			{:else if workbench.doughTemperature < TARGET_DOUGH_TEMPERATURE.min - 2}
+		<p
+			class="hint"
+			class:warn={doughTemperature !== null && doughTemperature > TARGET_DOUGH_TEMPERATURE.max}
+		>
+			{#if doughTemperature === null}
+				Mål dejen med et stegetermometer lige efter æltning, og skriv temperaturen her.
+			{:else if outsideModel}
+				{doughTemperature} °C ligger uden for det, værktøjet regner med ({MIN_DOUGH_TEMPERATURE}-{MAX_DOUGH_TEMPERATURE}
+				°C). Mål igen — et stegetermometer skal sidde midt i dejen.
+			{:else if doughTemperature > TARGET_DOUGH_TEMPERATURE.max}
+				{#if fasterThanTarget < 1}
+					Lige over målet på {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C. Hold øje
+					med dejen mod slutningen.
+				{:else}
+					Over målet på {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C — dejen hæver
+					ca. <strong>{fasterThanTarget} % hurtigere</strong> end ved {TARGET_DOUGH_TEMPERATURE.max} °C.
+					Brug koldere vand, eller ælt kortere.
+				{/if}
+			{:else if doughTemperature < TARGET_DOUGH_TEMPERATURE.min - 2}
 				Under målet på {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C — dejen hæver
-				ca.
-				<strong>{slowerThanTarget} % langsommere</strong> end ved {TARGET_DOUGH_TEMPERATURE.min} °C og
-				kommer sent i gang. Brug lunere vand.
-			{:else if workbench.doughTemperature < TARGET_DOUGH_TEMPERATURE.min}
+				ca. <strong>{slowerThanTarget} % langsommere</strong> end ved {TARGET_DOUGH_TEMPERATURE.min} °C.
+				Brug lunere vand.
+			{:else if doughTemperature < TARGET_DOUGH_TEMPERATURE.min}
 				Lidt under målet på {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C. Fint til
-				en lang hævning — dejen kommer bare lidt langsommere i gang.
+				en lang hævning — dejen kommer blot en smule langsommere i gang.
 			{:else}
 				Inden for målet på {TARGET_DOUGH_TEMPERATURE.min}-{TARGET_DOUGH_TEMPERATURE.max} °C. Mål med et
 				stegetermometer lige efter æltning.
@@ -280,11 +312,19 @@
 				har nået at udvikle sig. Den bliver slap og fuld af gas og er svær at åbne til en pizza, og vinduet
 				til at ramme den på det rigtige tidspunkt bliver kort.
 			</p>
-			<p>
-				Gærmængden her er regnet med dejens temperatur, så <em>farten</em> er der taget højde for. Men
-				færre gram gær gør ikke en varm dej mindre slap, og en varm dej, der skal på køl, hæver videre
-				i timevis, mens den køler ned.
-			</p>
+			{#if isYeast}
+				<p>
+					Gærmængden her er regnet med dejens temperatur, så <em>farten</em> er der taget højde for. Men
+					færre gram gær gør ikke en varm dej mindre slap, og en varm dej, der skal på køl, hæver videre
+					i timevis, mens den køler ned.
+				</p>
+			{:else}
+				<p>
+					Surdejens tider her er estimater ved stuetemperatur og regnes ikke om efter dejens
+					temperatur. En varm surdej er klar før estimatet, så hold øje med dejen frem for uret — og
+					en varm dej, der skal på køl, hæver videre i timevis, mens den køler ned.
+				</p>
+			{/if}
 			{#if lotsOfWholegrain}
 				<p>
 					Med {workbench.strength.wholegrainPercentage} % fuldkorn sigter mange lavere, omkring 23 °C,
@@ -317,7 +357,7 @@
 				Tabellens udgangspunkt. Et varmere køkken hæver hurtigere.
 			{:else}
 				Dejen hæver ca. <strong>{rateFactor.toFixed(2)}×</strong> så hurtigt som ved
-				{REFERENCE_ROOM_TEMPERATURE} °C — gærmængden er justeret efter det.
+				{REFERENCE_ROOM_TEMPERATURE} °C{isYeast ? ' — gærmængden er justeret efter det' : ''}.
 			{/if}
 		</p>
 	</label>
@@ -405,15 +445,39 @@
 		background: var(--color-background);
 	}
 
+	/* display:flex drops the native triangle, so the marker is drawn here — the
+	   same pattern as the <details> in DoughControls */
 	.why summary {
 		display: flex;
 		align-items: center;
+		gap: var(--spacing-xs);
 		min-height: 44px;
 		padding: 0 var(--spacing-sm);
 		font-size: var(--font-size-sm);
 		font-weight: 600;
-		color: var(--color-primary);
+		color: var(--color-accent-text);
 		cursor: pointer;
+		list-style: none;
+	}
+
+	.why summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.why summary::before {
+		content: '▸';
+		display: inline-block;
+		transition: transform 0.15s ease;
+	}
+
+	.why[open] summary::before {
+		transform: rotate(90deg);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.why summary::before {
+			transition: none;
+		}
 	}
 
 	.why-body {

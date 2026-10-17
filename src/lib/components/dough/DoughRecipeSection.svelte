@@ -11,7 +11,7 @@
 	let blendSum = $derived(flourBlendSum(workbench.flours));
 
 	const extraTypes: { value: DoughIngredientRow['type']; labelDa: string }[] = [
-		{ value: 'water', labelDa: 'Vand' },
+		{ value: 'water', labelDa: 'Tilbageholdt vand' },
 		{ value: 'seed', labelDa: 'Frø/kerner' },
 		{ value: 'salt', labelDa: 'Salt' },
 		{ value: 'oil', labelDa: 'Olie' },
@@ -341,9 +341,13 @@
 				</div>
 			{/each}
 			<p class="hint">
-				Tilbageholdt vand er en del af hydrationen, ikke vand oveni: det trækkes fra det vand, der
-				kommer i fra starten, og tilsættes lidt ad gangen sidst i æltningen, når glutennettet er
-				dannet (bassinage). Alt andet lægges oveni dejen.
+				{#if workbench.holdBackShare > 0}
+					Tilbageholdt vand er en del af hydrationen, ikke vand oveni: det trækkes fra det vand, der
+					tilsættes fra starten, og kommes i lidt ad gangen sidst i æltningen, når glutennettet er
+					dannet (bassinage). Alt andet lægges oveni dejen.
+				{:else}
+					Alt, du tilføjer her, lægges oveni dejen.
+				{/if}
 			</p>
 		{/if}
 	</div>
@@ -434,6 +438,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--spacing-xs);
+		container: rows / inline-size;
 	}
 
 	.rows-head {
@@ -499,7 +504,11 @@
 		.grid-fields {
 			grid-template-columns: 1fr;
 		}
+	}
 
+	/* Keyed to the list's own width, not the window's: on a desktop the form sits
+	   in a ~340 px column, where a one-line row left the name field 47 px wide. */
+	@container rows (max-width: 520px) {
 		.row.wide {
 			flex-wrap: wrap;
 		}

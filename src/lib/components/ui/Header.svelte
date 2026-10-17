@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { activeTimerCount, preferences } from '$lib/stores';
-	import type { ColorTheme } from '$lib/stores/preferences';
+	import { colorThemeOrder, type ColorTheme } from '$lib/stores/preferences';
 
 	const themeLabels: Record<ColorTheme, string> = {
 		system: 'Automatisk',
@@ -8,11 +8,17 @@
 		dark: 'Mørk'
 	};
 
-	const nextTheme: Record<ColorTheme, ColorTheme> = {
-		system: 'light',
-		light: 'dark',
-		dark: 'system'
+	// "Tema" is neuter, so the spoken target takes the -t form: "mørkt tema"
+	const themeTargets: Record<ColorTheme, string> = {
+		system: 'automatisk tema',
+		light: 'lyst tema',
+		dark: 'mørkt tema'
 	};
+
+	// Read from the store's own order, so what is announced is what a click does
+	let nextTheme = $derived(
+		colorThemeOrder[(colorThemeOrder.indexOf($preferences.colorTheme) + 1) % colorThemeOrder.length]
+	);
 
 	let {
 		title = 'Pizza Tool',
@@ -48,7 +54,7 @@
 			type="button"
 			class="theme-button"
 			onclick={() => preferences.cycleColorTheme()}
-			aria-label={`Tema: ${themeLabels[$preferences.colorTheme]}. Skift til ${themeLabels[nextTheme[$preferences.colorTheme]].toLowerCase()}`}
+			aria-label={`Tema: ${themeLabels[$preferences.colorTheme]}. Skift til ${themeTargets[nextTheme]}`}
 			title={`Tema: ${themeLabels[$preferences.colorTheme]}`}
 		>
 			{#if $preferences.colorTheme === 'light'}
@@ -169,6 +175,7 @@
 	.theme-button {
 		display: inline-flex;
 		align-items: center;
+		justify-content: center;
 		gap: 6px;
 		min-height: 44px;
 		min-width: 44px;
@@ -179,8 +186,15 @@
 		font-weight: 500;
 	}
 
+	/* Darken rather than lighten: a white wash on red pulled the label to 4.06:1 */
 	.theme-button:hover {
-		background: rgba(255, 255, 255, 0.15);
+		background: rgba(0, 0, 0, 0.15);
+	}
+
+	/* The global focus ring is --color-primary, the header's own background, so
+	   it vanished here. White keeps it visible on every control in the header. */
+	.header :focus-visible {
+		outline-color: var(--color-text-light);
 	}
 
 	/* On a phone the icon says enough; the label is still in aria-label */

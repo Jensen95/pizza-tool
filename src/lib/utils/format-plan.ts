@@ -57,7 +57,7 @@ export const warningLabels: Record<DoughPlanWarning | SourdoughPlanWarning, stri
 	'starter-exceeds-water':
 		'Surdejen indeholder mere vand end hydrationen tillader. Sænk surdejsprocenten eller hæv hydrationen.',
 	'water-over-allocated':
-		'Der holdes mere vand tilbage, end hydrationen giver. Hold mindre tilbage, eller hæv hydrationen.',
+		'Der holdes mere vand tilbage, end hydrationen tillader. Hold mindre tilbage, eller hæv hydrationen.',
 	'flour-blend-off': 'Melblandingen summer ikke til 100 %. Juster procenterne, så de passer.',
 	'predough-covers-yeast':
 		'Fordejen indeholder al gæren, der er brug for — hoveddejen skal ikke have mere.',

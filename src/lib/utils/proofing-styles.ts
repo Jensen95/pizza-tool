@@ -229,8 +229,12 @@ export interface PhaseOptions {
 	predoughNameDa?: string;
 	/** What goes in after the autolyse: yeast, or a sourdough starter */
 	leavening?: 'yeast' | 'sourdough';
-	/** Some of the water is held back and worked in at the end of kneading */
-	holdBackWater?: boolean;
+	/**
+	 * Share of the dough's water held back and worked in at the end of kneading,
+	 * 0 to 1. Decides how the first mix is described: "the most of the water"
+	 * is only true while less than half is held back.
+	 */
+	holdBackShare?: number;
 }
 
 /**
@@ -257,13 +261,20 @@ export function buildPhases(split: ProofingSplit, options: PhaseOptions = {}): P
 		});
 	}
 
-	const heldBack = options.holdBackWater ? ' — det tilbageholdte vand til sidst' : '';
+	const holdBackShare = Math.max(0, options.holdBackShare ?? 0);
+	const holdsBack = holdBackShare > 0;
+	const heldBack = holdsBack ? ' — tilsæt det tilbageholdte vand til sidst' : '';
+	const firstWater = !holdsBack
+		? 'vand'
+		: holdBackShare < 0.5
+			? 'det meste af vandet'
+			: 'en del af vandet';
 
 	if (split.autolyseHours > 0) {
 		phases.push({
 			id: 'autolyse-mix',
 			kind: 'mix',
-			labelDa: options.holdBackWater ? 'Bland mel og det meste af vandet' : 'Bland mel og vand',
+			labelDa: `Bland mel og ${firstWater}`,
 			hours: 0
 		});
 		phases.push({

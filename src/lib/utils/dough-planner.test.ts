@@ -262,6 +262,31 @@ describe('added ingredient rows', () => {
 		expect(plan!.warnings).toContain('water-over-allocated');
 	});
 
+	test('warns when all the water is held back, leaving nothing for the first mix', () => {
+		const plan = planDough(
+			buildInput({
+				extras: [{ id: 'held-back', name: 'Tilbageholdt vand', percentage: 65, type: 'water' }]
+			})
+		);
+		expect(plan!.warnings).toContain('water-over-allocated');
+	});
+
+	test('a biga that takes all the water is not flagged — there is nothing held back', () => {
+		const plan = planDough(
+			buildInput({
+				hydrationPercentage: 45,
+				predough: {
+					kind: 'biga',
+					flourPercentage: 100,
+					hydrationPercentage: 45,
+					roomHours: 18,
+					fridgeHours: 0
+				}
+			})
+		);
+		expect(plan!.warnings).not.toContain('water-over-allocated');
+	});
+
 	test('other rows add weight on top', () => {
 		const plan = planDough(
 			buildInput({

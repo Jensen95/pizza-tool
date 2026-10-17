@@ -36,8 +36,14 @@ const defaultPreferences: Preferences = {
  * the old default of 'light', not a decision. It is dropped rather than carried
  * over, or everyone who ever changed a setting would be pinned to light mode.
  */
-export function migratePreferences(stored: Record<string, unknown>): Preferences {
-	const { theme: _legacyTheme, ...rest } = stored;
+export function migratePreferences(stored: unknown): Preferences {
+	// Storage can hold anything — a stored "null" used to throw here, and since
+	// the store is created at import time that left the whole app blank.
+	const source =
+		stored && typeof stored === 'object' && !Array.isArray(stored)
+			? (stored as Record<string, unknown>)
+			: {};
+	const { theme: _legacyTheme, ...rest } = source;
 	const merged = { ...defaultPreferences, ...rest } as Preferences;
 	if (!colorThemeOrder.includes(merged.colorTheme)) merged.colorTheme = 'system';
 	return merged;

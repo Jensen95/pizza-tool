@@ -154,9 +154,11 @@ test.describe('Dough Planner Page', () => {
 		// 30 °C against the 27 °C ceiling, at a doubling every 8 °C: 2^(3/8) ≈ 1.30
 		await expect(form).toContainText('30 % hurtigere');
 
+		// Visibility, not text: a closed <details> still has its text in the DOM
+		const reason = page.getByText('Gæren tager ikke skade');
+		await expect(reason).toBeHidden();
 		await page.getByText('Hvorfor 24-27 °C?').click();
-		await expect(form).toContainText('Gæren tager ikke skade');
-		await expect(form).toContainText('kontrol');
+		await expect(reason).toBeVisible();
 	});
 
 	test('should put held-back water on the timeline', async ({ page }) => {
@@ -188,12 +190,29 @@ test.describe('Theme', () => {
 		await button.click();
 		await expect(root).toHaveAttribute('data-theme', 'dark');
 
-		// Applied before the app boots, so a reload does not flash the wrong theme
 		await page.reload();
 		await expect(root).toHaveAttribute('data-theme', 'dark');
 
 		await page.getByRole('button', { name: /^Tema:/ }).click();
 		await expect(root).not.toHaveAttribute('data-theme');
+	});
+
+	test('the inline script applies the stored theme before the app runs', async ({ browser }) => {
+		// The app's own $effect also sets data-theme once it boots, which would
+		// mask a missing or broken pre-paint script. With the app's JavaScript
+		// blocked, only the inline script in app.html can have set it.
+		const context = await browser.newContext({ serviceWorkers: 'block' });
+		await context.addInitScript(() =>
+			localStorage.setItem('pizza-tool-preferences', JSON.stringify({ colorTheme: 'dark' }))
+		);
+		const page = await context.newPage();
+		await page.route('**/_app/**', (route) => route.abort());
+
+		await page.goto('/');
+		await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+		// Proof the app never ran: its header is not on the page
+		await expect(page.locator('header')).toHaveCount(0);
+		await context.close();
 	});
 
 	test('an explicit light choice beats a dark device', async ({ browser }) => {

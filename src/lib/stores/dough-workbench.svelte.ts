@@ -118,6 +118,15 @@ export class DoughWorkbench {
 
 	autolyseWindow = $derived(this.autolyseEnabled ? Math.max(0, this.autolyseHours) : 0);
 
+	/** Share of the water held back for the end of kneading, 0 to 1. */
+	holdBackShare = $derived(
+		this.hydrationPercentage > 0
+			? this.extras
+					.filter((row) => row.type === 'water')
+					.reduce((sum, row) => sum + Math.max(0, row.percentage), 0) / this.hydrationPercentage
+			: 0
+	);
+
 	/** True only when a predough is both switched on and meaningful for this dough. */
 	usesPredough = $derived(this.predoughEnabled && this.leavening === 'yeast');
 
@@ -223,7 +232,9 @@ export class DoughWorkbench {
 	 * other words, the point where it has to go into the fridge.
 	 */
 	warmBudgetHours = $derived.by(() => {
-		if (this.split.fridgeHours <= 0) return null;
+		// The budget is a yeast budget. A sourdough has none to spend, so a
+		// deadline worked out from one would be invented.
+		if (this.leavening !== 'yeast' || this.split.fridgeHours <= 0) return null;
 		const prediction = predictYeastRaw(this.thermalSchedule);
 		if (!prediction) return null;
 		return maxWarmHours(this.thermalSchedule, prediction.idyPercentage);
@@ -347,7 +358,7 @@ export class DoughWorkbench {
 		buildPhases(this.split, {
 			predoughNameDa: this.predoughEnabled ? predoughDefaults[this.predough.kind].nameDa : 'Fordej',
 			leavening: this.leavening,
-			holdBackWater: this.extras.some((row) => row.type === 'water' && row.percentage > 0)
+			holdBackShare: this.holdBackShare
 		})
 	);
 
@@ -467,7 +478,13 @@ export class DoughWorkbench {
 			state.autolyseHours && state.autolyseHours > 0 ? state.autolyseHours : 0.75;
 		this.autolyseEnabled = Boolean(state.autolyseHours && state.autolyseHours > 0);
 		this.flours = state.flours ? [...state.flours] : [];
-		this.extras = state.extras ? [...state.extras] : [];
+		// Plans saved by the first version named a water row "Vand (autolyse)".
+		// Water rows now mean held-back water, so the name follows the meaning.
+		this.extras = (state.extras ?? []).map((row) =>
+			row.type === 'water' && row.name === 'Vand (autolyse)'
+				? { ...row, name: 'Tilbageholdt vand' }
+				: { ...row }
+		);
 		this.starterPercentage = state.starterPercentage ?? 20;
 		this.starterHydrationPercentage = state.starterHydrationPercentage ?? 100;
 		this.predoughEnabled = Boolean(state.predough);

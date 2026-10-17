@@ -233,7 +233,14 @@ export function planDough(input: DoughPlanInput): DoughPlan | null {
 	const mainWaterPercentage =
 		input.hydrationPercentage - predoughWaterPercentage - allocatedWaterPercentage;
 	if (predoughWaterPercentage > input.hydrationPercentage) warnings.push('predough-too-wet');
-	if (mainWaterPercentage < -0.05) warnings.push('water-over-allocated');
+	// Over the top is always wrong; holding back *all* of it is wrong too, since
+	// the first mix then has no water to bring the flour together.
+	if (
+		mainWaterPercentage < -0.05 ||
+		(allocatedWaterPercentage > 0 && mainWaterPercentage <= 0.05)
+	) {
+		warnings.push('water-over-allocated');
+	}
 
 	const blendSum = flourBlendSum(input.flours);
 	if (blendSum > 0 && Math.abs(blendSum - 100) > 0.5) warnings.push('flour-blend-off');
