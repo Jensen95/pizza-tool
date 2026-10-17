@@ -6,15 +6,15 @@ allowed-tools: Bash(npm install)
 
 # Dev Setup
 
-This project requires **Node 24** (`.nvmrc` is `24`, `.npmrc` has `engine-strict=true`).
+This project runs on **Node 26** (`.nvmrc` is `26`, `.npmrc` has `engine-strict=true`).
 Use the correct Node version — do NOT skip the engine check with `--engine-strict=false`
 or `--ignore-engines`. If the check fails, install the right Node version first.
 
 ## Switch Node version + install
 
 ```bash
-nvm install 24   # if not yet installed
-nvm use          # reads .nvmrc (Node 24)
+nvm install 26   # if not yet installed
+nvm use          # reads .nvmrc (Node 26)
 # or: fnm use
 npm install
 ```

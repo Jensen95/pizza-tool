@@ -25,7 +25,7 @@ Pizza Tool is a SvelteKit-based Progressive Web App (PWA) for pizza recipe manag
   - Prettier with Svelte plugin
   - TypeScript strict mode
 - **CI/CD:** GitHub Actions
-- **Node Version:** >= 20.0.0
+- **Node Version:** 26 (see `.nvmrc`). `engines` allows >= 24 so Dependabot, which runs 24, keeps working
 
 ## Coding Standards
 
