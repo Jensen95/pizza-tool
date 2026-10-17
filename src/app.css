@@ -1,4 +1,6 @@
 :root {
+	/* Lets native controls — inputs, selects, scrollbars — match the theme */
+	color-scheme: light;
 	--color-primary: #d32f2f;
 	--color-primary-rgb: 211, 47, 47;
 	--color-primary-dark: #b71c1c;
@@ -9,6 +11,10 @@
 	--color-text-secondary: #757575;
 	--color-text-light: #ffffff;
 	--color-border: #e0e0e0;
+	--color-secondary-hover: #d0d0d0;
+	/* Red text that stays readable: --color-primary has no dark value and falls
+	   to 3.8:1 on the dark background */
+	--color-accent-text: #c62828;
 	--color-success: #4caf50;
 	--color-warning: #ff9800;
 	--color-warning-bg: #fff3e0;
@@ -179,7 +185,7 @@ h3 {
 }
 
 .btn-secondary:hover {
-	background: #d0d0d0;
+	background: var(--color-secondary-hover);
 }
 
 .btn-outline {
@@ -313,13 +319,22 @@ h3 {
 	}
 }
 
+/*
+ * Three states. With no data-theme on <html> the app follows the device; the
+ * header button stamps data-theme="light" or "dark" to override it. The dark
+ * tokens therefore live twice — once for a dark device that has not been told
+ * otherwise, once for an explicit choice — and must be kept in step.
+ */
 @media (prefers-color-scheme: dark) {
-	:root {
+	:root:not([data-theme='light']) {
+		color-scheme: dark;
 		--color-background: #121212;
 		--color-surface: #1e1e1e;
 		--color-text: #e8e8e8;
 		--color-text-secondary: #a0a0a0;
 		--color-border: #333333;
+		--color-secondary-hover: #454545;
+		--color-accent-text: #ef6b68;
 		--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
 		--shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5);
 		--shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.6);
@@ -332,4 +347,26 @@ h3 {
 		--color-temper: #d3a24d;
 		--color-phase-text: #12100e;
 	}
+}
+
+:root[data-theme='dark'] {
+	color-scheme: dark;
+	--color-background: #121212;
+	--color-surface: #1e1e1e;
+	--color-text: #e8e8e8;
+	--color-text-secondary: #a0a0a0;
+	--color-border: #333333;
+	--color-secondary-hover: #454545;
+	--color-accent-text: #ef6b68;
+	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+	--shadow-md: 0 2px 8px rgba(0, 0, 0, 0.5);
+	--shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.6);
+	--color-warning-bg: rgba(255, 152, 0, 0.15);
+	--color-warning-border: rgba(255, 152, 0, 0.5);
+	--color-predough: #9d80c9;
+	--color-room: #ef6b68;
+	--color-autolyse: #7fb096;
+	--color-fridge: #6ba3cc;
+	--color-temper: #d3a24d;
+	--color-phase-text: #12100e;
 }

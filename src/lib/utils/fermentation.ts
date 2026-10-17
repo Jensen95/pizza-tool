@@ -1,6 +1,6 @@
 // ABOUTME: Fermentation model — temperature-corrected yeast prediction from a proofing schedule
 import type { YeastLookupEntry } from '$lib/models';
-import { yeastLookup } from '$lib/data/reference';
+import { waterTempFormula, yeastLookup } from '$lib/data/reference';
 
 export type ProofLocation = YeastLookupEntry['location'];
 
@@ -17,7 +17,10 @@ export const TEMPERATURE_DOUBLING_STEP = 8;
 export const FRIDGE_TEMPERATURE = 4;
 
 /** The dough temperature after kneading that the app's own reference aims for. */
-export const TARGET_DOUGH_TEMPERATURE = { min: 24, max: 27 };
+export const TARGET_DOUGH_TEMPERATURE = {
+	min: waterTempFormula.targetDoughTemp.min,
+	max: waterTempFormula.targetDoughTemp.max
+};
 
 export const MIN_ROOM_TEMPERATURE = 10;
 export const MAX_ROOM_TEMPERATURE = 35;

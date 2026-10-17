@@ -144,4 +144,89 @@ test.describe('Dough Planner Page', () => {
 		// A warmer dough ferments faster, so the same schedule needs less yeast
 		expect(cool).not.toEqual(warm);
 	});
+
+	test('should explain why the dough should not run too warm', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		const form = page.getByTestId('dough-form');
+		await page.getByLabel('Dejtemperatur efter æltning i celsius').fill('30');
+		// 30 °C against the 27 °C ceiling, at a doubling every 8 °C: 2^(3/8) ≈ 1.30
+		await expect(form).toContainText('30 % hurtigere');
+
+		// Visibility, not text: a closed <details> still has its text in the DOM
+		const reason = page.getByText('Gæren tager ikke skade');
+		await expect(reason).toBeHidden();
+		await page.getByText('Hvorfor 24-27 °C?').click();
+		await expect(reason).toBeVisible();
+	});
+
+	test('should put held-back water on the timeline', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		await page.getByRole('button', { name: '+ Hold vand tilbage' }).click();
+		const panel = page.getByTestId('dough-result');
+		await expect(panel).toContainText('Tilbageholdt vand');
+		await expect(panel).toContainText('det tilbageholdte vand til sidst');
+	});
+});
+
+test.describe('Theme', () => {
+	test('cycles automatic, light and dark, and remembers the choice', async ({ page }) => {
+		await page.goto('/');
+		await page.waitForLoadState('networkidle');
+
+		const root = page.locator('html');
+		const button = page.getByRole('button', { name: /^Tema:/ });
+
+		// A fresh visitor follows the device: no override on <html>
+		await expect(button).toHaveAttribute('aria-label', /Tema: Automatisk/);
+		await expect(root).not.toHaveAttribute('data-theme');
+
+		await button.click();
+		await expect(root).toHaveAttribute('data-theme', 'light');
+
+		await button.click();
+		await expect(root).toHaveAttribute('data-theme', 'dark');
+
+		await page.reload();
+		await expect(root).toHaveAttribute('data-theme', 'dark');
+
+		await page.getByRole('button', { name: /^Tema:/ }).click();
+		await expect(root).not.toHaveAttribute('data-theme');
+	});
+
+	test('the inline script applies the stored theme before the app runs', async ({ browser }) => {
+		// The app's own $effect also sets data-theme once it boots, which would
+		// mask a missing or broken pre-paint script. With the app's JavaScript
+		// blocked, only the inline script in app.html can have set it.
+		const context = await browser.newContext({ serviceWorkers: 'block' });
+		await context.addInitScript(() =>
+			localStorage.setItem('pizza-tool-preferences', JSON.stringify({ colorTheme: 'dark' }))
+		);
+		const page = await context.newPage();
+		await page.route('**/_app/**', (route) => route.abort());
+
+		await page.goto('/');
+		await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+		// Proof the app never ran: its header is not on the page
+		await expect(page.locator('header')).toHaveCount(0);
+		await context.close();
+	});
+
+	test('an explicit light choice beats a dark device', async ({ browser }) => {
+		const context = await browser.newContext({ colorScheme: 'dark' });
+		const page = await context.newPage();
+		await page.goto('/');
+		await page.waitForLoadState('networkidle');
+
+		const background = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+		const darkBackground = await background();
+
+		await page.getByRole('button', { name: /^Tema:/ }).click();
+		await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+		expect(await background()).not.toEqual(darkBackground);
+		await context.close();
+	});
 });

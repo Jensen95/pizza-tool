@@ -1,5 +1,24 @@
 <script lang="ts">
-	import { activeTimerCount } from '$lib/stores';
+	import { activeTimerCount, preferences } from '$lib/stores';
+	import { colorThemeOrder, type ColorTheme } from '$lib/stores/preferences';
+
+	const themeLabels: Record<ColorTheme, string> = {
+		system: 'Automatisk',
+		light: 'Lys',
+		dark: 'Mørk'
+	};
+
+	// "Tema" is neuter, so the spoken target takes the -t form: "mørkt tema"
+	const themeTargets: Record<ColorTheme, string> = {
+		system: 'automatisk tema',
+		light: 'lyst tema',
+		dark: 'mørkt tema'
+	};
+
+	// Read from the store's own order, so what is announced is what a click does
+	let nextTheme = $derived(
+		colorThemeOrder[(colorThemeOrder.indexOf($preferences.colorTheme) + 1) % colorThemeOrder.length]
+	);
 
 	let {
 		title = 'Pizza Tool',
@@ -30,6 +49,63 @@
 		{/if}
 
 		<h1 class="header-title">{title}</h1>
+
+		<button
+			type="button"
+			class="theme-button"
+			onclick={() => preferences.cycleColorTheme()}
+			aria-label={`Tema: ${themeLabels[$preferences.colorTheme]}. Skift til ${themeTargets[nextTheme]}`}
+			title={`Tema: ${themeLabels[$preferences.colorTheme]}`}
+		>
+			{#if $preferences.colorTheme === 'light'}
+				<svg
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
+					<circle cx="12" cy="12" r="4" />
+					<path
+						d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+					/>
+				</svg>
+			{:else if $preferences.colorTheme === 'dark'}
+				<svg
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
+					<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+				</svg>
+			{:else}
+				<svg
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
+					<circle cx="12" cy="12" r="9" />
+					<path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" />
+				</svg>
+			{/if}
+			<span class="theme-label">{themeLabels[$preferences.colorTheme]}</span>
+		</button>
 
 		{#if $activeTimerCount > 0}
 			<a href="/timers" class="timer-indicator" aria-label="{$activeTimerCount} aktive timere">
@@ -94,6 +170,38 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+	.theme-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		min-height: 44px;
+		min-width: 44px;
+		padding: 0 10px;
+		border-radius: var(--radius-full);
+		color: inherit;
+		font-size: var(--font-size-sm);
+		font-weight: 500;
+	}
+
+	/* Darken rather than lighten: a white wash on red pulled the label to 4.06:1 */
+	.theme-button:hover {
+		background: rgba(0, 0, 0, 0.15);
+	}
+
+	/* The global focus ring is --color-primary, the header's own background, so
+	   it vanished here. White keeps it visible on every control in the header. */
+	.header :focus-visible {
+		outline-color: var(--color-text-light);
+	}
+
+	/* On a phone the icon says enough; the label is still in aria-label */
+	@media (max-width: 420px) {
+		.theme-label {
+			display: none;
+		}
 	}
 
 	.timer-indicator {

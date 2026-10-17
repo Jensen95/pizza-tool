@@ -4,11 +4,16 @@ import type { YeastInfo } from '$lib/models';
 
 const PREFERENCES_STORAGE_KEY = 'preferences';
 
+/** 'system' follows the phone or computer; the other two override it. */
+export type ColorTheme = 'system' | 'light' | 'dark';
+
+export const colorThemeOrder: ColorTheme[] = ['system', 'light', 'dark'];
+
 export interface Preferences {
 	defaultPizzaCount: number;
 	defaultDoughWeight: number;
 	notificationsEnabled: boolean;
-	theme: 'light' | 'dark' | 'system';
+	colorTheme: ColorTheme;
 	notificationBannerDismissed: boolean;
 	keepScreenAwake: boolean;
 	/** Yeast the dough planner starts on — most bakers only keep one kind at home */
@@ -19,18 +24,33 @@ const defaultPreferences: Preferences = {
 	defaultPizzaCount: 4,
 	defaultDoughWeight: 270,
 	notificationsEnabled: true,
-	theme: 'light',
+	colorTheme: 'system',
 	notificationBannerDismissed: false,
 	keepScreenAwake: false,
 	defaultYeastType: 'fresh'
 };
 
+/**
+ * Older versions stored a `theme` field that nothing ever read and nothing let
+ * anyone choose — it was saved along with every other preference, so it holds
+ * the old default of 'light', not a decision. It is dropped rather than carried
+ * over, or everyone who ever changed a setting would be pinned to light mode.
+ */
+export function migratePreferences(stored: unknown): Preferences {
+	// Storage can hold anything — a stored "null" used to throw here, and since
+	// the store is created at import time that left the whole app blank.
+	const source =
+		stored && typeof stored === 'object' && !Array.isArray(stored)
+			? (stored as Record<string, unknown>)
+			: {};
+	const { theme: _legacyTheme, ...rest } = source;
+	const merged = { ...defaultPreferences, ...rest } as Preferences;
+	if (!colorThemeOrder.includes(merged.colorTheme)) merged.colorTheme = 'system';
+	return merged;
+}
+
 function loadPreferences(): Preferences {
-	const stored = storage.get<Partial<Preferences>>(PREFERENCES_STORAGE_KEY, {});
-	return {
-		...defaultPreferences,
-		...stored
-	};
+	return migratePreferences(storage.get<Record<string, unknown>>(PREFERENCES_STORAGE_KEY, {}));
 }
 
 function createPreferencesStore() {
@@ -103,10 +123,23 @@ function createPreferencesStore() {
 		},
 
 		/**
-		 * Set theme
+		 * Choose light, dark, or follow the device
 		 */
-		setTheme(theme: 'light' | 'dark' | 'system') {
-			this.updatePreference('theme', theme);
+		setColorTheme(theme: ColorTheme) {
+			this.updatePreference('colorTheme', theme);
+		},
+
+		/**
+		 * Step to the next theme: automatic → light → dark → automatic
+		 */
+		cycleColorTheme() {
+			update((prefs) => {
+				const next =
+					colorThemeOrder[(colorThemeOrder.indexOf(prefs.colorTheme) + 1) % colorThemeOrder.length];
+				const newPrefs = { ...prefs, colorTheme: next };
+				save(newPrefs);
+				return newPrefs;
+			});
 		},
 
 		/**

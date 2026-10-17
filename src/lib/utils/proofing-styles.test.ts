@@ -260,3 +260,41 @@ describe('a predough the baker switched on themselves', () => {
 		expect(splitTotalHours(fit.split)).toBeCloseTo(36, 1);
 	});
 });
+
+describe('held-back water', () => {
+	const split = {
+		predoughHours: 0,
+		autolyseHours: 0,
+		roomHours: 3,
+		fridgeHours: 24,
+		temperHours: 2
+	};
+
+	test('the kneading step says when it goes in', () => {
+		const mix = buildPhases(split, { holdBackShare: 0.1 }).find((phase) => phase.id === 'mix')!;
+		expect(mix.labelDa).toBe('Ælt dejen — tilsæt det tilbageholdte vand til sidst');
+	});
+
+	test('with an autolyse and a little held back, most of the water goes in first', () => {
+		const phases = buildPhases({ ...split, autolyseHours: 0.75 }, { holdBackShare: 0.15 });
+		expect(phases.find((phase) => phase.id === 'autolyse-mix')!.labelDa).toBe(
+			'Bland mel og det meste af vandet'
+		);
+		expect(phases.find((phase) => phase.id === 'mix')!.labelDa).toContain('tilbageholdte vand');
+	});
+
+	test('does not claim most of the water when most of it is held back', () => {
+		// 40 of 65 % held back: only a quarter of the water goes in at the start
+		const phases = buildPhases({ ...split, autolyseHours: 0.75 }, { holdBackShare: 40 / 65 });
+		expect(phases.find((phase) => phase.id === 'autolyse-mix')!.labelDa).toBe(
+			'Bland mel og en del af vandet'
+		);
+	});
+
+	test('says nothing about it when no water is held back', () => {
+		expect(buildPhases(split).find((phase) => phase.id === 'mix')!.labelDa).toBe('Ælt dejen');
+		expect(
+			buildPhases(split, { holdBackShare: 0 }).find((phase) => phase.id === 'mix')!.labelDa
+		).toBe('Ælt dejen');
+	});
+});
