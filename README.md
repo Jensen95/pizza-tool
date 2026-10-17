@@ -20,6 +20,8 @@ A SvelteKit application for pizza recipe management with baker's percentage calc
 
 ## Development
 
+Requires **Node 26**. The version is pinned in `.nvmrc`, so `nvm use` (or `fnm use`) picks it up.
+
 Once you've installed dependencies with `npm install`, start a development server:
 
 ```sh

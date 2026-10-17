@@ -7,8 +7,12 @@ IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning
 
 ## Environment
 
-- Requires **Node 24** (`.nvmrc` is `24`, `.npmrc` has `engine-strict=true`).
-- Switch to the correct version: `nvm install 24 && nvm use` or `fnm use`.
+- Uses **Node 26** (`.nvmrc` is `26`; every workflow runs 26). Node 26 is LTS from 28 Oct 2026.
+- Switch to the correct version: `nvm install 26 && nvm use` or `fnm use`.
+- `package.json` `engines` deliberately stays at `>=24.0.0`. Dependabot's npm updater runs
+  Node 24, and with `engine-strict=true` a floor of 26 makes every Dependabot update fail.
+  Raise it only once Dependabot moves to 26 (`NODEJS_VERSION` in dependabot-core's
+  `npm_and_yarn/Dockerfile`).
 - Then install: `npm install`
 - **Never** bypass with `--engine-strict=false` or `--ignore-engines` — install the right Node version instead.
 
