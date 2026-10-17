@@ -158,4 +158,56 @@ test.describe('Dough Planner Page', () => {
 		await expect(form).toContainText('Gæren tager ikke skade');
 		await expect(form).toContainText('kontrol');
 	});
+
+	test('should put held-back water on the timeline', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		await page.getByRole('button', { name: '+ Hold vand tilbage' }).click();
+		const panel = page.getByTestId('dough-result');
+		await expect(panel).toContainText('Tilbageholdt vand');
+		await expect(panel).toContainText('det tilbageholdte vand til sidst');
+	});
+});
+
+test.describe('Theme', () => {
+	test('cycles automatic, light and dark, and remembers the choice', async ({ page }) => {
+		await page.goto('/');
+		await page.waitForLoadState('networkidle');
+
+		const root = page.locator('html');
+		const button = page.getByRole('button', { name: /^Tema:/ });
+
+		// A fresh visitor follows the device: no override on <html>
+		await expect(button).toHaveAttribute('aria-label', /Tema: Automatisk/);
+		await expect(root).not.toHaveAttribute('data-theme');
+
+		await button.click();
+		await expect(root).toHaveAttribute('data-theme', 'light');
+
+		await button.click();
+		await expect(root).toHaveAttribute('data-theme', 'dark');
+
+		// Applied before the app boots, so a reload does not flash the wrong theme
+		await page.reload();
+		await expect(root).toHaveAttribute('data-theme', 'dark');
+
+		await page.getByRole('button', { name: /^Tema:/ }).click();
+		await expect(root).not.toHaveAttribute('data-theme');
+	});
+
+	test('an explicit light choice beats a dark device', async ({ browser }) => {
+		const context = await browser.newContext({ colorScheme: 'dark' });
+		const page = await context.newPage();
+		await page.goto('/');
+		await page.waitForLoadState('networkidle');
+
+		const background = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+		const darkBackground = await background();
+
+		await page.getByRole('button', { name: /^Tema:/ }).click();
+		await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+		expect(await background()).not.toEqual(darkBackground);
+		await context.close();
+	});
 });

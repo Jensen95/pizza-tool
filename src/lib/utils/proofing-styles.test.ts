@@ -260,3 +260,31 @@ describe('a predough the baker switched on themselves', () => {
 		expect(splitTotalHours(fit.split)).toBeCloseTo(36, 1);
 	});
 });
+
+describe('held-back water', () => {
+	const split = {
+		predoughHours: 0,
+		autolyseHours: 0,
+		roomHours: 3,
+		fridgeHours: 24,
+		temperHours: 2
+	};
+
+	test('the kneading step says when it goes in', () => {
+		const mix = buildPhases(split, { holdBackWater: true }).find((phase) => phase.id === 'mix')!;
+		expect(mix.labelDa).toBe('Ælt dejen — det tilbageholdte vand til sidst');
+	});
+
+	test('with an autolyse, the first mix leaves some water out', () => {
+		const phases = buildPhases({ ...split, autolyseHours: 0.75 }, { holdBackWater: true });
+		expect(phases.find((phase) => phase.id === 'autolyse-mix')!.labelDa).toBe(
+			'Bland mel og det meste af vandet'
+		);
+		expect(phases.find((phase) => phase.id === 'mix')!.labelDa).toContain('tilbageholdte vand');
+	});
+
+	test('says nothing about it when no water is held back', () => {
+		const mix = buildPhases(split).find((phase) => phase.id === 'mix')!;
+		expect(mix.labelDa).toBe('Ælt dejen');
+	});
+});

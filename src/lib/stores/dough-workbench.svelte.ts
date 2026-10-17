@@ -346,7 +346,8 @@ export class DoughWorkbench {
 	phases = $derived(
 		buildPhases(this.split, {
 			predoughNameDa: this.predoughEnabled ? predoughDefaults[this.predough.kind].nameDa : 'Fordej',
-			leavening: this.leavening
+			leavening: this.leavening,
+			holdBackWater: this.extras.some((row) => row.type === 'water' && row.percentage > 0)
 		})
 	);
 
@@ -423,7 +424,11 @@ export class DoughWorkbench {
 		}
 		this.extras = [
 			...this.extras,
-			createRow(type === 'water' ? 'Vand (autolyse)' : 'Ny ingrediens', 0, type)
+			createRow(
+				type === 'water' ? 'Tilbageholdt vand' : 'Ny ingrediens',
+				type === 'water' ? 5 : 0,
+				type
+			)
 		];
 	}
 

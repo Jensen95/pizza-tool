@@ -244,7 +244,7 @@
 					type="button"
 					onclick={() => workbench.addExtra('water')}
 				>
-					+ Vandlinje
+					+ Hold vand tilbage
 				</button>
 				<button
 					class="btn btn-secondary small"
@@ -265,8 +265,8 @@
 
 		{#if workbench.extras.length === 0}
 			<p class="hint">
-				Tilføj frø og kerner, malt, honning, olie — eller en vandlinje, hvis vandet skal deles op i
-				autolyse og bassinage.
+				Tilføj frø og kerner, malt, honning eller olie. Skal en våd dej være lettere at ælte, kan du
+				holde en del af vandet tilbage og komme det i sidst.
 			</p>
 		{:else}
 			{#each workbench.extras as row (row.id)}
@@ -341,8 +341,9 @@
 				</div>
 			{/each}
 			<p class="hint">
-				Vandlinjer tager deres del af hydrationen — de lægger ikke vand oveni. Alt andet lægges
-				oveni dejen.
+				Tilbageholdt vand er en del af hydrationen, ikke vand oveni: det trækkes fra det vand, der
+				kommer i fra starten, og tilsættes lidt ad gangen sidst i æltningen, når glutennettet er
+				dannet (bassinage). Alt andet lægges oveni dejen.
 			</p>
 		{/if}
 	</div>
@@ -450,7 +451,13 @@
 
 	.row-actions {
 		display: flex;
+		flex-wrap: wrap;
 		gap: var(--spacing-xs);
+	}
+
+	/* Wrap the buttons, not the words inside them */
+	.row-actions .btn {
+		white-space: nowrap;
 	}
 
 	.small {
@@ -497,9 +504,22 @@
 			flex-wrap: wrap;
 		}
 
+		/* The name gets a line of its own; type, amount and remove share the next */
+		.row.wide .input[type='text'] {
+			flex: 1 1 100%;
+		}
+
+		/* Dropdowns wrap rather than shrink to a bare chevron; a seed row's two
+		   dropdowns then share a line and the amount drops to the next */
 		.row.wide select.input {
 			width: auto;
-			flex: 1;
+			flex: 1 1 7rem;
+			min-width: 7rem;
+		}
+
+		.row.wide .with-unit.narrow {
+			width: auto;
+			flex: 1 1 6.5rem;
 		}
 	}
 </style>

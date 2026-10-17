@@ -229,6 +229,8 @@ export interface PhaseOptions {
 	predoughNameDa?: string;
 	/** What goes in after the autolyse: yeast, or a sourdough starter */
 	leavening?: 'yeast' | 'sourdough';
+	/** Some of the water is held back and worked in at the end of kneading */
+	holdBackWater?: boolean;
 }
 
 /**
@@ -255,11 +257,13 @@ export function buildPhases(split: ProofingSplit, options: PhaseOptions = {}): P
 		});
 	}
 
+	const heldBack = options.holdBackWater ? ' — det tilbageholdte vand til sidst' : '';
+
 	if (split.autolyseHours > 0) {
 		phases.push({
 			id: 'autolyse-mix',
 			kind: 'mix',
-			labelDa: 'Bland mel og vand',
+			labelDa: options.holdBackWater ? 'Bland mel og det meste af vandet' : 'Bland mel og vand',
 			hours: 0
 		});
 		phases.push({
@@ -271,11 +275,11 @@ export function buildPhases(split: ProofingSplit, options: PhaseOptions = {}): P
 		phases.push({
 			id: 'mix',
 			kind: 'mix',
-			labelDa: `Tilsæt ${leavenNameDa} og salt, ælt færdig`,
+			labelDa: `Tilsæt ${leavenNameDa} og salt, ælt færdig${heldBack}`,
 			hours: 0
 		});
 	} else {
-		phases.push({ id: 'mix', kind: 'mix', labelDa: 'Ælt dejen', hours: 0 });
+		phases.push({ id: 'mix', kind: 'mix', labelDa: `Ælt dejen${heldBack}`, hours: 0 });
 	}
 
 	if (split.roomHours > 0) {

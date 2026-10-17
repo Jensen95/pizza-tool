@@ -240,23 +240,23 @@ describe('flour blends', () => {
 });
 
 describe('added ingredient rows', () => {
-	test('water rows take their share out of the hydration', () => {
+	test('held-back water takes its share out of the hydration', () => {
 		const plan = planDough(
 			buildInput({
-				extras: [{ id: 'autolyse', name: 'Vand (autolyse)', percentage: 50, type: 'water' }]
+				extras: [{ id: 'held-back', name: 'Tilbageholdt vand', percentage: 50, type: 'water' }]
 			})
 		);
 		const byId = new Map(plan!.ingredients.map((ing) => [ing.id, ing]));
-		expect(byId.get('autolyse')?.weight).toBe(500);
+		expect(byId.get('held-back')?.weight).toBe(500);
 		expect(byId.get('water')?.weight).toBe(150);
 		// Total water is unchanged: the rows only say when it goes in
 		expect(plan!.totalWeight).toBeCloseTo(1677, 0);
 	});
 
-	test('warns when the water rows claim more than the hydration', () => {
+	test('warns when more water is held back than the hydration allows', () => {
 		const plan = planDough(
 			buildInput({
-				extras: [{ id: 'autolyse', name: 'Vand', percentage: 70, type: 'water' }]
+				extras: [{ id: 'held-back', name: 'Tilbageholdt vand', percentage: 70, type: 'water' }]
 			})
 		);
 		expect(plan!.warnings).toContain('water-over-allocated');
