@@ -5,8 +5,9 @@ IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning
 - Formatting runs automatically: a `PostToolUse` hook in `.claude/settings.json` runs Prettier on
   every file Claude writes or edits (see below), and the husky pre-commit hook runs `lint-staged`
   (Prettier + ESLint) on staged files.
-- Still run `npm run format:check` before pushing — edits made through the shell (`sed`, scripts)
-  skip the `PostToolUse` hook, and CI fails on any unformatted file.
+- The husky pre-push hook runs `npm run format:check` and `npm run lint` and blocks the push if
+  either fails. Edits made through the shell (`sed`, scripts) skip the `PostToolUse` hook, so run
+  `npm run format` after them rather than finding out at push time.
 
 ## Environment
 
