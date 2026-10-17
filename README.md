@@ -99,11 +99,11 @@ npm run format
 ### Type Checking
 
 ```sh
-# Run TypeScript type checking
-npm run check
+# Run both type checkers (svelte-check and tsc) — the same check CI runs
+npm run typecheck
 
-# Run type checking in watch mode
-npm run check:watch
+# Run svelte-check in watch mode
+npm run svelte:check:watch
 ```
 
 ## Building
@@ -161,12 +161,14 @@ This project uses GitHub Actions for continuous integration:
 
 This project uses [Dependabot](https://docs.github.com/en/code-security/dependabot) for automated dependency updates:
 
-- **NPM packages** are checked weekly and grouped by type (dev/production dependencies)
+- **NPM packages** are checked weekly and grouped by tool (Svelte, SvelteKit, Vite, testing, linting, formatting and so on)
 - **GitHub Actions** are checked weekly and grouped together
 - **Auto-merge enabled** for patch and minor updates (safe updates only)
 - **Manual review required** for major updates (breaking changes)
 
-See [DEPENDABOT_GUIDE.md](./DEPENDABOT_GUIDE.md) for detailed configuration and customization options.
+The configuration is in [`.github/dependabot.yml`](./.github/dependabot.yml) and the auto-merge rule in [`.github/workflows/dependabot-auto-merge.yml`](./.github/workflows/dependabot-auto-merge.yml).
+
+Dependabot's npm updater runs Node 24, which is why `engines` in `package.json` still allows `>=24` while the project itself runs Node 26 — see `CLAUDE.md` before raising it.
 
 ## Project Structure
 
