@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 import * as storage from '$lib/utils/storage';
+import type { YeastInfo } from '$lib/models';
 
 const PREFERENCES_STORAGE_KEY = 'preferences';
 
@@ -10,6 +11,8 @@ export interface Preferences {
 	theme: 'light' | 'dark' | 'system';
 	notificationBannerDismissed: boolean;
 	keepScreenAwake: boolean;
+	/** Yeast the dough planner starts on — most bakers only keep one kind at home */
+	defaultYeastType: YeastInfo['type'];
 }
 
 const defaultPreferences: Preferences = {
@@ -18,7 +21,8 @@ const defaultPreferences: Preferences = {
 	notificationsEnabled: true,
 	theme: 'light',
 	notificationBannerDismissed: false,
-	keepScreenAwake: false
+	keepScreenAwake: false,
+	defaultYeastType: 'fresh'
 };
 
 function loadPreferences(): Preferences {
@@ -110,6 +114,13 @@ function createPreferencesStore() {
 		 */
 		dismissNotificationBanner() {
 			this.updatePreference('notificationBannerDismissed', true);
+		},
+
+		/**
+		 * Remember which yeast the planner should default to
+		 */
+		setDefaultYeastType(type: YeastInfo['type']) {
+			this.updatePreference('defaultYeastType', type);
 		},
 
 		/**

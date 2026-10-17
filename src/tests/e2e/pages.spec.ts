@@ -54,3 +54,94 @@ test.describe('Timers Page', () => {
 		await expect(sectionHeading).toBeVisible();
 	});
 });
+
+test.describe('Dough Planner Page', () => {
+	test('should render the planner', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		await expect(page).toHaveTitle(/Dej - Pizza Tool/);
+		await expect(page.getByRole('heading', { name: 'Planlæg dejen' })).toBeVisible();
+		await expect(page.getByTestId('dough-result')).toContainText('Resultat');
+	});
+
+	test('should switch to planning from a deadline', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		await page.getByRole('button', { name: 'Klar til' }).click();
+		await expect(page.getByLabel('Tidspunkt dejen skal være klar')).toBeVisible();
+		await expect(page.getByRole('button', { name: 'Natten over, stuetemperatur' })).toBeVisible();
+	});
+
+	test('should size the dough in balls', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		await page.getByLabel('Antal kugler').fill('4');
+		await page.getByLabel('Vægt pr. kugle i gram').fill('250');
+		await expect(page.getByTestId('dough-form')).toContainText('mel');
+	});
+
+	test('should add an autolyse rest without changing the weights', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		const total = page.locator('.stat', { hasText: 'Samlet dej' });
+		const before = await total.innerText();
+
+		await page.getByLabel('Brug autolyse').check();
+
+		await expect(page.getByTestId('dough-result')).toContainText('Bland mel og vand');
+		await expect(page.getByTestId('dough-result')).toContainText('Tilsæt gær og salt');
+		await expect(total).toHaveText(before);
+	});
+	test('should warn when the flour blend gets too weak to hold seeds', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		const panel = page.getByTestId('dough-result');
+		await expect(panel).not.toContainText('Dejens styrke');
+
+		await page.getByRole('button', { name: '+ Tilføj mel' }).click();
+		await page.getByRole('button', { name: '+ Tilføj mel' }).click();
+		const shares = page.locator('.row.wide input[type="number"]');
+		await shares.nth(0).fill('50');
+		await shares.nth(1).fill('50');
+		await page.locator('.row.wide select').nth(1).selectOption('rye');
+
+		await expect(panel).toContainText('Dejens styrke');
+		await expect(panel).toContainText('50 % rugmel');
+		await expect(panel).toContainText('50 % fuldkorn');
+	});
+
+	test('should work out the water thirsty seeds will bind', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		await page.getByRole('button', { name: '+ Frø/kerner' }).click();
+		await page.locator('select[id$="-seed"]').first().selectOption('chia');
+
+		const panel = page.getByTestId('dough-result');
+		// Soak first, and say how much water — then the fallback for no time to soak
+		await expect(panel).toContainText('chiafrø skal i blød først');
+		await expect(panel).toContainText('Har du ikke tid til at lægge dem i blød?');
+	});
+	test('should account for the dough temperature after kneading', async ({ page }) => {
+		await page.goto('/dough');
+		await page.waitForLoadState('networkidle');
+
+		const panel = page.getByTestId('dough-result');
+		await expect(panel).toContainText('På vej i køleskabet');
+		await expect(panel).toContainText('Skal på køl senest');
+
+		const probe = page.getByLabel('Dejtemperatur efter æltning i celsius');
+		await probe.fill('22');
+		const cool = await panel.innerText();
+		await probe.fill('29');
+		const warm = await panel.innerText();
+
+		// A warmer dough ferments faster, so the same schedule needs less yeast
+		expect(cool).not.toEqual(warm);
+	});
+});

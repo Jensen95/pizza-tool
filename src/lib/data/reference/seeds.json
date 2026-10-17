@@ -1,0 +1,99 @@
+[
+	{
+		"id": "sunflower",
+		"name": "Sunflower seeds",
+		"nameDa": "Solsikkefrø",
+		"waterFactor": 0.4,
+		"structureLoad": 0.6,
+		"hydrophilic": false,
+		"notesDa": "Ristning giver mere smag, men suger også mere vand."
+	},
+	{
+		"id": "pumpkin",
+		"name": "Pumpkin seeds",
+		"nameDa": "Græskarkerner",
+		"waterFactor": 0.35,
+		"structureLoad": 0.7,
+		"hydrophilic": false,
+		"notesDa": "Store, flade kerner skærer mest i glutennettet — ælt dem i til sidst."
+	},
+	{
+		"id": "sesame",
+		"name": "Sesame seeds",
+		"nameDa": "Sesamfrø",
+		"waterFactor": 0.35,
+		"structureLoad": 0.4,
+		"hydrophilic": false,
+		"notesDa": "Små frø fylder lidt i dejen og er også gode udenpå."
+	},
+	{
+		"id": "poppy",
+		"name": "Poppy seeds",
+		"nameDa": "Birkes",
+		"waterFactor": 0.5,
+		"structureLoad": 0.35,
+		"hydrophilic": false
+	},
+	{
+		"id": "flax",
+		"name": "Flax seeds",
+		"nameDa": "Hørfrø",
+		"waterFactor": 2,
+		"structureLoad": 0.3,
+		"hydrophilic": true,
+		"notesDa": "Danner gelé. Knuste hørfrø suger endnu mere end hele."
+	},
+	{
+		"id": "chia",
+		"name": "Chia seeds",
+		"nameDa": "Chiafrø",
+		"waterFactor": 4,
+		"structureLoad": 0.3,
+		"hydrophilic": true,
+		"notesDa": "Suger flere gange sin egen vægt. Læg altid i blød først."
+	},
+	{
+		"id": "psyllium",
+		"name": "Psyllium husk",
+		"nameDa": "Psyllium husk",
+		"waterFactor": 8,
+		"structureLoad": 0.1,
+		"hydrophilic": true,
+		"notesDa": "Binder dejen sammen i stedet for at svække den — bruges i glutenfrit bagværk."
+	},
+	{
+		"id": "oats",
+		"name": "Rolled oats",
+		"nameDa": "Havregryn",
+		"waterFactor": 1,
+		"structureLoad": 0.5,
+		"hydrophilic": true,
+		"notesDa": "Suger cirka sin egen vægt vand i en soaker."
+	},
+	{
+		"id": "cracked-rye",
+		"name": "Cracked rye",
+		"nameDa": "Knækkede rugkerner",
+		"waterFactor": 1,
+		"structureLoad": 0.6,
+		"hydrophilic": true,
+		"notesDa": "Skal i blød, ellers trækker de vand ud af dejen under hævningen."
+	},
+	{
+		"id": "walnut",
+		"name": "Walnuts",
+		"nameDa": "Valnødder",
+		"waterFactor": 0.1,
+		"structureLoad": 0.8,
+		"hydrophilic": false,
+		"notesDa": "Nødder suger næsten intet vand, men bryder glutennettet mest af alt."
+	},
+	{
+		"id": "other",
+		"name": "Other seeds",
+		"nameDa": "Andre frø/kerner",
+		"waterFactor": 0.4,
+		"structureLoad": 0.5,
+		"hydrophilic": false
+	}
+]

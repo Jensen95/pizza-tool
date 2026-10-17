@@ -99,7 +99,15 @@ test.describe('Visual Screenshots @screenshot', () => {
 		);
 	});
 
-	test('should capture baker math tool', async ({ page }) => {
-		await captureElement(page, '/tools', '[data-testid="baker-math-lab"]', 'tools-baker-math.png');
+	test('should capture dough planner page screenshot', async ({ page }) => {
+		await captureFullPage(page, '/dough', 'dough-page.png');
+	});
+
+	test('should capture dough planner form', async ({ page }) => {
+		await captureElement(page, '/dough', '[data-testid="dough-form"]', 'dough-form.png');
+	});
+
+	test('should capture dough planner result', async ({ page }) => {
+		await captureElement(page, '/dough', '[data-testid="dough-result"]', 'dough-result.png');
 	});
 });
