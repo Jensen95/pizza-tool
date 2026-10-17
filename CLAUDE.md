@@ -2,8 +2,12 @@
 
 IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning
 
-- Use the shared post-room hook `./post-room.sh` to auto-run Prettier (`npm run format`) after a room.
-- Run `npm run format` (or `npm run format:check`) before committing or pushing to avoid formatting-related CI failures.
+- Formatting runs automatically: a `PostToolUse` hook in `.claude/settings.json` runs Prettier on
+  every file Claude writes or edits (see below), and the husky pre-commit hook runs `lint-staged`
+  (Prettier + ESLint) on staged files.
+- The husky pre-push hook runs `npm run format:check` and `npm run lint` and blocks the push if
+  either fails. Edits made through the shell (`sed`, scripts) skip the `PostToolUse` hook, so run
+  `npm run format` after them rather than finding out at push time.
 
 ## Environment
 

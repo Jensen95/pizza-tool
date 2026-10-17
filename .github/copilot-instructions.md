@@ -83,7 +83,7 @@ src/
 ### Testing Requirements
 
 - **Unit tests are required** for all utility functions in `src/lib/utils/`
-- Place unit tests in `src/tests/unit/` with `.test.ts` extension
+- Place unit tests next to the code they test, named `<file>.test.ts` (e.g. `src/lib/utils/fermentation.test.ts`); Vitest picks up `src/**/*.test.ts`
 - Use descriptive test names: `describe()` and `test()` or `it()`
 - E2E tests in `src/tests/e2e/` should cover critical user workflows
 - Run tests before committing code
@@ -121,7 +121,7 @@ npm run lint             # Check for lint errors
 npm run lint:fix         # Fix lint errors automatically
 npm run format           # Format code with Prettier
 npm run format:check     # Check formatting
-npm run check            # TypeScript type checking
+npm run typecheck        # TypeScript type checking
 ```
 
 ## CI/CD Pipeline
@@ -132,7 +132,7 @@ The project uses GitHub Actions for continuous integration. All pull requests mu
 
 1. **Linting** - `npm run lint` - ESLint checks for code quality issues
 2. **Formatting** - `npm run format:check` - Prettier checks code formatting
-3. **Type Checking** - `npm run check` - TypeScript strict type checking
+3. **Type Checking** - `npm run typecheck` - TypeScript strict type checking
 4. **Unit Tests** - `npm run test:unit` - Run all unit tests with Vitest
 5. **Build** - `npm run build` - Verify production build succeeds
 6. **E2E Tests** - `npm run test:e2e` - Run end-to-end tests with Playwright
@@ -143,12 +143,12 @@ Before pushing code or requesting review, run all CI checks locally:
 
 ```bash
 # Run all checks in sequence (same as CI)
-npm run lint && npm run format:check && npm run check && npm run test:unit && npm run build && npm run test:e2e
+npm run lint && npm run format:check && npm run typecheck && npm run test:unit && npm run build && npm run test:e2e
 
 # Or run individually to debug failures
 npm run lint           # Check linting
 npm run format:check   # Check formatting
-npm run check          # Check TypeScript types
+npm run typecheck      # Check TypeScript types
 npm run test:unit      # Run unit tests
 npm run build          # Build for production
 npm run test:e2e       # Run E2E tests (requires successful build)
@@ -158,7 +158,7 @@ npm run test:e2e       # Run E2E tests (requires successful build)
 
 - **Linting errors**: Run `npm run lint:fix` to auto-fix most issues
 - **Formatting errors**: Run `npm run format` to auto-format all files
-- **Type errors**: Fix TypeScript errors manually, `npm run check` will show details
+- **Type errors**: Fix TypeScript errors manually, `npm run typecheck` will show details
 - **Test failures**: Review test output and fix the failing tests
 - **Build failures**: Check for compilation errors in the build output
 - **E2E failures**: Review Playwright test output and screenshots in CI artifacts
@@ -174,7 +174,7 @@ npm run test:e2e       # Run E2E tests (requires successful build)
 - Keep components small and focused
 - Use descriptive variable and function names
 - Run lint and format before committing
-- **Run CI checks locally before pushing** (`npm run lint && npm run format:check && npm run check && npm run test:unit`)
+- **Run CI checks locally before pushing** (`npm run lint && npm run format:check && npm run typecheck && npm run test:unit`)
 
 ### DON'T:
 
