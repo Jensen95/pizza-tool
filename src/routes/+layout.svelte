@@ -30,6 +30,14 @@
 	$effect(() => {
 		void syncWakeLock(keepScreenAwake);
 	});
+
+	// 'system' removes the attribute so the CSS falls back to the device setting
+	$effect(() => {
+		const theme = $preferences.colorTheme;
+		const root = document.documentElement;
+		if (theme === 'system') delete root.dataset.theme;
+		else root.dataset.theme = theme;
+	});
 </script>
 
 <svelte:head>

@@ -1,5 +1,18 @@
 <script lang="ts">
-	import { activeTimerCount } from '$lib/stores';
+	import { activeTimerCount, preferences } from '$lib/stores';
+	import type { ColorTheme } from '$lib/stores/preferences';
+
+	const themeLabels: Record<ColorTheme, string> = {
+		system: 'Automatisk',
+		light: 'Lys',
+		dark: 'Mørk'
+	};
+
+	const nextTheme: Record<ColorTheme, ColorTheme> = {
+		system: 'light',
+		light: 'dark',
+		dark: 'system'
+	};
 
 	let {
 		title = 'Pizza Tool',
@@ -30,6 +43,63 @@
 		{/if}
 
 		<h1 class="header-title">{title}</h1>
+
+		<button
+			type="button"
+			class="theme-button"
+			onclick={() => preferences.cycleColorTheme()}
+			aria-label={`Tema: ${themeLabels[$preferences.colorTheme]}. Skift til ${themeLabels[nextTheme[$preferences.colorTheme]].toLowerCase()}`}
+			title={`Tema: ${themeLabels[$preferences.colorTheme]}`}
+		>
+			{#if $preferences.colorTheme === 'light'}
+				<svg
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
+					<circle cx="12" cy="12" r="4" />
+					<path
+						d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+					/>
+				</svg>
+			{:else if $preferences.colorTheme === 'dark'}
+				<svg
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
+					<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+				</svg>
+			{:else}
+				<svg
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
+					<circle cx="12" cy="12" r="9" />
+					<path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" />
+				</svg>
+			{/if}
+			<span class="theme-label">{themeLabels[$preferences.colorTheme]}</span>
+		</button>
 
 		{#if $activeTimerCount > 0}
 			<a href="/timers" class="timer-indicator" aria-label="{$activeTimerCount} aktive timere">
@@ -94,6 +164,30 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+	.theme-button {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		min-height: 44px;
+		min-width: 44px;
+		padding: 0 10px;
+		border-radius: var(--radius-full);
+		color: inherit;
+		font-size: var(--font-size-sm);
+		font-weight: 500;
+	}
+
+	.theme-button:hover {
+		background: rgba(255, 255, 255, 0.15);
+	}
+
+	/* On a phone the icon says enough; the label is still in aria-label */
+	@media (max-width: 420px) {
+		.theme-label {
+			display: none;
+		}
 	}
 
 	.timer-indicator {
