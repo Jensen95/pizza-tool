@@ -78,7 +78,7 @@
 	}
 
 	.timer-btn {
-		min-height: 36px;
+		min-height: 44px;
 		padding: 0 var(--spacing-sm);
 		font-size: var(--font-size-xs);
 	}

@@ -160,6 +160,12 @@ export interface StyleFit {
 export interface FitOptions {
 	/** Autolyse is reserved off the top: it fills the window but ferments nothing. */
 	autolyseHours?: number;
+	/**
+	 * A predough the baker has switched on themselves. Styles that build their
+	 * own predough window ignore this; the rest reserve it off the top, because
+	 * the predough has to ferment before the main dough is even mixed.
+	 */
+	predoughHours?: number;
 }
 
 /**
@@ -176,9 +182,15 @@ export function fitStyle(
 	if (!style) return null;
 
 	const autolyseHours = Math.max(0, options.autolyseHours ?? 0);
+	const ownPredoughHours = style.usesPredough ? 0 : Math.max(0, options.predoughHours ?? 0);
 	const available = Math.max(0, availableHours);
-	const forFermentation = Math.max(0, available - autolyseHours);
-	const split = { ...style.split(forFermentation), autolyseHours };
+	const forFermentation = Math.max(0, available - autolyseHours - ownPredoughHours);
+	const styleSplit = style.split(forFermentation);
+	const split = {
+		...styleSplit,
+		autolyseHours,
+		predoughHours: style.usesPredough ? styleSplit.predoughHours : ownPredoughHours
+	};
 
 	return {
 		split,

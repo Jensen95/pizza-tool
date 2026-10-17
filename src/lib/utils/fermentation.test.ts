@@ -196,3 +196,36 @@ describe('when the dough has to go in the fridge', () => {
 		expect(maxWarmHours(base, 0.4)).toBeLessThan(maxWarmHours(base, 0.05));
 	});
 });
+
+describe('the counter deadline accounts for the fridge', () => {
+	const schedule = {
+		roomHours: 3,
+		fridgeHours: 24,
+		temperHours: 2,
+		roomTemperature: 21,
+		bulkWeight: 1700,
+		pieceWeight: 260
+	};
+
+	test('a long cold stage leaves little time on the counter', () => {
+		const idy = predictYeast(schedule)!.idyPercentage;
+		const warm = maxWarmHours(schedule, idy);
+		// The 24 h fridge stage spends most of the budget; the counter gets the
+		// planned bulk and not a great deal more.
+		expect(warm).toBeGreaterThan(schedule.roomHours * 0.8);
+		expect(warm).toBeLessThan(schedule.roomHours * 2);
+	});
+
+	test('the same yeast with no fridge stage buys far longer', () => {
+		const idy = predictYeast(schedule)!.idyPercentage;
+		const withFridge = maxWarmHours(schedule, idy);
+		const withoutFridge = maxWarmHours({ ...schedule, fridgeHours: 0 }, idy);
+		// 8.1 h on the counter alone against 4.1 h once the fridge has taken its share
+		expect(withoutFridge).toBeGreaterThan(withFridge * 1.8);
+	});
+
+	test('a fridge stage that already spends the budget leaves nothing', () => {
+		const idy = predictYeast(schedule)!.idyPercentage;
+		expect(maxWarmHours({ ...schedule, fridgeHours: 96 }, idy)).toBe(0);
+	});
+});

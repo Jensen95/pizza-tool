@@ -16,6 +16,9 @@
 	--color-error: #f44336;
 	--color-predough: #7b5ea7;
 	--color-autolyse: #4f7a63;
+	/* The bulk block carries --color-phase-text, so it needs a dark-mode pair of
+	   its own: --color-primary has none and would fail contrast there. */
+	--color-room: #c02a2a;
 	--color-fridge: #3f7196;
 	--color-temper: #8a6320;
 	/* Text on the timeline blocks: light blocks in dark mode need dark ink */
@@ -323,6 +326,7 @@ h3 {
 		--color-warning-bg: rgba(255, 152, 0, 0.15);
 		--color-warning-border: rgba(255, 152, 0, 0.5);
 		--color-predough: #9d80c9;
+		--color-room: #ef6b68;
 		--color-autolyse: #7fb096;
 		--color-fridge: #6ba3cc;
 		--color-temper: #d3a24d;

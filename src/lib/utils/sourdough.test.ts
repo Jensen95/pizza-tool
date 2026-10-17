@@ -120,3 +120,26 @@ describe('estimateSourdoughSchedule', () => {
 		expect(estimateSourdoughSchedule(75, 20).finalProofFridge).toEqual({ min: 8, max: 14 });
 	});
 });
+
+describe('flour blends', () => {
+	test('warns when the blend does not add up, like the yeast planner does', () => {
+		const plan = planSourdough(
+			buildInput({
+				flours: [{ id: 'f1', name: 'Tipo 00', percentage: 60, type: 'flour' }]
+			})
+		);
+		expect(plan!.warnings).toContain('flour-blend-off');
+	});
+
+	test('a balanced blend raises no warning', () => {
+		const plan = planSourdough(
+			buildInput({
+				flours: [
+					{ id: 'f1', name: 'Tipo 00', percentage: 70, type: 'flour' },
+					{ id: 'f2', name: 'Fuldkorn', percentage: 30, type: 'flour' }
+				]
+			})
+		);
+		expect(plan!.warnings).not.toContain('flour-blend-off');
+	});
+});

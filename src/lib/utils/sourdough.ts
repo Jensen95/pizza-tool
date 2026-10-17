@@ -4,6 +4,7 @@ import {
 	buildAdditionIngredients,
 	buildFlourIngredients,
 	buildWaterAllocationIngredients,
+	flourBlendSum,
 	waterAllocationSum,
 	type DoughIngredientRow,
 	type PlannedIngredient
@@ -34,7 +35,8 @@ export interface SourdoughSchedule {
 	finalProofFridge: HourRange;
 }
 
-export type SourdoughPlanWarning = 'starter-exceeds-water' | 'water-over-allocated';
+export type SourdoughPlanWarning =
+	'starter-exceeds-water' | 'water-over-allocated' | 'flour-blend-off';
 
 export interface SourdoughPlan {
 	ingredients: PlannedIngredient[];
@@ -139,6 +141,9 @@ export function planSourdough(input: SourdoughPlanInput): SourdoughPlan | null {
 	if (addedWater < -0.05 && !warnings.includes('starter-exceeds-water')) {
 		warnings.push('water-over-allocated');
 	}
+
+	const blendSum = flourBlendSum(input.flours);
+	if (blendSum > 0 && Math.abs(blendSum - 100) > 0.5) warnings.push('flour-blend-off');
 
 	const ingredients: PlannedIngredient[] = [
 		...buildFlourIngredients(flour, input.flours),

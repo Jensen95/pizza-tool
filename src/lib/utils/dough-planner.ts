@@ -273,9 +273,11 @@ export function planDough(input: DoughPlanInput): DoughPlan | null {
 	}
 
 	const mainFlourWeight = totalFlour - (predough?.flourWeight ?? 0);
-	const mainIngredients: PlannedIngredient[] = rebase(
-		buildFlourIngredients(mainFlourWeight, input.flours, predough ? '(hoveddej)' : '')
-	);
+	// A biga can hold all the flour, and a 0 g flour line helps nobody.
+	const mainIngredients: PlannedIngredient[] =
+		mainFlourWeight > 0.05
+			? rebase(buildFlourIngredients(mainFlourWeight, input.flours, predough ? '(hoveddej)' : ''))
+			: [];
 
 	mainIngredients.push({
 		id: 'water',

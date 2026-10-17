@@ -232,3 +232,31 @@ describe('autolyse', () => {
 		expect(steps[0].startsAt.toISOString()).toBe('2026-08-21T12:00:00.000Z');
 	});
 });
+
+describe('a predough the baker switched on themselves', () => {
+	test('is reserved off the top by styles that have no predough of their own', () => {
+		const fit = fitStyle('cold-overnight', 36, { predoughHours: 12 })!;
+		expect(fit.split.predoughHours).toBe(12);
+		expect(splitTotalHours(fit.split)).toBeCloseTo(36, 1);
+		// The fermentation that is left is the window minus the predough
+		expect(fit.split.roomHours + fit.split.fridgeHours + fit.split.temperHours).toBeCloseTo(24, 1);
+	});
+
+	test('makes a tight window show as too short', () => {
+		expect(fitStyle('cold-overnight', 24)!.tooShort).toBe(false);
+		expect(fitStyle('cold-overnight', 24, { predoughHours: 20 })!.tooShort).toBe(true);
+	});
+
+	test('is ignored by a style that builds its own predough window', () => {
+		const fit = fitStyle('predough-cold', 40, { predoughHours: 12 })!;
+		expect(fit.split.predoughHours).not.toBe(12);
+		expect(splitTotalHours(fit.split)).toBeCloseTo(40, 1);
+	});
+
+	test('stacks with an autolyse', () => {
+		const fit = fitStyle('cold-overnight', 36, { predoughHours: 10, autolyseHours: 1 })!;
+		expect(fit.split.predoughHours).toBe(10);
+		expect(fit.split.autolyseHours).toBe(1);
+		expect(splitTotalHours(fit.split)).toBeCloseTo(36, 1);
+	});
+});

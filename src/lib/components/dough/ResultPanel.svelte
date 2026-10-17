@@ -84,6 +84,8 @@
 				Indeholder {sourdough.flourInStarter} g mel og {sourdough.waterInStarter} g vand
 			</p>
 		</div>
+	{:else if workbench.resolvedFlourWeight <= 0}
+		<p class="empty">Angiv hvor meget dej du skal have.</p>
 	{:else}
 		<p class="empty">{warningLabels['no-proof-time']}</p>
 	{/if}

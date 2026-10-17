@@ -11,7 +11,8 @@ export * from './storage';
 export * from './timer-manager';
 export * from './notification';
 export * from './yeast';
-export * from './fermentation';
+// fermentation's public symbols are re-exported by dough-planner; starring both
+// here would give every one of them two paths into the barrel.
 export * from './dough-ingredients';
 export * from './predough';
 export * from './proofing-styles';

@@ -118,19 +118,36 @@ export class DoughWorkbench {
 
 	autolyseWindow = $derived(this.autolyseEnabled ? Math.max(0, this.autolyseHours) : 0);
 
+	/** True only when a predough is both switched on and meaningful for this dough. */
+	usesPredough = $derived(this.predoughEnabled && this.leavening === 'yeast');
+
+	/** The predough window the baker set themselves. */
+	ownPredoughHours = $derived(
+		Math.max(0, this.predough.roomHours) + Math.max(0, this.predough.fridgeHours)
+	);
+
 	styleFit = $derived(
 		this.timeMode === 'deadline' && this.styleId !== 'custom'
-			? fitStyle(this.styleId, this.availableHours, { autolyseHours: this.autolyseWindow })
+			? fitStyle(this.styleId, this.availableHours, {
+					autolyseHours: this.autolyseWindow,
+					predoughHours: this.usesPredough ? this.ownPredoughHours : 0
+				})
 			: null
 	);
 
-	/** The proofing split in play, either fitted to the deadline or typed in directly. */
+	/**
+	 * The proofing split in play, either fitted to the deadline or typed in
+	 * directly. A style that reserves a predough window only gets one when there
+	 * is actually a predough to put in it.
+	 */
 	split = $derived<ProofingSplit>(
-		this.styleFit?.split ?? {
-			predoughHours:
-				this.predoughEnabled && this.leavening === 'yeast'
-					? Math.max(0, this.predough.roomHours) + Math.max(0, this.predough.fridgeHours)
-					: 0,
+		(this.styleFit
+			? {
+					...this.styleFit.split,
+					predoughHours: this.usesPredough ? this.styleFit.split.predoughHours : 0
+				}
+			: null) ?? {
+			predoughHours: this.usesPredough ? this.ownPredoughHours : 0,
 			autolyseHours: this.autolyseWindow,
 			roomHours: Math.max(0, this.roomHours),
 			fridgeHours: Math.max(0, this.fridgeHours),
@@ -143,10 +160,12 @@ export class DoughWorkbench {
 	 * gets; a biga sits out, a poolish gets a short start before the fridge.
 	 */
 	predoughConfig = $derived<PredoughConfig | null>(
-		this.predoughEnabled && this.leavening === 'yeast'
+		this.usesPredough
 			? {
 					...this.predough,
-					...(this.styleFit
+					// Only a style that actually reserves a predough window overrides the
+					// hours; otherwise the user's own predough timing stands.
+					...(this.styleFit && this.styleFit.split.predoughHours > 0
 						? fitPredoughWindow(this.predough.kind, this.styleFit.split.predoughHours)
 						: {}),
 					roomTemperature: this.roomTemperature
@@ -355,7 +374,7 @@ export class DoughWorkbench {
 			this.timeMode === 'deadline' && this.availableHours > 0
 				? this.availableHours
 				: Math.min(style.maxHours, Math.max(style.minHours, this.totalProofHours));
-		const fit = fitStyle(id, window);
+		const fit = fitStyle(id, window, { autolyseHours: this.autolyseWindow });
 		if (!fit) return;
 
 		this.roomHours = fit.split.roomHours;

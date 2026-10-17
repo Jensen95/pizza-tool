@@ -71,8 +71,11 @@ function categoryOf(row: DoughIngredientRow): FlourCategory {
 	return variant && variant in glutenFactor ? variant : DEFAULT_CATEGORY;
 }
 
+const fallbackSeed = seedTypes.find((seed) => seed.id === 'other') ?? seedTypes[0];
+
 function seedOf(row: DoughIngredientRow) {
-	return seedTypes.find((seed) => seed.id === row.variant) ?? seedTypes[seedTypes.length - 1];
+	// By id, not by position: seeds.json is data and may be reordered.
+	return seedTypes.find((seed) => seed.id === row.variant) ?? fallbackSeed;
 }
 
 function sumPercentage(rows: DoughIngredientRow[]): number {

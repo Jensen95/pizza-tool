@@ -87,7 +87,7 @@
 	}
 
 	.block.room {
-		background: var(--color-primary);
+		background: var(--color-room);
 	}
 
 	.block.fridge {
@@ -143,7 +143,7 @@
 	}
 
 	.swatch.room {
-		background: var(--color-primary);
+		background: var(--color-room);
 	}
 
 	.swatch.fridge {

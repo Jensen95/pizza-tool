@@ -344,3 +344,25 @@ describe('room temperature', () => {
 		expect(withTemper.yeastWeight).toBeLessThan(without.yeastWeight);
 	});
 });
+
+describe('a predough holding all the flour', () => {
+	test('leaves no empty flour line in the final dough', () => {
+		const plan = planDough(
+			buildInput({
+				predough: {
+					kind: 'biga',
+					flourPercentage: 100,
+					hydrationPercentage: 45,
+					roomHours: 18,
+					fridgeHours: 0
+				}
+			})
+		)!;
+		const main = plan.stages.find((stage) => stage.id === 'main')!;
+		expect(main.ingredients.some((ing) => ing.weight === 0)).toBe(false);
+		expect(main.ingredients.some((ing) => ing.id === 'flour')).toBe(false);
+		// All the flour is still accounted for, in the biga
+		expect(plan.stages.find((s) => s.id === 'predough')!.ingredients[0].weight).toBe(1000);
+		expect(plan.totalWeight).toBeCloseTo(1677, 0);
+	});
+});

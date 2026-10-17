@@ -122,7 +122,8 @@ const direct = samples.filter((sample) => !sample.hasPredough);
 
 function ratioFor(sample: Measured): number {
 	const predicted = predict(sample);
-	return predicted && sample.actualIdy > 0 ? predicted / sample.actualIdy : Number.NaN;
+	// `predicted !== null`, not truthiness: a predicted 0 is a result, not a miss
+	return predicted !== null && sample.actualIdy > 0 ? predicted / sample.actualIdy : Number.NaN;
 }
 
 function median(values: number[]): number {
@@ -183,6 +184,8 @@ describe('the fermentation model against the recipe library', () => {
 			(sample) => sample.roomHours + sample.fridgeHours >= 2 && sample.actualIdy < 1
 		);
 		const ratios = inRange.map(ratioFor).filter(Number.isFinite);
+		// Without this the tripwire passes on an empty array: Math.max() is -Infinity
+		expect(ratios.length).toBeGreaterThanOrEqual(6);
 		// Nothing wildly over-dosed: an over-proofed dough cannot be rescued
 		expect(Math.max(...ratios)).toBeLessThan(2.5);
 	});

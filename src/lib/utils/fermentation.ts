@@ -62,11 +62,20 @@ interface TablePoint {
 // The lookup table maps proofing hours to IDY percentage per location.
 // Both axes behave log-linearly (halving yeast roughly doubles time), so all
 // interpolation and extrapolation happens in log-log space.
+const tableCache = new Map<ProofLocation, TablePoint[]>();
+
 function tableFor(location: ProofLocation): TablePoint[] {
-	return yeastLookup.lookupTable
+	// Solving a mixed schedule calls this a few hundred times per keystroke, so
+	// the sorted table is built once and reused.
+	const cached = tableCache.get(location);
+	if (cached) return cached;
+
+	const points = yeastLookup.lookupTable
 		.filter((entry) => entry.location === location)
 		.map((entry) => ({ hours: entry.hours, idy: entry.idyPercentage }))
 		.sort((a, b) => a.hours - b.hours);
+	tableCache.set(location, points);
+	return points;
 }
 
 function interpolate(
@@ -75,7 +84,8 @@ function interpolate(
 	getX: (p: TablePoint) => number,
 	getY: (p: TablePoint) => number
 ): number {
-	const sorted = [...points].sort((a, b) => getX(a) - getX(b));
+	const ascending = getX(points[0]) <= getX(points[points.length - 1]);
+	const sorted = ascending ? points : [...points].reverse();
 	const logX = Math.log(x);
 
 	let lower = sorted[0];
@@ -132,9 +142,22 @@ function isWithinTable(location: ProofLocation, hours: number): boolean {
 const MIN_IDY = 0.005;
 const MAX_IDY = 2;
 
+/** For the drift maths, where fridge temperature is a legitimate value. */
 function clampTemperature(temperature: number): number {
 	if (!Number.isFinite(temperature)) return REFERENCE_ROOM_TEMPERATURE;
 	return Math.min(MAX_ROOM_TEMPERATURE, Math.max(FRIDGE_TEMPERATURE, temperature));
+}
+
+/**
+ * For a room or dough temperature the user typed. The model was never
+ * calibrated below 10 °C, and a number field accepts typed values outside its
+ * own min, so the floor has to be enforced here too.
+ */
+function clampAmbient(temperature: number | undefined): number {
+	if (temperature === undefined || !Number.isFinite(temperature)) {
+		return REFERENCE_ROOM_TEMPERATURE;
+	}
+	return Math.min(MAX_ROOM_TEMPERATURE, Math.max(MIN_ROOM_TEMPERATURE, temperature));
 }
 
 /**
@@ -223,8 +246,8 @@ export interface CoolingReport {
  * fermenting on the way down, and a big warm mass keeps at it for hours.
  */
 export function analyseFridgeCooling(schedule: ProofingSchedule): CoolingReport {
-	const room = clampTemperature(schedule.roomTemperature ?? REFERENCE_ROOM_TEMPERATURE);
-	const dough = clampTemperature(schedule.doughTemperature ?? room);
+	const room = clampAmbient(schedule.roomTemperature);
+	const dough = clampAmbient(schedule.doughTemperature ?? room);
 	const bulkTau = coolingTimeConstant(schedule.bulkWeight);
 	const pieceTau = coolingTimeConstant(schedule.pieceWeight ?? schedule.bulkWeight);
 	const fridgeHours = Math.max(0, schedule.fridgeHours);
@@ -263,8 +286,8 @@ export function analyseFridgeCooling(schedule: ProofingSchedule): CoolingReport 
  * dough does while it is still cooling down in the fridge.
  */
 export function effectiveRoomHours(schedule: ProofingSchedule): number {
-	const room = clampTemperature(schedule.roomTemperature ?? REFERENCE_ROOM_TEMPERATURE);
-	const dough = clampTemperature(schedule.doughTemperature ?? room);
+	const room = clampAmbient(schedule.roomTemperature);
+	const dough = clampAmbient(schedule.doughTemperature ?? room);
 	const bulkTau = coolingTimeConstant(schedule.bulkWeight);
 	const pieceTau = coolingTimeConstant(schedule.pieceWeight ?? schedule.bulkWeight);
 
@@ -281,14 +304,28 @@ export function effectiveRoomHours(schedule: ProofingSchedule): number {
 
 /**
  * The longest the dough can stay warm before the yeast has used up its whole
- * budget — in other words, when it has to go into the fridge. Bisection on the
- * same drift integral the prediction uses.
+ * budget — in other words, when it has to go into the fridge.
+ *
+ * The fridge stage spends part of that budget too, so only what it leaves over
+ * is available on the counter. Same equation the prediction solves:
+ * warmHours / R(y) + fridgeHours / F(y) = 1.
  */
 export function maxWarmHours(schedule: ProofingSchedule, idyPercentage: number): number {
 	if (idyPercentage <= 0) return 0;
-	const budget = hoursForIdy('room', idyPercentage);
-	const room = clampTemperature(schedule.roomTemperature ?? REFERENCE_ROOM_TEMPERATURE);
-	const dough = clampTemperature(schedule.doughTemperature ?? room);
+
+	const fridgeHours = Math.max(0, schedule.fridgeHours);
+	const fridgeShare = fridgeHours > 0 ? fridgeHours / hoursForIdy('fridge', idyPercentage) : 0;
+	const roomShare = 1 - fridgeShare;
+	if (roomShare <= 0) return 0;
+
+	// The cooling-down period is charged to the warm side, so it comes off the
+	// counter time the baker actually has.
+	const coolingCost = analyseFridgeCooling(schedule).extraWarmEquivalentHours;
+	const budget = roomShare * hoursForIdy('room', idyPercentage) - coolingCost;
+	if (budget <= 0) return 0;
+
+	const room = clampAmbient(schedule.roomTemperature);
+	const dough = clampAmbient(schedule.doughTemperature ?? room);
 	const bulkTau = coolingTimeConstant(schedule.bulkWeight);
 
 	let low = 0;

@@ -378,7 +378,7 @@
 	}
 
 	.seg {
-		min-height: 36px;
+		min-height: 44px;
 		padding: 0 var(--spacing-md);
 		border-radius: var(--radius-full);
 		font-size: var(--font-size-sm);
@@ -454,7 +454,7 @@
 	}
 
 	.small {
-		min-height: 36px;
+		min-height: 44px;
 		padding: 0 var(--spacing-sm);
 		font-size: var(--font-size-xs);
 	}
