@@ -1,7 +1,7 @@
 :root {
 	/* Lets native controls — inputs, selects, scrollbars — match the theme */
 	color-scheme: light;
-	--color-primary: #d22f2f;
+	--color-primary: #d32f2f;
 	--color-primary-rgb: 211, 47, 47;
 	--color-primary-dark: #b71c1c;
 	--color-primary-light: #ef5350;
