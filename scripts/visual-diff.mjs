@@ -60,15 +60,21 @@ export async function compareImages(baseFile, prFile, diffFile) {
 	};
 	const [a, b] = await Promise.all([rgba(baseFile, base, canvas), rgba(prFile, pr, canvas)]);
 	const diff = Buffer.alloc(canvas.width * canvas.height * 4);
-	// Threshold 0: both sides render in the same browser on the same runner, so a pixel that
-	// differs at all is a real change. Anti-aliasing detection stays on to ignore edge noise.
-	const diffPixels = pixelmatch(a, b, diff, canvas.width, canvas.height, { threshold: 0 });
-	if (diffPixels > 0) {
+	// Both sides render in the same browser on the same runner, and an unchanged page is
+	// byte-identical between runs, so any pixel that differs is a real change. That rules out
+	// both a colour threshold and pixelmatch's anti-aliasing detection, which skips differing
+	// pixels on edges and would hide a recoloured 1px border or most of a text change.
+	const diffPixels = pixelmatch(a, b, diff, canvas.width, canvas.height, {
+		threshold: 0,
+		includeAA: true
+	});
+	const changed = diffPixels > 0 || base.width !== pr.width || base.height !== pr.height;
+	if (changed) {
 		await sharp(diff, { raw: { width: canvas.width, height: canvas.height, channels: 4 } })
 			.png()
 			.toFile(diffFile);
 	}
-	return { diffPixels, diffRatio: diffPixels / (canvas.width * canvas.height), base, pr };
+	return { changed, diffPixels, diffRatio: diffPixels / (canvas.width * canvas.height), base, pr };
 }
 
 /** @param {string} dir */
@@ -100,12 +106,12 @@ export async function compareScreenshots(baseDir, prDir, outDir) {
 			const base = await sizeOf(join(baseDir, name));
 			results.push({ name, status: 'removed', diffPixels: 0, diffRatio: 0, base, pr: null });
 		} else {
-			const result = await compareImages(
+			const { changed, ...result } = await compareImages(
 				join(baseDir, name),
 				join(prDir, name),
 				join(diffDir, name)
 			);
-			results.push({ name, status: result.diffPixels > 0 ? 'changed' : 'unchanged', ...result });
+			results.push({ name, status: changed ? 'changed' : 'unchanged', ...result });
 		}
 	}
 	return results;
@@ -154,9 +160,17 @@ function entry(summary, open, headers, urls) {
  * instead of adding a new one on every push.
  *
  * @param {Result[]} results
- * @param {{ images?: Record<string, ImageUrls>, baseRef?: string, runUrl?: string }} [options]
+ * @param {object} [options]
+ * @param {Record<string, ImageUrls>} [options.images] uploaded image URLs by screenshot name
+ * @param {string} [options.baseRef]
+ * @param {string} [options.runUrl]
+ * @param {string} [options.headSha] the PR commit, so a comment left from an earlier push shows its age
+ * @param {boolean} [options.baseCaptured] false when the base couldn't be built or screenshotted
  */
-export function renderComment(results, { images = {}, baseRef = 'main', runUrl } = {}) {
+export function renderComment(
+	results,
+	{ images = {}, baseRef = 'main', runUrl, headSha, baseCaptured = true } = {}
+) {
 	const withStatus = (/** @type {Status} */ status) => results.filter((r) => r.status === status);
 	const changed = withStatus('changed');
 	const added = withStatus('added');
@@ -164,25 +178,36 @@ export function renderComment(results, { images = {}, baseRef = 'main', runUrl }
 	const unchanged = withStatus('unchanged');
 	const run = runUrl ? `[this run](${runUrl})` : 'this run';
 
-	const lines = [COMMENT_MARKER, '## 📸 Visual comparison', ''];
+	const title = headSha
+		? `## 📸 Visual comparison of ${headSha.slice(0, 7)}`
+		: '## 📸 Visual comparison';
+	const lines = [COMMENT_MARKER, title, ''];
 	if (results.length === 0) {
 		lines.push('> ⚠️ No screenshots were captured.');
 		return lines.join('\n') + '\n';
 	}
 	if (changed.length + added.length + removed.length === 0) {
-		lines.push(
-			`✅ No visual changes: all ${results.length} screenshots match \`${baseRef}\` pixel for pixel.`
-		);
+		const all =
+			results.length === 1 ? 'the 1 screenshot matches' : `all ${results.length} screenshots match`;
+		lines.push(`✅ No visual changes: ${all} \`${baseRef}\` pixel for pixel.`);
 	} else {
 		lines.push(
 			`**${changed.length} changed** · ${added.length} added · ${removed.length} removed · ` +
 				`${unchanged.length} unchanged, compared with \`${baseRef}\`.`
 		);
-		if (Object.keys(images).length === 0) {
+		if (!baseCaptured) {
 			lines.push(
 				'',
-				`> Images aren't embedded because this run has no ImgBB key. ` +
-					`Download the \`visual-comparison\` artifact from ${run} to see them.`
+				`> ⚠️ \`${baseRef}\` couldn't be built or fully screenshotted, so screenshots missing ` +
+					`from it are reported as added. See the job log of ${run}.`
+			);
+		}
+		const embedded = Object.values(images).some((urls) => Object.values(urls).some(Boolean));
+		if (!embedded) {
+			lines.push(
+				'',
+				`> Images aren't embedded: this run has no ImgBB key, or uploading them failed (see the ` +
+					`job log). Download the \`visual-comparison\` artifact from ${run} to see them.`
 			);
 		}
 	}
@@ -196,7 +221,8 @@ export function renderComment(results, { images = {}, baseRef = 'main', runUrl }
 				: `, ${dimensions(result.base)} → ${dimensions(result.pr)}`;
 		lines.push(
 			...entry(
-				`<b>${result.name}</b>: ${percent(result.diffRatio)} of pixels differ${resized}`,
+				`<b>${result.name}</b>: ${result.diffPixels.toLocaleString('en-US')} px differ ` +
+					`(${percent(result.diffRatio)})${resized}`,
 				true,
 				[`Base (${baseRef})`, 'This PR', 'Diff'],
 				[urls.base, urls.pr, urls.diff]
@@ -254,13 +280,15 @@ async function uploadToImgBB(file, name, apiKey) {
 		const body = new URLSearchParams({ image: readFileSync(file).toString('base64'), name });
 		const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
 			method: 'POST',
-			body
+			body,
+			signal: AbortSignal.timeout(30_000)
 		});
 		if (!response.ok) {
-			console.warn(`ImgBB upload failed for ${name}: ${response.status}`);
+			console.warn(`ImgBB upload failed for ${name}: ${response.status} ${await response.text()}`);
 			return null;
 		}
 		const json = await response.json();
+		if (!json?.data?.url) console.warn(`ImgBB returned no URL for ${name}`);
 		return json?.data?.url ?? null;
 	} catch (error) {
 		console.warn(`ImgBB upload failed for ${name}:`, error);
@@ -304,7 +332,9 @@ async function main() {
 		renderComment(results, {
 			images,
 			baseRef: process.env.BASE_REF || 'main',
-			runUrl: process.env.RUN_URL
+			runUrl: process.env.RUN_URL,
+			headSha: process.env.HEAD_SHA,
+			baseCaptured: process.env.BASE_CAPTURED !== 'false'
 		})
 	);
 }

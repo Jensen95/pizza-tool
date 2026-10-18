@@ -11,20 +11,33 @@ let root: string;
 let baseDir: string;
 let prDir: string;
 
+/** Writes a PNG with the colour colorAt gives each pixel. */
+async function draw(
+	file: string,
+	width: number,
+	height: number,
+	colorAt: (x: number, y: number) => Rgb
+) {
+	const data = Buffer.alloc(width * height * 4);
+	for (let y = 0; y < height; y++) {
+		for (let x = 0; x < width; x++) data.set([...colorAt(x, y), 255], (y * width + x) * 4);
+	}
+	await sharp(data, { raw: { width, height, channels: 4 } })
+		.png()
+		.toFile(file);
+}
+
 /** Writes a flat-coloured PNG, optionally with one pixel in another colour. */
-async function png(
+function png(
 	file: string,
 	width: number,
 	height: number,
 	fill: Rgb = [245, 245, 245],
 	pixel?: { x: number; y: number; color: Rgb }
 ) {
-	const data = Buffer.alloc(width * height * 4);
-	for (let i = 0; i < width * height; i++) data.set([...fill, 255], i * 4);
-	if (pixel) data.set([...pixel.color, 255], (pixel.y * width + pixel.x) * 4);
-	await sharp(data, { raw: { width, height, channels: 4 } })
-		.png()
-		.toFile(file);
+	return draw(file, width, height, (x, y) =>
+		pixel && x === pixel.x && y === pixel.y ? pixel.color : fill
+	);
 }
 
 beforeEach(() => {
@@ -64,6 +77,21 @@ describe('compareScreenshots', () => {
 		expect(existsSync(join(root, 'diff', 'page.png'))).toBe(true);
 	});
 
+	it('counts edge pixels too, so a recoloured 1px line is caught', async () => {
+		// Black | 1px grey divider | white. pixelmatch's anti-aliasing detection would skip the
+		// divider's pixels and call this unchanged.
+		const divider =
+			(grey: number) =>
+			(x: number): Rgb =>
+				x < 4 ? [0, 0, 0] : x === 4 ? [grey, grey, grey] : [255, 255, 255];
+		await draw(join(baseDir, 'page.png'), 9, 9, divider(128));
+		await draw(join(prDir, 'page.png'), 9, 9, divider(131));
+
+		const [result] = await compareScreenshots(baseDir, prDir, root);
+
+		expect(result).toMatchObject({ status: 'changed', diffPixels: 9 });
+	});
+
 	it('counts the rows a page grew by as changed', async () => {
 		await png(join(baseDir, 'page.png'), 20, 10);
 		await png(join(prDir, 'page.png'), 20, 12);
@@ -78,6 +106,17 @@ describe('compareScreenshots', () => {
 		});
 		const diff = await sharp(join(root, 'diff', 'page.png')).metadata();
 		expect([diff.width, diff.height]).toEqual([20, 12]);
+	});
+
+	it('reports a size change even when no pixel differs', async () => {
+		// The shorter screenshot is padded with magenta, so a new magenta row diffs as 0 pixels
+		await png(join(baseDir, 'page.png'), 4, 4, [255, 0, 255]);
+		await png(join(prDir, 'page.png'), 4, 5, [255, 0, 255]);
+
+		const [result] = await compareScreenshots(baseDir, prDir, root);
+
+		expect(result).toMatchObject({ status: 'changed', diffPixels: 0 });
+		expect(existsSync(join(root, 'diff', 'page.png'))).toBe(true);
 	});
 
 	it('reports screenshots that exist on only one side as added or removed', async () => {
@@ -120,6 +159,10 @@ describe('renderComment', () => {
 		expect(comment).not.toContain('<img');
 	});
 
+	it('uses the singular for a single screenshot', () => {
+		expect(renderComment([unchanged('a.png')])).toContain('the 1 screenshot matches `main`');
+	});
+
 	it('shows base, PR and diff images for a changed screenshot', () => {
 		const changed = {
 			name: 'dough-page.png',
@@ -142,29 +185,48 @@ describe('renderComment', () => {
 
 		expect(comment).toContain('**1 changed** · 0 added · 0 removed · 1 unchanged');
 		expect(comment).toContain(
-			'<b>dough-page.png</b>: 0.10 % of pixels differ, 1280×2400 → 1280×2550'
+			'<b>dough-page.png</b>: 3,072 px differ (0.10 %), 1280×2400 → 1280×2550'
 		);
 		expect(comment).toContain('<img src="https://i/diff.png"');
 		expect(comment).toContain('<summary>1 unchanged</summary>');
 		expect(comment).toContain('[this run](https://github.com/o/r/actions/runs/1)');
 	});
 
-	it('points to the artifact when images could not be uploaded', () => {
-		const added = {
-			name: 'new.png',
-			status: 'added' as const,
-			diffPixels: 0,
-			diffRatio: 0,
-			base: null,
-			pr: size
-		};
+	const added = {
+		name: 'new.png',
+		status: 'added' as const,
+		diffPixels: 0,
+		diffRatio: 0,
+		base: null,
+		pr: size
+	};
 
+	it('points to the artifact when there are no images', () => {
 		const comment = renderComment([added]);
 
 		expect(comment).toContain('### Added');
 		expect(comment).toContain('- <b>new.png</b>: new screenshot');
 		expect(comment).not.toContain('<table');
-		expect(comment).toContain("Images aren't embedded because this run has no ImgBB key");
+		expect(comment).toContain("Images aren't embedded: this run has no ImgBB key");
+	});
+
+	it('points to the artifact when every upload failed', () => {
+		const comment = renderComment([added], { images: { 'new.png': { pr: null } } });
+
+		expect(comment).toContain("Images aren't embedded");
+		expect(comment).not.toContain('<table');
+	});
+
+	it('warns when the base could not be captured', () => {
+		const comment = renderComment([added], { baseCaptured: false });
+
+		expect(comment).toContain("`main` couldn't be built or fully screenshotted");
+	});
+
+	it('names the commit it compared', () => {
+		const comment = renderComment([unchanged('a.png')], { headSha: '5a5e0b31c5f77f37e38bd7f' });
+
+		expect(comment).toContain('## 📸 Visual comparison of 5a5e0b3\n');
 	});
 
 	it('warns when no screenshots were captured', () => {
