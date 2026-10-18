@@ -10,6 +10,11 @@ import * as path from 'path';
 // Get screenshot output directory from env or use default
 const outputDir = process.env.SCREENSHOT_DIR || 'screenshots';
 
+// Everything that varies between runs is pinned, so two captures of the same build are identical
+// and a diff against the base branch shows only real UI changes. The dough planner lays its
+// timeline out from the current time, so without this its screenshots change every minute.
+const FIXED_NOW = '2026-06-12T10:00:00+02:00';
+
 async function captureFullPage(
 	page: import('@playwright/test').Page,
 	url: string,
@@ -42,13 +47,18 @@ async function captureElement(
 	fs.mkdirSync(outputDir, { recursive: true });
 
 	await element.screenshot({
-		path: path.join(outputDir, filename)
+		path: path.join(outputDir, filename),
+		animations: 'disabled'
 	});
 }
 
 test.describe('Visual Screenshots @screenshot', () => {
+	// A service worker could show the PWA install/update banner on one run and not the next
+	test.use({ timezoneId: 'Europe/Copenhagen', locale: 'da-DK', serviceWorkers: 'block' });
+
 	// Add screenshot mode class before each test to fix navigation positioning
 	test.beforeEach(async ({ page }) => {
+		await page.clock.setFixedTime(FIXED_NOW);
 		await page.setViewportSize({ width: 1280, height: 2400 });
 		await page.addInitScript(() => {
 			// This runs before page load, so we need to add the class after DOM is ready

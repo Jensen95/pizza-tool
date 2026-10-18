@@ -29,5 +29,6 @@ coverage
 /test-results/
 /playwright-report/
 /playwright/.cache/
+/screenshots/
 **/*-snapshots/
 .claude/settings.local.json

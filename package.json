@@ -51,6 +51,7 @@
 		"husky": "^9.1.7",
 		"jsdom": "^29.1.1",
 		"lint-staged": "^17.6.0",
+		"pixelmatch": "^7.2.0",
 		"prettier": "^3.9.9",
 		"prettier-plugin-svelte": "^4.1.1",
 		"sharp": "^0.35.5",

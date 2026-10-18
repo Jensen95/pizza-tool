@@ -8,7 +8,7 @@ export default defineConfig({
 		environment: 'node',
 		setupFiles: ['./src/tests/setup.ts'],
 		// Only include unit tests, not e2e tests
-		include: ['src/**/*.{test,spec}.{js,ts}'],
+		include: ['src/**/*.{test,spec}.{js,ts}', 'scripts/**/*.test.ts'],
 		exclude: [
 			'**/node_modules/**',
 			'**/dist/**',

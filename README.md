@@ -152,10 +152,17 @@ This project uses GitHub Actions for continuous integration:
   - Requires manual review for major updates
   - Adds comments explaining merge status
 
-- **Visual Comparison** (`.github/workflows/visual-comparison.yml`): Captures before/after screenshots for UI changes
-  - Takes screenshots of both base and PR versions
-  - Embeds images directly in PR comments
-  - Creates side-by-side comparison tables
+- **Visual Comparison** (`.github/workflows/visual-comparison.yml`): Diffs the UI of every PR into `main` against `main`
+  - Screenshots the PR build and the base build with the PR's screenshot specs (`src/tests/e2e/screenshots.spec.ts`), with the clock, time zone, locale and service worker pinned so that an unchanged page is pixel-identical between runs
+  - Compares them pixel by pixel (`scripts/visual-diff.mjs`) and reports each screenshot as changed, added, removed or unchanged
+  - Keeps one PR comment up to date with base, PR and diff images for what changed only; a PR without visual changes gets no comment
+  - Images are hosted on ImgBB and need the `IMGBB_API_KEY` repository secret; without it the comment lists the changes without images. Dependabot and fork PRs get a read-only token and no comment, but the job summary still has the report
+  - Uploads full-size screenshots and diffs as the `visual-comparison` artifact, and puts the report in the job summary
+  - Reports changes without failing: a UI change is often the point of the PR
+  - To run it locally, build both sides, then from this branch:
+    - `SCREENSHOT_DIR=screenshots/pr npm run test:screenshots -- --project=chromium`
+    - `SCREENSHOT_DIR=screenshots/base SCREENSHOT_APP_DIR=<other checkout> npm run test:screenshots -- --project=chromium`
+    - `node scripts/visual-diff.mjs screenshots/base screenshots/pr screenshots`
 
 ## Dependency Management
 
