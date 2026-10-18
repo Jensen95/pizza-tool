@@ -31,6 +31,9 @@ export default defineConfig({
 
 	webServer: {
 		command: 'npm run preview',
+		// The visual comparison workflow points this at the base branch's checkout, to screenshot
+		// its build with this branch's specs
+		cwd: process.env.SCREENSHOT_APP_DIR,
 		url: 'http://localhost:4173',
 		reuseExistingServer: !process.env.CI,
 		timeout: 120 * 1000

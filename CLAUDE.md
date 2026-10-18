@@ -54,6 +54,10 @@ no trailing commas, printWidth 100. Tests: Vitest (unit) + Playwright (e2e).
 - **Svelte 5**: use the `svelte` skill — fetch real docs via `npx @sveltejs/mcp`
   and run `svelte-autofixer` on edited components.
 - **Browser verification**: use the `agent-browser` skill for manual checks.
+- **Screenshots**: the Visual Comparison workflow diffs every PR's screenshots against its base
+  pixel by pixel, using the PR's `screenshots.spec.ts` for both sides. That spec pins the clock,
+  time zone, locale and service worker. A new screenshot of anything that depends on the current
+  time, randomness or network state must be pinned there too, or it shows up as a diff on every PR.
 - **Session learnings**: use the `session-review` skill at end of session to capture
   memories, skills, and settings updates before closing.
 - **Skills vs memories**: conditional workflows (triggered by context) go in `.claude/skills/`

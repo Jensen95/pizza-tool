@@ -152,10 +152,12 @@ This project uses GitHub Actions for continuous integration:
   - Requires manual review for major updates
   - Adds comments explaining merge status
 
-- **Visual Comparison** (`.github/workflows/visual-comparison.yml`): Captures before/after screenshots for UI changes
-  - Takes screenshots of both base and PR versions
-  - Embeds images directly in PR comments
-  - Creates side-by-side comparison tables
+- **Visual Comparison** (`.github/workflows/visual-comparison.yml`): Diffs the UI of every PR against its base
+  - Screenshots the PR build and the base build with the PR's screenshot specs (`src/tests/e2e/screenshots.spec.ts`), with the clock, time zone, locale and service worker pinned so that an unchanged page is pixel-identical between runs
+  - Compares them pixel by pixel (`scripts/visual-diff.mjs`) and reports each screenshot as changed, added, removed or unchanged
+  - Keeps one PR comment up to date with base, PR and diff images for what changed only; a PR without visual changes gets no comment
+  - Uploads full-size screenshots and diffs as the `visual-comparison` artifact, and puts the report in the job summary
+  - Reports changes without failing: a UI change is often the point of the PR
 
 ## Dependency Management
 
