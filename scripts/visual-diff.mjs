@@ -5,8 +5,8 @@
  *   node scripts/visual-diff.mjs <baseDir> <prDir> <outDir>
  *
  * Writes <outDir>/diff/<name>.png for every screenshot that changed, plus <outDir>/report.json
- * and <outDir>/comment.md. With IMGBB_API_KEY set, the images of everything that changed are
- * uploaded to ImgBB and embedded in the comment; unchanged screenshots are never uploaded.
+ * and <outDir>/comment.md. With IMGBB_API_KEY set, the images of every changed, added or removed
+ * screenshot are uploaded to ImgBB and embedded in the comment; unchanged ones never are.
  */
 import sharp from 'sharp';
 import pixelmatch from 'pixelmatch';
